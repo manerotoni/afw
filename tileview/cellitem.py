@@ -12,19 +12,20 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 class CellGraphicsItem(QtGui.QGraphicsItemGroup):
+    """Item group to show a pixmap, the segmentation and annotation as one item
+    """
 
     BOUNDARY = 3.0
 
-    def __init__(self, name, *args, **kw):
+    def __init__(self, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
-        self.name = name
         self.setFlag(self.ItemIsSelectable)
 
     def setImage(self, image):
-        self._image = QtGui.QGraphicsPixmapItem()
-        self._image.setPixmap(QtGui.QPixmap.fromImage(image))
-        self._image.setPos(self.pos())
-        self.addToGroup(self._image)
+        item = QtGui.QGraphicsPixmapItem()
+        item.setPixmap(QtGui.QPixmap.fromImage(image))
+        item.setPos(self.pos())
+        self.addToGroup(item)
 
     def paint(self, painter, option, widget):
         painter.setPen(QtCore.Qt.NoPen)

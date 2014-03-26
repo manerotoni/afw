@@ -18,6 +18,13 @@ from cellitem import CellGraphicsItem
 
 
 class GridScene(QtGui.QGraphicsScene):
+    """GraphicsScene with customized selection functionality
+
+    -) double-click -> selects a single item, unselects all other items
+    -) Ctrl-button + left mouse buuton -> selects all items the mouse moved over
+    -) Ctrl-button + mouse click -> selects the item clicked,
+       keeps previous selection
+    """
 
     def __init__(self, *args, **kw):
         super(GridScene, self).__init__(*args, **kw)
@@ -52,6 +59,10 @@ class GridScene(QtGui.QGraphicsScene):
 
 
 class MouseWheelView(QtGui.QGraphicsView):
+    """Graphicsview with zoom and pan feature.
+
+    Mousewheel events scale, Left click and mouse-move drag the the view.
+    """
 
     def __init__(self, *args, **kw):
         super(MouseWheelView, self).__init__(*args, **kw)
@@ -106,9 +117,8 @@ class GraphicsTileView(MouseWheelView):
         self.resize(800, 600)
         self.show()
 
-        for i, gal in enumerate(self.iter_gallery(self.file, self.region,
-                                                  self.GSIZE)):
-            pitem = CellGraphicsItem(i)
+        for gal in self.iter_gallery(self.file, self.region, self.GSIZE):
+            pitem = CellGraphicsItem()
             pitem.setImage(array2qimage(gal))
             pitem.setPos(*self._grid.newPos(pitem))
             scene.addItem(pitem)
