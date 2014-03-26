@@ -29,10 +29,24 @@ class GridScene(QtGui.QGraphicsScene):
     def __init__(self, *args, **kw):
         super(GridScene, self).__init__(*args, **kw)
         self._multiselect = False
+        self._selector = None
 
     def mouseMoveEvent(self, event):
-        item = self.itemAt(event.scenePos().x(),
-                           event.scenePos().y())
+
+        if self._multiselect:
+            plg = self._selector.polygon()
+            plg += event.scenePos()
+            self._selector.setPolygon(plg)
+
+        try:
+            item = self.items(event.scenePos())[-1]
+        except IndexError:
+            item = None
+
+        # print items
+        # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        # import pdb; pdb.set_trace()
+
 
         if (event.modifiers() == QtCore.Qt.ControlModifier and
             item is not None and
@@ -49,13 +63,28 @@ class GridScene(QtGui.QGraphicsScene):
         if event.button() == QtCore.Qt.RightButton:
             return
         elif event.modifiers() == QtCore.Qt.ControlModifier:
+            pen = QtGui.QPen()
+            pen.setColor(QtCore.Qt.white)
+            pen.setWidth(3)
+            polygon = QtGui.QPolygonF()
+            self._selector = self.addPolygon(polygon, pen)
+
             super(GridScene, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             self._multiselect = False
 
+        if self._selector is not None:
+            self.removeItem(self._selector)
+            self._selector = None
+
         super(GridScene, self).mouseReleaseEvent(event)
+
+
+    def paint(self, painter, option, widget):
+        print "foobar"
+        super(GridScene, self).paint(painter, option, widget)
 
 
 class MouseWheelView(QtGui.QGraphicsView):
@@ -124,7 +153,6 @@ class GraphicsTileView(MouseWheelView):
             scene.addItem(pitem)
             QtGui.QApplication.processEvents()
 
-        print self.scene().selectedItems()
 
     def iter_gallery(self, file_, region, size):
         ch5 = cellh5.CH5File(file_, 'r')
@@ -136,6 +164,7 @@ class GraphicsTileView(MouseWheelView):
         events = pos.get_events().flatten()[:30]
         for event in events:
             yield pos.get_gallery_image(event, region, size)
+
 
 
 if __name__ == '__main__':
