@@ -5,15 +5,16 @@ graphicsscene.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'LGPL'
 
-__all__ = ("AlfGraphicsScene", )
+__all__ = ("AfGraphicsScene", )
 
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from alf.cellitem import Colors
-from alf.cellitem import PainterPathItem
+from af.cellitem import Colors
+from af.cellitem import PainterPathItem
 
-class AlfGraphicsScene(QtGui.QGraphicsScene):
+
+class AfGraphicsScene(QtGui.QGraphicsScene):
     """GraphicsScene with customized selection functionality
 
     -) double-click -> selects a single item, unselects all other items
@@ -23,7 +24,7 @@ class AlfGraphicsScene(QtGui.QGraphicsScene):
     """
 
     def __init__(self, *args, **kw):
-        super(AlfGraphicsScene, self).__init__(*args, **kw)
+        super(AfGraphicsScene, self).__init__(*args, **kw)
         self._multiselect = False
         self._selector = None
 
@@ -44,7 +45,7 @@ class AlfGraphicsScene(QtGui.QGraphicsScene):
             self._multiselect):
             item.setSelected(True)
         else:
-            super(AlfGraphicsScene, self).mouseMoveEvent(event)
+            super(AfGraphicsScene, self).mouseMoveEvent(event)
 
     def mousePressEvent(self, event):
 
@@ -63,7 +64,7 @@ class AlfGraphicsScene(QtGui.QGraphicsScene):
             # selection occurs on hovering the items
             self._selector = PainterPathItem(path, scene=self)
             self._selector.setPen(pen)
-            super(AlfGraphicsScene, self).mousePressEvent(event)
+            super(AfGraphicsScene, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
@@ -73,4 +74,4 @@ class AlfGraphicsScene(QtGui.QGraphicsScene):
             self.removeItem(self._selector)
             self._selector = None
 
-        super(AlfGraphicsScene, self).mouseReleaseEvent(event)
+        super(AfGraphicsScene, self).mouseReleaseEvent(event)

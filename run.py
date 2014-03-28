@@ -12,7 +12,7 @@ sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
 
 from PyQt4 import QtGui
-from alf.main import AlfMainWindow
+from af.main import AfMainWindow
 
 
 if __name__ == '__main__':
@@ -20,11 +20,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(\
         description='Test script for tiled graphicview widget')
     parser.add_argument('file', help='hdf file to load')
-    parser.add_argument('--region', help="segmentation region",
-                        default="primary__primary")
+
 
     args = parser.parse_args()
     app = QtGui.QApplication(sys.argv)
-    mw = AlfMainWindow(args.file, args.region)
+    mw = AfMainWindow(args.file)
     mw.show()
     sys.exit(app.exec_())

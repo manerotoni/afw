@@ -20,6 +20,9 @@ class ItemGrid(QtCore.QObject):
         self._positions = dict()
         self._first_pos = (0, 0)
 
+    def reset(self):
+        self._positions.clear()
+
     def newPos(self, item):
         nitems = len(self._positions)
         irow = math.ceil(nitems/self._cols)
