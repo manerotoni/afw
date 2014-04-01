@@ -6,7 +6,7 @@ read data from cellh5 and hdffiles
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
-__licence__ = 'LGPL'
+__licence__ = 'GPL'
 
 __all__ = ('HdfReader', )
 

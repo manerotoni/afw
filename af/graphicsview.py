@@ -3,6 +3,7 @@ tileview.py
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
+__licence__ = 'GPL'
 
 __all__ = ("AfGraphicsView", )
 
