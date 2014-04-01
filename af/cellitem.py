@@ -12,7 +12,8 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 class Colors(object):
-    selected = QtGui.QColor("#87CEFA")
+    # selected = QtGui.QColor("#87CEFA")
+    selected = QtGui.QColor("blue")
 
 
 class PainterPathItem(QtGui.QGraphicsPathItem):

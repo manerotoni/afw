@@ -8,6 +8,7 @@ __licence__ = 'LGPL'
 __all__ = 'ItemGrid'
 
 import math
+from collections import OrderedDict
 from PyQt4 import QtCore
 
 
@@ -16,9 +17,20 @@ class ItemGrid(QtCore.QObject):
     def __init__(self, cols=10, colwidth=100, *args, **kw):
         super(ItemGrid, self).__init__(*args, **kw)
         self._cols = cols
-        self._colwidth = colwidth
-        self._positions = dict()
+        self.colwidth = colwidth
+        self._positions = OrderedDict()
         self._first_pos = (0, 0)
+
+    def colCount(self):
+        return self._cols
+
+    def reorder(self, width):
+        self._cols = math.floor(width/self.colwidth)
+        old_positions = self._positions
+        self._positions = OrderedDict()
+
+        for item in old_positions.keys():
+            item.setPos(*self.newPos(item))
 
     def reset(self):
         self._positions.clear()
@@ -28,7 +40,7 @@ class ItemGrid(QtCore.QObject):
         irow = math.ceil(nitems/self._cols)
         icol = nitems % self._cols
 
-        pos =  (icol*self._colwidth, irow*self._colwidth)
+        pos =  (icol*self.colwidth, irow*self.colwidth)
         self._positions[item] = pos
 
         return pos
