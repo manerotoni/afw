@@ -26,19 +26,26 @@ class ItemGrid(QtCore.QObject):
 
     def reorder(self, width):
         self._cols = math.floor(width/self.colwidth)
-        old_positions = self._positions
-        self._positions = OrderedDict()
-
-        for item in old_positions.keys():
-            item.setPos(*self.newPos(item))
+        for i, item in enumerate(self._positions.keys()):
+            irow = math.floor(i/self._cols)
+            icol = i % self._cols
+            pos =  (icol*self.colwidth, irow*self.colwidth)
+            self._positions[item] = pos
+            item.setPos(*pos)
 
     def reset(self):
         self._positions.clear()
 
+    def itemCount(self):
+        return len(self._positions)
+
     def newPos(self, item):
         nitems = len(self._positions)
-        irow = math.ceil(nitems/self._cols)
+        irow = math.floor(nitems/self._cols)
         icol = nitems % self._cols
+
+        if self._positions.has_key(item):
+            raise RuntimeError("cannot add the same item twice")
 
         pos =  (icol*self.colwidth, irow*self.colwidth)
         self._positions[item] = pos
