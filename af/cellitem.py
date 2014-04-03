@@ -14,6 +14,7 @@ from PyQt4 import QtCore
 class Colors(object):
     # selected = QtGui.QColor("#87CEFA")
     selected = QtGui.QColor("blue")
+    neutral = QtGui.QColor("white")
 
 
 class PainterPathItem(QtGui.QGraphicsPathItem):
@@ -66,4 +67,13 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         super(CellGraphicsItem, self).setPos(x, y)
 
     def setContour(self, contour):
-        pass
+
+        pen = QtGui.QPen()
+        pen.setColor(Colors.neutral)
+        polygon = QtGui.QPolygonF([QtCore.QPointF(*p) for p in contour])
+        item = QtGui.QGraphicsPolygonItem(self)
+        item.setPolygon(polygon)
+        item.setPos(self.pos())
+        item.setPen(pen)
+        item.setOpacity(0.5)
+        self.addToGroup(item)

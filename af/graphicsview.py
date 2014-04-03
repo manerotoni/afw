@@ -69,7 +69,8 @@ class AfGraphicsView(MouseWheelView):
 
     def __init__(self, *args, **kw):
         super(AfGraphicsView, self).__init__(*args, **kw)
-        self._grid = ItemGrid(self.NCOLS, self.GSIZE+4)
+        self._grid = ItemGrid(self.NCOLS,
+                              self.GSIZE+CellGraphicsItem.BOUNDARY)
         self._hdf = None
 
         scene = AfGraphicsScene()
@@ -82,7 +83,6 @@ class AfGraphicsView(MouseWheelView):
         col_count = math.floor(event.size().width()%scaled_colwidth)
         if self._grid.colCount() > col_count:
             self._grid.reorder(event.size().width()/self.transform().m11())
-#            self.ensureVisible(self.sceneRect(), 10, 10)
             # slow according to qt-doc
             ibr = self.scene().itemsBoundingRect()
             self.scene().setSceneRect(ibr)
@@ -102,9 +102,9 @@ class AfGraphicsView(MouseWheelView):
         p.region.addItems(self._hdf.regionNames())
 
     def loadItems(self, plate, well, site, region):
-        for gal in self._hdf.iterEventGallery(plate, well, site, region,
+        for gal, cnt in self._hdf.iterEventGallery(plate, well, site, region,
                                               size=self.GSIZE):
-            self.addItem(gal)
+            self.addItem(gal, cnt)
             QtGui.QApplication.processEvents()
 
     def clear(self):
@@ -112,8 +112,12 @@ class AfGraphicsView(MouseWheelView):
         self.scene().clear()
         self._grid.reset()
 
-    def addItem(self, gallery):
-        pitem = CellGraphicsItem()
-        pitem.setImage(array2qimage(gallery))
-        pitem.setPos(*self._grid.newPos(pitem))
-        self.scene().addItem(pitem)
+    def addItem(self, gallery, cnt=None):
+
+        citem = CellGraphicsItem()
+        citem.setImage(array2qimage(gallery))
+        if cnt is not None:
+            citem.setContour(cnt)
+
+        citem.setPos(*self._grid.newPos(citem))
+        self.scene().addItem(citem)
