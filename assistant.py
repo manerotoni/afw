@@ -1,8 +1,11 @@
+#!/usr/bin/env Python
+
 """
-tileview.py
+assistant.py
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
+__licence__ ='GPL'
 
 import sys
 import argparse
