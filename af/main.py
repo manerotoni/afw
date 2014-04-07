@@ -11,7 +11,6 @@ from os.path import splitext, basename, expanduser
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtGui import QFileDialog
-# from PyQt4 import QtCore
 
 from af.graphicsview import AfGraphicsView
 
@@ -26,15 +25,33 @@ class AfMainWindow(QtGui.QMainWindow):
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("AfMainWindow")
 
-        self.tileview = AfGraphicsView(parent=self)
+        self.galSize = QtGui.QSpinBox(self)
+        self.galSize.setPrefix("gallery size: ")
+        self.galSize.setRange(0, 256)
+        self.galSize.setValue(75)
+
+        self.nItems = QtGui.QSpinBox(self)
+        self.nItems.setPrefix("number items: ")
+        self.nItems.setRange(0, 1e9)
+        self.nItems.setSingleStep(50)
+        self.nItems.setValue(1000)
+
+        self.reloadBtn = QtGui.QPushButton("reload", self)
+        self.reloadBtn.clicked.connect(self.loadItems)
+        self.tileview = AfGraphicsView(parent=self, gsize=self.galSize.value())
+
         self.setupToolbar()
         self.setCentralWidget(self.tileview)
+        self.setupProgressBar()
+
+        self.tileview.itemLoaded.connect(self.progressbar.setValue)
         self.show()
 
         if file_ is not None:
             self.openFile(file_)
             self.loadItems()
 
+        self.galSize.valueChanged.connect(self.tileview.updateRaster)
         self.plate.activated.connect(self.loadItems)
         self.well.activated.connect(self.loadItems)
         self.site.activated.connect(self.loadItems)
@@ -46,13 +63,23 @@ class AfMainWindow(QtGui.QMainWindow):
         except AttributeError:
             pass
 
+    def setupProgressBar(self):
+        self.progressbar = QtGui.QProgressBar(self)
+        frame = QtGui.QFrame(self)
+        vbox = QtGui.QVBoxLayout(frame)
+        vbox.addWidget(self.progressbar)
+        vbox.setContentsMargins(0, 0, 0, 0)
+        self.statusBar().addPermanentWidget(frame)
+
     def setupToolbar(self):
-        toolbar = QtGui.QToolBar(self)
         actionOpen = QtGui.QAction(
             QtGui.QIcon.fromTheme("document-open"), "open", self)
         actionOpen.triggered.connect(self.onFileOpen)
-        toolbar.addAction(actionOpen)
-        toolbar.addSeparator()
+        self.toolBar.addAction(actionOpen)
+        self.toolBar.addSeparator()
+        self.toolBar.addWidget(self.galSize)
+        self.toolBar.addWidget(self.nItems)
+        self.toolBar.addWidget(self.reloadBtn)
 
         self.plate = QtGui.QComboBox(self)
         self.well = QtGui.QComboBox(self)
@@ -65,12 +92,10 @@ class AfMainWindow(QtGui.QMainWindow):
         self.site.setSizeAdjustPolicy(policy)
         self.region.setSizeAdjustPolicy(policy)
 
-        toolbar.addWidget(self.plate)
-        toolbar.addWidget(self.well)
-        toolbar.addWidget(self.site)
-        toolbar.addWidget(self.region)
-
-        self.addToolBar(toolbar)
+        self.navToolBar.addWidget(self.plate)
+        self.navToolBar.addWidget(self.well)
+        self.navToolBar.addWidget(self.site)
+        self.navToolBar.addWidget(self.region)
 
     def onFileOpen(self):
 
@@ -80,7 +105,7 @@ class AfMainWindow(QtGui.QMainWindow):
 
         if bool(file_):
             self._lastdir = basename(file_)
-            self.loadFromFile(file_)
+            self.openFile(file_)
 
     def openFile(self, file_):
         try:
@@ -88,7 +113,7 @@ class AfMainWindow(QtGui.QMainWindow):
         except:
             self.statusBar().showMessage("Error loading file %s" %file_)
         else:
-            self.statusBar().showMessage(file_)
+            self.statusBar().showMessage(basename(file_))
 
     @property
     def coordinate(self):
@@ -98,5 +123,9 @@ class AfMainWindow(QtGui.QMainWindow):
                 "region": self.region.currentText()}
 
     def loadItems(self):
+
+        self.progressbar.setRange(0, self.nItems.value())
         self.tileview.clear()
-        self.tileview.loadItems(**self.coordinate)
+        self.tileview.loadItems(size=self.galSize.value(),
+                                nitems=self.nItems.value(),
+                                **self.coordinate)
