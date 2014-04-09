@@ -13,7 +13,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtGui import QFileDialog
 
-from af.graphicsview import AfGraphicsView
+from af.gui.graphicsview import AfGraphicsView
 from af.hdfio import HdfCoord
 from af.loader import AfLoader, AfLoaderThread
 

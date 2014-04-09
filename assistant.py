@@ -15,7 +15,7 @@ sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
 
 from PyQt4 import QtGui
-from af.main import AfMainWindow
+from af.gui import AfMainWindow
 
 
 if __name__ == '__main__':

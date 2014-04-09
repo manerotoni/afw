@@ -10,8 +10,8 @@ __all__ = ("AfGraphicsScene", )
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from af.cellitem import Colors
-from af.cellitem import PainterPathItem
+from af.gui.cellitem import Colors
+from af.gui.cellitem import PainterPathItem
 
 
 class AfGraphicsScene(QtGui.QGraphicsScene):

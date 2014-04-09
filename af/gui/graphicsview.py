@@ -7,15 +7,13 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __all__ = ("AfGraphicsView", )
 
 import math
-import numpy as np
 from qimage2ndarray import array2qimage
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
 
 from af.itemgrid import ItemGrid
-from af.cellitem import CellGraphicsItem
-from af.graphicsscene import AfGraphicsScene
-from af.hdfio import HdfReader, HdfCoord
+from af.gui.cellitem import CellGraphicsItem
+from af.gui.graphicsscene import AfGraphicsScene
 
 
 class MouseWheelView(QtGui.QGraphicsView):
@@ -100,18 +98,6 @@ class AfGraphicsView(MouseWheelView):
     def wheelEvent(self, event):
         super(AfGraphicsView, self).wheelEvent(event)
         # self.reorder()
-
-    def openFile(self, file_):
-        self._hdf = HdfReader(file_, "r", cached=True)
-
-        coord = dict()
-        p = self.parent()
-        p.plate.addItems(self._hdf.plateNames())
-        coord["plate"] = p.plate.currentText()
-        p.well.addItems(self._hdf.wellNames(coord))
-        coord["well"] = p.well.currentText()
-        p.site.addItems(self._hdf.siteNames(coord))
-        p.region.addItems(self._hdf.regionNames())
 
     def clear(self):
         self._abort = True

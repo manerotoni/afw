@@ -40,11 +40,9 @@ class AfLoaderThread(QtCore.QThread):
             self._worker.moveToThread(QtGui.QApplication.instance().thread())
 
 
-
 class AfLoader(QtCore.QObject):
 
     PYDELAY = 10 # ms
-
 
     itemLoaded = QtCore.pyqtSignal("PyQt_PyObject")
     progressUpdate = QtCore.pyqtSignal(int)
@@ -114,7 +112,6 @@ class AfLoader(QtCore.QObject):
         nf = self._h5f.numberItems(self._coordinate)
         indices = np.random.randint(0, nf, self._nitems)
         for i, idx in enumerate(indices):
-            print i
             if self._aborted:
                 break
             item = self._h5f.loadItem(idx, self._coordinate, self._size)
