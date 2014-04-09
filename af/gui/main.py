@@ -158,9 +158,7 @@ class AfMainWindow(QtGui.QMainWindow):
 
         self.tileview.clear()
         self.tileview.updateRaster(self.galSize.value())
-        self.tileview.setNColumns(
-            math.floor(self.size().width()/self.tileview.gridSpan())-1)
-
+        self.tileview.updateNColumns(self.size().width())
 
         self.progressbar.setRange(0, self.nItems.value())
         self.loader.setNumberItems(self.nItems.value())

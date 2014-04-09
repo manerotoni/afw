@@ -78,8 +78,9 @@ class AfGraphicsView(MouseWheelView):
         scene.setBackgroundBrush(QtCore.Qt.darkGray)
         self.setScene(scene)
 
-    def setNColumns(self, ncols):
-        self._grid.ncols = ncols
+    def updateNColumns(self, width):
+        self._grid.ncols = math.floor(
+            width/(self.gridSpan()*self.transform().m11())-1)
 
     def updateRaster(self, gsize):
         self.gsize = gsize
