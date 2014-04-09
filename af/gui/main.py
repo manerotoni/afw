@@ -5,7 +5,7 @@ main.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-
+import math
 from os.path import splitext, basename, expanduser
 
 from PyQt4 import uic
@@ -62,11 +62,11 @@ class AfMainWindow(QtGui.QMainWindow):
             self.openFile(file_)
             self.loadItems()
 
-        self.galSize.valueChanged.connect(self.tileview.updateRaster)
         self.plate.activated.connect(self.updateLoader)
         self.well.activated.connect(self.updateLoader)
         self.site.activated.connect(self.updateLoader)
         self.region.activated.connect(self.updateLoader)
+
 
     def closeEvent(self, event):
         try:
@@ -155,7 +155,13 @@ class AfMainWindow(QtGui.QMainWindow):
 
         self.abort.emit()
         self.loaderThread.wait()
+
         self.tileview.clear()
+        self.tileview.updateRaster(self.galSize.value())
+        self.tileview.setNColumns(
+            math.floor(self.size().width()/self.tileview.gridSpan())-1)
+
+
         self.progressbar.setRange(0, self.nItems.value())
         self.loader.setNumberItems(self.nItems.value())
         self.loader.setGallerySize(self.galSize.value())

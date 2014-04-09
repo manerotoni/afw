@@ -66,23 +66,27 @@ class MouseWheelView(QtGui.QGraphicsView):
 
 class AfGraphicsView(MouseWheelView):
 
-    NCOLS = 15
     itemLoaded = QtCore.pyqtSignal(int)
 
     def __init__(self, parent, gsize, *args, **kw):
         super(AfGraphicsView, self).__init__(parent, *args, **kw)
         self.gsize = gsize
-        self._grid = ItemGrid(self.NCOLS,
-                              self.gsize+CellGraphicsItem.BOUNDARY)
+        self._grid = ItemGrid(self.gsize+CellGraphicsItem.BOUNDARY)
         self._hdf = None
 
         scene = AfGraphicsScene()
         scene.setBackgroundBrush(QtCore.Qt.darkGray)
         self.setScene(scene)
 
+    def setNColumns(self, ncols):
+        self._grid.ncols = ncols
+
     def updateRaster(self, gsize):
         self.gsize = gsize
         self._grid.colwidth = self.gsize + CellGraphicsItem.BOUNDARY
+
+    def gridSpan(self):
+        return self.gsize + CellGraphicsItem.BOUNDARY
 
     def reorder(self):
         scaled_colwidth = self.transform().m11()*self._grid.colwidth
