@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(\
         description='Test script for tiled graphicview widget')
-    parser.add_argument('file', help='hdf file to load')
+    parser.add_argument('--file', '-f', help='hdf file to load', default=None)
 
 
     args = parser.parse_args()

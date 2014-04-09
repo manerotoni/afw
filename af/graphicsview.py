@@ -30,6 +30,7 @@ class MouseWheelView(QtGui.QGraphicsView):
         self.setDragMode(self.NoDrag)
         self.setTransformationAnchor(self.AnchorUnderMouse)
         self.setResizeAnchor(self.NoAnchor)
+        self.setAlignment(QtCore.Qt.AlignJustify)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
@@ -90,9 +91,7 @@ class AfGraphicsView(MouseWheelView):
         col_count = math.floor(self.size().width()%scaled_colwidth)
         if self._grid.colCount() > col_count:
             self._grid.reorder(self.size().width()/self.transform().m11())
-            # slow according to qt-doc
-            ibr = self.scene().itemsBoundingRect()
-            self.scene().setSceneRect(ibr)
+            self.scene().setSceneRect(self._grid.rect(5.0))
 
     def resizeEvent(self, event):
         super(AfGraphicsView, self).resizeEvent(event)
@@ -114,33 +113,18 @@ class AfGraphicsView(MouseWheelView):
         p.site.addItems(self._hdf.siteNames(coord))
         p.region.addItems(self._hdf.regionNames())
 
-    def loadItems(self, plate, well, site, region, size, nitems):
-        assert isinstance(size, int)
-        assert isinstance(nitems, int)
-
-        coord = HdfCoord(plate, well, site, region)
-        ftr_names = self._hdf.featureNames(region)
-        nf = self._hdf.numberItems(coord)
-
-        indices = np.random.randint(0, nf, nitems)
-        for i, idx in enumerate(indices):
-            item = self._hdf.loadItem(idx, coord, size)
-            self.addItem(item.image, item.contour)
-            self.itemLoaded.emit(i+1)
-            QtGui.QApplication.processEvents()
-
     def clear(self):
         self._abort = True
         self.scene().clear()
         self.scene().setSceneRect(QtCore.QRectF())
         self._grid.reset()
 
-    def addItem(self, gallery, cnt=None):
-
+    def addItem(self, item):
         citem = CellGraphicsItem()
-        citem.setImage(array2qimage(gallery))
-        if cnt is not None:
-            citem.setContour(cnt)
+        citem.setImage(array2qimage(item.image))
+        if item.contour is not None:
+            citem.setContour(item.contour)
 
         citem.setPos(*self._grid.newPos(citem))
         self.scene().addItem(citem)
+        self.scene().setSceneRect(self._grid.rect(5.0))

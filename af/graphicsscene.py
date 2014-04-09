@@ -75,3 +75,9 @@ class AfGraphicsScene(QtGui.QGraphicsScene):
             self._selector = None
 
         super(AfGraphicsScene, self).mouseReleaseEvent(event)
+
+    def optimizeSceneRect(self):
+        """Set the scene rect to the smallest possibe rect that contains
+        all items."""
+        # slow according to qt-doc
+        self.setSceneRect(self.itemsBoundingRect())

@@ -10,25 +10,33 @@ from os.path import splitext, basename, expanduser
 
 from PyQt4 import uic
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4.QtGui import QFileDialog
 
 from af.graphicsview import AfGraphicsView
+from af.hdfio import HdfCoord
+from af.loader import AfLoader, AfLoaderThread
 
 
 class AfMainWindow(QtGui.QMainWindow):
 
+    coordUpdated = QtCore.pyqtSignal("PyQt_PyObject")
+    abort = QtCore.pyqtSignal()
+
     def __init__(self, file_=None, *args, **kw):
         super(AfMainWindow, self).__init__(*args, **kw)
-        self._lastdir = expanduser("~")
-        self._hdf = None
-
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("AfMainWindow")
+        self.show()
+
+        self.loaderThread = AfLoaderThread(self)
+        self.loader = AfLoader()
+        self._lastdir = expanduser("~")
 
         self.galSize = QtGui.QSpinBox(self)
         self.galSize.setPrefix("gallery size: ")
         self.galSize.setRange(0, 256)
-        self.galSize.setValue(75)
+        self.galSize.setValue(65)
 
         self.nItems = QtGui.QSpinBox(self)
         self.nItems.setPrefix("number items: ")
@@ -44,22 +52,27 @@ class AfMainWindow(QtGui.QMainWindow):
         self.setCentralWidget(self.tileview)
         self.setupProgressBar()
 
-        self.tileview.itemLoaded.connect(self.progressbar.setValue)
-        self.show()
+        self.loader.progressUpdate.connect(self.progressbar.setValue)
+        self.loader.fileOpened.connect(self.updateNavToolbar)
+        self.loader.itemLoaded.connect(self.tileview.addItem)
+        self.abort.connect(self.loader.abort)
+        self.coordUpdated.connect(self.loader.setCoordinate)
 
         if file_ is not None:
             self.openFile(file_)
             self.loadItems()
 
         self.galSize.valueChanged.connect(self.tileview.updateRaster)
-        self.plate.activated.connect(self.loadItems)
-        self.well.activated.connect(self.loadItems)
-        self.site.activated.connect(self.loadItems)
-        self.region.activated.connect(self.loadItems)
+        self.plate.activated.connect(self.updateLoader)
+        self.well.activated.connect(self.updateLoader)
+        self.site.activated.connect(self.updateLoader)
+        self.region.activated.connect(self.updateLoader)
 
     def closeEvent(self, event):
         try:
-            self._hdf.close()
+            self.abort.emit()
+            self.loaderThread.wait()
+            self.loader.close()
         except AttributeError:
             pass
 
@@ -97,6 +110,18 @@ class AfMainWindow(QtGui.QMainWindow):
         self.navToolBar.addWidget(self.site)
         self.navToolBar.addWidget(self.region)
 
+    def updateNavToolbar(self, coords):
+        self.plate.clear()
+        self.well.clear()
+        self.site.clear()
+        self.region.clear()
+        self.plate.addItems(coords['plate'])
+        self.well.addItems(coords['well'])
+        self.site.addItems(coords['site'])
+        self.region.addItems(coords['region'])
+
+        self.coordUpdated.emit(self.coordinate)
+
     def onFileOpen(self):
 
         file_ = QFileDialog.getOpenFileName(
@@ -108,24 +133,29 @@ class AfMainWindow(QtGui.QMainWindow):
             self.openFile(file_)
 
     def openFile(self, file_):
+
         try:
-            self.tileview.openFile(file_)
-        except:
-            self.statusBar().showMessage("Error loading file %s" %file_)
+            self.loader.openFile(file_)
+        except Exception as e:
+            self.statusBar().showMessage(str(e))
         else:
             self.statusBar().showMessage(basename(file_))
 
     @property
     def coordinate(self):
-        return {"plate": self.plate.currentText(),
-                "well": self.well.currentText(),
-                "site": self.site.currentText(),
-                "region": self.region.currentText()}
+        return HdfCoord(self.plate.currentText(),
+                        self.well.currentText(),
+                        self.site.currentText(),
+                        self.region.currentText())
+
+    def updateLoader(self):
+        self.coordUpdated.emit(self.coordinate)
 
     def loadItems(self):
 
-        self.progressbar.setRange(0, self.nItems.value())
+        self.abort.emit()
         self.tileview.clear()
-        self.tileview.loadItems(size=self.galSize.value(),
-                                nitems=self.nItems.value(),
-                                **self.coordinate)
+        self.progressbar.setRange(0, self.nItems.value())
+        self.loader.setNumberItems(self.nItems.value())
+        self.loader.setGallerySize(self.galSize.value())
+        self.loaderThread.start(self.loader)

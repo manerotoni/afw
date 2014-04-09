@@ -84,7 +84,6 @@ class HdfReader(cellh5.CH5File):
         gal = site.get_gallery_image(index, coord['region'], size)
         cnt = site.get_crack_contour(index, coord['region'], size=size)
         ftr = self._hdf[path][index]
-
         return HdfItem(gal, cnt[0], ftr)
 
     def iterEventGallery(self, plate, well, site, region, size=50):
