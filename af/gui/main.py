@@ -42,7 +42,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.nItems.setPrefix("number items: ")
         self.nItems.setRange(0, 1e9)
         self.nItems.setSingleStep(50)
-        self.nItems.setValue(1000)
+        self.nItems.setValue(250)
 
         self.reloadBtn = QtGui.QPushButton("reload", self)
         self.reloadBtn.clicked.connect(self.loadItems)
@@ -154,6 +154,7 @@ class AfMainWindow(QtGui.QMainWindow):
     def loadItems(self):
 
         self.abort.emit()
+        self.loaderThread.wait()
         self.tileview.clear()
         self.progressbar.setRange(0, self.nItems.value())
         self.loader.setNumberItems(self.nItems.value())

@@ -88,7 +88,8 @@ class AfGraphicsView(MouseWheelView):
         scaled_colwidth = self.transform().m11()*self._grid.colwidth
         col_count = math.floor(self.size().width()%scaled_colwidth)
         if self._grid.colCount() > col_count:
-            self._grid.reorder(self.size().width()/self.transform().m11())
+            width = self.size().width()/self.transform().m11()
+            self._grid.reorder(width - scaled_colwidth)
             self.scene().setSceneRect(self._grid.rect(5.0))
 
     def resizeEvent(self, event):
