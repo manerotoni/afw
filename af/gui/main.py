@@ -5,7 +5,7 @@ main.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-import math
+
 from os.path import splitext, basename, expanduser
 
 from PyQt4 import uic
@@ -14,7 +14,7 @@ from PyQt4 import QtCore
 from PyQt4.QtGui import QFileDialog
 
 from af.gui.graphicsview import AfGraphicsView
-from af.hdfio import HdfCoord
+from af.gui.toolbars import NavToolBar, ViewToolBar
 from af.loader import AfLoader, AfLoaderThread
 
 
@@ -33,40 +33,19 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader = AfLoader()
         self._lastdir = expanduser("~")
 
-        self.galSize = QtGui.QSpinBox(self)
-        self.galSize.setPrefix("gallery size: ")
-        self.galSize.setRange(0, 256)
-        self.galSize.setValue(65)
-
-        self.nItems = QtGui.QSpinBox(self)
-        self.nItems.setPrefix("number items: ")
-        self.nItems.setRange(0, 1e9)
-        self.nItems.setSingleStep(50)
-        self.nItems.setValue(250)
-
-        self.reloadBtn = QtGui.QPushButton("reload", self)
-        self.reloadBtn.clicked.connect(self.loadItems)
-        self.tileview = AfGraphicsView(parent=self, gsize=self.galSize.value())
-
         self.setupToolbar()
+        self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
         self.setCentralWidget(self.tileview)
         self.setupProgressBar()
 
         self.loader.progressUpdate.connect(self.progressbar.setValue)
-        self.loader.fileOpened.connect(self.updateNavToolbar)
+        self.loader.fileOpened.connect(self.navToolBar.updateNavToolbar)
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
-        self.coordUpdated.connect(self.loader.setCoordinate)
 
         if file_ is not None:
             self.openFile(file_)
             self.loadItems()
-
-        self.plate.activated.connect(self.updateLoader)
-        self.well.activated.connect(self.updateLoader)
-        self.site.activated.connect(self.updateLoader)
-        self.region.activated.connect(self.updateLoader)
-
 
     def closeEvent(self, event):
         try:
@@ -85,42 +64,14 @@ class AfMainWindow(QtGui.QMainWindow):
         self.statusBar().addPermanentWidget(frame)
 
     def setupToolbar(self):
-        actionOpen = QtGui.QAction(
-            QtGui.QIcon.fromTheme("document-open"), "open", self)
-        actionOpen.triggered.connect(self.onFileOpen)
-        self.toolBar.addAction(actionOpen)
-        self.toolBar.addSeparator()
-        self.toolBar.addWidget(self.galSize)
-        self.toolBar.addWidget(self.nItems)
-        self.toolBar.addWidget(self.reloadBtn)
+        self.toolBar = ViewToolBar(self)
+        self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
+        self.toolBar.actionOpen.triggered.connect(self.onFileOpen)
+        self.toolBar.reloadBtn.clicked.connect(self.loadItems)
 
-        self.plate = QtGui.QComboBox(self)
-        self.well = QtGui.QComboBox(self)
-        self.site = QtGui.QComboBox(self)
-        self.region = QtGui.QComboBox(self)
-
-        policy = QtGui.QComboBox.AdjustToContents
-        self.plate.setSizeAdjustPolicy(policy)
-        self.well.setSizeAdjustPolicy(policy)
-        self.site.setSizeAdjustPolicy(policy)
-        self.region.setSizeAdjustPolicy(policy)
-
-        self.navToolBar.addWidget(self.plate)
-        self.navToolBar.addWidget(self.well)
-        self.navToolBar.addWidget(self.site)
-        self.navToolBar.addWidget(self.region)
-
-    def updateNavToolbar(self, coords):
-        self.plate.clear()
-        self.well.clear()
-        self.site.clear()
-        self.region.clear()
-        self.plate.addItems(coords['plate'])
-        self.well.addItems(coords['well'])
-        self.site.addItems(coords['site'])
-        self.region.addItems(coords['region'])
-
-        self.coordUpdated.emit(self.coordinate)
+        self.navToolBar = NavToolBar(self)
+        self.addToolBar(QtCore.Qt.BottomToolBarArea, self.navToolBar)
+        self.navToolBar.coordUpdated.connect(self.loader.setCoordinate)
 
     def onFileOpen(self):
 
@@ -141,26 +92,16 @@ class AfMainWindow(QtGui.QMainWindow):
         else:
             self.statusBar().showMessage(basename(file_))
 
-    @property
-    def coordinate(self):
-        return HdfCoord(self.plate.currentText(),
-                        self.well.currentText(),
-                        self.site.currentText(),
-                        self.region.currentText())
-
-    def updateLoader(self):
-        self.coordUpdated.emit(self.coordinate)
-
     def loadItems(self):
 
         self.abort.emit()
         self.loaderThread.wait()
 
         self.tileview.clear()
-        self.tileview.updateRaster(self.galSize.value())
+        self.tileview.updateRaster(self.toolBar.galsize)
         self.tileview.updateNColumns(self.size().width())
 
-        self.progressbar.setRange(0, self.nItems.value())
-        self.loader.setNumberItems(self.nItems.value())
-        self.loader.setGallerySize(self.galSize.value())
+        self.progressbar.setRange(0, self.toolBar.nitems)
+        self.loader.setNumberItems(self.toolBar.nitems)
+        self.loader.setGallerySize(self.toolBar.galsize)
         self.loaderThread.start(self.loader)
