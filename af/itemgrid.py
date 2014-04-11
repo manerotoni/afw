@@ -8,7 +8,6 @@ __licence__ = 'GPL'
 __all__ = 'ItemGrid'
 
 import math
-from collections import OrderedDict
 from PyQt4 import QtCore
 
 
@@ -18,7 +17,7 @@ class ItemGrid(QtCore.QObject):
         super(ItemGrid, self).__init__(*args, **kw)
         self.ncols = ncols
         self.colwidth = colwidth
-        self._positions = OrderedDict()
+        self._positions = dict()
         self._first_pos = (0, 0)
         self._rect = QtCore.QRectF()
         self._rect.setX(0.0)
@@ -29,7 +28,10 @@ class ItemGrid(QtCore.QObject):
 
     def reorder(self, width):
         self.ncols = math.floor(width/self.colwidth)
-        for i, item in enumerate(self._positions.keys()):
+
+        skeys = sorted(self._positions.keys(), key=lambda p: p.sortkey)
+
+        for i, item in enumerate(skeys):
             irow = math.floor(i/self.ncols)
             icol = i % self.ncols
             pos =  (icol*self.colwidth, irow*self.colwidth)
@@ -55,6 +57,7 @@ class ItemGrid(QtCore.QObject):
 
     def newPos(self, item):
         nitems = len(self._positions)
+        item.sortkey = nitems
         irow = math.floor(nitems/self.ncols)
         icol = nitems % self.ncols
 

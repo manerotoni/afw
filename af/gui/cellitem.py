@@ -38,6 +38,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def __init__(self, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
         self.setFlag(self.ItemIsSelectable)
+        self.sortkey = None
 
     def setImage(self, image):
         item = QtGui.QGraphicsPixmapItem()
