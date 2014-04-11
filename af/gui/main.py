@@ -15,6 +15,7 @@ from PyQt4.QtGui import QFileDialog
 
 from af.gui.graphicsview import AfGraphicsView
 from af.gui.toolbars import NavToolBar, ViewToolBar
+from af.gui.sortwidget import AfSortWidget
 from af.loader import AfLoader, AfLoaderThread
 
 
@@ -34,9 +35,9 @@ class AfMainWindow(QtGui.QMainWindow):
         self._lastdir = expanduser("~")
 
         self.setupToolbar()
+        self.setupDock()
         self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
         self.setCentralWidget(self.tileview)
-#        self.centralLayout.addWidget(self.tileview)
         self.setupProgressBar()
 
         self.loader.progressUpdate.connect(self.progressbar.setValue)
@@ -56,6 +57,11 @@ class AfMainWindow(QtGui.QMainWindow):
             self.loader.close()
         except AttributeError:
             pass
+
+    def setupDock(self):
+        self.sorting = AfSortWidget(self)
+        self.toolBox.addItem(self.sorting, "sorting")
+
 
     def setupProgressBar(self):
         self.progressbar = QtGui.QProgressBar(self)
