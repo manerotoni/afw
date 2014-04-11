@@ -81,7 +81,6 @@ class ViewToolBar(QtGui.QToolBar):
         self.nItems.setValue(250)
 
         self.reloadBtn = QtGui.QPushButton("reload", self)
-        self.sortBtn = QtGui.QPushButton("sort", self)
 
         self.actionOpen = QtGui.QAction(
             QtGui.QIcon.fromTheme("document-open"), "open", self)

@@ -32,6 +32,9 @@ class MouseWheelView(QtGui.QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
+        self.setSizePolicy(QtGui.QSizePolicy.Expanding,
+                           QtGui.QSizePolicy.Expanding)
+
         self.setRenderHints(QtGui.QPainter.Antialiasing |
                             QtGui.QPainter.SmoothPixmapTransform)
         self.setViewportUpdateMode(self.SmartViewportUpdate)

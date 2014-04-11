@@ -31,6 +31,7 @@ class ItemGrid(QtCore.QObject):
 
         skeys = sorted(self._positions.keys(), key=lambda p: p.sortkey)
 
+        irow = 0
         for i, item in enumerate(skeys):
             irow = math.floor(i/self.ncols)
             icol = i % self.ncols

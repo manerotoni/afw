@@ -109,6 +109,9 @@ class AfLoader(QtCore.QObject):
 
     def loadItems(self):
 
+        if self._h5f is None:
+            return
+
         nf = self._h5f.numberItems(self._coordinate)
         indices = np.random.randint(0, nf, self._nitems)
         for i, idx in enumerate(indices):

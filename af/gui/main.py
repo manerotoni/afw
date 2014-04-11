@@ -27,7 +27,7 @@ class AfMainWindow(QtGui.QMainWindow):
         super(AfMainWindow, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("AfMainWindow")
-        self.show()
+        self.sorting.adjustSize()
 
         self.loaderThread = AfLoaderThread(self)
         self.loader = AfLoader()
@@ -36,6 +36,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.setupToolbar()
         self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
         self.setCentralWidget(self.tileview)
+#        self.centralLayout.addWidget(self.tileview)
         self.setupProgressBar()
 
         self.loader.progressUpdate.connect(self.progressbar.setValue)
@@ -43,6 +44,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
 
+        self.show()
         if file_ is not None:
             self.openFile(file_)
             self.loadItems()
@@ -99,7 +101,7 @@ class AfMainWindow(QtGui.QMainWindow):
 
         self.tileview.clear()
         self.tileview.updateRaster(self.toolBar.galsize)
-        self.tileview.updateNColumns(self.size().width())
+        self.tileview.updateNColumns(self.tileview.size().width())
 
         self.progressbar.setRange(0, self.toolBar.nitems)
         self.loader.setNumberItems(self.toolBar.nitems)
