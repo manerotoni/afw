@@ -59,7 +59,8 @@ class MouseWheelView(QtGui.QGraphicsView):
 
     def mousePressEvent(self, event):
 
-        if event.modifiers() != QtCore.Qt.ControlModifier:
+        if event.modifiers() != QtCore.Qt.ControlModifier and \
+                event.buttons() == QtCore.Qt.LeftButton:
             self.setDragMode(self.ScrollHandDrag)
             QtGui.QApplication.setOverrideCursor(
                 QtGui.QCursor(Qt.ClosedHandCursor))
@@ -80,6 +81,25 @@ class AfGraphicsView(MouseWheelView):
         scene = AfGraphicsScene()
         scene.setBackgroundBrush(QtCore.Qt.darkGray)
         self.setScene(scene)
+        self.createActions()
+        self.createContextMenu()
+
+    def contextMenuEvent(self, event):
+        self.context_menu.exec_(event.globalPos())
+
+    def createContextMenu(self):
+        self.context_menu = QtGui.QMenu(self)
+        self.context_menu.addAction(self.actionReorder)
+        self.context_menu.addAction(self.actionAdd)
+
+    def createActions(self):
+        self.actionReorder = QtGui.QAction(
+            "&refresh", self, triggered=lambda: self.reorder(True))
+        self.actionAdd = QtGui.QAction(
+            "&add to panel", self, triggered=self.addToSidepanel)
+
+    def addToSidepanel(self):
+        pass
 
     def updateNColumns(self, width):
         self._grid.ncols = math.floor(
@@ -92,10 +112,11 @@ class AfGraphicsView(MouseWheelView):
     def gridSpan(self):
         return self.gsize + CellGraphicsItem.BOUNDARY
 
-    def reorder(self):
+    def reorder(self, force_update=False):
         scaled_colwidth = self.transform().m11()*self._grid.colwidth
         col_count = math.floor(self.size().width()%scaled_colwidth)
-        if self._grid.colCount() > col_count:
+
+        if self._grid.colCount() > col_count or force_update:
             width = self.size().width()/self.transform().m11()
             self._grid.reorder(width - scaled_colwidth)
             self.scene().setSceneRect(self._grid.rect(5.0))
