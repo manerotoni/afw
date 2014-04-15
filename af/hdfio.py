@@ -23,12 +23,17 @@ class HdfCoord(dict):
 
 class HdfItem(object):
 
-    __slots__ = ['image', 'contour', 'features']
+    __slots__ = ['image', 'contour', 'features', 'frame', 'objid']
 
-    def __init__(self, image, contour, features):
+    def __init__(self, image, contour, features, frame=None, objid=None):
         self.image = image
         self.contour = contour
         self.features = features
+        self.frame = frame
+        self.objid = objid
+
+    def __str__(self):
+        return "%d-%d" %(self.frame, self.objid)
 
 
 class HdfReader(cellh5.CH5File):
@@ -40,7 +45,8 @@ class HdfReader(cellh5.CH5File):
     _well_key =  _plate_key + "/experiment/%(well)s"
     _site_key = _well_key + "/position/%(site)s"
     _features_key = _site_key + "/feature/%(region)s/object_features"
-
+    _time_key = _site_key + "/object/%(region)s"
+    _timelapse_key = _site_key + "/image/time_lapse"
 
     def __init__(self, *args, **kw):
         super(HdfReader, self).__init__(*args, **kw)
@@ -67,7 +73,7 @@ class HdfReader(cellh5.CH5File):
         return self._hdf[self._features_def_key].keys()
 
     def featureNames(self, region):
-        path = "%s/%s/object_features" %(self._features_def_key, region)
+        path = "%s/%s/objcect_features" %(self._features_def_key, region)
         return self._hdf[path]["name"]
 
     def numberItems(self, coordinate):
@@ -78,14 +84,6 @@ class HdfReader(cellh5.CH5File):
         site = self._open_position(plate, well, site)
         return site.get_events().flatten()
 
-    def loadItem(self, index, coord, size=50):
-        path = self._features_key %coord
-        site = self._open_position(coord['plate'], coord['well'], coord['site'])
-        gal = site.get_gallery_image(index, coord['region'], size)
-        cnt = site.get_crack_contour(index, coord['region'], size=size)
-        ftr = self._hdf[path][index]
-        return HdfItem(gal, cnt[0], ftr)
-
     def iterEventGallery(self, plate, well, site, region, size=50):
         site = self._open_position(plate, well, site)
         events = site.get_events().flatten()
@@ -94,3 +92,17 @@ class HdfReader(cellh5.CH5File):
             gal = site.get_gallery_image(event, region, size)
             cont = site.get_crack_contour(event, region, size=size)
             yield gal, cont[0]
+
+    def loadItem(self, index, coord, size=50):
+        path = self._features_key %coord
+        site = self._open_position(coord['plate'], coord['well'], coord['site'])
+        gal = site.get_gallery_image(index, coord['region'], size)
+        cnt = site.get_crack_contour(index, coord['region'], size=size)
+        ftr = self._hdf[path][index]
+
+        # inefficient!
+        path = self._time_key %coord
+        fidx, objid =  self._hdf[path][index]
+        frame = self._hdf[self._timelapse_key %coord]["frame"][fidx]
+
+        return HdfItem(gal, cnt[0], ftr, frame, objid)

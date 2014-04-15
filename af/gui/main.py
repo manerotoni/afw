@@ -35,9 +35,9 @@ class AfMainWindow(QtGui.QMainWindow):
         self._lastdir = expanduser("~")
 
         self.setupToolbar()
-        self.setupDock()
         self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
         self.setCentralWidget(self.tileview)
+        self.setupDock()
         self.setupProgressBar()
 
         self.loader.progressUpdate.connect(self.progressbar.setValue)
@@ -59,9 +59,8 @@ class AfMainWindow(QtGui.QMainWindow):
             pass
 
     def setupDock(self):
-        self.sorting = AfSortWidget(self)
+        self.sorting = AfSortWidget(self.tileview)
         self.toolBox.addItem(self.sorting, "sorting")
-
 
     def setupProgressBar(self):
         self.progressbar = QtGui.QProgressBar(self)
@@ -99,6 +98,10 @@ class AfMainWindow(QtGui.QMainWindow):
             self.statusBar().showMessage(str(e))
         else:
             self.statusBar().showMessage(basename(file_))
+
+    def addToToolbox(self):
+        cw = self.toolBox.currentWidget()
+        cw.addItems(self.tileview.selectedItems())
 
     def loadItems(self):
 

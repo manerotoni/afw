@@ -8,8 +8,11 @@ __licence__ = 'GPL'
 __all__ = ("CellGraphicsItem", "PainterPathItem", "Colors")
 
 
+from qimage2ndarray import array2qimage
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+
 
 class Colors(object):
     # selected = QtGui.QColor("#87CEFA")
@@ -35,14 +38,32 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     BOUNDARY = 4.0
 
-    def __init__(self, *args, **kw):
+    def __init__(self, item, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
+
+        self.setImage(array2qimage(item.image))
+
+        self.features = item.features
+        self.frame = item.frame
+        self.objid = item.objid
+
+        if item.contour is not None:
+            self.setContour(item.contour)
+
         self.setFlag(self.ItemIsSelectable)
         self.sortkey = None
 
+    def __str__(self):
+        return "%s-%s" %(self.frame, self.objid)
+
+    @property
+    def pixmap(self):
+        return self._pixmap
+
     def setImage(self, image):
+        self._pixmap = QtGui.QPixmap.fromImage(image)
         item = QtGui.QGraphicsPixmapItem()
-        item.setPixmap(QtGui.QPixmap.fromImage(image))
+        item.setPixmap(self.pixmap)
         item.setPos(self.pos())
         self.addToGroup(item)
 

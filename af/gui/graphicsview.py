@@ -7,7 +7,6 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __all__ = ("AfGraphicsView", )
 
 import math
-from qimage2ndarray import array2qimage
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
 
@@ -96,10 +95,10 @@ class AfGraphicsView(MouseWheelView):
         self.actionReorder = QtGui.QAction(
             "&refresh", self, triggered=lambda: self.reorder(True))
         self.actionAdd = QtGui.QAction(
-            "&add to panel", self, triggered=self.addToSidepanel)
+            "&add to panel", self, triggered=self.parent().addToToolbox)
 
-    def addToSidepanel(self):
-        pass
+    def selectedItems(self):
+        return self.scene().selectedItems()
 
     def updateNColumns(self, width):
         self._grid.ncols = math.floor(
@@ -136,11 +135,7 @@ class AfGraphicsView(MouseWheelView):
         self._grid.reset()
 
     def addItem(self, item):
-        citem = CellGraphicsItem()
-        citem.setImage(array2qimage(item.image))
-        if item.contour is not None:
-            citem.setContour(item.contour)
-
+        citem = CellGraphicsItem(item)
         citem.setPos(*self._grid.newPos(citem))
         self.scene().addItem(citem)
         self.scene().setSceneRect(self._grid.rect(5.0))

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>208</width>
-    <height>711</height>
+    <width>250</width>
+    <height>698</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,9 @@
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>-1</number>
+     </property>
      <item>
       <widget class="QPushButton" name="sortBtn">
        <property name="text">
@@ -27,21 +30,110 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="refItems"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="addBtn">
-       <property name="text">
-        <string>add Selection</string>
+      <widget class="QTreeWidget" name="items">
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+       <property name="indentation">
+        <number>0</number>
+       </property>
+       <property name="rootIsDecorated">
+        <bool>true</bool>
+       </property>
+       <property name="uniformRowHeights">
+        <bool>false</bool>
+       </property>
+       <property name="itemsExpandable">
+        <bool>false</bool>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="animated">
+        <bool>true</bool>
+       </property>
+       <property name="allColumnsShowFocus">
+        <bool>false</bool>
+       </property>
+       <property name="headerHidden">
+        <bool>false</bool>
+       </property>
+       <property name="expandsOnDoubleClick">
+        <bool>false</bool>
+       </property>
+       <attribute name="headerStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>item</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>frame</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>object-id</string>
+        </property>
+       </column>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="clearBtn">
-       <property name="text">
-        <string>clear Selection</string>
+      <layout class="QVBoxLayout" name="vbox2">
+       <property name="spacing">
+        <number>0</number>
        </property>
-      </widget>
+       <item>
+        <layout class="QVBoxLayout" name="vbox1">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="addBtn">
+           <property name="text">
+            <string>add Selection</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="hbox1">
+         <property name="spacing">
+          <number>-1</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="removeBtn">
+           <property name="text">
+            <string>remove</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeAllBtn">
+           <property name="text">
+            <string>remove all</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
