@@ -9,6 +9,7 @@ __all__ = ('AfSortWidget', )
 
 
 from os.path import splitext
+import numpy as np
 
 from PyQt4 import uic
 from PyQt4 import QtGui
@@ -19,6 +20,7 @@ class AfTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def __init__(self, item, *args, **kw):
         super(AfTreeWidgetItem, self).__init__(*args, **kw)
+        self.cellitem = item
         self.setIcon(0, QtGui.QIcon(item.pixmap))
         self.setData(1, QtCore.Qt.DisplayRole, str(item.frame))
         self.setData(2, QtCore.Qt.DisplayRole, str(item.objid))
@@ -53,6 +55,7 @@ class AfSortWidget(AfSideBarWidget):
         self.removeBtn.clicked.connect(self.onRemove)
         self.removeAllBtn.clicked.connect(self.onRemoveAll)
         self.addBtn.clicked.connect(self.onAdd)
+        self.sortBtn.clicked.connect(self.onSort)
 
         for i in xrange(self.items.columnCount()):
             self.items.setColumnWidth(i, 50)
@@ -62,4 +65,22 @@ class AfSortWidget(AfSideBarWidget):
         self.addItems(items)
 
     def onSort(self):
-        pass
+        center = self._meanFromItems()
+
+        all_items = sorted(self.parent().items(), lambda p: p.sortkey)
+
+        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        import pdb; pdb.set_trace()
+
+        print center
+
+    def _meanFromItems(self):
+        """Mean feature vector of the items in the list."""
+        nitems = self.items.topLevelItemCount()
+        nfeatures = self.items.topLevelItem(0).cellitem.features.size
+
+        ftrs = np.empty((nitems, nfeatures))
+        for i in xrange(nitems):
+            ftrs[i, :] = self.items.topLevelItem(i).cellitem.features
+
+        return ftrs.mean(axis=0)

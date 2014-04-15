@@ -26,10 +26,14 @@ class ItemGrid(QtCore.QObject):
     def colCount(self):
         return self.ncols
 
+    def items(self):
+        # unsorted!
+        return self._positions.keys()
+
     def reorder(self, width):
         self.ncols = math.floor(width/self.colwidth)
 
-        skeys = sorted(self._positions.keys(), key=lambda p: p.sortkey)
+        skeys = sorted(self.items, key=lambda p: p.sortkey)
 
         irow = 0
         for i, item in enumerate(skeys):
