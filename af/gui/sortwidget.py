@@ -11,6 +11,9 @@ __all__ = ('AfSortWidget', )
 from os.path import splitext
 import numpy as np
 
+from scipy import stats
+from matplotlib import mlab
+
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -71,17 +74,26 @@ class AfSortWidget(AfSideBarWidget):
         self.addItems(items)
 
     def onSort(self):
-        mu = self._meanFromItems()
 
         all_items = self.parent.items
+        nitems = len(all_items)
+        nfeatures = all_items[0].features.size
+        data = np.empty((nitems, nfeatures))
 
-        distsq = [np.power((item.features[self.reduced_idx]-mu), 2).sum()
-                  for item in all_items]
+        # all featurs of all items
+        for i, item in enumerate(all_items):
+            data[i, :] = item.features
 
-        # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        # import pdb; pdb.set_trace()
+        zs_mean = data.mean(axis=0)
+        zs_std = data.std(axis=0)
+        data_zs = (data - zs_mean)/zs_std
 
-        # dist = np.sqrt(distsq)
+        pca = mlab.PCA(data_zs)
+        data_pca = pca.project(data_zs)
+
+        mu = self._meanFromItems(pca, zs_mean, zs_std)
+        distsq = [np.power((x - mu), 2).sum() for x in data_pca]
+
         dist = np.sqrt(distsq)
 
         for d, item in zip(dist, all_items):
@@ -89,14 +101,16 @@ class AfSortWidget(AfSideBarWidget):
 
         self.startSorting.emit()
 
-    def _meanFromItems(self):
+    def _meanFromItems(self, pca, zs_mean, zs_std):
         """Mean feature vector of the items in the list."""
         nitems = self.items.topLevelItemCount()
-        nfeatures = len(self.reduced_idx)
-        # self.items.topLevelItem(0).cellitem.features.size
+        nfeatures = self.items.topLevelItem(0).cellitem.features.size
 
         ftrs = np.empty((nitems, nfeatures))
         for i in xrange(nitems):
-            ftrs[i, :] = self.items.topLevelItem(i).cellitem.features[self.reduced_idx]
+            ftrs[i, :] = \
+                self.items.topLevelItem(i).cellitem.features
+
+        ftrs = pca.project((ftrs-zs_mean)/zs_std)
 
         return ftrs.mean(axis=0)
