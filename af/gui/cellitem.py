@@ -53,6 +53,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.setFlag(self.ItemIsSelectable)
         self.sortkey = None
 
+    def __cmp__(self, other):
+        return cmp(self.sortkey, other.sortkey)
+
     def __str__(self):
         return "%s-%s" %(self.frame, self.objid)
 

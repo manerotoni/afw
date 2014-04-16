@@ -76,6 +76,7 @@ class AfLoader(QtCore.QObject):
 
         self._h5f = HdfReader(file_, "r", cached=True)
 
+
         # XXX assuming all values have the same subranges
         coord =  dict()
         plates = self._h5f.plateNames()

@@ -46,6 +46,10 @@ class AfSideBarWidget(QtGui.QWidget):
 
 class AfSortWidget(AfSideBarWidget):
 
+    startSorting = QtCore.pyqtSignal()
+
+    reduced_idx = [222, 223, 236]
+
     def __init__(self, parent=None, *args, **kw):
         super(AfSortWidget, self).__init__(parent, *args, **kw)
         # qtmethod does not return the real parent!
@@ -57,6 +61,8 @@ class AfSortWidget(AfSideBarWidget):
         self.addBtn.clicked.connect(self.onAdd)
         self.sortBtn.clicked.connect(self.onSort)
 
+        self.startSorting.connect(lambda: parent.reorder(force_update=True))
+
         for i in xrange(self.items.columnCount()):
             self.items.setColumnWidth(i, 50)
 
@@ -65,22 +71,32 @@ class AfSortWidget(AfSideBarWidget):
         self.addItems(items)
 
     def onSort(self):
-        center = self._meanFromItems()
+        mu = self._meanFromItems()
 
-        all_items = sorted(self.parent().items(), lambda p: p.sortkey)
+        all_items = self.parent.items
 
-        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        import pdb; pdb.set_trace()
+        distsq = [np.power((item.features[self.reduced_idx]-mu), 2).sum()
+                  for item in all_items]
 
-        print center
+        # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        # import pdb; pdb.set_trace()
+
+        # dist = np.sqrt(distsq)
+        dist = np.sqrt(distsq)
+
+        for d, item in zip(dist, all_items):
+            item.sortkey = d
+
+        self.startSorting.emit()
 
     def _meanFromItems(self):
         """Mean feature vector of the items in the list."""
         nitems = self.items.topLevelItemCount()
-        nfeatures = self.items.topLevelItem(0).cellitem.features.size
+        nfeatures = len(self.reduced_idx)
+        # self.items.topLevelItem(0).cellitem.features.size
 
         ftrs = np.empty((nitems, nfeatures))
         for i in xrange(nitems):
-            ftrs[i, :] = self.items.topLevelItem(i).cellitem.features
+            ftrs[i, :] = self.items.topLevelItem(i).cellitem.features[self.reduced_idx]
 
         return ftrs.mean(axis=0)

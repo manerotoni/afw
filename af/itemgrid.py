@@ -9,6 +9,7 @@ __all__ = 'ItemGrid'
 
 import math
 from PyQt4 import QtCore
+from collections import OrderedDict
 
 
 class ItemGrid(QtCore.QObject):
@@ -17,8 +18,7 @@ class ItemGrid(QtCore.QObject):
         super(ItemGrid, self).__init__(*args, **kw)
         self.ncols = ncols
         self.colwidth = colwidth
-        self._positions = dict()
-        self._first_pos = (0, 0)
+        self._positions = OrderedDict()
         self._rect = QtCore.QRectF()
         self._rect.setX(0.0)
         self._rect.setY(0.0)
@@ -26,6 +26,7 @@ class ItemGrid(QtCore.QObject):
     def colCount(self):
         return self.ncols
 
+    @property
     def items(self):
         # unsorted!
         return self._positions.keys()
@@ -33,7 +34,7 @@ class ItemGrid(QtCore.QObject):
     def reorder(self, width):
         self.ncols = math.floor(width/self.colwidth)
 
-        skeys = sorted(self.items, key=lambda p: p.sortkey)
+        skeys = sorted(self.items)
 
         irow = 0
         for i, item in enumerate(skeys):

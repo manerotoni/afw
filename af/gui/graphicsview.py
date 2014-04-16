@@ -83,6 +83,10 @@ class AfGraphicsView(MouseWheelView):
         self.createActions()
         self.createContextMenu()
 
+    @property
+    def items(self):
+        return self._grid.items
+
     def contextMenuEvent(self, event):
         self.context_menu.exec_(event.globalPos())
 
