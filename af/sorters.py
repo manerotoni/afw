@@ -7,7 +7,7 @@ __licence__ = 'GPL'
 
 import numpy as np
 from matplotlib import mlab
-
+from af.mining import filter_nans
 
 class SortFactory(type):
     """Meta class to implement the factory design pattern"""
@@ -55,8 +55,7 @@ class ZScoreSorter(Sorter):
 
     def __init__(self, data, treedata):
 
-        self.data = data
-        self.treedata = treedata
+        self.data, self.treedata = filter_nans(data, treedata)
 
     def __call__(self):
         # z-scoring
@@ -64,34 +63,37 @@ class ZScoreSorter(Sorter):
         zs_std = self.data.std(axis=0)
         data_zs = (self.data - zs_mean)/zs_std
 
+        # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        # import pdb; pdb.set_trace()
+
         # z-scored mean value of pca procjected treedata
         mu = ((self.treedata-zs_mean)/zs_std).mean(axis=0)
+        print mu[:5]
         distsq = [np.power((x - mu), 2).sum() for x in data_zs]
 
         return np.sqrt(distsq)
 
 
-class PcaSorter(Sorter):
-    """Sorting data by performing a PCA and using the Euclidic distance as
-    similarity measurement. Sorting is not performed, the __call__() method
-    computes only the distance measure."""
+# class PcaSorter(Sorter):
+#     """Sorting data by performing a PCA and using the Euclidic distance as
+#     similarity measurement. Sorting is not performed, the __call__() method
+#     computes only the distance measure."""
 
-    def __init__(self, data, treedata):
+#     def __init__(self, data, treedata):
 
-        self.data = data
-        self.treedata = treedata
+#         self.data, self.treedata = filter_nans(data, treedata)
 
-    def __call__(self):
-        # z-scoring
-        zs_mean = self.data.mean(axis=0)
-        zs_std = self.data.std(axis=0)
-        data_zs = (self.data - zs_mean)/zs_std
+#     def __call__(self):
+#         # z-scoring
+#         zs_mean = self.data.mean(axis=0)
+#         zs_std = self.data.std(axis=0)
+#         data_zs = (self.data - zs_mean)/zs_std
 
-        pca = mlab.PCA(data_zs)
-        data_pca = pca.project(data_zs)
+#         pca = mlab.PCA(data_zs)
+#         data_pca = pca.project(data_zs)
 
-        # zscored mean value of pca procjected treedata
-        mu = pca.project((self.treedata-zs_mean)/zs_std).mean(axis=0)
-        distsq = [np.power((x - mu), 2).sum() for x in data_pca]
+#         # zscored mean value of pca procjected treedata
+#         mu = pca.project((self.treedata-zs_mean)/zs_std).mean(axis=0)
+#         distsq = [np.power((x - mu), 2).sum() for x in data_pca]
 
-        return np.sqrt(distsq)
+#         return np.sqrt(distsq)
