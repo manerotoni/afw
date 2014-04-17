@@ -30,6 +30,9 @@
       </widget>
      </item>
      <item>
+      <widget class="QComboBox" name="sortAlgorithm"/>
+     </item>
+     <item>
       <widget class="QTreeWidget" name="items">
        <property name="frameShape">
         <enum>QFrame::Box</enum>

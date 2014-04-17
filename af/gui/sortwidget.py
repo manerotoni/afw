@@ -10,14 +10,13 @@ __all__ = ('AfSortWidget', )
 
 from os.path import splitext
 import numpy as np
-
-from scipy import stats
 from matplotlib import mlab
 
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
+from af.sorters import Sorter
 
 class AfTreeWidgetItem(QtGui.QTreeWidgetItem):
 
@@ -59,6 +58,8 @@ class AfSortWidget(AfSideBarWidget):
         self.parent = parent
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
 
+        self.sortAlgorithm.addItems(Sorter.sorters())
+
         self.removeBtn.clicked.connect(self.onRemove)
         self.removeAllBtn.clicked.connect(self.onRemoveAll)
         self.addBtn.clicked.connect(self.onAdd)
@@ -73,44 +74,34 @@ class AfSortWidget(AfSideBarWidget):
         items = self.parent.selectedItems()
         self.addItems(items)
 
+    def _featuresFromSidebar(self):
+        """Yields a feature matrix from the itmes in the Sidebar. One feature
+        vector per row."""
+        nitems = self.items.topLevelItemCount()
+        nfeatures = self.items.topLevelItem(0).cellitem.features.size
+        ftrs = np.empty((nitems, nfeatures))
+
+        for i in xrange(nitems):
+            ftrs[i, :] = \
+                self.items.topLevelItem(i).cellitem.features
+        return ftrs
+
     def onSort(self):
 
         all_items = self.parent.items
         nitems = len(all_items)
         nfeatures = all_items[0].features.size
         data = np.empty((nitems, nfeatures))
+        treedata = self._featuresFromSidebar()
 
         # all featurs of all items
         for i, item in enumerate(all_items):
             data[i, :] = item.features
 
-        zs_mean = data.mean(axis=0)
-        zs_std = data.std(axis=0)
-        data_zs = (data - zs_mean)/zs_std
-
-        pca = mlab.PCA(data_zs)
-        data_pca = pca.project(data_zs)
-
-        mu = self._meanFromItems(pca, zs_mean, zs_std)
-        distsq = [np.power((x - mu), 2).sum() for x in data_pca]
-
-        dist = np.sqrt(distsq)
+        sorter = Sorter(self.sortAlgorithm.currentText(), data, treedata)
+        dist = sorter()
 
         for d, item in zip(dist, all_items):
             item.sortkey = d
 
         self.startSorting.emit()
-
-    def _meanFromItems(self, pca, zs_mean, zs_std):
-        """Mean feature vector of the items in the list."""
-        nitems = self.items.topLevelItemCount()
-        nfeatures = self.items.topLevelItem(0).cellitem.features.size
-
-        ftrs = np.empty((nitems, nfeatures))
-        for i in xrange(nitems):
-            ftrs[i, :] = \
-                self.items.topLevelItem(i).cellitem.features
-
-        ftrs = pca.project((ftrs-zs_mean)/zs_std)
-
-        return ftrs.mean(axis=0)
