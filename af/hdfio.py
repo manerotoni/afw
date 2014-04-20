@@ -10,16 +10,30 @@ __licence__ = 'GPL'
 
 __all__ = ('HdfReader', )
 
+
 import cellh5
 
-
 class HdfCoord(dict):
+    """Custom mapping allowing only the following keys:
+    plate, well, site and region.
+    """
+
+    _keys = ('plate', 'well', 'site', 'region')
 
     def __init__(self, plate, well, site, region):
-        super(HdfCoord, self).__init__(plate=plate,
-                                       well=well,
-                                       site=site,
-                                       region=region)
+        super(HdfCoord, self).__init__(plate=plate, well=well,
+                                       site=site, region=region)
+
+    def __getitem__(self, key):
+        if key not in self._keys:
+            raise KeyError('Key is invalid')
+        return super(HdfCoord, self).__getitem__(key)
+
+    def __setitem__(self, key, value):
+        if key not in self._keys:
+            raise KeyError('Key is invalid')
+        return super(HdfCoord, self).__setitem__(key, value)
+
 
 class HdfItem(object):
 
@@ -80,18 +94,43 @@ class HdfReader(cellh5.CH5File):
         path = self._features_key %coordinate
         return self._hdf[path].shape[0]
 
-    def events(self, plate, well, site, region):
-        site = self._open_position(plate, well, site)
-        return site.get_events().flatten()
+    # def events(self, plate, well, site, region):
+    #     site = self._open_position(plate, well, site)
+    #     return site.get_events().flatten()
 
-    def iterEventGallery(self, plate, well, site, region, size=50):
-        site = self._open_position(plate, well, site)
-        events = site.get_events().flatten()
+    # def iterEventGallery(self, plate, well, site, region, size=50):
+    #     site = self._open_position(plate, well, site)
+    #     events = site.get_events().flatten()
 
-        for event in events:
-            gal = site.get_gallery_image(event, region, size)
-            cont = site.get_crack_contour(event, region, size=size)
-            yield gal, cont[0]
+    #     for event in events:
+    #         gal = site.get_gallery_image(event, region, size)
+    #         cont = site.get_crack_contour(event, region, size=size)
+    #         yield gal, cont[0]
+
+    def cspace(self):
+        """Returns a full mapping of the coordiante space the hdf file"""
+
+        # plate, well and site point to one single movie. each movie
+        # can have different segementation regions.
+
+        coord = dict()
+        coorddict = dict()
+        plates = self.plateNames()
+
+        # read regions from definition
+        regions = self.regionNames()
+
+        for plate in plates:
+            coord['plate'] = plate
+            wells = self.wellNames(coord)
+            coorddict.setdefault(plate, {})
+            for well in wells:
+                coord['well'] = well
+                coorddict[plate].setdefault(well, {})
+                sites = self.siteNames(coord)
+                for site in sites:
+                    coorddict[plate][well][site] = regions
+        return coorddict
 
     def loadItem(self, index, coord, size=50):
         path = self._features_key %coord
@@ -102,7 +141,7 @@ class HdfReader(cellh5.CH5File):
 
         # inefficient!
         path = self._time_key %coord
-        fidx, objid =  self._hdf[path][index]
+        fidx, objid = self._hdf[path][index]
         frame = self._hdf[self._timelapse_key %coord]["frame"][fidx]
 
         return HdfItem(gal, cnt[0], ftr, frame, objid)

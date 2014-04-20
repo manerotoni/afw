@@ -21,3 +21,13 @@ def filter_nans(data, data2=None):
     else:
         return (np.delete(data, col_nans, axis=1),
                 np.delete(data2, col_nans, axis=1))
+
+
+class ZScore(object):
+
+    def __init__(self, data):
+        self.mean = data.mean(axis=0)
+        self.std = data.std(axis=0)
+
+    def normalize(self, data):
+        return (data - self.mean)/self.std

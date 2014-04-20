@@ -7,7 +7,7 @@ __licence__ = 'GPL'
 
 __all__ = ('AfLoader', 'AfLoaderThread')
 
-
+import traceback
 import warnings
 import numpy as np
 
@@ -34,6 +34,7 @@ class AfLoaderThread(QtCore.QThread):
         try:
             self._worker()
         except Exception as e:
+            traceback.print_exc()
             warnings.warn(str(e))
             self.error.emit(e)
         finally:
@@ -62,8 +63,8 @@ class AfLoader(QtCore.QObject):
         self._aborted = False
         self.loadItems()
 
-    def timerEvent(self, event):
-        self.thread().msleep(100)
+    def cspace(self):
+        return self._h5f.cspace()
 
     @property
     def filename(self):
@@ -75,22 +76,12 @@ class AfLoader(QtCore.QObject):
             self._h5f.close()
 
         self._h5f = HdfReader(file_, "r", cached=True)
+        cmap = self._h5f.cspace()
 
-
-        # XXX assuming all values have the same subranges
-        coord =  dict()
-        plates = self._h5f.plateNames()
-        coord['plate'] = plates[0]
-        wells = self._h5f.wellNames(coord)
-        coord['well'] = wells[0]
-        sites = self._h5f.siteNames(coord)
-        coord['site'] = sites[0]
-        regions =  self._h5f.regionNames()
-
-        self.fileOpened.emit({'plate': plates,
-                              'well': wells,
-                              'site': sites,
-                              'region': regions})
+        self.fileOpened.emit({'plate': cmap.keys(),
+                              'well': cmap.values()[0].keys(),
+                              'site': cmap.values()[0].values()[0].keys(),
+                              'region': cmap.values()[0].values()[0].values()[0]})
 
     def setCoordinate(self, coordinate):
         self._coordinate = coordinate

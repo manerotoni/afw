@@ -8,6 +8,8 @@ __licence__ = 'GPL'
 import numpy as np
 from matplotlib import mlab
 from af.mining import filter_nans
+from af.mining import ZScore
+
 
 class SortFactory(type):
     """Meta class to implement the factory design pattern"""
@@ -31,9 +33,9 @@ class SortFactory(type):
 
 
 class Sorter(object):
-    """Class to implement the factory desing pattern. The __init__ method of this
-    class returns the requestest child-instance. Arguments of the child classes are
-    delegated transparently to the child class's __init__() methods.
+    """Class to implement the factory desing pattern. The __init__ method of
+    this class returns the requestest child-instance. Arguments of the child
+    classes are delegated transparently to the child class's __init__() methods.
 
     >>>pcasorter = Sorter(Sorter.PcaSorter, 1, 3)
     >>><__main__.PcaSorter object at 0x1004a7190>
@@ -55,45 +57,47 @@ class ZScoreSorter(Sorter):
 
     def __init__(self, data, treedata):
 
-        self.data, self.treedata = filter_nans(data, treedata)
+        self.data = data
+        self.treedata = treedata
 
     def __call__(self):
         # z-scoring
-        zs_mean = self.data.mean(axis=0)
-        zs_std = self.data.std(axis=0)
-        data_zs = (self.data - zs_mean)/zs_std
-
-        # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        # import pdb; pdb.set_trace()
+        zs = ZScore(self.data)
+        data_zs = zs.normalize(self.data)
 
         # z-scored mean value of pca procjected treedata
-        mu = ((self.treedata-zs_mean)/zs_std).mean(axis=0)
-        print mu[:5]
+        mu = zs.normalize(self.treedata)
+        data_zs, mu = filter_nans(data_zs, mu)
+
+        mu = mu.mean(axis=0)
         distsq = [np.power((x - mu), 2).sum() for x in data_zs]
 
         return np.sqrt(distsq)
 
 
-# class PcaSorter(Sorter):
-#     """Sorting data by performing a PCA and using the Euclidic distance as
-#     similarity measurement. Sorting is not performed, the __call__() method
-#     computes only the distance measure."""
+class PcaSorter(Sorter):
+    """Sorting data by performing a PCA and using the Euclidic distance as
+    similarity measurement. Sorting is not performed, the __call__() method
+    computes only the distance measure."""
 
-#     def __init__(self, data, treedata):
+    def __init__(self, data, treedata):
 
-#         self.data, self.treedata = filter_nans(data, treedata)
+        self.data = data
+        self.treedata = treedata
 
-#     def __call__(self):
-#         # z-scoring
-#         zs_mean = self.data.mean(axis=0)
-#         zs_std = self.data.std(axis=0)
-#         data_zs = (self.data - zs_mean)/zs_std
+    def __call__(self):
+        # z-scoring
+        zs = ZScore(self.data)
+        data_zs = zs.normalize(self.data)
+        mu = zs.normalize(self.treedata)
 
-#         pca = mlab.PCA(data_zs)
-#         data_pca = pca.project(data_zs)
+        data_zs, mu = filter_nans(data_zs, mu)
 
-#         # zscored mean value of pca procjected treedata
-#         mu = pca.project((self.treedata-zs_mean)/zs_std).mean(axis=0)
-#         distsq = [np.power((x - mu), 2).sum() for x in data_pca]
+        pca = mlab.PCA(data_zs)
+        data_pca = pca.project(data_zs)
 
-#         return np.sqrt(distsq)
+        # zscored mean value of pca procjected treedata
+        mu = pca.project(mu).mean(axis=0)
+        distsq = [np.power((x - mu), 2).sum() for x in data_pca]
+
+        return np.sqrt(distsq)
