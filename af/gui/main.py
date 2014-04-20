@@ -50,6 +50,9 @@ class AfMainWindow(QtGui.QMainWindow):
             self.openFile(file_)
             self.loadItems()
 
+    def onAbort(self):
+        self.abort.emit()
+
     def closeEvent(self, event):
         try:
             self.abort.emit()
@@ -64,10 +67,18 @@ class AfMainWindow(QtGui.QMainWindow):
 
     def setupProgressBar(self):
         self.progressbar = QtGui.QProgressBar(self)
+        self.progressbar.setMaximumHeight(15)
+        self.abortBtn = QtGui.QPushButton('abort', self)
+        self.abortBtn.clicked.connect(self.onAbort)
+        self.abortBtn.setMaximumHeight(20)
         frame = QtGui.QFrame(self)
-        vbox = QtGui.QVBoxLayout(frame)
-        vbox.addWidget(self.progressbar)
-        vbox.setContentsMargins(0, 0, 0, 0)
+        hbox = QtGui.QHBoxLayout(frame)
+        hbox.addWidget(self.progressbar)
+        hbox.addWidget(self.abortBtn)
+        hbox.setContentsMargins(0, 0, 0, 0)
+        self.loaderThread.started.connect(frame.show)
+        self.loaderThread.finished.connect(frame.hide)
+        frame.hide()
         self.statusBar().addPermanentWidget(frame)
 
     def setupToolbar(self):
