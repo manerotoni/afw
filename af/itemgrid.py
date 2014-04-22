@@ -9,16 +9,16 @@ __all__ = 'ItemGrid'
 
 import math
 from PyQt4 import QtCore
-from collections import OrderedDict
-
 
 class ItemGrid(QtCore.QObject):
+
+    SPACING = 5.0
 
     def __init__(self, colwidth=100, ncols=10, *args, **kw):
         super(ItemGrid, self).__init__(*args, **kw)
         self.ncols = ncols
         self.colwidth = colwidth
-        self._positions = OrderedDict()
+        self._positions = dict()
         self._rect = QtCore.QRectF()
         self._rect.setX(0.0)
         self._rect.setY(0.0)

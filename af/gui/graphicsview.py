@@ -110,10 +110,10 @@ class AfGraphicsView(MouseWheelView):
 
     def updateRaster(self, gsize):
         self.gsize = gsize
-        self._grid.colwidth = self.gsize + CellGraphicsItem.BOUNDARY
+        self._grid.colwidth = self.gsize + self._grid.SPACING
 
     def gridSpan(self):
-        return self.gsize + CellGraphicsItem.BOUNDARY
+        return self.gsize + self._grid.SPACING
 
     def reorder(self, force_update=False):
         scaled_colwidth = self.transform().m11()*self._grid.colwidth

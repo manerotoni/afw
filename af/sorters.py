@@ -6,7 +6,7 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 import numpy as np
-from matplotlib import mlab
+# from matplotlib import mlab
 from af.mining import filter_nans
 from af.mining import ZScore
 
@@ -75,29 +75,30 @@ class ZScoreSorter(Sorter):
         return np.sqrt(distsq)
 
 
-class PcaSorter(Sorter):
-    """Sorting data by performing a PCA and using the Euclidic distance as
-    similarity measurement. Sorting is not performed, the __call__() method
-    computes only the distance measure."""
+# --> I'm looking at distances
+# class PcaSorter(Sorter):
+#     """Sorting data by performing a PCA and using the Euclidic distance as
+#     similarity measurement. Sorting is not performed, the __call__() method
+#     computes only the distance measure."""
 
-    def __init__(self, data, treedata):
+#     def __init__(self, data, treedata):
 
-        self.data = data
-        self.treedata = treedata
+#         self.data = data
+#         self.treedata = treedata
 
-    def __call__(self):
-        # z-scoring
-        zs = ZScore(self.data)
-        data_zs = zs.normalize(self.data)
-        mu = zs.normalize(self.treedata)
+#     def __call__(self):
+#         # z-scoring
+#         zs = ZScore(self.data)
+#         data_zs = zs.normalize(self.data)
+#         mu = zs.normalize(self.treedata)
 
-        data_zs, mu = filter_nans(data_zs, mu)
+#         data_zs, mu = filter_nans(data_zs, mu)
 
-        pca = mlab.PCA(data_zs)
-        data_pca = pca.project(data_zs)
+#         pca = mlab.PCA(data_zs)
+#         data_pca = pca.project(data_zs)
 
-        # zscored mean value of pca procjected treedata
-        mu = pca.project(mu).mean(axis=0)
-        distsq = [np.power((x - mu), 2).sum() for x in data_pca]
+#         # zscored mean value of pca procjected treedata
+#         mu = pca.project(mu).mean(axis=0)
+#         distsq = [np.power((x - mu), 2).sum() for x in data_pca]
 
-        return np.sqrt(distsq)
+#         return np.sqrt(distsq)

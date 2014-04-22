@@ -32,11 +32,13 @@ class PainterPathItem(QtGui.QGraphicsPathItem):
         return self._path
 
 
+
+
 class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     """Item group to show a pixmap, the segmentation and annotation as one item.
     """
 
-    BOUNDARY = 4.0
+    BOUNDARY = 2.0
 
     def __init__(self, item, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
@@ -59,33 +61,58 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def __str__(self):
         return "%s-%s" %(self.frame, self.objid)
 
+    def _selectorRect(self):
+        rect0 = self.childrenBoundingRect()
+        rect = QtCore.QRectF()
+        rect.setX(rect0.x() + self.BOUNDARY/2)
+        rect.setY(rect0.y() + self.BOUNDARY/2)
+        rect.setSize(
+            rect0.size() - QtCore.QSizeF(self.BOUNDARY, self.BOUNDARY))
+        return rect
+
+    def _addSelectorRect(self):
+        brush = QtGui.QBrush()
+        brush.setStyle(QtCore.Qt.NoBrush)
+        pen = QtGui.QPen()
+        pen.setColor(Colors.selected)
+        pen.setWidthF(self.BOUNDARY)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+
+        rect = self._selectorRect()
+        self._selrect = QtGui.QGraphicsRectItem(rect)
+        self._selrect.setBrush(brush)
+        self._selrect.setPen(pen)
+        self._selrect.hide()
+        self.addToGroup(self._selrect)
+
     @property
     def pixmap(self):
         return self._pixmap
 
     def setImage(self, image):
         self._pixmap = QtGui.QPixmap.fromImage(image)
-        item = QtGui.QGraphicsPixmapItem()
+        item = QtGui.QGraphicsPixmapItem(self)
         item.setPixmap(self.pixmap)
         item.setPos(self.pos())
         self.addToGroup(item)
+        self._addSelectorRect()
 
     def paint(self, painter, option, widget):
-        painter.setPen(QtCore.Qt.NoPen)
-        painter.setBrush(QtCore.Qt.darkGray)
-
         if self.isSelected():
-            rect = self.boundingRect()
-            painter.setBrush(Colors.selected)
-            painter.drawRect(rect)
+            self._selrect.show()
+        else:
+            self._selrect.hide()
+
+            # rect = self.boundingRect()
+            # painter.setBrush(Colors.selected)
+            # painter.drawRect(rect)
 
     def boundingRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
-        rect.setX(rect0.x() - self.BOUNDARY/2)
-        rect.setY(rect0.y() - self.BOUNDARY/2)
-        rect.setSize(
-            rect0.size() + QtCore.QSizeF(self.BOUNDARY, self.BOUNDARY))
+        rect.setX(rect0.x())
+        rect.setY(rect0.y())
+        rect.setSize(rect0.size())
         return rect
 
     def setPos(self, x, y):
