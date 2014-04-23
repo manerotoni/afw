@@ -80,7 +80,7 @@ class ZScoreSorter(Sorter):
 
 class PcaSorter(Sorter):
     """Sorting data by performing a PCA, taking only 99% of the variance,
-    back projecting the the reduced feature set and sort after their difference
+    back projecting the the reduced feature set and sort after the difference
     to the original features."""
 
     def __init__(self, data, treedata):

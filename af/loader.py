@@ -105,8 +105,9 @@ class AfLoader(QtCore.QObject):
             return
 
         nf = self._h5f.numberItems(self._coordinate)
-        indices = np.random.randint(0, nf, self._nitems)
-        for i, idx in enumerate(indices):
+        indices = range(0, nf)
+        np.random.shuffle(indices)
+        for i, idx in enumerate(sorted(indices[:self._nitems])):
             if self._aborted:
                 break
             item = self._h5f.loadItem(idx, self._coordinate, self._size)
