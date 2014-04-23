@@ -103,10 +103,6 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         else:
             self._selrect.hide()
 
-            # rect = self.boundingRect()
-            # painter.setBrush(Colors.selected)
-            # painter.drawRect(rect)
-
     def boundingRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()

@@ -6,9 +6,8 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 import numpy as np
-# from matplotlib import mlab
 from af.mining import filter_nans
-from af.mining import ZScore
+from af.mining import ZScore, PCA
 
 
 class SortFactory(type):
@@ -75,30 +74,38 @@ class ZScoreSorter(Sorter):
         return np.sqrt(distsq)
 
 
-# --> I'm looking at distances
-# class PcaSorter(Sorter):
-#     """Sorting data by performing a PCA and using the Euclidic distance as
-#     similarity measurement. Sorting is not performed, the __call__() method
-#     computes only the distance measure."""
+class PcaSorter(Sorter):
+    """Sorting data by performing a PCA and using the Euclidic distance as
+    similarity measurement. Sorting is not performed, the __call__() method
+    computes only the distance measure."""
 
-#     def __init__(self, data, treedata):
+    def __init__(self, data, treedata):
 
-#         self.data = data
-#         self.treedata = treedata
+        self.data = data
+        self.treedata = treedata
 
-#     def __call__(self):
-#         # z-scoring
-#         zs = ZScore(self.data)
-#         data_zs = zs.normalize(self.data)
-#         mu = zs.normalize(self.treedata)
+    def __call__(self):
 
-#         data_zs, mu = filter_nans(data_zs, mu)
+        # PCA does the z scoring automatically
+        # zscored mean value of pca procjected treedata
 
-#         pca = mlab.PCA(data_zs)
-#         data_pca = pca.project(data_zs)
+        zs = ZScore(self.data)
+        data_zs = zs.normalize(self.data)
+        mu = zs.normalize(self.treedata)
+        data_zs, mu_zs = filter_nans(data_zs, mu)
 
-#         # zscored mean value of pca procjected treedata
-#         mu = pca.project(mu).mean(axis=0)
-#         distsq = [np.power((x - mu), 2).sum() for x in data_pca]
+        pca = PCA(data_zs, minfrac=0.01)
+        data_pca = pca.project(data_zs)
+        mu_pca = pca.project(mu_zs)
 
-#         return np.sqrt(distsq)
+        # inverse projection of the data
+        data_pca_ = pca.iproject(data_pca)
+        mu_ = pca.iproject(mu_pca)
+
+        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        import pdb; pdb.set_trace()
+
+
+        distsq = [np.power((x - mu), 2).sum() for x in data_pca]
+
+        return np.sqrt(distsq)

@@ -12,7 +12,7 @@ from PyQt4 import QtCore
 
 class ItemGrid(QtCore.QObject):
 
-    SPACING = 5.0
+    SPACING = 1.0
 
     def __init__(self, colwidth=100, ncols=10, *args, **kw):
         super(ItemGrid, self).__init__(*args, **kw)
