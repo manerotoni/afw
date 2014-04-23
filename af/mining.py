@@ -7,7 +7,7 @@ Collection of various helper functions
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-from matplotlib import mlab
+
 import numpy as np
 
 
@@ -33,24 +33,28 @@ class ZScore(object):
         return (data - self.mean)/self.std
 
 
-class PCA(mlab.PCA):
+class PCA(object):
 
     def __init__(self, data, minfrac=0.0):
         self.minfrac = minfrac
-        mlab.PCA.__init__(self, data)
 
-    def center(self, data):
-        """Overwrite this method to not perform a zscoring."""
-        return data
+        self.numrows, self.numcols = data.shape
+        if not self.numrows > self.numcols:
+            raise RuntimeError(('PCA requires numrows > numcols'))
+
+        U, s, Vh = np.linalg.svd(data, full_matrices=False)
+
+        vars = s**2/float(len(s))
+        self.fracs = vars/vars.sum()
+        self._mask = self.fracs > self.minfrac
+        self.wt = Vh
 
     def iproject(self, data, minfrac=0.0):
+        wt_inv = np.linalg.inv(self.wt)
+        wt_inv = wt_inv[:, self._mask]
 
-        mask = self.fracs >= minfrac
-        wt_inv = np.linalg.inv(self.Wt)
-        wt_inv = wt_inv[:, mask]
-
-        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        import pdb; pdb.set_trace()
+        if data.shape[1] != wt_inv.shape[1]:
+            raise RuntimeError("Shapes of inversion matrices do not match")
 
         return np.dot(wt_inv, data.T).T
 
@@ -65,11 +69,9 @@ class PCA(mlab.PCA):
         if (x.shape[-1]!=self.numcols):
             raise ValueError('Expected an array with dims[-1]==%d'%self.numcols)
 
-        Y = np.dot(self.Wt, x.T).T
-        mask = self.fracs>=minfrac
+        Y = np.dot(self.wt, x.T).T
 
-        if ndims==2:
-            Yreduced = Y[:,mask]
+        if ndims == 2:
+            return Y[:, self._mask]
         else:
-            Yreduced = Y[mask]
-        return Yreduced
+            return Y[self._mask]

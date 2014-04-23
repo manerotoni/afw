@@ -10,6 +10,10 @@ from af.mining import filter_nans
 from af.mining import ZScore, PCA
 
 
+class MinNumberSamplesError(Exception):
+    pass
+
+
 class SortFactory(type):
     """Meta class to implement the factory design pattern"""
 
@@ -75,9 +79,9 @@ class ZScoreSorter(Sorter):
 
 
 class PcaSorter(Sorter):
-    """Sorting data by performing a PCA and using the Euclidic distance as
-    similarity measurement. Sorting is not performed, the __call__() method
-    computes only the distance measure."""
+    """Sorting data by performing a PCA, taking only 99% of the variance,
+    back projecting the the reduced feature set and sort after their difference
+    to the original features."""
 
     def __init__(self, data, treedata):
 
@@ -88,24 +92,16 @@ class PcaSorter(Sorter):
 
         # PCA does the z scoring automatically
         # zscored mean value of pca procjected treedata
-
         zs = ZScore(self.data)
         data_zs = zs.normalize(self.data)
-        mu = zs.normalize(self.treedata)
-        data_zs, mu_zs = filter_nans(data_zs, mu)
+        data_zs = filter_nans(data_zs)
 
         pca = PCA(data_zs, minfrac=0.01)
         data_pca = pca.project(data_zs)
-        mu_pca = pca.project(mu_zs)
 
         # inverse projection of the data
-        data_pca_ = pca.iproject(data_pca)
-        mu_ = pca.iproject(mu_pca)
+        data2 = pca.iproject(data_pca)
+        delta = data_zs - data2
+        distsq = [np.power(d, 2).sum() for d in delta]
 
-        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        import pdb; pdb.set_trace()
-
-
-        distsq = [np.power((x - mu), 2).sum() for x in data_pca]
-
-        return np.sqrt(distsq)
+        return -1.*np.sqrt(distsq)
