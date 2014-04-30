@@ -20,6 +20,8 @@ from af.gui.sidebar import AfSortWidget
 from af.gui.sidebar import AfAnnotationWidget
 from af.loader import AfLoader, AfLoaderThread
 
+# import resources
+from af import af_rc
 
 class AfMainWindow(QtGui.QMainWindow):
 
