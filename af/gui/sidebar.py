@@ -8,9 +8,9 @@ __licence__ = 'GPL'
 __all__ = ('AfSortWidget', )
 
 
-from os.path import splitext
+from os.path import dirname, join
 import numpy as np
-from matplotlib import mlab
+
 
 from PyQt4 import uic
 from PyQt4 import QtGui
@@ -46,6 +46,16 @@ class AfSideBarWidget(QtGui.QWidget):
             self.items.takeTopLevelItem(index)
 
 
+class AfAnnotationWidget(AfSideBarWidget):
+
+    def __init__(self, parent, *args, **kw):
+        super(AfAnnotationWidget, self).__init__(parent, *args, **kw)
+        # qtmethod does not return the real parent!
+        self.parent = parent
+        uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
+        uic.loadUi(uifile, self)
+
+
 class AfSortWidget(AfSideBarWidget):
 
     startSorting = QtCore.pyqtSignal()
@@ -56,7 +66,8 @@ class AfSortWidget(AfSideBarWidget):
         super(AfSortWidget, self).__init__(parent, *args, **kw)
         # qtmethod does not return the real parent!
         self.parent = parent
-        uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
+        uic.loadUi(uifile, self)
 
         self.sortAlgorithm.addItems(Sorter.sorters())
 

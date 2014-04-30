@@ -19,6 +19,7 @@ class NavToolBar(QtGui.QToolBar):
 
     def __init__(self, *args, **kw):
         super(NavToolBar, self).__init__(*args, **kw)
+        self.setObjectName('NavigationToolbar')
 
         self.plate = QtGui.QComboBox(self)
         self.well = QtGui.QComboBox(self)
@@ -68,6 +69,7 @@ class ViewToolBar(QtGui.QToolBar):
 
     def __init__(self, *args, **kw):
         super(ViewToolBar, self).__init__(*args, **kw)
+        self.setObjectName("ViewToolbar")
 
         self.galSize = QtGui.QSpinBox(self)
         self.galSize.setPrefix("gallery size: ")

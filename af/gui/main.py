@@ -13,9 +13,11 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtGui import QFileDialog
 
+from af import version
 from af.gui.graphicsview import AfGraphicsView
 from af.gui.toolbars import NavToolBar, ViewToolBar
-from af.gui.sortwidget import AfSortWidget
+from af.gui.sidebar import AfSortWidget
+from af.gui.sidebar import AfAnnotationWidget
 from af.loader import AfLoader, AfLoaderThread
 
 
@@ -45,15 +47,36 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
 
+        self._restoreSettings()
         self.show()
         if file_ is not None:
             self.openFile(file_)
             self.loadItems()
 
+    def _saveSettings(self):
+        settings = QtCore.QSettings(version.organisation, version.appname)
+        settings.beginGroup('Gui')
+        settings.setValue('state', self.saveState())
+        settings.setValue('geometry', self.saveGeometry())
+        settings.endGroup()
+
+    def _restoreSettings(self):
+        settings = QtCore.QSettings(version.organisation, version.appname)
+        settings.beginGroup('Gui')
+
+        geometry = settings.value('geometry')
+        if geometry is not None:
+            self.restoreGeometry(geometry)
+        state = settings.value('state')
+        if state is not None:
+            self.restoreState(state)
+        settings.endGroup()
+
     def onAbort(self):
         self.abort.emit()
 
     def closeEvent(self, event):
+        self._saveSettings()
         try:
             self.abort.emit()
             self.loaderThread.wait()
@@ -63,7 +86,10 @@ class AfMainWindow(QtGui.QMainWindow):
 
     def setupDock(self):
         self.sorting = AfSortWidget(self.tileview)
+        self.annotation = AfAnnotationWidget(self.tileview)
+
         self.toolBox.addItem(self.sorting, "sorting")
+        self.toolBox.addItem(self.annotation, "annotation")
 
     def setupProgressBar(self):
         self.progressbar = QtGui.QProgressBar(self)

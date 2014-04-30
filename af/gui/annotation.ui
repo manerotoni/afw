@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>250</width>
+    <height>698</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>-1</number>
+     </property>
+     <item>
+      <widget class="QTreeWidget" name="classifier">
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+       <property name="indentation">
+        <number>15</number>
+       </property>
+       <property name="rootIsDecorated">
+        <bool>true</bool>
+       </property>
+       <property name="uniformRowHeights">
+        <bool>false</bool>
+       </property>
+       <property name="itemsExpandable">
+        <bool>true</bool>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="animated">
+        <bool>true</bool>
+       </property>
+       <property name="allColumnsShowFocus">
+        <bool>false</bool>
+       </property>
+       <property name="headerHidden">
+        <bool>false</bool>
+       </property>
+       <property name="expandsOnDoubleClick">
+        <bool>false</bool>
+       </property>
+       <attribute name="headerStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>item</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>frame</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>object-id</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>prophase</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>sample1</string>
+         </property>
+        </item>
+       </item>
+       <item>
+        <property name="text">
+         <string>prometa</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>sample2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sample1</string>
+         </property>
+        </item>
+       </item>
+       <item>
+        <property name="text">
+         <string>interphase</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>0</red>
+           <green>255</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </property>
+        <property name="foreground">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>0</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </property>
+        <item>
+         <property name="text">
+          <string>sample4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sample3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sample2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sample1</string>
+         </property>
+        </item>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="vbox2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="hbox1">
+         <property name="spacing">
+          <number>-1</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="save">
+           <property name="text">
+            <string>save</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
