@@ -70,6 +70,7 @@ class ViewToolBar(QtGui.QToolBar):
     def __init__(self, *args, **kw):
         super(ViewToolBar, self).__init__(*args, **kw)
         self.setObjectName("ViewToolbar")
+        self.setIconSize(QtCore.QSize(16, 16))
 
         self.galSize = QtGui.QSpinBox(self)
         self.galSize.setPrefix("gallery size: ")
@@ -82,16 +83,16 @@ class ViewToolBar(QtGui.QToolBar):
         self.nItems.setSingleStep(50)
         self.nItems.setValue(250)
 
-        self.reloadBtn = QtGui.QPushButton("reload", self)
+        self.reloadBtn = QtGui.QPushButton("load", self)
 
+        icon = QtGui.QIcon(":/hdf5-logo.png")
         self.actionOpen = QtGui.QAction(
-            QtGui.QIcon.fromTheme("document-open"), "open", self)
+            icon, "open", self)
         self.addAction(self.actionOpen)
+        self.addWidget(self.reloadBtn)
         self.addSeparator()
         self.addWidget(self.galSize)
         self.addWidget(self.nItems)
-        self.addWidget(self.reloadBtn)
-
 
     @property
     def galsize(self):
