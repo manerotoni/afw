@@ -57,10 +57,12 @@ class PcaBackProjectedDistance(Sorter):
     back projecting the the reduced feature set and sort after the difference
     to the original features."""
 
-    def __init__(self, data, treedata):
+    needs_treedata = False
 
+    def __init__(self, data, *args, **kw):
+        super(PcaBackProjectedDistance, self).__init__(*args, **kw)
         self.data = data
-        self.treedata = treedata
+
 
     def __call__(self):
 
@@ -86,11 +88,12 @@ class EucledianDistance(Sorter):
     similarity measurement. Sorting is not performed, the __call__() method
     computes only the distance measure."""
 
+    needs_treedata = True
 
-    def __init__(self, data, treedata):
-
+    def __init__(self, data, *args, **kw):
+        super(EucledianDistance, self).__init__(*args, **kw)
         self.data = data
-        self.treedata = treedata
+        self.treedata = None
 
     def __call__(self):
         # z-scoring

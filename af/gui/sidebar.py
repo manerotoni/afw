@@ -15,6 +15,7 @@ import numpy as np
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtGui import QMessageBox
 
 from af.sorters import Sorter
 
@@ -32,19 +33,23 @@ class AfSideBarWidget(QtGui.QWidget):
 
     def __init__(self, *args, **kw):
         super(AfSideBarWidget, self).__init__(*args, **kw)
+        self._items = list()
 
     def addItems(self, items):
         for item in items:
-            self.items.addTopLevelItem(AfTreeWidgetItem(item))
+            if item not in self._items:
+                self.items.addTopLevelItem(AfTreeWidgetItem(item))
+                self._items.append(item)
 
     def onRemoveAll(self):
         self.items.clear()
+        self._items = list()
 
     def onRemove(self):
         for item in self.items.selectedItems():
             index = self.items.indexOfTopLevelItem(item)
-            self.items.takeTopLevelItem(index)
-
+            topitem = self.items.takeTopLevelItem(index)
+            self._items.remove(topitem.cellitem)
 
 class AfAnnotationWidget(AfSideBarWidget):
 
@@ -103,13 +108,21 @@ class AfSortWidget(AfSideBarWidget):
         nitems = len(all_items)
         nfeatures = all_items[0].features.size
         data = np.empty((nitems, nfeatures))
-        treedata = self._featuresFromSidebar()
 
         # all featurs of all items
         for i, item in enumerate(all_items):
             data[i, :] = item.features
 
-        sorter = Sorter(self.sortAlgorithm.currentText(), data, treedata)
+        sorter = Sorter(self.sortAlgorithm.currentText(), data)
+
+        if self.items.topLevelItemCount() == 0 and sorter.needs_treedata:
+            QMessageBox.warning(self, 'no items added',
+                                'You need to add items to the sidebar')
+            return
+
+        elif sorter.needs_treedata:
+            sorter.treedata = self._featuresFromSidebar()
+
         dist = sorter()
 
         for d, item in zip(dist, all_items):
