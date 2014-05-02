@@ -67,6 +67,8 @@ class NavToolBar(QtGui.QToolBar):
 
 class ViewToolBar(QtGui.QToolBar):
 
+    valueChanged = QtCore.pyqtSignal(float)
+
     def __init__(self, *args, **kw):
         super(ViewToolBar, self).__init__(*args, **kw)
         self.setObjectName("ViewToolbar")
@@ -83,6 +85,12 @@ class ViewToolBar(QtGui.QToolBar):
         self.nItems.setSingleStep(50)
         self.nItems.setValue(250)
 
+        self.zoom =  QtGui.QComboBox(self)
+        self.zoom.addItem("100%", QtCore.QVariant(1.0))
+        self.zoom.addItem("75%", QtCore.QVariant(0.75))
+        self.zoom.addItem("50%", QtCore.QVariant(0.50))
+        self.zoom.addItem("25%", QtCore.QVariant(0.25))
+        self.zoom.currentIndexChanged.connect(self.onIndexChanged)
         self.reloadBtn = QtGui.QPushButton("load", self)
 
         icon = QtGui.QIcon(":/hdf5-logo.png")
@@ -93,6 +101,11 @@ class ViewToolBar(QtGui.QToolBar):
         self.addSeparator()
         self.addWidget(self.galSize)
         self.addWidget(self.nItems)
+        self.addWidget(self.zoom)
+
+    def onIndexChanged(self, index):
+        zfactor = self.zoom.itemData(index).toDouble()[0]
+        self.valueChanged.emit(zfactor)
 
     @property
     def galsize(self):

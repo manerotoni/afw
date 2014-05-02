@@ -12,7 +12,7 @@ import argparse
 
 import sip
 sip.setapi('QString', 2)
-sip.setapi('QVariant', 2)
+sip.setapi('QVariant', 1)
 
 from PyQt4 import QtGui
 from af.gui import AfMainWindow

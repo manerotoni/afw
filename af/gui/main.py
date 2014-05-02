@@ -40,6 +40,7 @@ class AfMainWindow(QtGui.QMainWindow):
 
         self.setupToolbar()
         self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
+        self.toolBar.valueChanged.connect(self.tileview.zoom)
         self.setCentralWidget(self.tileview)
         self.setupDock()
         self.setupProgressBar()
@@ -69,10 +70,10 @@ class AfMainWindow(QtGui.QMainWindow):
 
         geometry = settings.value('geometry')
         if geometry is not None:
-            self.restoreGeometry(geometry)
+            self.restoreGeometry(geometry.toByteArray())
         state = settings.value('state')
         if state is not None:
-            self.restoreState(state)
+            self.restoreState(state.toByteArray())
         settings.endGroup()
 
     def onAbort(self):

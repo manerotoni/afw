@@ -83,6 +83,11 @@ class AfGraphicsView(MouseWheelView):
         self.createActions()
         self.createContextMenu()
 
+    def zoom(self, factor):
+        factor = factor/self.transform().m11()
+        self.scale(factor, factor)
+        self.reorder(True)
+
     @property
     def items(self):
         return self._grid.items
