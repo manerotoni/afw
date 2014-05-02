@@ -52,33 +52,7 @@ class Sorter(object):
         return cls._sorters.keys()
 
 
-class ZScoreSorter(Sorter):
-    """Sorting data by using the Euclidic distance of the z-scored data as
-    similarity measurement. Sorting is not performed, the __call__() method
-    computes only the distance measure."""
-
-
-    def __init__(self, data, treedata):
-
-        self.data = data
-        self.treedata = treedata
-
-    def __call__(self):
-        # z-scoring
-        zs = ZScore(self.data)
-        data_zs = zs.normalize(self.data)
-
-        # z-scored mean value of pca procjected treedata
-        mu = zs.normalize(self.treedata)
-        data_zs, mu = filter_nans(data_zs, mu)
-
-        mu = mu.mean(axis=0)
-        distsq = [np.power((x - mu), 2).sum() for x in data_zs]
-
-        return np.sqrt(distsq)
-
-
-class PcaSorter(Sorter):
+class PcaBackProjectedDistance(Sorter):
     """Sorting data by performing a PCA, taking only 99% of the variance,
     back projecting the the reduced feature set and sort after the difference
     to the original features."""
@@ -105,3 +79,29 @@ class PcaSorter(Sorter):
         distsq = [np.power(d, 2).sum() for d in delta]
 
         return -1.*np.sqrt(distsq)
+
+
+class EucledianDistance(Sorter):
+    """Sorting data by using the Euclidic distance of the z-scored data as
+    similarity measurement. Sorting is not performed, the __call__() method
+    computes only the distance measure."""
+
+
+    def __init__(self, data, treedata):
+
+        self.data = data
+        self.treedata = treedata
+
+    def __call__(self):
+        # z-scoring
+        zs = ZScore(self.data)
+        data_zs = zs.normalize(self.data)
+
+        # z-scored mean value of pca procjected treedata
+        mu = zs.normalize(self.treedata)
+        data_zs, mu = filter_nans(data_zs, mu)
+
+        mu = mu.mean(axis=0)
+        distsq = [np.power((x - mu), 2).sum() for x in data_zs]
+
+        return np.sqrt(distsq)

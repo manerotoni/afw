@@ -32,8 +32,6 @@ class PainterPathItem(QtGui.QGraphicsPathItem):
         return self._path
 
 
-
-
 class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     """Item group to show a pixmap, the segmentation and annotation as one item.
     """
