@@ -48,13 +48,14 @@
     <addaction name="actionOpen"/>
     <addaction name="actionQuit"/>
    </widget>
-   <widget class="QMenu" name="menuHelp">
+   <widget class="QMenu" name="menuData">
     <property name="title">
-     <string>Help</string>
+     <string>Data</string>
     </property>
+    <addaction name="actionImport"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuHelp"/>
+   <addaction name="menuData"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="sorting">
@@ -126,6 +127,11 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>import trainingset</string>
    </property>
   </action>
  </widget>

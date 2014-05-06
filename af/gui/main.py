@@ -18,6 +18,7 @@ from af.gui.graphicsview import AfGraphicsView
 from af.gui.toolbars import NavToolBar, ViewToolBar
 from af.gui.sidebar import AfSortWidget
 from af.gui.sidebar import AfAnnotationWidget
+from af.gui.imagedialog import ImportDialog
 from af.loader import AfLoader, AfLoaderThread
 
 # import resources
@@ -50,6 +51,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
         self.actionOpen.triggered.connect(self.onFileOpen)
+        self.actionImport.triggered.connect(self.openImporter)
 
         self._restoreSettings()
         self.show()
@@ -139,6 +141,10 @@ class AfMainWindow(QtGui.QMainWindow):
             self.statusBar().showMessage(str(e))
         else:
             self.statusBar().showMessage(basename(file_))
+
+    def openImporter(self):
+        dlg = ImportDialog()
+        dlg.exec_()
 
     def addToToolbox(self):
         cw = self.toolBox.currentWidget()
