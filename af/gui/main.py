@@ -18,7 +18,7 @@ from af.gui.graphicsview import AfGraphicsView
 from af.gui.toolbars import NavToolBar, ViewToolBar
 from af.gui.sidebar import AfSortWidget
 from af.gui.sidebar import AfAnnotationWidget
-from af.gui.imagedialog import ImportDialog
+from af.gui.importdlg import ImportDialog
 from af.loader import AfLoader, AfLoaderThread
 
 # import resources
@@ -98,12 +98,12 @@ class AfMainWindow(QtGui.QMainWindow):
         self.toolBox.addItem(self.annotation, "annotation")
 
     def setupProgressBar(self):
-        self.progressbar = QtGui.QProgressBar(self)
+        frame = QtGui.QFrame(self)
+        self.progressbar = QtGui.QProgressBar(frame)
         self.progressbar.setMaximumHeight(15)
         self.abortBtn = QtGui.QPushButton('abort', self)
         self.abortBtn.clicked.connect(self.onAbort)
         self.abortBtn.setMaximumHeight(20)
-        frame = QtGui.QFrame(self)
         hbox = QtGui.QHBoxLayout(frame)
         hbox.addWidget(self.progressbar)
         hbox.addWidget(self.abortBtn)
@@ -143,7 +143,7 @@ class AfMainWindow(QtGui.QMainWindow):
             self.statusBar().showMessage(basename(file_))
 
     def openImporter(self):
-        dlg = ImportDialog()
+        dlg = ImportDialog(self)
         dlg.exec_()
 
     def addToToolbox(self):
