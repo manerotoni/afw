@@ -14,7 +14,7 @@ import numpy as np
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from af.hdfio import HdfReader
-
+from qimage2ndarray import array2qimage
 
 class AfLoaderThread(QtCore.QThread):
 

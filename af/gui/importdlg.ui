@@ -90,6 +90,9 @@
       </widget>
      </item>
      <item>
+      <layout class="QVBoxLayout" name="cbox"/>
+     </item>
+     <item>
       <layout class="QGridLayout" name="gbox">
        <item row="0" column="0">
         <widget class="QCheckBox" name="segmentation">

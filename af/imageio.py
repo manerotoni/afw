@@ -41,7 +41,7 @@ class LsmImage(Lsmimage):
         return types[self.bitdepth]
 
     @property
-    def zslices(self):
+    def zSlices(self):
         return self.header[self.CZ_LSM_INFO][self.ZSTACK]
 
     @property
@@ -52,3 +52,7 @@ class LsmImage(Lsmimage):
     @property
     def channels(self):
         return self.header[self.IMAGE][0][self.CHANNEL]
+
+    def iterQImages(self):
+        for ci in self.channels:
+            yield array2qimage(lsm.get_image(stack=0, channel=ci))
