@@ -7,8 +7,8 @@ __licence__ = 'GPL'
 
 
 import h5py
+import numpy as np
 
-HdfImageAttribs = {}
 
 class HdfWriter(object):
 
@@ -25,9 +25,8 @@ class HdfWriter(object):
         self._file.close()
 
     def setupImages(self, n_images, n_channels, size, dtype):
-        shape = (n_images, n_channels) + size
+        shape = size + (n_channels, n_images)
         self.images = self._file.create_dataset(self.IMAGES, shape, dtype=dtype)
 
-    def setImage(self, image, index, channel):
-
-        self.images[index, channel, :, :] = image
+    def setImage(self, image, index):
+        self.images[:, :, :, index] = image

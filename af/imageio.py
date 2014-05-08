@@ -52,20 +52,3 @@ class LsmImage(Lsmimage):
     @property
     def channels(self):
         return self.header[self.IMAGE][0][self.CHANNEL]
-
-    # def meta_images(self, channel):
-    #     """Get a list of cellcognition meta images for a given channel.
-    #     One meta image per z-slice"""
-    #     assert isinstance(channel, int)
-
-    #     if not (0 <= channel < self.channels):
-    #         raise RuntimeError("channel %d does not exist" %channel)
-
-    #     metaimages = list()
-    #     for i in xrange(self.zslices):
-    #         img = self.get_image(stack=i, channel=channel)
-    #         # kinda sucks, but theres no way around
-    #         metaimage = MetaImage()
-    #         metaimage.set_image(ccore.numpy_to_image(img, copy=True))
-    #         metaimages.append(metaimage)
-    #     return metaimages

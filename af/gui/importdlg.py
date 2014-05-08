@@ -10,8 +10,10 @@ __all__ = ('ImportDialog', )
 
 import glob
 from os.path import isfile, isdir, basename, dirname
-
 from os.path import splitext, expanduser
+
+import numpy as np
+from qimage2ndarray import array2qimage
 from pylsm import lsmreader
 
 from PyQt4 import uic
@@ -21,6 +23,7 @@ from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QMessageBox
 
 from af.hdfwriter import HdfWriter
+from af.gui.imagewidget import ImageWidget
 from af.imageio import LsmImage
 
 
@@ -34,6 +37,8 @@ class ImportDialog(QtGui.QDialog):
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        self.viewer = ImageWidget(self)
+        self.imagebox.addWidget(self.viewer)
 
         pbar= self.parent().progressbar
         self.progressUpdate.connect(pbar.setValue)
@@ -44,6 +49,7 @@ class ImportDialog(QtGui.QDialog):
         self.outputBtn.clicked.connect(self.onOpenOutFile)
         self.inputBtn.clicked.connect(self.onOpenInputDir)
         self.importBtn.clicked.connect(self.raw2hdf)
+        self.closeBtn.clicked.connect(self.close)
 
         self.progressStart.connect(lambda: self.importBtn.setEnabled(False))
         self.progressFinished.connect(lambda: self.importBtn.setEnabled(True))
@@ -74,7 +80,7 @@ class ImportDialog(QtGui.QDialog):
 
         if isdir(idir):
             self.inputDir.setText(idir)
-            pattern = self.inputDir.text() + "/*.*"
+            pattern = self.inputDir.text() + "/*.lsm"
             self._files = glob.glob(pattern)
             self.dirinfo.setText("%d images found" %len(self._files))
 
@@ -91,13 +97,25 @@ class ImportDialog(QtGui.QDialog):
 
         self.progressSetRange.emit(0, len(self._files))
         self.progressStart.emit()
+
+        image = np.empty(lsm.size+(lsm.channels, ), dtype=lsm.dtype)
         for i, file_ in enumerate(self._files):
             self.progressUpdate.emit(i+1)
             QtCore.QCoreApplication.processEvents()
             lsm = LsmImage(file_)
             lsm.open()
-            for ci in xrange(lsm.channels):
-                writer.setImage(lsm.get_image(stack=0, channel=ci), i, ci)
+            try:
+                for ci in xrange(lsm.channels):
+                    image[:, :, ci] = lsm.get_image(stack=0, channel=ci)
+                writer.setImage(image, i)
+            except Exception as e:
+                QMessageBox.critical(self,
+                                     "Error",
+                                     str(e) + "in file" + str(file))
+
+            qimage = array2qimage(image[:, :, 0])
+            qimage.convertToFormat(qimage.Format_RGB32)
+            self.viewer.showImage(qimage)
 
         writer.close()
         self.progressFinished.emit()
