@@ -10,6 +10,7 @@ __licence__ = 'GPL'
 
 import numpy as np
 from pylsm.lsmreader import Lsmimage
+from qimage2ndarray import array2qimage
 
 
 class LsmImage(Lsmimage):
@@ -54,5 +55,5 @@ class LsmImage(Lsmimage):
         return self.header[self.IMAGE][0][self.CHANNEL]
 
     def iterQImages(self):
-        for ci in self.channels:
-            yield array2qimage(lsm.get_image(stack=0, channel=ci))
+        for ci in xrange(self.channels):
+            yield array2qimage(self.get_image(stack=0, channel=ci))

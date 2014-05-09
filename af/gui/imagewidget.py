@@ -29,7 +29,11 @@ class ImageWidget(QtGui.QWidget):
 
     def showImage(self, image):
         assert isinstance(image, QtGui.QImage)
-        self.iview.showImage(image)
+        self.iview.showPixmap(QtGui.QPixmap.fromImage(image))
+
+    def showPixmap(self, pixmap):
+        assert isinstance(pixmap, QtGui.QPixmap)
+        self.iview.showPixmap(pixmap)
 
 
 class ImageViewer(QtGui.QGraphicsView):
@@ -73,8 +77,8 @@ class ImageViewer(QtGui.QGraphicsView):
         self.actionExpand.setActionGroup(actiongrp)
         self.actionMaximize.setActionGroup(actiongrp)
 
-    def showImage(self, image):
-        self._pixmap.setPixmap(QtGui.QPixmap.fromImage(image))
+    def showPixmap(self, pixmap):
+        self._pixmap.setPixmap(pixmap)
 
     @property
     def scalefactor(self):

@@ -43,6 +43,9 @@ class ColorButton(QtGui.QPushButton):
                            (color.red(), color.green(), color.blue()))
         self.colorChanged.emit(color)
 
+    def currentColor(self):
+        return self._current_color
+
     def onClicked(self):
         dlg = QtGui.QColorDialog(self)
 

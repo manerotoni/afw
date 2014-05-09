@@ -38,13 +38,15 @@ class ImportDialog(QtGui.QDialog):
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        self.setWindowTitle("Import Training Data")
         self.viewer = ImageWidget(self)
         self.imagebox.addWidget(self.viewer)
 
         self.cbar = ChannelBar(self)
         self.cbox.addWidget(self.cbar)
+        self.cbar.newPixmap.connect(self.viewer.showPixmap)
 
-        pbar= self.parent().progressbar
+        pbar = self.parent().progressbar
         self.progressUpdate.connect(pbar.setValue)
         self.progressSetRange.connect(pbar.setRange)
         self.progressFinished.connect(pbar.parent().hide)
@@ -90,7 +92,7 @@ class ImportDialog(QtGui.QDialog):
 
         lsm = LsmImage(self._files[0])
         lsm.open()
-        self.cbar.addChannels(lsm.channels)
+        self.cbar.setImages(list(lsm.iterQImages()))
         lsm.close()
 
     def raw2hdf(self):
