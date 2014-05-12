@@ -28,6 +28,21 @@ from af.gui.channelbar import ChannelBar
 from af.imageio import LsmImage
 
 
+class MetaData(object):
+
+    __slot__ = ["size", "dtype", "nchannels", "n_images"]
+
+    def __init__(self, size, n_channels, n_images, dtype):
+        self.size = size
+        self.n_channels = n_channels
+        self.dtype = dtype
+        self.n_images = n_images
+
+    @property
+    def image_dimension(self):
+        return self.size + (self.n_channels, )
+
+
 class ImportDialog(QtGui.QDialog):
 
     progressUpdate = QtCore.pyqtSignal(int)
@@ -41,7 +56,7 @@ class ImportDialog(QtGui.QDialog):
         self.setWindowTitle("Import Training Data")
         self.viewer = ImageWidget(self)
         self.imagebox.addWidget(self.viewer)
-
+        self.metadata =  None
         self.cbar = ChannelBar(self)
         self.cbox.addWidget(self.cbar)
         self.cbar.newPixmap.connect(self.viewer.showPixmap)
@@ -92,6 +107,8 @@ class ImportDialog(QtGui.QDialog):
 
         lsm = LsmImage(self._files[0])
         lsm.open()
+        self.metadata =  MetaData(lsm.size, lsm.channels,
+                                  len(self._files), lsm.dtype)
         images = list(lsm.iterQImages())
         self.cbar.addChannels(len(images))
         self.cbar.setImages(images)
@@ -102,17 +119,16 @@ class ImportDialog(QtGui.QDialog):
             QMessageBox.critical(self, "Error", "path does not exist!")
             return
 
-        lsm = LsmImage(self._files[0])
-        lsm.open()
-
         writer = HdfWriter(self.outputFile.text())
-        writer.setupImages(len(self._files), lsm.channels, lsm.size, lsm.dtype)
+        writer.setupImages(self.metadata.n_images, self.metadata.n_channels,
+                           self.metadata.size, self.metadata.dtype)
 
         self.progressSetRange.emit(0, len(self._files))
         self.progressStart.emit()
         channels = self.cbar.checkedChannels()
 
-        image = np.zeros(lsm.size+(len(channels), ), dtype=lsm.dtype)
+        image = np.zeros(self.metadata.image_dimension,
+                         dtype=self.metadata.dtype)
         for i, file_ in enumerate(self._files):
             self.progressUpdate.emit(i+1)
             QtCore.QCoreApplication.processEvents()
