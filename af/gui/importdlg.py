@@ -92,7 +92,9 @@ class ImportDialog(QtGui.QDialog):
 
         lsm = LsmImage(self._files[0])
         lsm.open()
-        self.cbar.setImages(list(lsm.iterQImages()))
+        images = list(lsm.iterQImages())
+        self.cbar.addChannels(len(images))
+        self.cbar.setImages(images)
         lsm.close()
 
     def raw2hdf(self):
@@ -124,10 +126,9 @@ class ImportDialog(QtGui.QDialog):
                 QMessageBox.critical(self,
                                      "Error",
                                      "%s (%s)" %(e, file_))
-            if len(channels) > 0:
-                qimage = array2qimage(image)
-                qimage.convertToFormat(qimage.Format_RGB32)
-                self.viewer.showImage(qimage)
+
+            self.cbar.setImages(list(lsm.iterQImages()))
+            lsm.close()
 
         writer.close()
         self.progressFinished.emit()

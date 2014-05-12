@@ -52,7 +52,7 @@ class ImageViewer(QtGui.QGraphicsView):
 
         self._pixmap = QtGui.QGraphicsPixmapItem()
         self._pixmap.setShapeMode(QtGui.QGraphicsPixmapItem.BoundingRectShape)
-        self._pixmap.setTransformationMode(Qt.SmoothTransformation)
+        # self._pixmap.setTransformationMode(Qt.SmoothTransformation)
         self.scene().addItem(self._pixmap)
         self.setToolTip("ctrl+mouse to pan/zoom")
 

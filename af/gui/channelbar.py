@@ -83,6 +83,5 @@ class ChannelBar(QtGui.QWidget):
         self.newPixmap.emit(pixmap)
 
     def setImages(self, images):
-        self.addChannels(len(images))
         self._images = images
         self.updateImage()
