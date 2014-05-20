@@ -25,6 +25,7 @@ from PyQt4.QtGui import QMessageBox
 from af.hdfwriter import HdfWriter
 from af.gui.imagewidget import ImageWidget
 from af.gui.channelbar import ChannelBar
+from af.gui.contrast import ContrastWidget
 from af.imageio import LsmImage
 
 
@@ -60,6 +61,8 @@ class ImportDialog(QtGui.QDialog):
         self.cbar = ChannelBar(self)
         self.cbox.addWidget(self.cbar)
         self.cbar.newPixmap.connect(self.viewer.showPixmap)
+        self.contrast = ContrastWidget(["foo", "bar", "baz"], self)
+        self.contrastbox.addWidget(self.contrast)
 
         pbar = self.parent().progressbar
         self.progressUpdate.connect(pbar.setValue)

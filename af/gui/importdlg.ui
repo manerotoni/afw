@@ -93,35 +93,7 @@
       <layout class="QVBoxLayout" name="cbox"/>
      </item>
      <item>
-      <layout class="QGridLayout" name="gbox">
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="segmentation">
-         <property name="text">
-          <string>segmentation</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="importBtn">
-         <property name="text">
-          <string>import data</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QLabel" name="dirinfo">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="contrastbox"/>
      </item>
      <item>
       <spacer name="spacer0">
@@ -138,6 +110,37 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="dirinfo">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="gbox">
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="segmentation">
+         <property name="text">
+          <string>segmentation</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="importBtn">
+         <property name="text">
+          <string>import data</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QPushButton" name="closeBtn">
