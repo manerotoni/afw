@@ -16,6 +16,15 @@ from cecog.environment import CecogEnvironment
 from cecog import ccore
 
 
+features  = ['granulometry', 'normbase', 'normbase2', 'roisize',
+             'circularity', 'irregularity', 'irregularity2', 'axes',
+             'distance', 'convexhull', 'moments', 'levelset']
+
+features2 = {'haralick_categories': ['haralick', 'haralick2'],
+             'haralick_distances': (1, 2, 4, 8)}
+
+
+
 class Segmentation(object):
 
     def __init__(self, image, mean_radius=3, window_size=42, min_contrast=3,
