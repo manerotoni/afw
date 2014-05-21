@@ -5,13 +5,26 @@ contrast.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
+__all__ = ('AfEnhancerWidget', 'AfContrasSliderWidget')
+
+from os.path import splitext
+import numpy as np
+
+from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
-class ContrastManager(object):
+
+class BaCCalculator(QtCore.QObject):
+    """Brightness and Contrast calculator. By using the proper setter methods.
+    all the other properties get updated automatically. Each call of those
+    methods emit the signal 'valuesUpdated'."""
+
+    valuesUpdated = QtCore.pyqtSignal()
 
     def __init__(self, default_minimum, default_maximum,
-                 disp_minimum=0, disp_maximum=255):
+                 disp_minimum=0, disp_maximum=255, *args, **kw):
+        super(BaCCalculator, self).__init__(*args, **kw)
         self.default_minimum = default_minimum
         self.default_maximum = default_maximum
         self.minimum = default_minimum
@@ -30,10 +43,11 @@ class ContrastManager(object):
         self.maximum = self.default_maximum
         self.brightness = self.slider_range / 2.0
         self.contrast = self.slider_range / 2.0
+        self.valuesUpdated.emit()
 
     def setImageMinMax(self, image):
-        self.image_minimum = numpy.min(image)
-        self.image_maximum = numpy.max(image)
+        self.image_minimum = image.min()
+        self.image_maximum = image.max()
 
     def setImageToMinMax(self, image=None):
         if not image is None:
@@ -49,11 +63,16 @@ class ContrastManager(object):
         if contrast <= mid:
             slope = contrast / mid
         else:
-            slope = mid / (self.slider_range - contrast)
+            try:
+                slope = mid / (self.slider_range - contrast)
+            except ZeroDivisionError:
+                slope = mid / self.slider_range
+
         if slope > 0.0:
             range = self.default_maximum - self.default_minimum
             self.minimum = center - (0.5 * range) / slope
             self.maximum = center + (0.5 * range) / slope
+        self.valuesUpdated.emit()
 
     def setBrightness(self, brightness):
         self.brightness = brightness
@@ -63,18 +82,21 @@ class ContrastManager(object):
         width = self.maximum - self.minimum
         self.minimum = center - width / 2.0
         self.maximum = center + width / 2.0
+        self.valuesUpdated.emit()
 
     def setMinimum(self, minimum):
         self.minimum = minimum
         if self.minimum > self.maximum:
             self.maximum = self.minimum
         self.update()
+        self.valuesUpdated.emit()
 
     def setMaximum(self, maximum):
         self.maximum = maximum
         if self.minimum > self.maximum:
             self.minimum = self.maximum
         self.update()
+        self.valuesUpdated.emit()
 
     def update(self):
         range = float(self.default_maximum - self.default_minimum + 1)
@@ -88,132 +110,110 @@ class ContrastManager(object):
         self.brightness = normalized * self.slider_range
 
 
-class ContrastWidget(QtGui.QWidget):
+class AfContrastSliderWidget(QtGui.QWidget):
+    """Slider widget contains the 4 sliders for contrast enhancement of
+    one slinge grey level image."""
 
-    SLIDER_NAMES = ['minimum', 'maximum', 'brightness', 'contrast']
+    def __init__(self, parent, range_=(0, 256)):
+        super(AfContrastSliderWidget, self).__init__(parent)
+        uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        self.settings = BaCCalculator(*range_)
 
-    valuesChanged = QtCore.pyqtSignal(str)
-
-    def __init__(self, channel_names, parent, bitdepth=8):
-        super(ContrastWidget, self).__init__(parent)
-
-        self.setMaximumWidth(220)
-
-        layout = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom, self)
-        layout.setContentsMargins(0, 0, 0, 0)
-
-        frame0 = QtGui.QFrame(self)
-        layout0 = QtGui.QBoxLayout(QtGui.QBoxLayout.LeftToRight, frame0)
-        layout0.setContentsMargins(0, 0, 0, 0)
-        layout0.addStretch(1)
-        grp = QtGui.QButtonGroup(frame0)
-        grp.setExclusive(True)
-
-        self._display_settings = {}
-        self._current = None
-
-        fct = lambda x: lambda y: self.onChannelChanged(x, y)
-        for idx, name in enumerate(channel_names):
-            btn = QtGui.QPushButton(name, frame0)
-            btn.toggled.connect(fct(name))
-            btn.setCheckable(True)
-            grp.addButton(btn)
-            layout0.addWidget(btn)
-            self._display_settings[name] = ContrastManager(0, 2**bitdepth)
-
-        layout0.addStretch(1)
-        layout.addWidget(frame0)
-
-        frame1 = QtGui.QFrame(self)
-        layout1 = QtGui.QGridLayout(frame1)
-        layout1.setContentsMargins(2, 0, 2, 0)
-
-        self._newSlider(frame1, "minimum", (0, 2**bitdepth), 0)
-        self._newSlider(frame1, "maximum", (0, 2**bitdepth), 1)
-        self._newSlider(frame1, "brightness", (0, 2**bitdepth), 2)
-        self._newSlider(frame1, "contrast", (0, 2**bitdepth), 3)
-
-        layout.addWidget(frame1)
-
-        frame2 = QtGui.QFrame(self)
-        layout2 = QtGui.QBoxLayout(QtGui.QBoxLayout.LeftToRight, frame2)
-        layout2.setContentsMargins(5, 5, 5, 5)
-        btn = QtGui.QPushButton('Min/Max', self)
-        btn.clicked.connect(self.onMinMax)
-        layout2.addWidget(btn)
-        btn = QtGui.QPushButton('Reset', self)
-        btn.clicked.connect(self.onReset)
-        layout2.addWidget(btn)
-        layout.addWidget(frame2)
-
-        if len(grp.buttons()) > 0:
-            grp.buttons()[0].setChecked(True)
-
-    def _newSlider(self, parent, name, range_, row):
-        layout = parent.layout()
-        fct = lambda x: lambda : self.onSliderChanged(x)
-
-        label = QtGui.QLabel(name.capitalize(), parent)
-        label.setAlignment(QtCore.Qt.AlignRight)
-        slider = QtGui.QSlider(QtCore.Qt.Horizontal, parent)
-        slider.setRange(*range_)
-        slider.setTickPosition(QtGui.QSlider.TicksBelow)
-        slider.valueChanged.connect(fct(name))
-        slider.setObjectName(name)
-        layout.addWidget(label, row, 0)
-        layout.addWidget(slider, row, 1)
-
-        setattr(self, name, slider)
+        self.minimum.setRange(*range_)
+        self.maximum.setRange(*range_)
+        self.brightness.setRange(*range_)
+        self.contrast.setRange(*range_)
 
 
-    def setSliders(self, ignore=None):
-        s = self._display_settings[self._current]
+        self.settings.valuesUpdated.connect(self.updateSliders)
+        self.minMaxBtn.clicked.connect(self.settings.setImageToMinMax)
+        self.resetBtn.clicked.connect(self.settings.reset)
+
+        self.minimum.valueChanged.connect(self.settings.setMinimum)
+        self.maximum.valueChanged.connect(self.settings.setMaximum)
+        self.contrast.valueChanged.connect(self.settings.setContrast)
+        self.brightness.valueChanged.connect(self.settings.setBrightness)
+        self.updateSliders()
+
+    def _slidersBlockSignals(self, state):
         for slider in (self.minimum, self.maximum,
-                       self.brightness, self.contrast):
-            if slider.objectName() != ignore:
-                slider.blockSignals(True)
-                slider.setValue(getattr(s, slider.objectName()))
-                slider.blockSignals(False)
+                       self.contrast, self.brightness):
+            slider.blockSignals(state)
 
-    def onSliderChanged(self, name):
-        s = self._display_settings[self._current]
-        sld = getattr(self, name)
-        getattr(s, "set%s" %name.title())(sld.value())
-        self.setSliders(ignore=name)
-        self.valuesChanged.emit(self._current)
+
+    def updateSliders(self):
+        self._slidersBlockSignals(True)
+        self.minimum.setValue(self.settings.minimum)
+        self.maximum.setValue(self.settings.maximum)
+        self.contrast.setValue(self.settings.contrast)
+        self.brightness.setValue(self.settings.brightness)
+        self._slidersBlockSignals(False)
 
     def onReset(self):
-        s = self._display_settings[self._current]
-        s.reset()
-        self.setSliders()
-        self.valuesChanged.emit(self._current)
+        self.settings.reset()
 
     def onMinMax(self):
-        s = self._display_settings[self._current]
-        s.setImageToMinMax()
-        self.setSliders()
-        self.valuesChanged.emit(self._current)
+        self.settings.setImageToMinMax()
 
-    def onChannelChanged(self, name, state):
-        if state:
-            self._current = name
-            self.setSliders()
+    def transformImage(self, image):
 
-    def transformImage(self, name, image):
-
-        s = self._display_settings[name]
-        s.setImageMinMax(image)
-
+        self.settings.setImageMinMax(image)
         # FIXME: Just a workaround, the image comes with wrong strides
         #        fixed in master
-        image2 = numpy.zeros(image.shape, dtype=numpy.float32, order='F')
+        image2 = np.zeros(image.shape, dtype=numpy.float32, order='F')
         image2[:] = image
 
         # add a small value in case max == min
-        image2 *= 255.0 / (s.maximum - s.minimum + 0.1)
-        image2 -= s.minimum
+        image2 *= 255.0 / (self.settings.maximum - self.settings.minimum + 0.1)
+        image2 -= self.settings.minimum
 
         image2 = image2.clip(0, 255)
 
-        image2 = numpy.require(image2, numpy.uint8)
+        image2 = np.require(image2, numpy.uint8)
         return image2
+
+
+class AfEnhancerWidget(QtGui.QWidget):
+    """Contrast enhancer widget manages multiple slider widgets for
+    multiple channels."""
+
+    def __init__(self, *args, **kw):
+        super(AfEnhancerWidget, self).__init__(*args, **kw)
+
+        vbox = QtGui.QVBoxLayout(self)
+        self.buttonbox = QtGui.QHBoxLayout()
+
+        self.button_group = QtGui.QButtonGroup(self)
+        self.stack = QtGui.QStackedWidget()
+
+        vbox.addLayout(self.buttonbox)
+        vbox.addWidget(self.stack)
+
+        self.button_group.buttonClicked[int].connect(self.changeChannel)
+        vbox.setContentsMargins(0, 0, 0, 0)
+
+    def clear(self):
+        for button in self.button_group.buttons():
+            self.button_group.remove_button(button)
+
+        for i in xrange(self.stack.count()):
+            self.stack.removeWidget(self.stack.widget(i))
+
+    def addChannel(self, name):
+        sliderwidget = AfContrastSliderWidget(self.stack, range_=(0, 255))
+        idx = self.stack.addWidget(sliderwidget)
+        radiobtn = QtGui.QRadioButton(name, self)
+        # index of stackwidget and buttongroup id correspond
+        self.button_group.addButton(radiobtn, idx)
+        self.buttonbox.addWidget(radiobtn)
+
+        if len(self.button_group.buttons()) == 1:
+            self.button_group.buttons()[0].setChecked(True)
+
+    def changeChannel(self, index):
+        print index
+        self.stack.setCurrentIndex(index)
+
+    def enhanceImage(self, index, image):
+        sliderwidget = self.stack.widget(index)
+        return sliderwidget.transformImage(image)

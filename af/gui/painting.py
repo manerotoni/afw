@@ -9,9 +9,6 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
 
-
-
-
 class AfPainter(object):
 
     @staticmethod

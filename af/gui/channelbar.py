@@ -13,6 +13,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from af.gui.colorbutton import ColorButton
 from af.gui.painting import AfPainter
+from af.gui.contrast import AfEnhancerWidget
 
 
 def lut_from_color(color, ncolors):
@@ -32,8 +33,21 @@ class ChannelBar(QtGui.QWidget):
 
     def __init__(self, *args, **kw):
         super(ChannelBar, self).__init__(*args, **kw)
-        gbox = QtGui.QGridLayout(self)
-        self.setLayout(gbox)
+        vbox = QtGui.QVBoxLayout(self)
+
+        self.gbox = QtGui.QGridLayout()
+        cbox = QtGui.QVBoxLayout()
+        self.enhancer = AfEnhancerWidget(self)
+
+        cbox.addWidget(self.enhancer)
+
+        vbox.addLayout(self.gbox)
+        vbox.addLayout(cbox)
+
+        vbox.setContentsMargins(0, 0, 0, 0)
+        self.gbox.setContentsMargins(0, 0, 0, 0)
+        cbox.setContentsMargins(0, 0, 0, 0)
+
         self._images = None
 
     def addChannels(self, n):
@@ -44,23 +58,26 @@ class ChannelBar(QtGui.QWidget):
             cb.stateChanged.connect(self.updateImage)
             cbtn  = ColorButton()
             cbtn.colorChanged.connect(self.updateImage)
-            self.layout().addWidget(cb, i, 0)
-            self.layout().addWidget(cbtn, i, 1)
+            self.gbox.addWidget(cb, i, 0)
+            self.gbox.addWidget(cbtn, i, 1)
+            self.enhancer.addChannel(cb.text())
 
     def widgetAt(self, row, column):
-        return self.layout().itemAtPosition(row, column).widget()
+        return self.gbox.itemAtPosition(row, column).widget()
 
     def clear(self):
-        for i in xrange(self.layout().rowCount()):
-            for j in xrange(self.layout().columnCount()):
-                item  = self.layout().itemAtPosition(i, j)
+        self.enhancer.clear()
+        for i in xrange(self.gbox.rowCount()):
+            for j in xrange(self.gbox.columnCount()):
+                item  = self.gbox.itemAtPosition(i, j)
                 if item is not None:
-                    self.layout().removeWidget(item.widget())
+                    self.gbox.removeWidget(item.widget())
                     item.widget().close()
+
 
     def checkedChannels(self):
         cidx = list()
-        for i in xrange(self.layout().rowCount()):
+        for i in xrange(self.gbox.rowCount()):
             cb = self.widgetAt(i, 0)
             if cb.isChecked():
                 cidx.append(i)
@@ -77,6 +94,7 @@ class ChannelBar(QtGui.QWidget):
             image = self._images[i]
             lut = lut_from_color(color, image.depth()*8)
             image = image.convertToFormat(image.Format_Indexed8, lut)
+#            image = self.enhancer.enhanceImage(i, image)
             images.append(image)
 
         pixmap = AfPainter.blend(images)

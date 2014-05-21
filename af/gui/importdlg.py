@@ -13,8 +13,6 @@ from os.path import isfile, isdir, basename, dirname
 from os.path import splitext, expanduser
 
 import numpy as np
-from qimage2ndarray import array2qimage
-from pylsm import lsmreader
 
 from PyQt4 import uic
 from PyQt4 import QtGui
@@ -25,8 +23,30 @@ from PyQt4.QtGui import QMessageBox
 from af.hdfwriter import HdfWriter
 from af.gui.imagewidget import ImageWidget
 from af.gui.channelbar import ChannelBar
-from af.gui.contrast import ContrastWidget
 from af.imageio import LsmImage
+
+
+class ImageProps(object):
+
+    __slots__ = ["min", "max", "range", "bitdepth"]
+
+    def __init__(self, image):
+
+        self.image_min = image.min()
+        self.image.max = image.max()
+
+        if np.issubdtype(np.int, image.dtype):
+            iinfo = np.iinfo(image.dtype)
+            self.min = iinfo.min
+            self.max = iinfo.max
+            self.range = self.max - self.min
+
+        elif np.issubdtype(np.float, image.dtype):
+            finfo = np.finfo(image.dtype)
+            self.min = 0.0
+            self.max = 1.0
+            self.range = 1.0
+        self.bitdepth = np.nbytes[image.dtype]*8
 
 
 class MetaData(object):
@@ -55,14 +75,15 @@ class ImportDialog(QtGui.QDialog):
         super(ImportDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("Import Training Data")
+
         self.viewer = ImageWidget(self)
+        self.viewer.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
+                                  QtGui.QSizePolicy.MinimumExpanding)
         self.imagebox.addWidget(self.viewer)
         self.metadata =  None
         self.cbar = ChannelBar(self)
         self.cbox.addWidget(self.cbar)
         self.cbar.newPixmap.connect(self.viewer.showPixmap)
-        self.contrast = ContrastWidget(["foo", "bar", "baz"], self)
-        self.contrastbox.addWidget(self.contrast)
 
         pbar = self.parent().progressbar
         self.progressUpdate.connect(pbar.setValue)
