@@ -10,7 +10,49 @@ __licence__ = 'GPL'
 
 import numpy as np
 from pylsm.lsmreader import Lsmimage
-from qimage2ndarray import array2qimage
+from qimage2ndarray import gray2qimage
+
+
+class ImageProps(object):
+
+    __slots__ = ["image_min", "image_max", "min", "max", "range", "bitdepth",
+                 "histogram"]
+
+    def __init__(self, image):
+
+        self.image_min = image.min()
+        self.image_max = image.max()
+
+        if np.issubdtype(np.int, image.dtype) or \
+                np.issubdtype(np.uint, image.dtype):
+            iinfo = np.iinfo(image.dtype)
+            self.min = iinfo.min
+            self.max = iinfo.max
+            self.range = self.max - self.min
+            self.histogram = np.histogram(image.flatten(), bins=self.range)
+
+        elif np.issubdtype(np.float, image.dtype):
+            finfo = np.finfo(image.dtype)
+            self.min = 0.0
+            self.max = 1.0
+            self.range = 1.0
+            self.histogram = np.histogram(image.flatten(), bins=256)
+        self.bitdepth = np.nbytes[image.dtype]*8
+
+
+class MetaData(object):
+
+    __slot__ = ["size", "dtype", "nchannels", "n_images"]
+
+    def __init__(self, size, n_channels, dtype, n_images=None):
+        self.size = size
+        self.n_channels = n_channels
+        self.dtype = dtype
+        self.n_images = n_images
+
+    @property
+    def image_dimension(self):
+        return self.size + (self.n_channels, )
 
 
 class LsmImage(Lsmimage):
@@ -29,6 +71,16 @@ class LsmImage(Lsmimage):
     def __init__(self, *args, **kw):
         Lsmimage.__init__(self, *args, **kw)
 
+    # def __del__(self):
+    #     self.close()
+
+    def iterprops(self):
+        for ci in xrange(self.channels):
+            yield ImageProps(self.get_image(stack=0, channel=ci))
+
+    @property
+    def metadata(self, nfiles=None):
+        return MetaData(self.size, self.channels, self.dtype)
 
     @property
     def bitdepth(self):
@@ -56,4 +108,5 @@ class LsmImage(Lsmimage):
 
     def iterQImages(self):
         for ci in xrange(self.channels):
-            yield array2qimage(self.get_image(stack=0, channel=ci))
+            yield gray2qimage(self.get_image(stack=0, channel=ci),
+                              normalize=False)

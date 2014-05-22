@@ -26,43 +26,6 @@ from af.gui.channelbar import ChannelBar
 from af.imageio import LsmImage
 
 
-class ImageProps(object):
-
-    __slots__ = ["min", "max", "range", "bitdepth"]
-
-    def __init__(self, image):
-
-        self.image_min = image.min()
-        self.image.max = image.max()
-
-        if np.issubdtype(np.int, image.dtype):
-            iinfo = np.iinfo(image.dtype)
-            self.min = iinfo.min
-            self.max = iinfo.max
-            self.range = self.max - self.min
-
-        elif np.issubdtype(np.float, image.dtype):
-            finfo = np.finfo(image.dtype)
-            self.min = 0.0
-            self.max = 1.0
-            self.range = 1.0
-        self.bitdepth = np.nbytes[image.dtype]*8
-
-
-class MetaData(object):
-
-    __slot__ = ["size", "dtype", "nchannels", "n_images"]
-
-    def __init__(self, size, n_channels, n_images, dtype):
-        self.size = size
-        self.n_channels = n_channels
-        self.dtype = dtype
-        self.n_images = n_images
-
-    @property
-    def image_dimension(self):
-        return self.size + (self.n_channels, )
-
 
 class ImportDialog(QtGui.QDialog):
 
@@ -131,11 +94,13 @@ class ImportDialog(QtGui.QDialog):
 
         lsm = LsmImage(self._files[0])
         lsm.open()
-        self.metadata =  MetaData(lsm.size, lsm.channels,
-                                  len(self._files), lsm.dtype)
+
+        self.metadata = lsm.metadata
+        self.metadata.n_images = len(self._files)
+
         images = list(lsm.iterQImages())
         self.cbar.addChannels(len(images))
-        self.cbar.setImages(images)
+        self.cbar.setImages(images, list(lsm.iterprops()))
         lsm.close()
 
     def raw2hdf(self):

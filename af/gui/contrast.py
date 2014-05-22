@@ -30,6 +30,21 @@ class BaCCalculator(QtCore.QObject):
         self.minimum = default_minimum
         self.maximum = default_maximum
         self.setBitdepth(disp_maximum, disp_minimum)
+        self._image_properties = None
+
+    @property
+    def image_properties(self):
+        return self._image_properties
+
+    @image_properties.setter
+    def image_properties(self, prop):
+        self._image_properties = prop
+        self.image_minimum = prop.min
+        self.image_maximum = prop.max
+
+    @image_properties.deleter
+    def image_properties(self):
+        del self._image_properties
 
     def setBitdepth(self, disp_maximum, disp_minimum=0):
         self.slider_range = disp_maximum - disp_minimum + 1
@@ -45,16 +60,11 @@ class BaCCalculator(QtCore.QObject):
         self.contrast = self.slider_range / 2.0
         self.valuesUpdated.emit()
 
-    def setImageMinMax(self, image):
-        self.image_minimum = image.min()
-        self.image_maximum = image.max()
-
-    def setImageToMinMax(self, image=None):
-        if not image is None:
-            self.setImageMinMax(image)
+    def setImageToMinMax(self):
         self.minimum = self.image_minimum
         self.maximum = self.image_maximum
         self.update()
+        self.valuesUpdated.emit()
 
     def setContrast(self, contrast):
         self.contrast = contrast
@@ -98,6 +108,27 @@ class BaCCalculator(QtCore.QObject):
         self.update()
         self.valuesUpdated.emit()
 
+    def setAuto(self):
+
+        csum = self.image_properties.histogram[0].cumsum()
+        csum = csum/float(csum[-1])
+
+        try:
+            self.maximum = max(np.argmax(csum[csum <= 0.99]),
+                               np.floor(self.image_properties.range/2.0))
+        except ValueError:
+            self.maximum = self.image_properties.image_max
+
+        try:
+            self.minimum = min(np.argmax(csum[csum <= 0.01]),
+                               np.floor(self.image_properties.range/2.))
+        except ValueError:
+            self.minimum = self.image_properties.image_min
+
+
+        self.update()
+        self.valuesUpdated.emit()
+
     def update(self):
         range = float(self.default_maximum - self.default_minimum + 1)
         range2 = float(self.maximum - self.minimum + 1)
@@ -114,6 +145,8 @@ class AfContrastSliderWidget(QtGui.QWidget):
     """Slider widget contains the 4 sliders for contrast enhancement of
     one slinge grey level image."""
 
+    valuesUpdated = QtCore.pyqtSignal()
+
     def __init__(self, parent, range_=(0, 256)):
         super(AfContrastSliderWidget, self).__init__(parent)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
@@ -128,6 +161,7 @@ class AfContrastSliderWidget(QtGui.QWidget):
         self.settings.valuesUpdated.connect(self.updateSliders)
         self.minMaxBtn.clicked.connect(self.settings.setImageToMinMax)
         self.resetBtn.clicked.connect(self.settings.reset)
+        self.autoBtn.clicked.connect(self.settings.setAuto)
 
         self.minimum.valueChanged.connect(self.settings.setMinimum)
         self.maximum.valueChanged.connect(self.settings.setMaximum)
@@ -135,11 +169,18 @@ class AfContrastSliderWidget(QtGui.QWidget):
         self.brightness.valueChanged.connect(self.settings.setBrightness)
         self.updateSliders()
 
+    @property
+    def image_properties(self):
+        return self.settings.image_properties
+
+    @image_properties.setter
+    def image_properties(self, prop):
+        self.settings.image_properties = prop
+
     def _slidersBlockSignals(self, state):
         for slider in (self.minimum, self.maximum,
                        self.contrast, self.brightness):
             slider.blockSignals(state)
-
 
     def updateSliders(self):
         self._slidersBlockSignals(True)
@@ -149,18 +190,17 @@ class AfContrastSliderWidget(QtGui.QWidget):
         self.brightness.setValue(self.settings.brightness)
         self._slidersBlockSignals(False)
 
-    def onReset(self):
-        self.settings.reset()
+        self.valuesUpdated.emit()
 
     def onMinMax(self):
         self.settings.setImageToMinMax()
 
     def transformImage(self, image):
 
-        self.settings.setImageMinMax(image)
+        # self.settings.setImageMinMax(image)
         # FIXME: Just a workaround, the image comes with wrong strides
         #        fixed in master
-        image2 = np.zeros(image.shape, dtype=numpy.float32, order='F')
+        image2 = np.zeros(image.shape, dtype=np.float32, order='F')
         image2[:] = image
 
         # add a small value in case max == min
@@ -169,13 +209,15 @@ class AfContrastSliderWidget(QtGui.QWidget):
 
         image2 = image2.clip(0, 255)
 
-        image2 = np.require(image2, numpy.uint8)
+        image2 = np.require(image2, np.uint8)
         return image2
 
 
 class AfEnhancerWidget(QtGui.QWidget):
     """Contrast enhancer widget manages multiple slider widgets for
     multiple channels."""
+
+    valuesUpdated = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kw):
         super(AfEnhancerWidget, self).__init__(*args, **kw)
@@ -194,13 +236,24 @@ class AfEnhancerWidget(QtGui.QWidget):
 
     def clear(self):
         for button in self.button_group.buttons():
-            self.button_group.remove_button(button)
+            self.button_group.removeButton(button)
 
         for i in xrange(self.stack.count()):
             self.stack.removeWidget(self.stack.widget(i))
 
+    def setImageProps(self, props):
+
+        if len(props) != self.stack.count():
+            raise RuntimeError(("Lenght of list does not match the "
+                                "number of enhancer widgets"))
+
+        for i, prop in enumerate(props):
+            self.stack.widget(i).image_properties = prop
+
+
     def addChannel(self, name):
-        sliderwidget = AfContrastSliderWidget(self.stack, range_=(0, 255))
+        sliderwidget = AfContrastSliderWidget(self, range_=(0, 255))
+        sliderwidget.valuesUpdated.connect(self.valuesUpdated.emit)
         idx = self.stack.addWidget(sliderwidget)
         radiobtn = QtGui.QRadioButton(name, self)
         # index of stackwidget and buttongroup id correspond
@@ -211,9 +264,20 @@ class AfEnhancerWidget(QtGui.QWidget):
             self.button_group.buttons()[0].setChecked(True)
 
     def changeChannel(self, index):
-        print index
         self.stack.setCurrentIndex(index)
 
     def enhanceImage(self, index, image):
         sliderwidget = self.stack.widget(index)
         return sliderwidget.transformImage(image)
+
+    def lut_from_color(self, index, color, ncolors):
+        """Create a colormap from a single color e.g. red and return
+        a list of qRgb instances.
+        """
+        lut = np.zeros((ncolors, 3), dtype=int)
+        for i, col in enumerate((color.red(), color.green(), color.blue())):
+            lut[: , i] = np.array(range(ncolors)) / (ncolors - 1.0) * col
+
+        lut2 = self.enhanceImage(index, lut)
+
+        return [QtGui.qRgb(r, g, b) for r, g, b in lut2]

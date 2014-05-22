@@ -38,6 +38,7 @@ class ChannelBar(QtGui.QWidget):
         self.gbox = QtGui.QGridLayout()
         cbox = QtGui.QVBoxLayout()
         self.enhancer = AfEnhancerWidget(self)
+        self.enhancer.valuesUpdated.connect(self.updateImage)
 
         cbox.addWidget(self.enhancer)
 
@@ -92,14 +93,16 @@ class ChannelBar(QtGui.QWidget):
             # converting the gray image to the color defined in the button
             color = self.widgetAt(i, 1).currentColor()
             image = self._images[i]
-            lut = lut_from_color(color, image.depth()*8)
-            image = image.convertToFormat(image.Format_Indexed8, lut)
-#            image = self.enhancer.enhanceImage(i, image)
+            lut = self.enhancer.lut_from_color(i, color, 256)
+            image.setColorTable(lut)
             images.append(image)
 
         pixmap = AfPainter.blend(images)
         self.newPixmap.emit(pixmap)
 
-    def setImages(self, images):
+    def setImages(self, images, image_props=None):
         self._images = images
+
+        if image_props is not None:
+            self.enhancer.setImageProps(image_props)
         self.updateImage()
