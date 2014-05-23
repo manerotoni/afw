@@ -68,13 +68,9 @@ class ChannelBar(QtGui.QWidget):
 
     def clear(self):
         self.enhancer.clear()
-        for i in xrange(self.gbox.rowCount()):
-            for j in xrange(self.gbox.columnCount()):
-                item  = self.gbox.itemAtPosition(i, j)
-                if item is not None:
-                    self.gbox.removeWidget(item.widget())
-                    item.widget().close()
-
+        for i in range(self.gbox.count()):
+            item = self.gbox.takeAt(0)
+            item.widget().close()
 
     def checkedChannels(self):
         cidx = list()

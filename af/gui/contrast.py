@@ -110,18 +110,19 @@ class BaCCalculator(QtCore.QObject):
 
     def setAuto(self):
 
-        csum = self.image_properties.histogram[0].cumsum()
-        csum = csum/float(csum[-1])
+        hist = self.image_properties.histogram[0]
+        npixels = hist.sum()
+        hmin = np.floor(npixels/100.0*0.1) # 0.5 % of the pixes
+        hmax = np.floor(npixels - hmin)
+        csum = hist.cumsum()
 
         try:
-            self.maximum = max(np.argmax(csum[csum <= 0.99]),
-                               np.floor(self.image_properties.range/2.0))
+            self.maximum = csum[csum <= hmax].size - 1
         except ValueError:
             self.maximum = self.image_properties.image_max
 
         try:
-            self.minimum = min(np.argmax(csum[csum <= 0.01]),
-                               np.floor(self.image_properties.range/2.))
+            self.minimum = max(csum[csum <= hmin].size - 1, 0)
         except ValueError:
             self.minimum = self.image_properties.image_min
 
@@ -167,6 +168,13 @@ class AfContrastSliderWidget(QtGui.QWidget):
         self.maximum.valueChanged.connect(self.settings.setMaximum)
         self.contrast.valueChanged.connect(self.settings.setContrast)
         self.brightness.valueChanged.connect(self.settings.setBrightness)
+
+
+        self.minimum.valueChanged.connect(self.valuesToolTip)
+        self.maximum.valueChanged.connect(self.valuesToolTip)
+        self.contrast.valueChanged.connect(self.valuesToolTip)
+        self.brightness.valueChanged.connect(self.valuesToolTip)
+
         self.updateSliders()
 
     @property
@@ -191,6 +199,15 @@ class AfContrastSliderWidget(QtGui.QWidget):
         self._slidersBlockSignals(False)
 
         self.valuesUpdated.emit()
+
+    def valuesToolTip(self, dummy=None):
+        # is connected to slider.valueChanged which emits an integer value
+        msg = ("min: %d\nmax: %d\ncontrast: %d\nbrightness: %d"
+               %(self.settings.minimum, self.settings.maximum,
+                 self.settings.contrast, self.settings.brightness))
+
+        QtGui.QToolTip.showText(QtGui.QCursor.pos(), msg, self)
+
 
     def onMinMax(self):
         self.settings.setImageToMinMax()
@@ -237,9 +254,12 @@ class AfEnhancerWidget(QtGui.QWidget):
     def clear(self):
         for button in self.button_group.buttons():
             self.button_group.removeButton(button)
+            button.close()
 
-        for i in xrange(self.stack.count()):
-            self.stack.removeWidget(self.stack.widget(i))
+        for i in range(self.stack.count()):
+            widget = self.stack.widget(0)
+            self.stack.removeWidget(widget)
+            widget.close()
 
     def setImageProps(self, props):
 

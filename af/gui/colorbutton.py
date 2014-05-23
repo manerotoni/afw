@@ -32,6 +32,7 @@ class ColorButton(QtGui.QPushButton):
 
     def close(self):
         self._setDefaultColors()
+        super(ColorButton, self).close()
 
     @classmethod
     def _setDefaultColors(cls):
