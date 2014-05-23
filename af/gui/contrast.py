@@ -208,7 +208,6 @@ class AfContrastSliderWidget(QtGui.QWidget):
 
         QtGui.QToolTip.showText(QtGui.QCursor.pos(), msg, self)
 
-
     def onMinMax(self):
         self.settings.setImageToMinMax()
 

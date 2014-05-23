@@ -124,8 +124,8 @@ class ImportDialog(QtGui.QDialog):
             lsm = LsmImage(file_)
             lsm.open()
             try:
-                for i, ci in enumerate(channels):
-                    image[:, :, i] = lsm.get_image(stack=0, channel=ci)
+                for j, ci in enumerate(channels):
+                    image[:, :, j] = lsm.get_image(stack=0, channel=ci)
                     writer.setImage(image, i)
             except Exception as e:
                 QMessageBox.critical(self,
