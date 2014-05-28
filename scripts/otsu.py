@@ -42,22 +42,24 @@ if __name__ == "__main__":
     newImage = ccore.numpy_to_image(image, copy=True)
     thr = 3 # ccore.get_otsu_threshold(newImage)
 
-    image = ndimage.gaussian_filter(image, 2)
+    # image = ndimage.median_filter(image, 2)
     # figure()
     # h = hist(image.flatten(), bins=256, normed=True)
     # h = hist(image2.flatten(), bins=256, normed=True)
 
-    gray()
+
     imshow(image, interpolation=None)
+    xlim(270, 300)
+    ylim(300, 340)
     title("original")
 
     # figure()
     # imshow(image2, interpolation=None)
     # title("histeq")
 
-    figure()
-    imshow(image > thr, interpolation=None)
-    title("segmentation")
+    # figure()
+    # imshow(image > thr, interpolation=None)
+    # title("segmentation")
 
     print thr
     show()

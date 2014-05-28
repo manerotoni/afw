@@ -1,73 +1,48 @@
 """
 threshold.py
-
-demo script for otsu threshold using cellcogntion framwork
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 import sys
+import vigra
 import numpy as np
 
-import vigra
-from cecog import VERSION
-from cecog.environment import CecogEnvironment
+sys.path.append('..')
+from af.segmentation import ImageObject, ObjectDict
+from af.segmentation.processing import PrimaryParams, ExpansionParams, feature_groups
+from af.segmentation.processing import ExpandedProcessor, PrimaryProcessor
 from cecog import ccore
-
-
-features  = ['granulometry', 'normbase', 'normbase2', 'roisize',
-             'circularity', 'irregularity', 'irregularity2', 'axes',
-             'distance', 'convexhull', 'moments', 'levelset']
-
-features2 = {'haralick_categories': ['haralick', 'haralick2'],
-             'haralick_distances': (1, 2, 4, 8)}
-
-
-
-class Segmentation(object):
-
-    def __init__(self, image, mean_radius=3, window_size=42, min_contrast=3,
-                 remove_borderojbects=True, fill_holes=True):
-        self._mean_radius = mean_radius
-        self._window_size = window_size
-        self._min_contrast = min_contrast
-        self._fill_holes = fill_holes
-        self._rbo = remove_borderojbects
-        self._image = ccore.numpy_to_image(image, copy=True)
-
-    @property
-    def label_image(self):
-        return self._container.img_labels.toArray()
-
-    def __call__(self):
-        image = ccore.disc_median(self._image, self._mean_radius)
-        seg_image = ccore.window_average_threshold(
-            image, self._window_size, self._min_contrast)
-        if self._fill_holes:
-            ccore.fill_holes(seg_image)
-
-        self._container = ccore.ImageMaskContainer(
-            image, seg_image, self._rbo)
-
 
 if __name__ == "__main__":
 
-    environ = CecogEnvironment(VERSION, redirect=False, debug=False)
     if not vigra.impex.isImage(sys.argv[1]):
         SystemExit("File not found!")
 
     # form vigra to numpy to cecog image
-    image0 = vigra.readImage(sys.argv[1])
-    image0 = np.array(np.squeeze(image0.swapaxes(0, 1))).astype(np.uint8)
+    image = vigra.readImage(sys.argv[1])
+    image = np.array(np.squeeze(image.swapaxes(0, 1))).astype(np.uint8)
 
-    seg = Segmentation(image0)
-    seg()
-    print seg._container
+    # mean radius, window_size, contrast, rbo, fill holes
+    pparams = PrimaryParams(3, 42, 3, True, True)
+    pp = PrimaryProcessor("Channel 1", image)
+    pp.segmentation(*pparams)
+    pp.calculateFeatures(feature_groups)
 
-    # from pylab import *
-    # figure()
-    # imshow(seg.label_image/255.)
-    # show()
+    for label, obj in pp.objects.iteritems():
+        print label, obj.bbox, obj.gallery_image.shape
+
+    image = vigra.readImage(sys.argv[2])
+    image = np.array(np.squeeze(image.swapaxes(0, 1))).astype(np.uint8)
+
+    eparams = ExpansionParams(ccore.SrgType.KeepContours, pp.label_image.max()+1, 0, 5, 0)
+    ep = ExpandedProcessor("Channel 2", image)
+    ep.segmentation(pp.label_image, *eparams)
+    ep.calculateFeatures(feature_groups)
+
+    for label, obj in ep.objects.iteritems():
+        print label, obj.bbox, obj.gallery_image.shape
+
 
     import pdb; pdb.set_trace()
