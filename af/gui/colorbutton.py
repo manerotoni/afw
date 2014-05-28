@@ -13,6 +13,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
+
 default_colors = (Qt.red, Qt.green, Qt.blue, Qt.cyan, Qt.magenta,
                   Qt.yellow, Qt.darkRed, Qt.darkGreen, Qt.darkBlue,
                   Qt.darkCyan, Qt.darkMagenta, Qt.darkYellow)

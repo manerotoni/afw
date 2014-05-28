@@ -72,6 +72,19 @@ class ChannelBar(QtGui.QWidget):
             item = self.gbox.takeAt(0)
             item.widget().close()
 
+    def channelNames(self):
+        cnames = list()
+        for i in xrange(self.gbox.rowCount()):
+            cnames.append(self.widgetAt(i, 0).text())
+        return cnames
+
+    def colors(self):
+        colors = dict()
+        for i in xrange(self.gbox.rowCount()):
+            colors[self.widgetAt(i, 0).text()] = \
+                self.widgetAt(i, 1).currentColor().name()
+        return colors
+
     def checkedChannels(self):
         cidx = list()
         for i in xrange(self.gbox.rowCount()):
