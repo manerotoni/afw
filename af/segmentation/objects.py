@@ -86,6 +86,7 @@ class ObjectDict(OrderedDict):
     def __init__(self, name):
         super(ObjectDict, self).__init__()
         self.name = name
+        self.feature_names = list()
 
     def copyObjects(self, objectdict):
         """Deepcopy image objects from one holder to self. Feature names must be
@@ -95,28 +96,26 @@ class ObjectDict(OrderedDict):
         for label, obj in objectdict.iteritems():
             self[label] = copy.deepcopy(obj)
 
-    # def remove_incomplete(self):
-    #     """Remove samples that do not have the same number of features as
-    #     required. This can happen in merged channels. i.e. where features of
-    #     different processing channels are concatenated and the sample was
-    #     skipped in on channel for some reason.
-    #     """
-    #     removed = list()
-    #     for label, sample in self.items():
-    #         if sample.features.size != self.nfeatures:
-    #             del self[label]
-    #             removed.append(label)
-    #     return removed
+    @property
+    def nfeatures(self):
+        return len(self.feature_names)
 
-    def concatenate(self, objectdict):
+    def remove_incomplete(self):
+        """Remove samples that do not have the same number of features as
+        required. This can happen in merged channels. i.e. where features of
+        different processing channels are concatenated and the sample was
+        skipped in on channel for some reason.
+        """
+        removed = list()
+        for label, sample in self.items():
+            if sample.features.size != self.nfeatures:
+                del self[label]
+                removed.append(label)
+        return removed
+
+    def concatenate(self, label, object_):
         """Concatenate features of image objects. If the dict does not contain
         the image object, it's added automatically.
         """
 
-        for label, object1 in objectdict.iteritems():
-            if self.has_key(label):
-                object0 = self[label]
-                object0.features = np.append(object0.features, object1.features)
-            else:
-                # including the crack_contour
-                self[label] = copy.deepcopy(object1)
+        self[label].features = np.append(self[label].features, object_.features)

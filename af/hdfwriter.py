@@ -30,3 +30,7 @@ class HdfWriter(object):
 
     def setImage(self, image, index):
         self.images[:, :, :, index] = image
+
+    def saveData(self, objectsdict):
+        for label, obj in objectsdict.iteritems():
+            print label, obj.bbox, obj.gallery_image.shape

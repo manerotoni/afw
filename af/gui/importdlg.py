@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 
 __all__ = ('ImportDialog', )
 
+
 import glob
 from os.path import isfile, isdir, basename, dirname
 from os.path import splitext, expanduser
@@ -24,7 +25,17 @@ from af.hdfwriter import HdfWriter
 from af.gui.imagewidget import ImageWidget
 from af.gui.channelbar import ChannelBar
 from af.imageio import LsmImage
+from af.segmentation.multicolor import MultiChannelProcessor
 
+from af.segmentation.processing import PrimaryParams, ExpansionParams, feature_groups
+from cecog import ccore
+
+params = {"Channel 1": PrimaryParams(3, 17, 3, True, True),
+          "Channel 2" : ExpansionParams(
+        ccore.SrgType.KeepContours, None, 0, 5, 0)}
+
+ftrg = {"Channel 1": feature_groups,
+        "Channel 2": feature_groups}
 
 
 class ImportDialog(QtGui.QDialog):
@@ -101,7 +112,6 @@ class ImportDialog(QtGui.QDialog):
         images = list(lsm.iterQImages())
         self.cbar.addChannels(len(images))
         self.cbar.setImages(images, list(lsm.iterprops()))
-        lsm.close()
 
     def raw2hdf(self):
         if not isdir(dirname(self.outputFile.text())):
@@ -123,17 +133,24 @@ class ImportDialog(QtGui.QDialog):
             QtCore.QCoreApplication.processEvents()
             lsm = LsmImage(file_)
             lsm.open()
+
             try:
                 for j, ci in enumerate(channels):
                     image[:, :, j] = lsm.get_image(stack=0, channel=ci)
-                    writer.setImage(image, i)
+
+                mp = MultiChannelProcessor(image, self.cbar.channelNames())
+                mp.segmentation(params)
+                mp.calculateFeatures(ftrg)
+                writer.saveData(mp.objects)
+                writer.setImage(image, i)
             except Exception as e:
                 QMessageBox.critical(self,
                                      "Error",
                                      "%s (%s)" %(e, file_))
+                writer.close()
+                raise
 
             self.cbar.setImages(list(lsm.iterQImages()))
-            lsm.close()
 
         writer.close()
         self.progressFinished.emit()

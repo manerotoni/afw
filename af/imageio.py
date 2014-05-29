@@ -110,3 +110,10 @@ class LsmImage(Lsmimage):
         for ci in xrange(self.channels):
             yield gray2qimage(self.get_image(stack=0, channel=ci),
                               normalize=False)
+
+    def toArray(self):
+        image = np.zeros(self.size + (self.channels, ), dtype=self.dtype)
+        for i in xrange(self.channels):
+            image[:, :, i] = self.get_image(stack=0, channel=i)
+
+        return image

@@ -1,0 +1,147 @@
+"""
+multicolor.py
+"""
+
+__author__ = 'rudolf.hoefler@gmail.com'
+__licence__ = 'GPL'
+
+__all__ = ('MultiChannelProcessor', )
+
+
+import warnings
+import numpy as np
+
+from collections import OrderedDict
+from cecog import ccore
+from af.imageio import LsmImage
+from af.segmentation import ObjectDict, ImageObject
+
+
+class MultiChannelProcessor(object):
+
+    def __init__(self, image, channel_names, master_channel=None, gallery_size=50):
+
+        if master_channel is None:
+            self._master_channel = 0
+        elif master_channel not in channel_names:
+            raise RuntimeError("master channel not in list of channels")
+        else:
+            self._master_channel = channel_names.index(master_channel)
+
+        self.gsize = gallery_size
+        self.image =  image
+        self.cnames = channel_names
+        self._containers = OrderedDict()
+
+    def _gallery_image(self, center, gallery_size=50):
+        height, width, nchannels = self.image.shape
+        halfsize = np.floor(gallery_size/2.0)
+
+        xmin = center.x - halfsize
+        xmax = xmin + gallery_size
+        ymin = center.y - halfsize
+        ymax = ymin + gallery_size
+
+        if xmin < 0:
+            xmin = 0
+            xmax = gallery_size
+        elif xmax >= width:
+            xmin = width - gallery_size
+            xmax = width
+
+        if ymin < 0:
+            ymin = 0
+            ymax = gallery_size
+        elif ymax >= height:
+            ymin = height - gallery_size
+            ymax = height
+
+        gimg = self.image[ymin:ymax, xmin:xmax, :]
+        return gimg
+
+    @property
+    def objects(self):
+        odict = ObjectDict("multicolor")
+        for i, (name, container) in enumerate(self._containers.iteritems()):
+            for label, cobj in container.getObjects().iteritems():
+                obj = ImageObject(cobj, container.getCrackCoordinates(label), label)
+
+                if odict.has_key(label):
+                    odict.concatenate(label, obj)
+                else:
+                    # mulitchannel gallery image
+                    obj.gallery_image = self._gallery_image(obj.center,
+                                                            gallery_size=50)
+                    odict[label] = obj
+
+            # set feature names extend with a prefix
+            odict.feature_names.extend(["c%d-%s" %(i, n) for n in obj.feature_names])
+
+        removed = odict.remove_incomplete()
+        warnings.warn("%d objects have been removed" %len(removed))
+        return odict
+
+    def calculateFeatures(self, feature_groups):
+        """Calculate the features per color channel."""
+        assert set(feature_groups.keys()) == set(self.cnames)
+
+        for name, container in self._containers.iteritems():
+            fgroups = feature_groups[name]
+            for group, params in fgroups.iteritems():
+                if params is None:
+                    container.applyFeature(group)
+                else: # special case for haralick features
+                    for param in params:
+                        container.haralick_distance = param
+                        container.applyFeature(group)
+
+    def segmentation(self, params):
+        assert isinstance(params, dict)
+        assert set(params.keys()) == set(self.cnames)
+
+        # segment the master first
+        cname = self.cnames[self._master_channel]
+        image = self.image[:, :, self._master_channel].copy()
+        self._containers[cname] = self.threshold(image, *params[cname])
+        label_image = self._containers[cname].img_labels.toArray()
+
+        for i, name in enumerate(self.cnames):
+            if i == self._master_channel:
+                continue
+            self._containers[name] = self.seededExpandedRegion(
+                self.image[:, :, i].copy(), label_image, *params[name])
+
+    def threshold(self, image, mean_radius, window_size, min_contrast,
+                  remove_borderobjects, fill_holes):
+
+        image = ccore.numpy_to_image(image, copy=True)
+        image = ccore.disc_median(image, mean_radius)
+
+        seg_image = ccore.window_average_threshold(
+            image, window_size, min_contrast)
+
+        if fill_holes:
+            ccore.fill_holes(seg_image)
+
+        return ccore.ImageMaskContainer(image, seg_image,
+                                        remove_borderobjects)
+
+    def seededExpandedRegion(self, image, label_image, srg_type, label_number,
+                             region_statistics_array=0,
+                             expansion_size=1,
+                             sep_expansion_size=0):
+
+        if label_number is None:
+           label_number = label_image.max() + 1
+
+        image = ccore.numpy_to_image(image, copy=True)
+        limage = ccore.numpy_to_image(label_image, copy=True)
+
+        img_labels = ccore.seeded_region_expansion(image, limage,
+                                                   srg_type,
+                                                   label_number,
+                                                   region_statistics_array,
+                                                   expansion_size,
+                                                   sep_expansion_size)
+
+        return ccore.ImageMaskContainer(image, img_labels, False, True, True)
