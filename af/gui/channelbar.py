@@ -16,17 +16,6 @@ from af.gui.painting import AfPainter
 from af.gui.contrast import AfEnhancerWidget
 
 
-def lut_from_color(color, ncolors):
-    """Create a colormap from a single color e.g. red and return
-    a list of qRgb instances.
-    """
-    lut = np.zeros((ncolors, 3), dtype=int)
-    for i, col in enumerate((color.red(), color.green(), color.blue())):
-        lut[: , i] = np.array(range(ncolors)) / (ncolors - 1.0) * col
-
-    return [QtGui.qRgb(r, g, b) for r, g, b in lut]
-
-
 class ChannelBar(QtGui.QWidget):
 
     newPixmap = QtCore.pyqtSignal(QtGui.QPixmap)
@@ -45,7 +34,7 @@ class ChannelBar(QtGui.QWidget):
         vbox.addLayout(self.gbox)
         vbox.addLayout(cbox)
 
-        vbox.setContentsMargins(0, 0, 0, 0)
+        vbox.setContentsMargins(3, 3, 3, 3)
         self.gbox.setContentsMargins(0, 0, 0, 0)
         cbox.setContentsMargins(0, 0, 0, 0)
 

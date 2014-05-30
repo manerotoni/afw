@@ -41,7 +41,7 @@ class ColorButton(QtGui.QPushButton):
 
     def setColor(self, color):
         self._current_color = color
-        self.setStyleSheet("background-color: rgb(%d, %d, %d)" %
+        self.setStyleSheet("ColorButton {background-color: rgb(%d, %d, %d)}" %
                            (color.red(), color.green(), color.blue()))
         self.colorChanged.emit(color)
 
