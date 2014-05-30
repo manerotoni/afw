@@ -58,6 +58,7 @@ class ImageViewer(QtGui.QGraphicsView):
 
         self.createActions()
         self.createContextMenu()
+        self.actionMaximize.setChecked(True)
 
     def createContextMenu(self):
         self.context_menu = QtGui.QMenu(self)
@@ -79,6 +80,12 @@ class ImageViewer(QtGui.QGraphicsView):
 
     def showPixmap(self, pixmap):
         self._pixmap.setPixmap(pixmap)
+
+        if self.actionExpand.isChecked():
+            self.expand()
+        elif self.actionMaximize.isChecked():
+            self.maximize()
+
 
     @property
     def scalefactor(self):
