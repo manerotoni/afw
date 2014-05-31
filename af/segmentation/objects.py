@@ -80,13 +80,24 @@ class ImageObject(object):
 
 class ObjectDict(OrderedDict):
     """Container class for image objects. Provides object access by label (key),
-    and the possibility to concatenate features of different object with the same label.
+    and the possibility to concatenate features of different object with
+    the same label.
     """
 
     def __init__(self, name):
         super(ObjectDict, self).__init__()
         self.name = name
         self.feature_names = list()
+
+    @property
+    def gallery_shape(self):
+        obj = self[self.keys()[0]]
+        return obj.gallery_image.shape + (len(self), )
+
+    @property
+    def gallery_dtype(self):
+        obj = self[self.keys()[0]]
+        return obj.gallery_image.dtype
 
     def copyObjects(self, objectdict):
         """Deepcopy image objects from one holder to self. Feature names must be

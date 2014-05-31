@@ -78,7 +78,8 @@ class MultiChannelProcessor(object):
             odict.feature_names.extend(["c%d-%s" %(i, n) for n in obj.feature_names])
 
         removed = odict.remove_incomplete()
-        warnings.warn("%d objects have been removed" %len(removed))
+        if len(removed) > 0:
+            warnings.warn("%d objects have been removed" %len(removed))
         return odict
 
     def calculateFeatures(self, feature_groups):
