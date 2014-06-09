@@ -51,10 +51,8 @@ class ImportDialog(QtGui.QDialog):
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("Import Training Data")
 
-        self.viewer = ImageWidget(self)
         self.viewer.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
                                   QtGui.QSizePolicy.MinimumExpanding)
-        self.imagebox.addWidget(self.viewer)
         self.metadata =  None
         self.cbar = ChannelBar(self)
         self.cbox.addWidget(self.cbar)

@@ -18,7 +18,7 @@
     <number>0</number>
    </property>
    <item row="0" column="1">
-    <widget class="QFrame" name="horizontalFrame">
+    <widget class="QFrame" name="hbox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -33,7 +33,7 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="imagebox"/>
+       <widget class="ImageViewer" name="viewer"/>
       </item>
      </layout>
     </widget>
@@ -183,6 +183,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ImageViewer</class>
+   <extends>QGraphicsView</extends>
+   <header>af/gui/imagewidget</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
