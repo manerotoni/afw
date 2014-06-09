@@ -84,7 +84,7 @@ class MultiChannelProcessor(object):
 
     def calculateFeatures(self, feature_groups):
         """Calculate the features per color channel."""
-        assert set(feature_groups.keys()) == set(self.cnames)
+        # assert set(feature_groups.keys()) == set(self.cnames)
 
         for name, container in self._containers.iteritems():
             fgroups = feature_groups[name]
@@ -98,7 +98,7 @@ class MultiChannelProcessor(object):
 
     def segmentation(self, params):
         assert isinstance(params, dict)
-        assert set(params.keys()) == set(self.cnames)
+        #assert set(params.keys()) == set(self.cnames)
 
         # segment the master first
         cname = self.cnames[self._master_channel]

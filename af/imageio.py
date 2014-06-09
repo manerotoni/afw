@@ -70,6 +70,7 @@ class LsmImage(Lsmimage):
 
     def __init__(self, *args, **kw):
         Lsmimage.__init__(self, *args, **kw)
+        self.open()
 
     # def __del__(self):
     #     self.close()
@@ -111,9 +112,12 @@ class LsmImage(Lsmimage):
             yield gray2qimage(self.get_image(stack=0, channel=ci),
                               normalize=False)
 
-    def toArray(self):
-        image = np.zeros(self.size + (self.channels, ), dtype=self.dtype)
-        for i in xrange(self.channels):
-            image[:, :, i] = self.get_image(stack=0, channel=i)
+    def toArray(self, channels=None, stack=0):
 
+        if channels is None:
+            channels = self.channels
+
+        image = np.zeros(self.size + (len(channels), ), dtype=self.dtype)
+        for i, ci in enumerate(channels):
+            image[:, :, i] = self.get_image(stack=stack, channel=ci)
         return image

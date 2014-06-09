@@ -27,7 +27,8 @@ from af.gui.channelbar import ChannelBar
 from af.imageio import LsmImage
 from af.segmentation.multicolor import MultiChannelProcessor
 
-from af.segmentation.processing import PrimaryParams, ExpansionParams, feature_groups
+from af.segmentation.processing import PrimaryParams, ExpansionParams
+from af.segmentation.processing import feature_groups
 from cecog import ccore
 
 params = {"Channel 1": PrimaryParams(3, 17, 3, True, True),
@@ -104,11 +105,9 @@ class ImportDialog(QtGui.QDialog):
             self.dirinfo.setText("%d images found" %len(self._files))
 
         lsm = LsmImage(self._files[0])
-        lsm.open()
 
         self.metadata = lsm.metadata
         self.metadata.n_images = len(self._files)
-
         images = list(lsm.iterQImages())
         self.cbar.addChannels(len(images))
         self.cbar.setImages(images, list(lsm.iterprops()))
@@ -119,25 +118,24 @@ class ImportDialog(QtGui.QDialog):
             return
 
         writer = HdfWriter(self.outputFile.text())
-        writer.setupImages(self.metadata.n_images, self.metadata.n_channels,
+        writer.setupImages(self.metadata.n_images,
+                           len(self.cbar.checkedChannels()),
                            self.metadata.size, self.metadata.dtype)
 
         self.progressSetRange.emit(0, len(self._files))
         self.progressStart.emit()
         channels = self.cbar.checkedChannels()
 
-        image = np.zeros(self.metadata.image_dimension,
-                         dtype=self.metadata.dtype)
+        # image = np.zeros(self.metadata.image_dimension,
+        #                  dtype=self.metadata.dtype)
         for i, file_ in enumerate(self._files):
             self.progressUpdate.emit(i+1)
             QtCore.QCoreApplication.processEvents()
             lsm = LsmImage(file_)
-            lsm.open()
 
             try:
-                for j, ci in enumerate(channels):
-                    image[:, :, j] = lsm.get_image(stack=0, channel=ci)
-
+                image = lsm.toArray(channels)
+                print image.shape
                 mp = MultiChannelProcessor(image, self.cbar.channelNames())
                 mp.segmentation(params)
                 mp.calculateFeatures(ftrg)

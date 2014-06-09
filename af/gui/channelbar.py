@@ -63,7 +63,7 @@ class ChannelBar(QtGui.QWidget):
 
     def channelNames(self):
         cnames = list()
-        for i in xrange(self.gbox.rowCount()):
+        for i in self.checkedChannels():
             cnames.append(self.widgetAt(i, 0).text())
         return cnames
 
