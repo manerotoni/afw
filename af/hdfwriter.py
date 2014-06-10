@@ -53,9 +53,6 @@ class HdfCache(object):
             self.features = features
             self.gallery = gallery
         else:
-            # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-            # import pdb; pdb.set_trace()
-
             self.data = np.append(self.data, data)
             self.features = np.append(self.features, features)
             self.gallery = np.concatenate((self.gallery, gallery), axis=3)
@@ -73,9 +70,13 @@ class HdfWriter(object):
         self._file = h5py.File(filename, "w")
         self._cache = None
 
-    def close(self, flush=True):
-        if flush:
-            self.flush()
+    def close(self):
+        self.flush()
+        self._file.close()
+
+    def closeHandle(self):
+        # sometimes it's not possible to flush, but I need to close the handle
+        # by any means
         self._file.close()
 
     def setupImages(self, n_images, n_channels, size, dtype):

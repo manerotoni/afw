@@ -41,6 +41,61 @@ ftrg = {"Channel 1": feature_groups,
         "Channel 4": feature_groups}
 
 
+class QProcessor(QtCore.QObject):
+
+    progressUpdate = QtCore.pyqtSignal(int)
+    progressSetRange = QtCore.pyqtSignal(int, int)
+    finished = QtCore.pyqtSignal()
+    started = QtCore.pyqtSignal()
+    imageReady = QtCore.pyqtSignal(tuple)
+    error = QtCore.pyqtSignal("pyqt_PyObject")
+
+    def __init__(self, files, metadata, outfile, channels,
+                 seg_params, feature_groups):
+
+        if not isdir(dirname(outfile)):
+            raise IOError(self, "Error", "path does not exist!")
+
+        self.files = files
+        self.channels = channels
+        self.metadata = metadata
+        self.outfile = outfile
+        self.seg_params = seg_params
+        self.feature_groups = feature_groups
+
+    def run(self):
+
+        writer = HdfWriter(self.outfile)
+        writer.setupImages(self.metadata.n_images,
+                           len(self.channels),
+                           self.metadata.size, self.metadata.dtype)
+
+        try:
+            for i, file_ in enumerate(self.files):
+                self.progressUpdate.emit(i+1)
+                self.thread.msleep(50)
+                QtCore.QCoreApplication.processEvents()
+                mp = LsmProcessor(file_)
+                # first channel for primary segementation
+                mp.segmentation(params, channels, min(channels.keys()))
+                mp.calculateFeatures(ftrg)
+                writer.saveData(mp.objects)
+                writer.setImage(mp.image[:, :, channels.keys()], i)
+                self.imageReady.emit(tuple(mp.iterQImages()))
+
+            writer.close()
+        except HdfError as e:
+            self.error.emit(e)
+            writer.closeHandle()
+            return
+        except Exception as e:
+            self.error.emit(e)
+            writer.close()
+            return
+        else:
+            self.progressFinished.emit()
+
+
 class ImportDialog(QtGui.QDialog):
 
     progressUpdate = QtCore.pyqtSignal(int)
