@@ -8,9 +8,10 @@ __licence__ = 'GPL'
 __all__ = ('ChannelBar', )
 
 
-import numpy as np
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from collections import OrderedDict
+
 from af.gui.colorbutton import ColorButton
 from af.gui.painting import AfPainter
 from af.gui.contrast import AfEnhancerWidget
@@ -73,12 +74,12 @@ class ChannelBar(QtGui.QWidget):
         return colors
 
     def checkedChannels(self):
-        cidx = list()
+        channels = OrderedDict()
         for i in xrange(self.gbox.rowCount()):
             cb = self.widgetAt(i, 0)
             if cb.isChecked():
-                cidx.append(i)
-        return cidx
+                channels[i] = cb.text()
+        return channels
 
     def updateImage(self, dummy=None):
         if self._images is None:

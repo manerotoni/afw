@@ -5,11 +5,12 @@ multicolor.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('MultiChannelProcessor', )
+__all__ = ('MultiChannelProcessor', 'LsmProcessor')
 
 
 import warnings
 import numpy as np
+from qimage2ndarray import gray2qimage
 
 from collections import OrderedDict
 from cecog import ccore
@@ -19,20 +20,42 @@ from af.segmentation import ObjectDict, ImageObject
 
 class MultiChannelProcessor(object):
 
-    def __init__(self, image, channel_names,
-                 master_channel=None, gallery_size=50):
+    def __init__(self, filename, gallery_size=50):
+        super(MultiChannelProcessor, self).__init__()
 
-        if master_channel is None:
-            self._master_channel = 0
-        elif master_channel not in channel_names:
-            raise RuntimeError("master channel not in list of channels")
-        else:
-            self._master_channel = channel_names.index(master_channel)
-
+        self._image = None
+        self._reader = None
+        self._filename = filename
         self.gsize = gallery_size
-        self.image =  image
-        self.cnames = channel_names
         self._containers = OrderedDict()
+
+    @property
+    def metadata(self):
+        return self._reader.metadata
+
+    def iterprops(self):
+        return self._reader.iterprops()
+
+    @property
+    def image(self):
+        if self._image is None:
+            self._image = self._reader.toArray()
+        return self._image
+
+    @image.deleter
+    def image(self):
+        del self._image
+
+    def iterQImages(self, all_channels=True):
+        """Iterator over to qimage converted images, one qimage per channel."""
+        if all_channels:
+            channels = range(self._reader.channels)
+        else:
+            channels = self.channels.keys()
+
+        for ci in channels:
+            yield gray2qimage(self._reader.get_image(stack=0, channel=ci),
+                              normalize=False)
 
     def _gallery_image(self, center, gallery_size=50):
         height, width, nchannels = self.image.shape
@@ -57,7 +80,7 @@ class MultiChannelProcessor(object):
             ymin = height - gallery_size
             ymax = height
 
-        gimg = self.image[ymin:ymax, xmin:xmax, :]
+        gimg = self.image[ymin:ymax, xmin:xmax, self._channel_idx]
         return gimg
 
     @property
@@ -99,18 +122,21 @@ class MultiChannelProcessor(object):
                         container.haralick_distance = param
                         container.applyFeature(group)
 
-    def segmentation(self, params):
+    def segmentation(self, params, channels, master_channel=0):
         assert isinstance(params, dict)
-        #assert set(params.keys()) == set(self.cnames)
+        assert isinstance(master_channel, int)
+
+        # neede for gallery images
+        self._channel_idx = channels.keys()
 
         # segment the master first
-        cname = self.cnames[self._master_channel]
-        image = self.image[:, :, self._master_channel].copy()
+        cname = channels[master_channel]
+        image = self.image[:, :, master_channel].copy()
         self._containers[cname] = self.threshold(image, *params[cname])
         label_image = self._containers[cname].img_labels.toArray()
 
-        for i, name in enumerate(self.cnames):
-            if i == self._master_channel:
+        for i, name in channels.iteritems():
+            if i == master_channel:
                 continue
             self._containers[name] = self.seededExpandedRegion(
                 self.image[:, :, i].copy(), label_image, *params[name])
@@ -149,3 +175,10 @@ class MultiChannelProcessor(object):
                                                    sep_expansion_size)
 
         return ccore.ImageMaskContainer(image, img_labels, False, True, True)
+
+
+class LsmProcessor(MultiChannelProcessor):
+
+    def __init__(self, filename, gallery_size=50):
+        super(LsmProcessor, self).__init__(filename, gallery_size)
+        self._reader = LsmImage(filename)

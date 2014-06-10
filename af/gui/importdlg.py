@@ -13,8 +13,6 @@ import glob
 from os.path import isfile, isdir, basename, dirname
 from os.path import splitext, expanduser
 
-import numpy as np
-
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -22,10 +20,9 @@ from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QMessageBox
 
 from af.hdfwriter import HdfWriter
-from af.gui.imagewidget import ImageWidget
+from af.hdfwriter import HdfError
 from af.gui.channelbar import ChannelBar
-from af.imageio import LsmImage
-from af.segmentation.multicolor import MultiChannelProcessor
+from af.segmentation.multicolor import LsmProcessor
 
 from af.segmentation.processing import PrimaryParams, ExpansionParams
 from af.segmentation.processing import feature_groups
@@ -35,8 +32,13 @@ params = {"Channel 1": PrimaryParams(3, 17, 3, True, True),
           "Channel 2" : ExpansionParams(
         ccore.SrgType.KeepContours, None, 0, 5, 0)}
 
+params["Channel 3"] = params["Channel 2"]
+params["Channel 4"] = params["Channel 2"]
+
 ftrg = {"Channel 1": feature_groups,
-        "Channel 2": feature_groups}
+        "Channel 2": feature_groups,
+        "Channel 3": feature_groups,
+        "Channel 4": feature_groups}
 
 
 class ImportDialog(QtGui.QDialog):
@@ -103,13 +105,12 @@ class ImportDialog(QtGui.QDialog):
             self._files = glob.glob(pattern)
             self.dirinfo.setText("%d images found" %len(self._files))
 
-        lsm = LsmImage(self._files[0])
-
-        self.metadata = lsm.metadata
+        proc = LsmProcessor(self._files[0])
+        self.metadata = proc.metadata
         self.metadata.n_images = len(self._files)
-        images = list(lsm.iterQImages())
+        images = list(proc.iterQImages())
         self.cbar.addChannels(len(images))
-        self.cbar.setImages(images, list(lsm.iterprops()))
+        self.cbar.setImages(images, list(proc.iterprops()))
 
     def raw2hdf(self):
         if not isdir(dirname(self.outputFile.text())):
@@ -123,29 +124,29 @@ class ImportDialog(QtGui.QDialog):
 
         self.progressSetRange.emit(0, len(self._files))
         self.progressStart.emit()
+
         channels = self.cbar.checkedChannels()
-
-        for i, file_ in enumerate(self._files):
-            self.progressUpdate.emit(i+1)
-            QtCore.QCoreApplication.processEvents()
-            lsm = LsmImage(file_)
-
-            try:
-                image = lsm.toArray(channels)
-                mp = MultiChannelProcessor(image, self.cbar.channelNames())
-                mp.segmentation(params)
+        try:
+            for i, file_ in enumerate(self._files):
+                self.progressUpdate.emit(i+1)
+                QtCore.QCoreApplication.processEvents()
+                mp = LsmProcessor(file_)
+                # first channel for primary segementation
+                mp.segmentation(params, channels, min(channels.keys()))
                 mp.calculateFeatures(ftrg)
                 writer.saveData(mp.objects)
-                writer.setImage(image, i)
-            except Exception as e:
-                QMessageBox.critical(self,
-                                     "Error",
-                                     "%s (%s)" %(e, file_))
-                writer.close()
-                raise
+                writer.setImage(mp.image[:, :, channels.keys()], i)
 
-            self.cbar.setImages(list(lsm.iterQImages()))
+                self.cbar.setImages(list(mp.iterQImages()))
+            writer.close()
+        except HdfError as e:
+            QMessageBox.critical(self, "Error", str(e))
+            writer.close(flush=False)
+            return
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e))
+            writer.close()
+            return
 
-        writer.close()
         self.progressFinished.emit()
         QMessageBox.information(self, "finished", "all images save to hdf")

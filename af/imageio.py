@@ -10,10 +10,12 @@ __licence__ = 'GPL'
 
 import numpy as np
 from pylsm.lsmreader import Lsmimage
-from qimage2ndarray import gray2qimage
 
 
 class ImageProps(object):
+    """Describes basic image data types. It determines min/max grey values
+    ranges and the bitdepth."""
+
 
     __slots__ = ["image_min", "image_max", "min", "max", "range", "bitdepth",
                  "histogram"]
@@ -41,6 +43,9 @@ class ImageProps(object):
 
 
 class MetaData(object):
+    """Meta data of an image, such as size, number of channels its dtype.
+    Furhter ther is the number of images which is similar to the stack size.
+    """
 
     __slot__ = ["size", "dtype", "nchannels", "n_images"]
 
@@ -71,9 +76,6 @@ class LsmImage(Lsmimage):
     def __init__(self, *args, **kw):
         Lsmimage.__init__(self, *args, **kw)
         self.open()
-
-    # def __del__(self):
-    #     self.close()
 
     def iterprops(self):
         for ci in xrange(self.channels):
@@ -107,15 +109,10 @@ class LsmImage(Lsmimage):
     def channels(self):
         return self.header[self.IMAGE][0][self.CHANNEL]
 
-    def iterQImages(self):
-        for ci in xrange(self.channels):
-            yield gray2qimage(self.get_image(stack=0, channel=ci),
-                              normalize=False)
-
     def toArray(self, channels=None, stack=0):
 
         if channels is None:
-            channels = self.channels
+            channels = range(self.channels)
 
         image = np.zeros(self.size + (len(channels), ), dtype=self.dtype)
         for i, ci in enumerate(channels):

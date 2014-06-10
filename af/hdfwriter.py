@@ -9,6 +9,10 @@ __licence__ = 'GPL'
 import h5py
 import numpy as np
 
+class HdfError(Exception):
+    pass
+
+
 class HdfCache(object):
     """Internal cache to be able to save non-resizeable data sets to hdf5."""
 
@@ -69,8 +73,9 @@ class HdfWriter(object):
         self._file = h5py.File(filename, "w")
         self._cache = None
 
-    def close(self):
-        self.flush()
+    def close(self, flush=True):
+        if flush:
+            self.flush()
         self._file.close()
 
     def setupImages(self, n_images, n_channels, size, dtype):
@@ -89,9 +94,19 @@ class HdfWriter(object):
 
     def flush(self):
 
-        dset = self._file.create_dataset(self.DATA, data=self._cache.data)
-        dset = self._file.create_dataset(self.FEATURES, data=self._cache.features)
-        dset = self._file.create_dataset(self.GALLERY, data=self._cache.gallery)
-        dset = self._file.create_dataset(self.CONTOURS,
-                                         data=self._cache.contours,
-                                         dtype=self._cache._dt_contours)
+        # hdf5 allows only 64kb of header metadata
+        try:
+            dset = self._file.create_dataset(
+                self.DATA, data=self._cache.data)
+            dset = self._file.create_dataset(
+                self.FEATURES, data=self._cache.features)
+            dset = self._file.create_dataset(
+                self.GALLERY, data=self._cache.gallery)
+            dset = self._file.create_dataset(
+                self.CONTOURS, data=self._cache.contours,
+                dtype=self._cache._dt_contours)
+        except ValueError as e:
+            if "Object header message is too large" in str(e):
+                raise HdfError("Cannot save data to hdf file."
+                                 "One of you tables is to large, "
+                                 "reduce number of channels")
