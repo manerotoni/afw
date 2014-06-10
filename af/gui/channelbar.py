@@ -22,23 +22,21 @@ class ChannelBar(QtGui.QWidget):
 
     def __init__(self, *args, **kw):
         super(ChannelBar, self).__init__(*args, **kw)
-        vbox = QtGui.QVBoxLayout(self)
+        self._images = None
 
+        vbox = QtGui.QVBoxLayout(self)
         self.gbox = QtGui.QGridLayout()
         cbox = QtGui.QVBoxLayout()
         self.enhancer = AfEnhancerWidget(self)
         self.enhancer.valuesUpdated.connect(self.updateImage)
 
         cbox.addWidget(self.enhancer)
-
         vbox.addLayout(self.gbox)
         vbox.addLayout(cbox)
 
         vbox.setContentsMargins(3, 3, 3, 3)
         self.gbox.setContentsMargins(0, 0, 0, 0)
         cbox.setContentsMargins(0, 0, 0, 0)
-
-        self._images = None
 
     def addChannels(self, n):
         self.clear()

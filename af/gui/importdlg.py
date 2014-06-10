@@ -68,6 +68,7 @@ class ImportDialog(QtGui.QDialog):
         self.inputBtn.clicked.connect(self.onOpenInputDir)
         self.importBtn.clicked.connect(self.raw2hdf)
         self.closeBtn.clicked.connect(self.close)
+        self.closeBtn.clicked.connect(self.cbar.clear)
 
         self.progressStart.connect(lambda: self.importBtn.setEnabled(False))
         self.progressFinished.connect(lambda: self.importBtn.setEnabled(True))
@@ -124,8 +125,6 @@ class ImportDialog(QtGui.QDialog):
         self.progressStart.emit()
         channels = self.cbar.checkedChannels()
 
-        # image = np.zeros(self.metadata.image_dimension,
-        #                  dtype=self.metadata.dtype)
         for i, file_ in enumerate(self._files):
             self.progressUpdate.emit(i+1)
             QtCore.QCoreApplication.processEvents()
@@ -133,7 +132,6 @@ class ImportDialog(QtGui.QDialog):
 
             try:
                 image = lsm.toArray(channels)
-                print image.shape
                 mp = MultiChannelProcessor(image, self.cbar.channelNames())
                 mp.segmentation(params)
                 mp.calculateFeatures(ftrg)

@@ -19,7 +19,8 @@ from af.segmentation import ObjectDict, ImageObject
 
 class MultiChannelProcessor(object):
 
-    def __init__(self, image, channel_names, master_channel=None, gallery_size=50):
+    def __init__(self, image, channel_names,
+                 master_channel=None, gallery_size=50):
 
         if master_channel is None:
             self._master_channel = 0
@@ -64,7 +65,8 @@ class MultiChannelProcessor(object):
         odict = ObjectDict("multicolor")
         for i, (name, container) in enumerate(self._containers.iteritems()):
             for label, cobj in container.getObjects().iteritems():
-                obj = ImageObject(cobj, container.getCrackCoordinates(label), label)
+                obj = ImageObject(cobj, container.getCrackCoordinates(label),
+                                  label)
 
                 if odict.has_key(label):
                     odict.concatenate(label, obj)
@@ -75,7 +77,8 @@ class MultiChannelProcessor(object):
                     odict[label] = obj
 
             # set feature names extend with a prefix
-            odict.feature_names.extend(["c%d-%s" %(i, n) for n in obj.feature_names])
+            odict.feature_names.extend(
+                ["c%d-%s" %(i, n) for n in obj.feature_names])
 
         removed = odict.remove_incomplete()
         if len(removed) > 0:
