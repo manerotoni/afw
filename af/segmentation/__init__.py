@@ -7,3 +7,4 @@ __licence__ = 'GPL'
 
 
 from objects import *
+from options import *

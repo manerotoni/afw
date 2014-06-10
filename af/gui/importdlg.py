@@ -24,8 +24,8 @@ from af.hdfwriter import HdfError
 from af.gui.channelbar import ChannelBar
 from af.segmentation.multicolor import LsmProcessor
 
-from af.segmentation.processing import PrimaryParams, ExpansionParams
-from af.segmentation.processing import feature_groups
+from af.segmentation import PrimaryParams, ExpansionParams
+from af.segmentation import feature_groups
 from cecog import ccore
 
 params = {"Channel 1": PrimaryParams(3, 17, 3, True, True),
