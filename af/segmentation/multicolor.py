@@ -10,15 +10,19 @@ __all__ = ('MultiChannelProcessor', 'LsmProcessor')
 
 import warnings
 import numpy as np
-from qimage2ndarray import gray2qimage
-
 from collections import OrderedDict
+
+from qimage2ndarray import gray2qimage
 from cecog import ccore
+from cecog.environment import CecogEnvironment
+
 from af.imageio import LsmImage
 from af.segmentation import ObjectDict, ImageObject
 
 
 class MultiChannelProcessor(object):
+
+    _environ = CecogEnvironment(redirect=False, debug=False)
 
     def __init__(self, filename, gallery_size=50):
         super(MultiChannelProcessor, self).__init__()
