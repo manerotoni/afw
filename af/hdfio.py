@@ -94,19 +94,6 @@ class HdfReader(cellh5.CH5File):
         path = self._features_key %coordinate
         return self._hdf[path].shape[0]
 
-    # def events(self, plate, well, site, region):
-    #     site = self._open_position(plate, well, site)
-    #     return site.get_events().flatten()
-
-    # def iterEventGallery(self, plate, well, site, region, size=50):
-    #     site = self._open_position(plate, well, site)
-    #     events = site.get_events().flatten()
-
-    #     for event in events:
-    #         gal = site.get_gallery_image(event, region, size)
-    #         cont = site.get_crack_contour(event, region, size=size)
-    #         yield gal, cont[0]
-
     def cspace(self):
         """Returns a full mapping of the coordiante space the hdf file"""
 
@@ -133,6 +120,7 @@ class HdfReader(cellh5.CH5File):
         return coorddict
 
     def loadItem(self, index, coord, size=50):
+
         path = self._features_key %coord
         site = self._open_position(coord['plate'], coord['well'], coord['site'])
         gal = site.get_gallery_image(index, coord['region'], size)

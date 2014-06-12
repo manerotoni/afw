@@ -71,12 +71,6 @@ class HdfWriter(object):
         self._cache = None
 
     def close(self):
-        self.flush()
-        self._file.close()
-
-    def closeHandle(self):
-        # sometimes it's not possible to flush, but I need to close the handle
-        # by any means
         self._file.close()
 
     def setupImages(self, n_images, n_channels, size, dtype):

@@ -19,9 +19,9 @@ from af.gui.toolbars import NavToolBar, ViewToolBar
 from af.gui.sidebar import AfSortWidget
 from af.gui.sidebar import AfAnnotationWidget
 from af.gui.importdlg import ImportDialog
-from af.loader import AfLoader, AfLoaderThread
+from af.threading import AfThread
+from af.threading import AfLoader
 
-# import resources
 from af import af_rc
 
 class AfMainWindow(QtGui.QMainWindow):
@@ -35,9 +35,10 @@ class AfMainWindow(QtGui.QMainWindow):
         self.setWindowTitle("AfMainWindow")
         self.sorting.adjustSize()
 
-        self.loaderThread = AfLoaderThread(self)
+        self.loaderThread = AfThread(self)
         self.loader = AfLoader()
         self._lastdir = expanduser("~")
+        self.impDlg = ImportDialog(self)
 
         self.setupToolbar()
         self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
@@ -51,7 +52,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
         self.actionOpen.triggered.connect(self.onFileOpen)
-        self.actionImport.triggered.connect(self.openImporter)
+        self.actionImport.triggered.connect(self.impDlg.show)
 
         self._restoreSettings()
         self.show()
@@ -78,9 +79,6 @@ class AfMainWindow(QtGui.QMainWindow):
             self.restoreState(state.toByteArray())
         settings.endGroup()
 
-    def onAbort(self):
-        self.abort.emit()
-
     def closeEvent(self, event):
         self._saveSettings()
         try:
@@ -102,7 +100,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.progressbar = QtGui.QProgressBar(frame)
         self.progressbar.setMaximumHeight(15)
         self.abortBtn = QtGui.QPushButton('abort', self)
-        self.abortBtn.clicked.connect(self.onAbort)
+        self.abortBtn.clicked.connect(self.abort.emit)
         self.abortBtn.setMaximumHeight(20)
         hbox = QtGui.QHBoxLayout(frame)
         hbox.addWidget(self.progressbar)
@@ -141,10 +139,6 @@ class AfMainWindow(QtGui.QMainWindow):
             self.statusBar().showMessage(str(e))
         else:
             self.statusBar().showMessage(basename(file_))
-
-    def openImporter(self):
-        dlg = ImportDialog(self)
-        dlg.exec_()
 
     def addToToolbox(self):
         cw = self.toolBox.currentWidget()
