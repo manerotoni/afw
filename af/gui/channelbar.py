@@ -24,6 +24,7 @@ class ChannelBar(QtGui.QWidget):
     def __init__(self, *args, **kw):
         super(ChannelBar, self).__init__(*args, **kw)
         self._images = None
+        self._channel_count = 0
 
         vbox = QtGui.QVBoxLayout(self)
         self.gbox = QtGui.QGridLayout()
@@ -41,6 +42,7 @@ class ChannelBar(QtGui.QWidget):
 
     def addChannels(self, n):
         self.clear()
+        self._channel_count = n
         for i in xrange(n):
             cb = QtGui.QCheckBox("Channel %d" %(i+1))
             cb.setCheckState(QtCore.Qt.Checked)
@@ -68,14 +70,14 @@ class ChannelBar(QtGui.QWidget):
 
     def colors(self):
         colors = dict()
-        for i in xrange(self.gbox.rowCount()):
+        for i in xrange(self._channel_count):
             colors[self.widgetAt(i, 0).text()] = \
                 self.widgetAt(i, 1).currentColor().name()
         return colors
 
     def checkedChannels(self):
         channels = OrderedDict()
-        for i in xrange(self.gbox.rowCount()):
+        for i in xrange(self._channel_count):
             cb = self.widgetAt(i, 0)
             if cb.isChecked():
                 channels[i] = cb.text()
