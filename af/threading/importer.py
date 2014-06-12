@@ -21,6 +21,9 @@ class AbortQWorker(Exception):
 
 class AfImporter(QtCore.QObject):
 
+    PYDELAY = 15 # ms
+
+
     progressUpdate = QtCore.pyqtSignal(int)
     progressSetRange = QtCore.pyqtSignal(int, int)
     finished = QtCore.pyqtSignal()
@@ -69,7 +72,7 @@ class AfImporter(QtCore.QObject):
             for i, file_ in enumerate(self.files):
                 self.progressUpdate.emit(i+1)
                 self.interruption_point()
-                self.thread().msleep(15)
+                self.thread().msleep(self.PYDELAY)
                 mp = LsmProcessor(file_)
                 # first channel for primary segementation
                 mp.segmentation(self.seg_params, self.channels,

@@ -43,13 +43,12 @@ ftrg = {"Channel 1": feature_groups,
         "Channel 4": feature_groups}
 
 
-class ImportDialog(QtGui.QWidget):
+class ImportDialog(QtGui.QDialog):
 
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("Import Training Data")
-        self.setWindowFlags(Qt.Window)
         self.progressBar.hide()
 
         self.thread = AfThread(self)
@@ -105,7 +104,7 @@ class ImportDialog(QtGui.QWidget):
 
     def onError(self, exc):
         self.startBtn.setText("start")
-        QMessageBox.critical(self, "Error", str(e))
+        QMessageBox.critical(self, "Error", str(exc))
 
     def onFinished(self):
         self.raise_()

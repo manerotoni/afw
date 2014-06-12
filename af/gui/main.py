@@ -38,7 +38,6 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loaderThread = AfThread(self)
         self.loader = AfLoader()
         self._lastdir = expanduser("~")
-        self.impDlg = ImportDialog(self)
 
         self.setupToolbar()
         self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
@@ -52,7 +51,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
         self.actionOpen.triggered.connect(self.onFileOpen)
-        self.actionImport.triggered.connect(self.impDlg.show)
+        self.actionImport.triggered.connect(self.openImporter)
 
         self._restoreSettings()
         self.show()
@@ -120,6 +119,10 @@ class AfMainWindow(QtGui.QMainWindow):
         self.navToolBar = NavToolBar(self)
         self.addToolBar(QtCore.Qt.BottomToolBarArea, self.navToolBar)
         self.navToolBar.coordUpdated.connect(self.loader.setCoordinate)
+
+    def openImporter(self):
+        dlg = ImportDialog(self)
+        dlg.exec_()
 
     def onFileOpen(self):
 
