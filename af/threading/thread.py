@@ -21,20 +21,21 @@ class AfThread(QtCore.QThread):
 
     def __init__(self, *args, **kw):
         super(AfThread, self).__init__(*args, **kw)
-        self._worker = None
+        self.worker = None
 
     def start(self, worker):
-        self._worker = worker
-        self._worker.moveToThread(self)
+        self.worker = worker
+        self.worker.moveToThread(self)
         super(AfThread, self).start()
 
     def run(self):
 
         try:
-            self._worker()
+            self.worker()
         except Exception as e:
             traceback.print_exc()
             warnings.warn(str(e))
             self.error.emit(e)
         finally:
-            self._worker.moveToThread(QtGui.QApplication.instance().thread())
+            self.worker.moveToThread(QtGui.QApplication.instance().thread())
+            self.worker = None

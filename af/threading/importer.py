@@ -53,8 +53,8 @@ class AfImporter(QtCore.QObject):
     def connetToProgressBar(self, pbar):
         self.progressUpdate.connect(pbar.setValue)
         self.progressSetRange.connect(pbar.setRange)
-        self.finished.connect(pbar.parent().hide)
-        self.started.connect(pbar.parent().show)
+        self.finished.connect(pbar.hide)
+        self.started.connect(pbar.show)
 
     def __call__(self):
         self.started.emit()
@@ -79,12 +79,12 @@ class AfImporter(QtCore.QObject):
                 writer.setImage(mp.image[:, :, self.channels.keys()], i)
                 self.imageReady.emit(tuple(mp.iterQImages()))
             writer.flush()
+            self.finished.emit()
 
         except AbortQWorker:
             pass
 
         except HdfError as e:
-            writer.close()
             self.error.emit(e)
 
         except Exception as e:
@@ -93,4 +93,3 @@ class AfImporter(QtCore.QObject):
 
         finally:
             writer.close()
-            self.finished.emit()

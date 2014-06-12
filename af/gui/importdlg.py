@@ -50,6 +50,7 @@ class ImportDialog(QtGui.QWidget):
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("Import Training Data")
         self.setWindowFlags(Qt.Window)
+        self.progressBar.hide()
 
         self.thread = AfThread(self)
         self.viewer.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
@@ -61,10 +62,9 @@ class ImportDialog(QtGui.QWidget):
 
         self.outputBtn.clicked.connect(self.onOpenOutFile)
         self.inputBtn.clicked.connect(self.onOpenInputDir)
-        self.importBtn.clicked.connect(self.raw2hdf)
+        self.startBtn.clicked.connect(self.raw2hdf)
         self.closeBtn.clicked.connect(self.close)
         self.closeBtn.clicked.connect(self.cbar.clear)
-
 
     def onOpenOutFile(self):
 
@@ -104,32 +104,34 @@ class ImportDialog(QtGui.QWidget):
         self.cbar.setImages(images, list(proc.iterprops()))
 
     def onError(self, exc):
+        self.startBtn.setText("start")
         QMessageBox.critical(self, "Error", str(e))
 
     def onFinished(self):
         self.raise_()
+        self.startBtn.setText("start")
         QMessageBox.information(self, "finished", "training set saved")
 
     def raw2hdf(self):
 
         if self.thread.isRunning():
-            QMessageBox.information(self, "wait",
-                                    "wait until current training set is loaded")
-            return
+            self.startBtn.setText("start")
+            self.thread.worker.abort()
+        else:
+            try:
+                worker = AfImporter(self._files,
+                                    self.metadata,
+                                    self.outputFile.text(),
+                                    self.cbar.checkedChannels(),
+                                    params,
+                                    ftrg)
+            except Exception as e:
+                QMessageBox.critical(self, "Error", str(e))
+                return
 
-        try:
-            worker = AfImporter(self._files,
-                                self.metadata,
-                                self.outputFile.text(),
-                                self.cbar.checkedChannels(),
-                                params,
-                                ftrg)
-        except Exception as e:
-            QMessageBox.critical(self, "Error", str(e))
-            return
-
-        worker.connetToProgressBar(self.parent().progressbar)
-        worker.finished.connect(self.onFinished)
-        worker.imageReady.connect(self.cbar.setImages)
-        self.parent().abort.connect(worker.abort)
-        self.thread.start(worker)
+            worker.connetToProgressBar(self.progressBar)
+            worker.finished.connect(self.onFinished)
+            worker.error.connect(self.onError)
+            worker.imageReady.connect(self.cbar.setImages)
+            self.thread.start(worker)
+            self.startBtn.setText("abort")
