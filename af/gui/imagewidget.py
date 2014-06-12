@@ -11,7 +11,7 @@ __licence__ = 'GPL'
 __all__ = ["ImageWidget", "ImageViewer"]
 
 from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
+from PyQt4.QtCore import Qt, QPointF
 
 
 class ImageWidget(QtGui.QWidget):
@@ -53,6 +53,7 @@ class ImageViewer(QtGui.QGraphicsView):
         self._pixmap = QtGui.QGraphicsPixmapItem()
         self._pixmap.setShapeMode(QtGui.QGraphicsPixmapItem.BoundingRectShape)
         # self._pixmap.setTransformationMode(Qt.SmoothTransformation)
+        self._polygonitems = list()
         self.scene().addItem(self._pixmap)
         self.setToolTip("ctrl+mouse to pan/zoom")
 
@@ -77,15 +78,6 @@ class ImageViewer(QtGui.QGraphicsView):
         actiongrp = QtGui.QActionGroup(self)
         self.actionExpand.setActionGroup(actiongrp)
         self.actionMaximize.setActionGroup(actiongrp)
-
-    def showPixmap(self, pixmap):
-        self._pixmap.setPixmap(pixmap)
-
-        if self.actionExpand.isChecked():
-            self.expand()
-        elif self.actionMaximize.isChecked():
-            self.maximize()
-
 
     @property
     def scalefactor(self):
@@ -165,6 +157,30 @@ class ImageViewer(QtGui.QGraphicsView):
             else:
                 factor = 0.9
             self.scale(factor, factor)
+
+    def showPixmap(self, pixmap):
+        self._pixmap.setPixmap(pixmap)
+
+        if self.actionExpand.isChecked():
+            self.expand()
+        elif self.actionMaximize.isChecked():
+            self.maximize()
+
+    def clearPolygons(self):
+        items = self.scene().items()
+        for item in items:
+            if isinstance(item, QtGui.QGraphicsPolygonItem):
+                self.scene().removeItem(item)
+
+    def drawContours(self, polygon_dict):
+        self.clearPolygons()
+
+        for channel, polygons in polygon_dict.iteritems():
+            for label, polygon in polygons.iteritems():
+                qpolygon = QtGui.QPolygonF([QPointF(*p) for p in polygon])
+                pen = QtGui.QPen()
+                pen.setColor(QtGui.QColor("white"))
+                self.scene().addPolygon(qpolygon, pen=pen)
 
 
 if __name__ == '__main__':

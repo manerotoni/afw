@@ -29,6 +29,7 @@ class AfImporter(QtCore.QObject):
     finished = QtCore.pyqtSignal()
     started = QtCore.pyqtSignal()
     imageReady = QtCore.pyqtSignal(tuple)
+    contoursReady = QtCore.pyqtSignal(dict)
     error = QtCore.pyqtSignal("PyQt_PyObject")
 
     def __init__(self, files, metadata, outfile, channels,
@@ -78,21 +79,24 @@ class AfImporter(QtCore.QObject):
                 mp.segmentation(self.seg_params, self.channels,
                                 min(self.channels.keys()))
                 mp.calculateFeatures(self.feature_groups)
-                writer.saveData(mp.objects)
+                objects = mp.objects
+                writer.saveData(objects)
                 writer.setImage(mp.image[:, :, self.channels.keys()], i)
                 self.imageReady.emit(tuple(mp.iterQImages()))
+                self.contoursReady.emit(objects.contours)
+
             writer.flush()
             self.finished.emit()
 
-        except AbortQWorker:
-            pass
+        # except AbortQWorker:
+        #     pass
 
-        except HdfError as e:
-            self.error.emit(e)
+        # except HdfError as e:
+        #     self.error.emit(e)
 
-        except Exception as e:
-            writer.flush()
-            self.error.emit(e)
+        # except Exception as e:
+        #     writer.flush()
+        #     self.error.emit(e)
 
         finally:
             writer.close()

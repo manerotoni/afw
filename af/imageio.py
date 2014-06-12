@@ -107,7 +107,12 @@ class LsmImage(Lsmimage):
 
     @property
     def channels(self):
-        return self.header[self.IMAGE][0][self.CHANNEL]
+        try:
+            return self.header[self.IMAGE][0][self.CHANNEL]
+        except Exception as e:
+            from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+            import pdb; pdb.set_trace()
+
 
     def toArray(self, channels=None, stack=0):
 

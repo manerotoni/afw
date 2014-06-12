@@ -92,11 +92,11 @@ class MultiChannelProcessor(object):
         odict = ObjectDict("multicolor")
         for i, (name, container) in enumerate(self._containers.iteritems()):
             for label, cobj in container.getObjects().iteritems():
-                obj = ImageObject(cobj, container.getCrackCoordinates(label),
-                                  label)
+                obj = ImageObject(name, cobj,
+                                  container.getCrackCoordinates(label), label)
 
                 if odict.has_key(label):
-                    odict.concatenate(label, obj)
+                    odict.concatenate(name, label, obj)
                 else:
                     # mulitchannel gallery image
                     obj.gallery_image = self._gallery_image(obj.center,

@@ -23,16 +23,17 @@ class ImageObject(object):
     # Simple wrapper class for the c++ objects to python plus some
     # extra functinality.
 
-    def __init__(self, cobj, contours_coords, label=None):
+    def __init__(self, name, cobj, contours_coords, label=None):
 
+        self.name = name
         self.center = Center(cobj.oCenterAbs.x, cobj.oCenterAbs.y)
-        self.bbox = BBox(cobj.oRoi.upperLeft.x, cobj.oRoi.upperLeft.y,
-                         cobj.oRoi.lowerRight.x, cobj.oRoi.lowerRight.y)
+        self.bbox = BBox(cobj.oRoi.upperLeft.x, cobj.oRoi.lowerRight.x,
+                         cobj.oRoi.upperLeft.y, cobj.oRoi.lowerRight.y)
 
         self.label  = label
         self.prediction_proba = {}
         self.class_= None
-        self.contour = None
+        self.contours = OrderedDict()
 
         ftrs = cobj.getFeatures()
         self.feature_names = sorted(ftrs.keys())
@@ -46,8 +47,12 @@ class ImageObject(object):
 
         # contour coordinates are relative to the bbox, want them in
         # pixel coordinates
-        self.contour = [(x + self.bbox.top, y + self.bbox.left)
-                        for (x, y) in contours_coords]
+        self.contours[self.name] = [(x + self.bbox.left, y + self.bbox.top)
+                                    for (x, y) in contours_coords]
+
+    @property
+    def contour(self):
+        return self.contours[self.contours.keys()[0]]
 
     def setClass(self, name, label, color):
         self.class_ = Class(name, label, color)
@@ -90,6 +95,14 @@ class ObjectDict(OrderedDict):
         self.feature_names = list()
 
     @property
+    def contours(self):
+        """Return a dictionary of the contours only."""
+        cnt = dict()
+        for key, value in self.iteritems():
+            cnt[key] = value.contours
+        return cnt
+
+    @property
     def gallery_shape(self):
         obj = self[self.keys()[0]]
         return obj.gallery_image.shape + (len(self), )
@@ -124,9 +137,11 @@ class ObjectDict(OrderedDict):
                 removed.append(label)
         return removed
 
-    def concatenate(self, label, object_):
+    def concatenate(self, name, label, object_):
         """Concatenate features of image objects. If the dict does not contain
         the image object, it's added automatically.
         """
 
-        self[label].features = np.append(self[label].features, object_.features)
+        obj = self[label]
+        obj.features = np.append(obj.features, object_.features)
+        obj.contours[object_.name] = object_.contour

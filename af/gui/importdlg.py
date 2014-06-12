@@ -132,5 +132,6 @@ class ImportDialog(QtGui.QDialog):
             worker.finished.connect(self.onFinished)
             worker.error.connect(self.onError)
             worker.imageReady.connect(self.cbar.setImages)
+            worker.contoursReady.connect(self.viewer.drawContours)
             self.thread.start(worker)
             self.startBtn.setText("abort")
