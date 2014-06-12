@@ -239,21 +239,18 @@ class AfEnhancerWidget(QtGui.QWidget):
         super(AfEnhancerWidget, self).__init__(*args, **kw)
 
         vbox = QtGui.QVBoxLayout(self)
-        self.buttonbox = QtGui.QHBoxLayout()
-
-        self.button_group = QtGui.QButtonGroup(self)
+        self.channelBox = QtGui.QComboBox(self)
         self.stack = QtGui.QStackedWidget()
 
-        vbox.addLayout(self.buttonbox)
+        vbox.addWidget(self.channelBox)
         vbox.addWidget(self.stack)
 
-        self.button_group.buttonClicked[int].connect(self.changeChannel)
+        self.channelBox.currentIndexChanged.connect(self.changeChannel)
         vbox.setContentsMargins(0, 0, 0, 0)
 
     def clear(self):
-        for button in self.button_group.buttons():
-            self.button_group.removeButton(button)
-            button.close()
+
+        self.channelBox.clear()
 
         for i in range(self.stack.count()):
             widget = self.stack.widget(0)
@@ -274,13 +271,7 @@ class AfEnhancerWidget(QtGui.QWidget):
         sliderwidget = AfContrastSliderWidget(self, range_=(0, 255))
         sliderwidget.valuesUpdated.connect(self.valuesUpdated.emit)
         idx = self.stack.addWidget(sliderwidget)
-        radiobtn = QtGui.QRadioButton(name, self)
-        # index of stackwidget and buttongroup id correspond
-        self.button_group.addButton(radiobtn, idx)
-        self.buttonbox.addWidget(radiobtn)
-
-        if len(self.button_group.buttons()) == 1:
-            self.button_group.buttons()[0].setChecked(True)
+        self.channelBox.addItem(name)
 
     def changeChannel(self, index):
         self.stack.setCurrentIndex(index)
