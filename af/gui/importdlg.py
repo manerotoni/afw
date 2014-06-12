@@ -10,20 +10,22 @@ __all__ = ('ImportDialog', )
 
 
 import glob
-from os.path import isfile, isdir, basename, dirname
+from os.path import isfile, isdir, basename
 from os.path import splitext, expanduser
 
 from PyQt4 import uic
 from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QMessageBox
 
-from af.hdfwriter import HdfWriter
-from af.hdfwriter import HdfError
+from af.threading import AfThread
+from af.threading import AfImporter
 from af.gui.channelbar import ChannelBar
 from af.segmentation.multicolor import LsmProcessor
 
+
+# XXX TODO implement dialog for segementation parmeters
 from af.segmentation import PrimaryParams, ExpansionParams
 from af.segmentation import feature_groups
 from cecog import ccore
@@ -41,73 +43,15 @@ ftrg = {"Channel 1": feature_groups,
         "Channel 4": feature_groups}
 
 
-class QProcessor(QtCore.QObject):
-
-    progressUpdate = QtCore.pyqtSignal(int)
-    progressSetRange = QtCore.pyqtSignal(int, int)
-    finished = QtCore.pyqtSignal()
-    started = QtCore.pyqtSignal()
-    imageReady = QtCore.pyqtSignal(tuple)
-    error = QtCore.pyqtSignal("pyqt_PyObject")
-
-    def __init__(self, files, metadata, outfile, channels,
-                 seg_params, feature_groups):
-
-        if not isdir(dirname(outfile)):
-            raise IOError(self, "Error", "path does not exist!")
-
-        self.files = files
-        self.channels = channels
-        self.metadata = metadata
-        self.outfile = outfile
-        self.seg_params = seg_params
-        self.feature_groups = feature_groups
-
-    def run(self):
-
-        writer = HdfWriter(self.outfile)
-        writer.setupImages(self.metadata.n_images,
-                           len(self.channels),
-                           self.metadata.size, self.metadata.dtype)
-
-        try:
-            for i, file_ in enumerate(self.files):
-                self.progressUpdate.emit(i+1)
-                self.thread.msleep(50)
-                QtCore.QCoreApplication.processEvents()
-                mp = LsmProcessor(file_)
-                # first channel for primary segementation
-                mp.segmentation(params, channels, min(channels.keys()))
-                mp.calculateFeatures(ftrg)
-                writer.saveData(mp.objects)
-                writer.setImage(mp.image[:, :, channels.keys()], i)
-                self.imageReady.emit(tuple(mp.iterQImages()))
-
-            writer.close()
-        except HdfError as e:
-            self.error.emit(e)
-            writer.closeHandle()
-            return
-        except Exception as e:
-            self.error.emit(e)
-            writer.close()
-            return
-        else:
-            self.progressFinished.emit()
-
-
-class ImportDialog(QtGui.QDialog):
-
-    progressUpdate = QtCore.pyqtSignal(int)
-    progressSetRange = QtCore.pyqtSignal(int, int)
-    progressFinished = QtCore.pyqtSignal()
-    progressStart = QtCore.pyqtSignal()
+class ImportDialog(QtGui.QWidget):
 
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("Import Training Data")
+        self.setWindowFlags(Qt.Window)
 
+        self.thread = AfThread(self)
         self.viewer.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
                                   QtGui.QSizePolicy.MinimumExpanding)
         self.metadata =  None
@@ -115,20 +59,12 @@ class ImportDialog(QtGui.QDialog):
         self.cbox.addWidget(self.cbar)
         self.cbar.newPixmap.connect(self.viewer.showPixmap)
 
-        pbar = self.parent().progressbar
-        self.progressUpdate.connect(pbar.setValue)
-        self.progressSetRange.connect(pbar.setRange)
-        self.progressFinished.connect(pbar.parent().hide)
-        self.progressStart.connect(pbar.parent().show)
-
         self.outputBtn.clicked.connect(self.onOpenOutFile)
         self.inputBtn.clicked.connect(self.onOpenInputDir)
         self.importBtn.clicked.connect(self.raw2hdf)
         self.closeBtn.clicked.connect(self.close)
         self.closeBtn.clicked.connect(self.cbar.clear)
 
-        self.progressStart.connect(lambda: self.importBtn.setEnabled(False))
-        self.progressFinished.connect(lambda: self.importBtn.setEnabled(True))
 
     def onOpenOutFile(self):
 
@@ -167,41 +103,33 @@ class ImportDialog(QtGui.QDialog):
         self.cbar.addChannels(len(images))
         self.cbar.setImages(images, list(proc.iterprops()))
 
+    def onError(self, exc):
+        QMessageBox.critical(self, "Error", str(e))
+
+    def onFinished(self):
+        self.raise_()
+        QMessageBox.information(self, "finished", "training set saved")
+
     def raw2hdf(self):
-        if not isdir(dirname(self.outputFile.text())):
-            QMessageBox.critical(self, "Error", "path does not exist!")
+
+        if self.thread.isRunning():
+            QMessageBox.information(self, "wait",
+                                    "wait until current training set is loaded")
             return
 
-        writer = HdfWriter(self.outputFile.text())
-        writer.setupImages(self.metadata.n_images,
-                           len(self.cbar.checkedChannels()),
-                           self.metadata.size, self.metadata.dtype)
-
-        self.progressSetRange.emit(0, len(self._files))
-        self.progressStart.emit()
-
-        channels = self.cbar.checkedChannels()
         try:
-            for i, file_ in enumerate(self._files):
-                self.progressUpdate.emit(i+1)
-                QtCore.QCoreApplication.processEvents()
-                mp = LsmProcessor(file_)
-                # first channel for primary segementation
-                mp.segmentation(params, channels, min(channels.keys()))
-                mp.calculateFeatures(ftrg)
-                writer.saveData(mp.objects)
-                writer.setImage(mp.image[:, :, channels.keys()], i)
-
-                self.cbar.setImages(list(mp.iterQImages()))
-            writer.close()
-        except HdfError as e:
-            QMessageBox.critical(self, "Error", str(e))
-            writer.close(flush=False)
-            return
+            worker = AfImporter(self._files,
+                                self.metadata,
+                                self.outputFile.text(),
+                                self.cbar.checkedChannels(),
+                                params,
+                                ftrg)
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
-            writer.close()
             return
 
-        self.progressFinished.emit()
-        QMessageBox.information(self, "finished", "all images save to hdf")
+        worker.connetToProgressBar(self.parent().progressbar)
+        worker.finished.connect(self.onFinished)
+        worker.imageReady.connect(self.cbar.setImages)
+        self.parent().abort.connect(worker.abort)
+        self.thread.start(worker)

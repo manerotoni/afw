@@ -5,40 +5,12 @@ loader.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('AfLoader', 'AfLoaderThread')
+__all__ = ('AfLoader', )
 
-import traceback
-import warnings
+
 import numpy as np
-
-from PyQt4 import QtGui
 from PyQt4 import QtCore
 from af.hdfio import HdfReader
-from qimage2ndarray import array2qimage
-
-class AfLoaderThread(QtCore.QThread):
-
-    error = QtCore.pyqtSignal("PyQt_PyObject")
-
-    def __init__(self, *args, **kw):
-        super(AfLoaderThread, self).__init__(*args, **kw)
-        self._worker = None
-
-    def start(self, worker):
-        self._worker = worker
-        self._worker.moveToThread(self)
-        super(AfLoaderThread, self).start()
-
-    def run(self):
-
-        try:
-            self._worker()
-        except Exception as e:
-            traceback.print_exc()
-            warnings.warn(str(e))
-            self.error.emit(e)
-        finally:
-            self._worker.moveToThread(QtGui.QApplication.instance().thread())
 
 
 class AfLoader(QtCore.QObject):
@@ -113,5 +85,4 @@ class AfLoader(QtCore.QObject):
             item = self._h5f.loadItem(idx, self._coordinate, self._size)
             self.progressUpdate.emit(i+1)
             self.itemLoaded.emit(item)
-            # QtCore.QCoreApplication.processEvents()
             self.thread().msleep(self.PYDELAY)
