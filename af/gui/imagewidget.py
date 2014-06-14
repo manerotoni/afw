@@ -11,7 +11,7 @@ __licence__ = 'GPL'
 __all__ = ["ImageWidget", "ImageViewer"]
 
 from PyQt4 import QtGui
-from PyQt4.QtCore import Qt, QPointF
+from PyQt4.QtCore import Qt
 
 
 class ImageWidget(QtGui.QWidget):
@@ -172,15 +172,16 @@ class ImageViewer(QtGui.QGraphicsView):
             if isinstance(item, QtGui.QGraphicsPolygonItem):
                 self.scene().removeItem(item)
 
-    def drawContours(self, polygon_dict):
-        self.clearPolygons()
 
-        for channel, polygons in polygon_dict.iteritems():
-            for label, polygon in polygons.iteritems():
-                qpolygon = QtGui.QPolygonF([QPointF(*p) for p in polygon])
+    def contourImage(self, pixmap, contours_dict=None):
+
+        self.showPixmap(pixmap)
+        self.clearPolygons()
+        for color, contours in contours_dict.iteritems():
+            for contour in contours:
                 pen = QtGui.QPen()
-                pen.setColor(QtGui.QColor("white"))
-                self.scene().addPolygon(qpolygon, pen=pen)
+                pen.setColor(color)
+                self.scene().addPolygon(contour, pen=pen)
 
 
 if __name__ == '__main__':

@@ -8,10 +8,12 @@ __licence__ = 'GPL'
 __all__ = ('AfImporter', 'AbortQWorker')
 
 from os.path import isdir, dirname
-from PyQt4 import QtCore
 
-from af.hdfwriter import HdfError
+from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
+
 from af.hdfwriter import HdfWriter
+from af.hdfwriter import HdfError
 from af.segmentation.multicolor import LsmProcessor
 
 
@@ -23,13 +25,12 @@ class AfImporter(QtCore.QObject):
 
     PYDELAY = 15 # ms
 
-
     progressUpdate = QtCore.pyqtSignal(int)
     progressSetRange = QtCore.pyqtSignal(int, int)
     finished = QtCore.pyqtSignal()
     started = QtCore.pyqtSignal()
     imageReady = QtCore.pyqtSignal(tuple)
-    contoursReady = QtCore.pyqtSignal(dict)
+    contourImage = QtCore.pyqtSignal(tuple, dict)
     error = QtCore.pyqtSignal("PyQt_PyObject")
 
     def __init__(self, files, metadata, outfile, channels,
@@ -54,11 +55,11 @@ class AfImporter(QtCore.QObject):
         if self._abort:
             raise AbortQWorker()
 
-    def connetToProgressBar(self, pbar):
-        self.progressUpdate.connect(pbar.setValue)
-        self.progressSetRange.connect(pbar.setRange)
-        self.finished.connect(pbar.hide)
-        self.started.connect(pbar.show)
+    def connetToProgressBar(self, pbar, connectiontype=Qt.QueuedConnection):
+        self.progressUpdate.connect(pbar.setValue, connectiontype)
+        self.progressSetRange.connect(pbar.setRange, connectiontype)
+        self.finished.connect(pbar.hide, connectiontype)
+        self.started.connect(pbar.show, connectiontype)
 
     def __call__(self):
         self.started.emit()
@@ -82,21 +83,21 @@ class AfImporter(QtCore.QObject):
                 objects = mp.objects
                 writer.saveData(objects)
                 writer.setImage(mp.image[:, :, self.channels.keys()], i)
-                self.imageReady.emit(tuple(mp.iterQImages()))
-                self.contoursReady.emit(objects.contours)
+                self.contourImage.emit(tuple(mp.iterQImages()),
+                                       objects.contours)
 
             writer.flush()
             self.finished.emit()
 
-        # except AbortQWorker:
-        #     pass
+        except AbortQWorker:
+            pass
 
-        # except HdfError as e:
-        #     self.error.emit(e)
+        except HdfError as e:
+            self.error.emit(e)
 
-        # except Exception as e:
-        #     writer.flush()
-        #     self.error.emit(e)
+        except Exception as e:
+            writer.flush()
+            self.error.emit(e)
 
         finally:
             writer.close()

@@ -57,7 +57,10 @@ class ImportDialog(QtGui.QDialog):
         self.metadata =  None
         self.cbar = ChannelBar(self)
         self.cbox.addWidget(self.cbar)
-        self.cbar.newPixmap.connect(self.viewer.showPixmap)
+        self.cbar.newPixmap.connect(self.viewer.showPixmap,
+                                    Qt.DirectConnection)
+        self.cbar.newContourImage.connect(self.viewer.contourImage,
+                                          Qt.DirectConnection)
 
         self.outputBtn.clicked.connect(self.onOpenOutFile)
         self.inputBtn.clicked.connect(self.onOpenInputDir)
@@ -128,10 +131,10 @@ class ImportDialog(QtGui.QDialog):
                 QMessageBox.critical(self, "Error", str(e))
                 return
 
-            worker.connetToProgressBar(self.progressBar)
-            worker.finished.connect(self.onFinished)
-            worker.error.connect(self.onError)
-            worker.imageReady.connect(self.cbar.setImages)
-            worker.contoursReady.connect(self.viewer.drawContours)
+            worker.connetToProgressBar(self.progressBar, Qt.QueuedConnection)
+            worker.finished.connect(self.onFinished, Qt.QueuedConnection)
+            worker.error.connect(self.onError, Qt.QueuedConnection)
+            worker.contourImage.connect(self.cbar.contourImage,
+                                        Qt.QueuedConnection)
             self.thread.start(worker)
             self.startBtn.setText("abort")

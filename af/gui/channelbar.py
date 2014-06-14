@@ -10,7 +10,8 @@ __all__ = ('ChannelBar', )
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from collections import OrderedDict
+from PyQt4.QtCore import QPointF
+from collections import OrderedDict, defaultdict
 
 from af.gui.colorbutton import ColorButton
 from af.gui.painting import AfPainter
@@ -20,6 +21,7 @@ from af.gui.contrast import AfEnhancerWidget
 class ChannelBar(QtGui.QWidget):
 
     newPixmap = QtCore.pyqtSignal(QtGui.QPixmap)
+    newContourImage =  QtCore.pyqtSignal(QtGui.QPixmap, defaultdict)
 
     def __init__(self, *args, **kw):
         super(ChannelBar, self).__init__(*args, **kw)
@@ -105,3 +107,23 @@ class ChannelBar(QtGui.QWidget):
         if image_props is not None:
             self.enhancer.setImageProps(image_props)
         self.updateImage()
+
+    def contourImage(self, images, contours_dict):
+        self._images = images
+
+        images = list()
+        polygons = defaultdict(list)
+        for index, name in self.checkedChannels().iteritems():
+            # converting the gray image to the color defined in the button
+            color = self.widgetAt(index, 1).currentColor()
+            for contours in contours_dict.itervalues():
+                polygon = QtGui.QPolygonF([QPointF(*c) for c in contours[name]])
+                polygons[color].append(polygon)
+
+            image = self._images[index]
+            lut = self.enhancer.lut_from_color(index, color, 256)
+            image.setColorTable(lut)
+            images.append(image)
+
+        pixmap = AfPainter.blend(images)
+        self.newContourImage.emit(pixmap, polygons)
