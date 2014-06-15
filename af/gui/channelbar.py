@@ -21,13 +21,14 @@ from af.gui.contrast import AfEnhancerWidget
 class ChannelBar(QtGui.QWidget):
 
     newPixmap = QtCore.pyqtSignal(QtGui.QPixmap)
-    newContourImage =  QtCore.pyqtSignal(QtGui.QPixmap, defaultdict)
+    
 
-    def __init__(self, *args, **kw):
-        super(ChannelBar, self).__init__(*args, **kw)
+    def __init__(self, parent, viewer, *args, **kw):
+        super(ChannelBar, self).__init__(parent, *args, **kw)
         self._images = None
         self._channel_count = 0
 
+        self.viewer = viewer
         vbox = QtGui.QVBoxLayout(self)
         self.gbox = QtGui.QGridLayout()
         cbox = QtGui.QVBoxLayout()
@@ -126,4 +127,5 @@ class ChannelBar(QtGui.QWidget):
             images.append(image)
 
         pixmap = AfPainter.blend(images)
-        self.newContourImage.emit(pixmap, polygons)
+
+        self.viewer.contourImage(pixmap, polygons)

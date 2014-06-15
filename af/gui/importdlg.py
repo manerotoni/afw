@@ -30,7 +30,7 @@ from af.segmentation import PrimaryParams, ExpansionParams
 from af.segmentation import feature_groups
 from cecog import ccore
 
-params = {"Channel 1": PrimaryParams(3, 17, 3, True, True),
+params = {"Channel 1": PrimaryParams(3, 42, 6, True, True),
           "Channel 2" : ExpansionParams(
         ccore.SrgType.KeepContours, None, 0, 5, 0)}
 
@@ -55,12 +55,10 @@ class ImportDialog(QtGui.QDialog):
         self.viewer.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
                                   QtGui.QSizePolicy.MinimumExpanding)
         self.metadata =  None
-        self.cbar = ChannelBar(self)
+        self.cbar = ChannelBar(self, self.viewer)
         self.cbox.addWidget(self.cbar)
         self.cbar.newPixmap.connect(self.viewer.showPixmap,
                                     Qt.DirectConnection)
-        self.cbar.newContourImage.connect(self.viewer.contourImage,
-                                          Qt.DirectConnection)
 
         self.outputBtn.clicked.connect(self.onOpenOutFile)
         self.inputBtn.clicked.connect(self.onOpenInputDir)
@@ -96,6 +94,7 @@ class ImportDialog(QtGui.QDialog):
             self.inputDir.setText(idir)
             pattern = self.inputDir.text() + "/*.lsm"
             self._files = glob.glob(pattern)
+            self._files.sort()
             self.dirinfo.setText("%d images found" %len(self._files))
 
         proc = LsmProcessor(self._files[0])

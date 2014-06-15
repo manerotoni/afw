@@ -13,6 +13,7 @@ __all__ = ('HdfReader', )
 
 import cellh5
 
+
 class HdfCoord(dict):
     """Custom mapping allowing only the following keys:
     plate, well, site and region.

@@ -7,7 +7,7 @@ __licence__ = 'GPL'
 
 __all__ = ('AfImporter', 'AbortQWorker')
 
-from os.path import isdir, dirname
+from os.path import isdir, dirname, basename
 
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -23,7 +23,7 @@ class AbortQWorker(Exception):
 
 class AfImporter(QtCore.QObject):
 
-    PYDELAY = 15 # ms
+    PYDELAY = 50 # ms
 
     progressUpdate = QtCore.pyqtSignal(int)
     progressSetRange = QtCore.pyqtSignal(int, int)
