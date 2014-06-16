@@ -81,11 +81,13 @@ class HdfWriter(object):
         self.images[:, :, :, index] = image
 
     def saveData(self, objectsdict):
-
-        if self._cache is None:
-            self._cache = HdfCache(objectsdict.feature_names,
-                                   objectsdict.gallery_dtype)
-        self._cache.appendData(objectsdict)
+        # sometimes there are not objects found in an image
+        # and objectsdict is empty
+        if objectsdict:
+            if self._cache is None:
+                self._cache = HdfCache(objectsdict.feature_names,
+                                       objectsdict.gallery_dtype)
+            self._cache.appendData(objectsdict)
 
     def flush(self):
 

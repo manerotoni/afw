@@ -81,6 +81,7 @@ class AfImporter(QtCore.QObject):
                                 min(self.channels.keys()))
                 mp.calculateFeatures(self.feature_groups)
                 objects = mp.objects
+                # saveData ignores empty objects
                 writer.saveData(objects)
                 writer.setImage(mp.image[:, :, self.channels.keys()], i)
                 self.contourImage.emit(tuple(mp.iterQImages()),
@@ -94,10 +95,12 @@ class AfImporter(QtCore.QObject):
 
         except HdfError as e:
             self.error.emit(e)
+            raise
 
         except Exception as e:
             writer.flush()
             self.error.emit(e)
+            raise
 
         finally:
             writer.close()

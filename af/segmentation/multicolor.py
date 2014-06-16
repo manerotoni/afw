@@ -104,8 +104,12 @@ class MultiChannelProcessor(object):
                     odict[label] = obj
 
             # set feature names extend with a prefix
-            odict.feature_names.extend(
-                ["c%d-%s" %(i, n) for n in obj.feature_names])
+            try:
+                odict.feature_names.extend(
+                    ["c%d-%s" %(i, n) for n in obj.feature_names])
+            except UnboundLocalError as e:
+                # empty image has no objects
+                pass
 
         removed = odict.remove_incomplete()
         if len(removed) > 0:
