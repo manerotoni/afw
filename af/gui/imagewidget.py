@@ -177,11 +177,13 @@ class ImageViewer(QtGui.QGraphicsView):
 
         self.showPixmap(pixmap)
         self.clearPolygons()
-        for color, contours in contours_dict.iteritems():
-            for contour in contours:
-                pen = QtGui.QPen()
-                pen.setColor(color)
-                self.scene().addPolygon(contour, pen=pen)
+
+        if contours_dict is not None:
+            for color, contours in contours_dict.iteritems():
+                for contour in contours:
+                    pen = QtGui.QPen()
+                    pen.setColor(color)
+                    self.scene().addPolygon(contour, pen=pen)
 
 
 if __name__ == '__main__':
