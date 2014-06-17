@@ -122,7 +122,6 @@ class ChannelBar(QtGui.QWidget):
                 polygon = QtGui.QPolygonF([QPointF(*c) for c in contours[name]])
                 polygons[color].append(polygon)
 
-
             image = self._images[index]
             lut = self.enhancer.lut_from_color(index, color, 256)
             image.setColorTable(lut)
@@ -130,6 +129,8 @@ class ChannelBar(QtGui.QWidget):
 
         pixmap = AfPainter.blend(images)
 
+
+        # sometimes qt segfaults if I draw the polygons into the graphics scene
         if False:
             pixmap = AfPainter.drawContours(pixmap, polygons)
             self.viewer.contourImage(pixmap, None)
