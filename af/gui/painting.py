@@ -29,5 +29,21 @@ class AfPainter(object):
         painter.end()
         return pixmap
 
-    def drawContours(self, contours):
-        pass
+    @staticmethod
+    def drawContours(image, polygons, color):
+        assert isinstance(image, QtGui.QImage)
+        assert isinstance(color, QtGui.QColor)
+
+        painter = QtGui.QPainter(image)
+
+        pen = QtGui.QPen()
+        pen.setColor(color)
+        painter.setBrush(Qt.NoBrush)
+
+        for polygon in polygons:
+            painter.drawPolygon(polygon)
+
+        painter.end()
+
+        return image
+

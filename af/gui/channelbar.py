@@ -21,7 +21,7 @@ from af.gui.contrast import AfEnhancerWidget
 class ChannelBar(QtGui.QWidget):
 
     newPixmap = QtCore.pyqtSignal(QtGui.QPixmap)
-    
+
 
     def __init__(self, parent, viewer, *args, **kw):
         super(ChannelBar, self).__init__(parent, *args, **kw)
@@ -113,19 +113,21 @@ class ChannelBar(QtGui.QWidget):
         self._images = images
 
         images = list()
-        polygons = defaultdict(list)
         for index, name in self.checkedChannels().iteritems():
             # converting the gray image to the color defined in the button
             color = self.widgetAt(index, 1).currentColor()
+
+            polygons = list()
             for contours in contours_dict.itervalues():
                 polygon = QtGui.QPolygonF([QPointF(*c) for c in contours[name]])
-                polygons[color].append(polygon)
+                polygons.append(polygon)
 
-            image = self._images[index]
+
+            image = AfPainter.drawContours(self._images[index], polygons, color)
             lut = self.enhancer.lut_from_color(index, color, 256)
             image.setColorTable(lut)
             images.append(image)
 
         pixmap = AfPainter.blend(images)
 
-        self.viewer.contourImage(pixmap, polygons)
+        self.viewer.contourImage(pixmap, None)
