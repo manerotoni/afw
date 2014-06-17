@@ -30,20 +30,19 @@ class AfPainter(object):
         return pixmap
 
     @staticmethod
-    def drawContours(image, polygons, color):
-        assert isinstance(image, QtGui.QImage)
-        assert isinstance(color, QtGui.QColor)
+    def drawContours(pixmap, polygons):
+        assert isinstance(pixmap, QtGui.QPixmap)
 
-        painter = QtGui.QPainter(image)
-
+        painter = QtGui.QPainter(pixmap)
         pen = QtGui.QPen()
-        pen.setColor(color)
         painter.setBrush(Qt.NoBrush)
 
-        for polygon in polygons:
-            painter.drawPolygon(polygon)
+        for color, polygons in polygons.iteritems():
+            pen.setColor(color)
+            painter.setPen(pen)
+            for polygon in polygons:
+                painter.drawPolygon(polygon)
 
         painter.end()
 
-        return image
-
+        return pixmap

@@ -113,21 +113,25 @@ class ChannelBar(QtGui.QWidget):
         self._images = images
 
         images = list()
+        polygons = defaultdict(list)
         for index, name in self.checkedChannels().iteritems():
             # converting the gray image to the color defined in the button
             color = self.widgetAt(index, 1).currentColor()
 
-            polygons = list()
             for contours in contours_dict.itervalues():
                 polygon = QtGui.QPolygonF([QPointF(*c) for c in contours[name]])
-                polygons.append(polygon)
+                polygons[color].append(polygon)
 
 
-            image = AfPainter.drawContours(self._images[index], polygons, color)
+            image = self._images[index]
             lut = self.enhancer.lut_from_color(index, color, 256)
             image.setColorTable(lut)
             images.append(image)
 
         pixmap = AfPainter.blend(images)
 
-        self.viewer.contourImage(pixmap, None)
+        if False:
+            pixmap = AfPainter.drawContours(pixmap, polygons)
+            self.viewer.contourImage(pixmap, None)
+        else:
+            self.viewer.contourImage(pixmap, polygons)
