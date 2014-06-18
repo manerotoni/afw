@@ -13,6 +13,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import QPointF
 from collections import OrderedDict, defaultdict
 
+from af.config import AfConfig
 from af.gui.colorbutton import ColorButton
 from af.gui.painting import AfPainter
 from af.gui.contrast import AfEnhancerWidget
@@ -21,7 +22,6 @@ from af.gui.contrast import AfEnhancerWidget
 class ChannelBar(QtGui.QWidget):
 
     newPixmap = QtCore.pyqtSignal(QtGui.QPixmap)
-
 
     def __init__(self, parent, viewer, *args, **kw):
         super(ChannelBar, self).__init__(parent, *args, **kw)
@@ -118,9 +118,13 @@ class ChannelBar(QtGui.QWidget):
             # converting the gray image to the color defined in the button
             color = self.widgetAt(index, 1).currentColor()
 
-            for contours in contours_dict.itervalues():
-                polygon = QtGui.QPolygonF([QPointF(*c) for c in contours[name]])
-                polygons[color].append(polygon)
+            try:
+                for contours in contours_dict.itervalues():
+                    polygon = QtGui.QPolygonF(
+                        [QPointF(*c) for c in contours[name]])
+                    polygons[color].append(polygon)
+            except KeyError:
+                pass
 
             image = self._images[index]
             lut = self.enhancer.lut_from_color(index, color, 256)
@@ -129,9 +133,8 @@ class ChannelBar(QtGui.QWidget):
 
         pixmap = AfPainter.blend(images)
 
-
         # sometimes qt segfaults if I draw the polygons into the graphics scene
-        if False:
+        if AfConfig().draw_contours_in_pixmap:
             pixmap = AfPainter.drawContours(pixmap, polygons)
             self.viewer.contourImage(pixmap, None)
         else:
