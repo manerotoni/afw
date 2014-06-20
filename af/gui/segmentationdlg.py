@@ -54,6 +54,8 @@ class SegmentationDialog(QtGui.QWidget):
         super(SegmentationDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowFlags(Qt.Window)
+        # row count (rowCount from gridlayout is not reliable!)
+        self._rcount = 1
 
     def closeEvent(self, event):
         print "pre"
@@ -64,14 +66,14 @@ class SegmentationDialog(QtGui.QWidget):
         expw = ExpansionWidget(self)
         ftrbox = FeatureBox(self)
 
-        row = self.regionBox.rowCount()
-        expw.setValue(expw.value()+row)
-        self.regionBox.addWidget(ChLabel(name), row, self.NAME)
-        self.regionBox.addWidget(expw, row, self.SEGMENTATION)
-        self.regionBox.addWidget(ftrbox, row, self.FEATURES)
+        expw.setValue(expw.value()+ self._rcount)
+        self.regionBox.addWidget(ChLabel(name), self._rcount, self.NAME)
+        self.regionBox.addWidget(expw, self._rcount, self.SEGMENTATION)
+        self.regionBox.addWidget(ftrbox, self._rcount, self.FEATURES)
+        self._rcount += 1
 
     def _rowIndexOfRegion(self, region):
-        rows = range(self.regionBox.rowCount())
+        rows = range(self._rcount)
         return [self.widgetAt(r, self.NAME).text() for r in rows].index(region)
 
     def widgetAt(self, row, column):
@@ -81,6 +83,8 @@ class SegmentationDialog(QtGui.QWidget):
         for i in range(self.regionBox.count()-self._ncols):
             item = self.regionBox.takeAt(3)
             item.widget().deleteLater()
+            del item
+        self._rcount = 1
 
     def deleteRegion(self, region):
 
@@ -90,6 +94,8 @@ class SegmentationDialog(QtGui.QWidget):
         for i in range(self._ncols):
             item = self.regionBox.takeAt(idx+1)
             item.widget().deleteLater()
+            del item
+        self._rcount -= 1
 
     def setRegions(self, names):
         self.clearRegions()
@@ -108,7 +114,7 @@ class SegmentationDialog(QtGui.QWidget):
 
     def segmentationParams(self):
         sparams = dict()
-        for i in xrange(self.regionBox.rowCount()):
+        for i in xrange(self._rcount):
             name = self.widgetAt(i, self.NAME).text()
             if i == 0:
                 sparams[name] = self._primaryParams()
@@ -118,7 +124,7 @@ class SegmentationDialog(QtGui.QWidget):
 
     def featureGroups(self):
         fgroups = dict()
-        for i in xrange(self.regionBox.rowCount()):
+        for i in xrange(self._rcount):
             name = self.widgetAt(i, self.NAME).text()
             fgroups[name] = self.widgetAt(i, self.FEATURES).featureGroups()
         return fgroups
