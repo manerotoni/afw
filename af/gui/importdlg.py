@@ -10,6 +10,7 @@ __all__ = ('ImportDialog', )
 
 
 import glob
+import traceback
 from os.path import isfile, isdir, basename
 from os.path import splitext, expanduser
 
@@ -149,7 +150,7 @@ class ImportDialog(QtGui.QDialog):
                                     self.segdlg.segmentationParams(),
                                     self.segdlg.featureGroups())
             except Exception as e:
-                QMessageBox.critical(self, "Error", str(e))
+                QMessageBox.critical(self, str(e), traceback.format_exc())
                 return
 
             worker.connetToProgressBar(self.progressBar, Qt.QueuedConnection)

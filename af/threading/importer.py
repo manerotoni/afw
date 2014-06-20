@@ -7,7 +7,8 @@ __licence__ = 'GPL'
 
 __all__ = ('AfImporter', 'AbortQWorker')
 
-from os.path import isdir, dirname, basename
+from os.path import isdir, dirname
+import traceback
 
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -95,11 +96,13 @@ class AfImporter(QtCore.QObject):
 
         except HdfError as e:
             self.error.emit(e)
+            traceback.print_exc()
             raise
 
         except Exception as e:
             writer.flush()
             self.error.emit(e)
+            traceback.print_exc()
             raise
 
         finally:
