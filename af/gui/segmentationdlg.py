@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 __all__ = ('SegmentationDialog', )
 
 import sys
+from collections import OrderedDict
 from os.path import splitext, join, dirname
 
 from PyQt4 import uic
@@ -132,14 +133,11 @@ class SegmentationDialog(QtGui.QWidget):
                              self.fillHoles.isChecked())
 
     def segmentationParams(self):
-        sparams = dict()
-        for i in xrange(self._rcount):
-            try:
-                name = self.widgetAt(i, self.NAME).text()
-            except AttributeError:
-                name = self.pchannel.currentText()
+        sparams = OrderedDict()
 
+        for i in xrange(self._rcount):
             if i == 0:
+                name = self.pchannel.currentText()
                 sparams[name] = self._primaryParams()
             else:
                 name = self.widgetAt(i, self.NAME).text()

@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 __all__ = ('AfImporter', 'AbortQWorker')
 
 from os.path import isdir, dirname
+from collections import OrderedDict
 import traceback
 
 from PyQt4 import QtCore
@@ -78,8 +79,7 @@ class AfImporter(QtCore.QObject):
                 self.thread().msleep(self.PYDELAY)
                 mp = LsmProcessor(file_)
                 # first channel for primary segementation
-                mp.segmentation(self.seg_params, self.channels,
-                                min(self.channels.keys()))
+                mp.segmentation(self.seg_params, self.channels)
                 mp.calculateFeatures(self.feature_groups)
                 objects = mp.objects
                 # saveData ignores empty objects
@@ -100,7 +100,7 @@ class AfImporter(QtCore.QObject):
             raise
 
         except Exception as e:
-            writer.flush()
+            # writer.flush()
             self.error.emit(e)
             traceback.print_exc()
             raise

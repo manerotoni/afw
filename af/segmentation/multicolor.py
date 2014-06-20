@@ -130,21 +130,37 @@ class MultiChannelProcessor(object):
                         container.haralick_distance = param
                         container.applyFeature(group)
 
-    def segmentation(self, params, channels, master_channel=0):
-        assert isinstance(params, dict)
-        assert isinstance(master_channel, int)
+    def segmentation(self, params, channels):
 
-        # neede for gallery images
+        if not isinstance(params, OrderedDict):
+            raise RuntimeError("Segmentation paramters must be ordered\n"
+                               "cannot determine the primary channel")
+
+
+        # needed for gallery images
         self._channel_idx = channels.keys()
+        # the master (primary) channel is determined by the first item
+        # the segmentation parameters (OrderedDict)
+        channels_r = OrderedDict([(v, k) for k, v in channels.items()])
+
+        try:
+            imaster = channels_r[params.keys()[0]]
+        except KeyError:
+            raise KeyError("Primary channel is deactivated!")
 
         # segment the master first
-        cname = channels[master_channel]
-        image = self.image[:, :, master_channel].copy()
+        try:
+            cname = channels[imaster]
+        except Exception:
+            from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+            import pdb; pdb.set_trace()
+
+        image = self.image[:, :, imaster].copy()
         self._containers[cname] = self.threshold(image, *params[cname])
         label_image = self._containers[cname].img_labels.toArray()
 
         for i, name in channels.iteritems():
-            if i == master_channel:
+            if i == imaster:
                 continue
             self._containers[name] = self.seededExpandedRegion(
                 self.image[:, :, i].copy(), label_image, *params[name])
