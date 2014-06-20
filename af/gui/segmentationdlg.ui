@@ -22,19 +22,6 @@
      <property name="topMargin">
       <number>12</number>
      </property>
-     <item row="0" column="2">
-      <widget class="FeatureBox" name="featurebox">
-       <property name="font">
-        <font>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="title">
-        <string>features</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1">
       <widget class="QGroupBox" name="primaryBox">
        <property name="font">
@@ -187,14 +174,48 @@
        </layout>
       </widget>
      </item>
+     <item row="0" column="2">
+      <widget class="FeatureBox" name="featurebox">
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="title">
+        <string>features</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
-      <widget class="QLabel" name="channel1Label">
-       <property name="text">
-        <string>Channel 1</string>
+      <widget class="QGroupBox" name="channelbox">
+       <property name="title">
+        <string>channels</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QComboBox" name="pchannel"/>
+        </item>
+        <item>
+         <spacer name="vspacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -272,6 +293,16 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>closeBtn</tabstop>
+  <tabstop>refreshBtn</tabstop>
+  <tabstop>minContrast</tabstop>
+  <tabstop>meanRadius</tabstop>
+  <tabstop>windowSize</tabstop>
+  <tabstop>removeBorderObjects</tabstop>
+  <tabstop>fillHoles</tabstop>
+  <tabstop>pchannel</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

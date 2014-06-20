@@ -57,10 +57,26 @@ class SegmentationDialog(QtGui.QWidget):
         # row count (rowCount from gridlayout is not reliable!)
         self._rcount = 1
 
+        self.pchannel.currentIndexChanged[str].connect(self.onChannelChanged)
+
     def closeEvent(self, event):
         print "pre"
         super(SegmentationDialog, self).closeEvent(event)
         print "post"
+
+    def onChannelChanged(self, channel):
+
+        # determine the missing/ old channel of the combobox
+        missing = [self.pchannel.itemText(i)
+                   for i in xrange(self.pchannel.count())]
+        for i in xrange(1, self._rcount, 1):
+            missing.remove(self.widgetAt(i, self.NAME).text())
+
+        for i in xrange(1, self._rcount, 1):
+            widget = self.widgetAt(i, self.NAME)
+            if widget.text() == channel:
+                widget.setText(missing[0])
+
 
     def addExpandedRegion(self, name):
         expw = ExpansionWidget(self)
@@ -89,7 +105,6 @@ class SegmentationDialog(QtGui.QWidget):
     def deleteRegion(self, region):
 
         ri = self._rowIndexOfRegion(region)
-
         idx = self._ncols*ri - 1
         for i in range(self._ncols):
             item = self.regionBox.takeAt(idx+1)
@@ -97,13 +112,17 @@ class SegmentationDialog(QtGui.QWidget):
             del item
         self._rcount -= 1
 
+        self.pchannel.removeItem(self.pchannel.findText(region))
+
     def setRegions(self, names):
         self.clearRegions()
+        self.pchannel.clear()
         for i, name in enumerate(names):
             if i > 0 : # assuming the first item is for the primary segmentation
                 self.addExpandedRegion(name)
             else:
-                self.channel1Label.setText(name)
+                self.pchannel.addItems(names)
+                self.pchannel.setCurrentIndex(0)
 
     def _primaryParams(self):
         return PrimaryParams(self.meanRadius.value(),
@@ -115,17 +134,25 @@ class SegmentationDialog(QtGui.QWidget):
     def segmentationParams(self):
         sparams = dict()
         for i in xrange(self._rcount):
-            name = self.widgetAt(i, self.NAME).text()
+            try:
+                name = self.widgetAt(i, self.NAME).text()
+            except AttributeError:
+                name = self.pchannel.currentText()
+
             if i == 0:
                 sparams[name] = self._primaryParams()
             else:
+                name = self.widgetAt(i, self.NAME).text()
                 sparams[name] = self.widgetAt(i, self.SEGMENTATION).params()
         return sparams
 
     def featureGroups(self):
         fgroups = dict()
         for i in xrange(self._rcount):
-            name = self.widgetAt(i, self.NAME).text()
+            try:
+                name = self.widgetAt(i, self.NAME).text()
+            except AttributeError:
+                name = self.pchannel.currentText()
             fgroups[name] = self.widgetAt(i, self.FEATURES).featureGroups()
         return fgroups
 
