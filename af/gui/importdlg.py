@@ -22,8 +22,8 @@ from PyQt4.QtGui import QMessageBox
 from af.threading import AfThread
 from af.threading import AfImporter
 from af.gui.channelbar import ChannelBar
+from af.gui.segmentationdlg import SegmentationDialog
 from af.segmentation.multicolor import LsmProcessor
-
 
 # XXX TODO implement dialog for segementation parmeters
 from af.segmentation import PrimaryParams, ExpansionParams
@@ -48,13 +48,19 @@ class ImportDialog(QtGui.QDialog):
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        self.metadata =  None
+        self._files  = None
+
         self.setWindowTitle("Import Training Data")
         self.progressBar.hide()
+
+        self.segdlg = SegmentationDialog(self)
+        self.segdlg.hide()
 
         self.thread = AfThread(self)
         self.viewer.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
                                   QtGui.QSizePolicy.MinimumExpanding)
-        self.metadata =  None
+
         self.cbar = ChannelBar(self, self.viewer)
         self.cbox.addWidget(self.cbar)
         self.cbar.newPixmap.connect(self.viewer.showPixmap,
@@ -65,6 +71,10 @@ class ImportDialog(QtGui.QDialog):
         self.startBtn.clicked.connect(self.raw2hdf)
         self.closeBtn.clicked.connect(self.close)
         self.closeBtn.clicked.connect(self.cbar.clear)
+        self.segmentationBtn.clicked.connect(self.onSegmentationBtn)
+
+    def onSegmentationBtn(self):
+        self.segdlg.show()
 
     def onOpenOutFile(self):
 
@@ -86,16 +96,25 @@ class ImportDialog(QtGui.QDialog):
         else:
             path = expanduser("~")
 
+        # TODO use getOpenFileNames instead
         idir = QFileDialog.getExistingDirectory(self,
                                                 "select output directory",
-                                                path)
+                                               path)
+        # cancel button
+        if not idir:
+            return
 
-        if isdir(idir):
-            self.inputDir.setText(idir)
-            pattern = self.inputDir.text() + "/*.lsm"
-            self._files = glob.glob(pattern)
-            self._files.sort()
-            self.dirinfo.setText("%d images found" %len(self._files))
+        self.inputDir.setText(idir)
+        pattern = self.inputDir.text() + "/*.lsm"
+        self._files = glob.glob(pattern)
+
+        # no lsm files in directory
+        if not self._files:
+            QMessageBox.warning(self, "Error", "No files found")
+            return
+
+        self._files.sort()
+        self.dirinfo.setText("%d images found" %len(self._files))
 
         proc = LsmProcessor(self._files[0])
         self.metadata = proc.metadata
@@ -103,6 +122,9 @@ class ImportDialog(QtGui.QDialog):
         images = list(proc.iterQImages())
         self.cbar.addChannels(len(images))
         self.cbar.setImages(images, list(proc.iterprops()))
+
+        self.segdlg.setRegions(self.cbar.allChannels())
+
 
     def onError(self, exc):
         self.startBtn.setText("start")
@@ -124,8 +146,8 @@ class ImportDialog(QtGui.QDialog):
                                     self.metadata,
                                     self.outputFile.text(),
                                     self.cbar.checkedChannels(),
-                                    params,
-                                    ftrg)
+                                    self.segdlg.segmentationParams(),
+                                    self.segdlg.featureGroups())
             except Exception as e:
                 QMessageBox.critical(self, "Error", str(e))
                 return

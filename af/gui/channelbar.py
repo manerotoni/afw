@@ -86,6 +86,9 @@ class ChannelBar(QtGui.QWidget):
                 channels[i] = cb.text()
         return channels
 
+    def allChannels(self):
+        return [self.widgetAt(i, 0).text() for i in xrange(self._channel_count)]
+
     def updateImage(self, dummy=None):
         if self._images is None:
             raise RuntimeError("No images set!")

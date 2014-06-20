@@ -20,6 +20,48 @@
    <property name="spacing">
     <number>0</number>
    </property>
+   <item row="0" column="0">
+    <widget class="QFrame" name="hbox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="ImageViewer" name="viewer"/>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="progressBar">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>12</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>6</pointsize>
+         </font>
+        </property>
+        <property name="value">
+         <number>24</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item row="0" column="2">
     <widget class="QWidget" name="widget" native="true">
      <property name="sizePolicy">
@@ -126,27 +168,31 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="dirinfo">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gbox">
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="segmentation">
+       <layout class="QVBoxLayout" name="vbox2">
+        <item>
+         <widget class="QLabel" name="dirinfo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string>segmentation</string>
+           <string/>
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="segmentationBtn">
+          <property name="text">
+           <string>segmentation setup</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gbox">
         <item row="0" column="1">
          <widget class="QPushButton" name="startBtn">
           <property name="text">
@@ -154,56 +200,14 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="closeBtn">
+          <property name="text">
+           <string>close</string>
+          </property>
+         </widget>
+        </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QPushButton" name="closeBtn">
-        <property name="text">
-         <string>close</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QFrame" name="hbox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="spacing">
-       <number>0</number>
-      </property>
-      <property name="margin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="ImageViewer" name="viewer"/>
-      </item>
-      <item>
-       <widget class="QProgressBar" name="progressBar">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>12</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>6</pointsize>
-         </font>
-        </property>
-        <property name="value">
-         <number>24</number>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
