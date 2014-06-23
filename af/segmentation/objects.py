@@ -42,7 +42,7 @@ class ImageObject(object):
         try:
             idx = self.feature_names.index("eccentricity")
             self.orientation = Orientation(cobj.orientation, self.features[idx])
-        except AttributeError:
+        except (AttributeError, ValueError):
             self.orientation = None
 
         # contour coordinates are relative to the bbox, want them in

@@ -174,7 +174,6 @@ class ImageViewer(QtGui.QGraphicsView):
 
 
     def contourImage(self, pixmap, contours_dict=None):
-
         self.showPixmap(pixmap)
         self.clearPolygons()
 

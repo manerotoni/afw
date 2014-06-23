@@ -149,11 +149,7 @@ class MultiChannelProcessor(object):
             raise KeyError("Primary channel is deactivated!")
 
         # segment the master first
-        try:
-            cname = channels[imaster]
-        except Exception:
-            from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-            import pdb; pdb.set_trace()
+        cname = channels[imaster]
 
         image = self.image[:, :, imaster].copy()
         self._containers[cname] = self.threshold(image, *params[cname])

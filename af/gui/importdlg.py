@@ -74,6 +74,28 @@ class ImportDialog(QtGui.QDialog):
         self.closeBtn.clicked.connect(self.cbar.clear)
         self.segmentationBtn.clicked.connect(self.onSegmentationBtn)
 
+        self.slider.valueChanged.connect(self.showImage)
+        self.slider.sliderReleased.connect(self.drawContours)
+        self.contoursCb.stateChanged.connect(self.onContours)
+        self.segdlg.refreshBtn.clicked.connect(self.drawContours)
+
+        self.nextBtn.clicked.connect(self.onNextBtn)
+        self.prevBtn.clicked.connect(self.onPrevBtn)
+
+    def onNextBtn(self):
+        self.slider.setValue(self.slider.value()+1)
+        self.drawContours()
+
+    def onPrevBtn(self):
+        self.slider.setValue(self.slider.value()-1)
+        self.drawContours()
+
+    def onContours(self, state):
+        if state == Qt.Checked:
+            self.drawContours()
+        else:
+            self.viewer.clearPolygons()
+
     def onSegmentationBtn(self):
         self.segdlg.show()
 
@@ -100,7 +122,7 @@ class ImportDialog(QtGui.QDialog):
         # TODO use getOpenFileNames instead
         idir = QFileDialog.getExistingDirectory(self,
                                                 "select output directory",
-                                               path)
+                                                path)
         # cancel button
         if not idir:
             return
@@ -126,6 +148,26 @@ class ImportDialog(QtGui.QDialog):
 
         self.segdlg.setRegions(self.cbar.allChannels())
 
+        self.slider.setRange(0, self.metadata.n_images-1)
+
+    def showImage(self, index=0):
+        self.viewer.clearPolygons()
+        proc = LsmProcessor(self._files[index])
+        images = list(proc.iterQImages())
+        self.cbar.setImages(images, list(proc.iterprops()))
+
+    def drawContours(self):
+        if not self.contoursCb.isChecked():
+            return
+
+        index = self.slider.value()
+        mp = LsmProcessor(self._files[index])
+        # first channel for primary segementation
+        mp.segmentation(self.segdlg.segmentationParams(),
+                        self.cbar.checkedChannels())
+        objects = mp.objects
+        self.cbar.contourImage(tuple(mp.iterQImages()),
+                               objects.contours)
 
     def onError(self, exc):
         self.startBtn.setText("start")
