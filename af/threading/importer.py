@@ -13,8 +13,8 @@ import traceback
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
-from af.hdfwriter import HdfWriter
-from af.hdfwriter import HdfError
+from af.hdfio import HdfWriter
+from af.hdfio import HdfError
 from af.segmentation.multicolor import LsmProcessor
 
 

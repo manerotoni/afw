@@ -10,7 +10,7 @@ __all__ = ("NavToolBar", "ViewToolBar")
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from af.hdfio import HdfCoord
+from af.hdfio import Ch5Coord
 
 
 class NavToolBar(QtGui.QToolBar):
@@ -44,7 +44,7 @@ class NavToolBar(QtGui.QToolBar):
 
     @property
     def coordinate(self):
-        return HdfCoord(self.plate.currentText(),
+        return Ch5Coord(self.plate.currentText(),
                         self.well.currentText(),
                         self.site.currentText(),
                         self.region.currentText())

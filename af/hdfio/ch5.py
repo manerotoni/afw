@@ -1,5 +1,5 @@
 """
-hdfio.py
+cellh5.py
 
 read data from cellh5 and hdffiles
 
@@ -8,13 +8,13 @@ read data from cellh5 and hdffiles
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('HdfReader', )
+__all__ = ('Ch5Reader', 'Ch5Coord', 'HdfItem')
 
 
 import cellh5
 
 
-class HdfCoord(dict):
+class Ch5Coord(dict):
     """Custom mapping allowing only the following keys:
     plate, well, site and region.
     """
@@ -22,18 +22,18 @@ class HdfCoord(dict):
     _keys = ('plate', 'well', 'site', 'region')
 
     def __init__(self, plate, well, site, region):
-        super(HdfCoord, self).__init__(plate=plate, well=well,
+        super(Ch5Coord, self).__init__(plate=plate, well=well,
                                        site=site, region=region)
 
     def __getitem__(self, key):
         if key not in self._keys:
             raise KeyError('Key is invalid')
-        return super(HdfCoord, self).__getitem__(key)
+        return super(Ch5Coord, self).__getitem__(key)
 
     def __setitem__(self, key, value):
         if key not in self._keys:
             raise KeyError('Key is invalid')
-        return super(HdfCoord, self).__setitem__(key, value)
+        return super(Ch5Coord, self).__setitem__(key, value)
 
 
 class HdfItem(object):
@@ -51,7 +51,7 @@ class HdfItem(object):
         return "%d-%d" %(self.frame, self.objid)
 
 
-class HdfReader(cellh5.CH5File):
+class Ch5Reader(cellh5.CH5File):
 
     _features_def_key = "/definition/feature/"
 
@@ -64,7 +64,7 @@ class HdfReader(cellh5.CH5File):
     _timelapse_key = _site_key + "/image/time_lapse"
 
     def __init__(self, *args, **kw):
-        super(HdfReader, self).__init__(*args, **kw)
+        super(Ch5Reader, self).__init__(*args, **kw)
         self._hdf = self._file_handle
 
     def plateNames(self):

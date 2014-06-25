@@ -10,7 +10,7 @@ __all__ = ('AfLoader', )
 
 import numpy as np
 from PyQt4 import QtCore
-from af.hdfio import HdfReader
+from af.hdfio import Ch5Reader
 
 
 class AfLoader(QtCore.QObject):
@@ -47,7 +47,7 @@ class AfLoader(QtCore.QObject):
         if self._h5f is not None:
             self._h5f.close()
 
-        self._h5f = HdfReader(file_, "r", cached=True)
+        self._h5f = Ch5Reader(file_, "r", cached=True)
         cmap = self._h5f.cspace()
 
         self.fileOpened.emit({'plate': cmap.keys(),

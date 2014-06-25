@@ -5,6 +5,8 @@ hdfwriter.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
+__all__ = ('HdfWriter', 'HdfError', )
+
 
 import h5py
 import numpy as np
