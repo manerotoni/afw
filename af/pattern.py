@@ -7,7 +7,7 @@ Some design pattern collected
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ["Singleton", "QSingleton"]
+__all__ = ["Singleton", "QSingleton", "Factory"]
 
 
 from PyQt4.QtCore import pyqtWrapperType
@@ -42,3 +42,26 @@ class QSingleton(pyqtWrapperType):
         if cls._instance is None:
             cls._instance = super(QSingleton, cls).__call__(*args, **kwargs)
         return cls._instance
+
+
+class Factory(type):
+    """Meta class to implement the factory design pattern"""
+
+    def __init__(cls, name, bases, dct):
+
+        if len(cls.__mro__) == 2:
+            setattr(cls , "_classes", {})
+        elif len(cls.__mro__)  >= 3:
+            bases[0]._classes[name] = cls
+            setattr(bases[0], name, name) # perhaps an int?
+        return type.__init__(cls, name, bases, dct)
+
+    def __call__(cls, klass=None, *args, **kw):
+
+        if klass in cls._classes.keys():
+            return cls._classes[klass](*args, **kw)
+        elif klass is None:
+            return type.__call__(cls, *args, **kw)
+        elif cls in cls._classes.values():
+            allargs = (klass, ) + args
+            return type.__call__(cls, *allargs, **kw)

@@ -50,8 +50,8 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader.fileOpened.connect(self.navToolBar.updateNavToolbar)
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
-        self.actionOpen.triggered.connect(self.onFileOpen)
-        self.actionImport.triggered.connect(self.openImporter)
+        self.actionOpenCellh5.triggered.connect(self.onFileOpen)
+        self.actionProcessTrainingSet.triggered.connect(self.openImporter)
 
         self._restoreSettings()
         self.show()

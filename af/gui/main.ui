@@ -45,11 +45,18 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen"/>
+    <addaction name="actionOpenCellh5"/>
+    <addaction name="actionOpenTrainingSet"/>
     <addaction name="actionQuit"/>
-    <addaction name="actionImport"/>
+   </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>data</string>
+    </property>
+    <addaction name="actionProcessTrainingSet"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuData"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="sorting">
@@ -113,11 +120,6 @@
     </layout>
    </widget>
   </widget>
-  <action name="actionOpen">
-   <property name="text">
-    <string>Open</string>
-   </property>
-  </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
@@ -126,6 +128,31 @@
   <action name="actionImport">
    <property name="text">
     <string>Import Trainingset</string>
+   </property>
+  </action>
+  <action name="actionCellh5">
+   <property name="text">
+    <string>cellh5</string>
+   </property>
+  </action>
+  <action name="actionHdf_from_importer">
+   <property name="text">
+    <string>hdf from importer</string>
+   </property>
+  </action>
+  <action name="actionOpenTrainingSet">
+   <property name="text">
+    <string>open from importer</string>
+   </property>
+  </action>
+  <action name="actionProcessTrainingSet">
+   <property name="text">
+    <string>process trainingset</string>
+   </property>
+  </action>
+  <action name="actionOpenCellh5">
+   <property name="text">
+    <string>open cellh5</string>
    </property>
   </action>
  </widget>

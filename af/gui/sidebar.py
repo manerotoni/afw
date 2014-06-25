@@ -65,8 +65,6 @@ class AfSortWidget(AfSideBarWidget):
 
     startSorting = QtCore.pyqtSignal()
 
-    reduced_idx = [222, 223, 236]
-
     def __init__(self, parent=None, *args, **kw):
         super(AfSortWidget, self).__init__(parent, *args, **kw)
         # qtmethod does not return the real parent!
@@ -91,7 +89,7 @@ class AfSortWidget(AfSideBarWidget):
         self.addItems(items)
 
     def _featuresFromSidebar(self):
-        """Yields a feature matrix from the itmes in the Sidebar. One feature
+        """Yields a feature matrix from the items in the Sidebar. One feature
         vector per row."""
         nitems = self.items.topLevelItemCount()
         nfeatures = self.items.topLevelItem(0).cellitem.features.size

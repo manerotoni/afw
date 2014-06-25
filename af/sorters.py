@@ -6,33 +6,14 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 import numpy as np
+
+from af.pattern import Factory
 from af.mining import filter_nans
 from af.mining import ZScore, PCA
 
 
 class MinNumberSamplesError(Exception):
     pass
-
-
-class SortFactory(type):
-    """Meta class to implement the factory design pattern"""
-
-    def __init__(cls, name, bases, dct):
-
-        if len(cls.__mro__)  >= 3:
-            bases[0]._sorters[name] = cls
-            setattr(bases[0], name, name) # perhaps an int?
-        return type.__init__(cls, name, bases, dct)
-
-    def __call__(cls, sorter=None, *args, **kw):
-
-        if sorter in cls._sorters.keys():
-            return cls._sorters[sorter](*args, **kw)
-        elif sorter is None:
-            return type.__call__(cls, *args, **kw)
-        elif cls in cls._sorters.values():
-            allargs = (sorter, ) + args
-            return type.__call__(cls, *allargs, **kw)
 
 
 class Sorter(object):
@@ -44,12 +25,11 @@ class Sorter(object):
     >>><__main__.PcaSorter object at 0x1004a7190>
     """
 
-    __metaclass__ = SortFactory
-    _sorters = dict()
+    __metaclass__ = Factory
 
     @classmethod
     def sorters(cls):
-        return cls._sorters.keys()
+        return cls._classes.keys()
 
 
 class PcaBackProjectedDistance(Sorter):
