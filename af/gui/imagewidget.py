@@ -105,7 +105,7 @@ class ImageViewer(QtGui.QGraphicsView):
             QtGui.QApplication.setOverrideCursor(
                 QtGui.QCursor(Qt.OpenHandCursor))
         elif event.key() == Qt.Key_R:
-            self.scaleReset()
+            self.origsize()
         elif event.key() == Qt.Key_M:
             self.maximize()
         elif event.key() == Qt.Key_F:

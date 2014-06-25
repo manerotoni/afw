@@ -136,7 +136,6 @@ class MultiChannelProcessor(object):
             raise RuntimeError("Segmentation paramters must be ordered\n"
                                "cannot determine the primary channel")
 
-
         # needed for gallery images
         self._channel_idx = channels.keys()
         # the master (primary) channel is determined by the first item
