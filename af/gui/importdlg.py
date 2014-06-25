@@ -26,23 +26,6 @@ from af.gui.channelbar import ChannelBar
 from af.gui.segmentationdlg import SegmentationDialog
 from af.segmentation.multicolor import LsmProcessor
 
-# XXX TODO implement dialog for segementation parmeters
-from af.segmentation import PrimaryParams, ExpansionParams
-from af.segmentation import feature_groups
-from cecog import ccore
-
-params = {"Channel 1": PrimaryParams(3, 42, 6, True, True),
-          "Channel 2" : ExpansionParams(
-        ccore.SrgType.KeepContours, None, 0, 5, 0)}
-
-params["Channel 3"] = params["Channel 2"]
-params["Channel 4"] = params["Channel 2"]
-
-ftrg = {"Channel 1": feature_groups,
-        "Channel 2": feature_groups,
-        "Channel 3": feature_groups,
-        "Channel 4": feature_groups}
-
 
 class ImportDialog(QtGui.QDialog):
 
@@ -131,7 +114,6 @@ class ImportDialog(QtGui.QDialog):
         pattern = self.inputDir.text() + "/*.lsm"
         self._files = glob.glob(pattern)
 
-        # no lsm files in directory
         if not self._files:
             QMessageBox.warning(self, "Error", "No files found")
             return
@@ -147,7 +129,6 @@ class ImportDialog(QtGui.QDialog):
         self.cbar.setImages(images, list(proc.iterprops()))
 
         self.segdlg.setRegions(self.cbar.allChannels())
-
         self.slider.setRange(0, self.metadata.n_images-1)
 
     def showImage(self, index=0):
@@ -165,9 +146,7 @@ class ImportDialog(QtGui.QDialog):
         # first channel for primary segementation
         mp.segmentation(self.segdlg.segmentationParams(),
                         self.cbar.checkedChannels())
-        objects = mp.objects
-        self.cbar.contourImage(tuple(mp.iterQImages()),
-                               objects.contours)
+        self.cbar.contourImage(tuple(mp.iterQImages()),  mp.objects.contours)
 
     def onError(self, exc):
         self.startBtn.setText("start")

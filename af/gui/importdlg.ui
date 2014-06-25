@@ -283,20 +283,20 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="dirinfo">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
        <layout class="QVBoxLayout" name="vbox2">
+        <item>
+         <widget class="QLabel" name="dirinfo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QPushButton" name="segmentationBtn">
           <property name="text">
