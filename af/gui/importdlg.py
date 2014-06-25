@@ -49,6 +49,7 @@ class ImportDialog(QtGui.QDialog):
         self.cbox.addWidget(self.cbar)
         self.cbar.newPixmap.connect(self.viewer.showPixmap,
                                     Qt.DirectConnection)
+        self.cbar.newContourImage.connect(self.viewer.contourImage)
 
         self.outputBtn.clicked.connect(self.onOpenOutFile)
         self.inputBtn.clicked.connect(self.onOpenInputDir)
@@ -58,24 +59,29 @@ class ImportDialog(QtGui.QDialog):
         self.segmentationBtn.clicked.connect(self.onSegmentationBtn)
 
         self.slider.valueChanged.connect(self.showImage)
-        self.slider.sliderReleased.connect(self.drawContours)
+        self.slider.sliderReleased.connect(self.showContours)
+        self.slider.sliderPressed.connect(self.cbar.clearContours)
         self.contoursCb.stateChanged.connect(self.onContours)
-        self.segdlg.refreshBtn.clicked.connect(self.drawContours)
+        self.segdlg.refreshBtn.clicked.connect(self.showContours)
 
         self.nextBtn.clicked.connect(self.onNextBtn)
         self.prevBtn.clicked.connect(self.onPrevBtn)
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_F5:
+            self.showContours()
+
     def onNextBtn(self):
         self.slider.setValue(self.slider.value()+1)
-        self.drawContours()
+        self.showContours()
 
     def onPrevBtn(self):
         self.slider.setValue(self.slider.value()-1)
-        self.drawContours()
+        self.showContours()
 
     def onContours(self, state):
         if state == Qt.Checked:
-            self.drawContours()
+            self.showContours()
         else:
             self.viewer.clearPolygons()
 
@@ -137,7 +143,7 @@ class ImportDialog(QtGui.QDialog):
         images = list(proc.iterQImages())
         self.cbar.setImages(images, list(proc.iterprops()))
 
-    def drawContours(self):
+    def showContours(self):
         if not self.contoursCb.isChecked():
             return
 
@@ -146,7 +152,7 @@ class ImportDialog(QtGui.QDialog):
         # first channel for primary segementation
         mp.segmentation(self.segdlg.segmentationParams(),
                         self.cbar.checkedChannels())
-        self.cbar.contourImage(tuple(mp.iterQImages()),  mp.objects.contours)
+        self.cbar.setContours(mp.objects.contours)
 
     def onError(self, exc):
         self.startBtn.setText("start")

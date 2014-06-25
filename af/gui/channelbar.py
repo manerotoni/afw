@@ -22,10 +22,12 @@ from af.gui.contrast import AfEnhancerWidget
 class ChannelBar(QtGui.QWidget):
 
     newPixmap = QtCore.pyqtSignal(QtGui.QPixmap)
+    newContourImage = QtCore.pyqtSignal(QtGui.QPixmap, "PyQt_PyObject")
 
     def __init__(self, parent, viewer, *args, **kw):
         super(ChannelBar, self).__init__(parent, *args, **kw)
         self._images = None
+        self._contours = None
         self._channel_count = 0
 
         self.viewer = viewer
@@ -90,20 +92,31 @@ class ChannelBar(QtGui.QWidget):
         return [self.widgetAt(i, 0).text() for i in xrange(self._channel_count)]
 
     def updateImage(self, dummy=None):
+
         if self._images is None:
             raise RuntimeError("No images set!")
 
         images = list()
-        for i in self.checkedChannels():
+        contours = dict()
+
+        for i, n in self.checkedChannels().iteritems():
             # converting the gray image to the color defined in the button
             color = self.widgetAt(i, 1).currentColor()
             image = self._images[i]
             lut = self.enhancer.lut_from_color(i, color, 256)
             image.setColorTable(lut)
             images.append(image)
+            if self._contours is not None:
+                contours[color] = self._contours[n]
 
         pixmap = AfPainter.blend(images)
-        self.newPixmap.emit(pixmap)
+
+        # sometimes qt segfaults when drawing polygons
+        if AfConfig().draw_contours_in_pixmap:
+            pixmap = AfPainter.drawContours(pixmap, contours)
+            self.newContourImage.emit(pixmap, None)
+        else:
+            self.newContourImage.emit(pixmap, contours)
 
     def setImages(self, images, image_props=None):
         self._images = images
@@ -112,33 +125,24 @@ class ChannelBar(QtGui.QWidget):
             self.enhancer.setImageProps(image_props)
         self.updateImage()
 
-    def contourImage(self, images, contours_dict):
-        self._images = images
+    def setContours(self, contours_dict):
 
-        images = list()
-        polygons = defaultdict(list)
-        for index, name in self.checkedChannels().iteritems():
-            # converting the gray image to the color defined in the button
-            color = self.widgetAt(index, 1).currentColor()
-
-            try:
-                for contours in contours_dict.itervalues():
+        cnts = defaultdict(list)
+        for contours in contours_dict.itervalues():
+            # operate only on checked channels here, since there
+            # no contours available for unchecked channels
+            for cname in self.checkedChannels().itervalues():
                     polygon = QtGui.QPolygonF(
-                        [QPointF(*c) for c in contours[name]])
-                    polygons[color].append(polygon)
-            except KeyError:
-                pass
+                        [QPointF(*c) for c in contours[cname]])
+                    cnts[cname].append(polygon)
 
-            image = self._images[index]
-            lut = self.enhancer.lut_from_color(index, color, 256)
-            image.setColorTable(lut)
-            images.append(image)
+        self._contours = cnts
+        self.updateImage()
 
-        pixmap = AfPainter.blend(images)
+    def clearContours(self):
+        self._contours = None
 
-        # sometimes qt segfaults if I draw the polygons into the graphics scene
-        if AfConfig().draw_contours_in_pixmap:
-            pixmap = AfPainter.drawContours(pixmap, polygons)
-            self.viewer.contourImage(pixmap, None)
-        else:
-            self.viewer.contourImage(pixmap, polygons)
+    def contourImage(self, images, contours_dict):
+        """Combines setImage and setContours but updates viewer only once."""
+        self._images = images
+        self.setContours(contours_dict)
