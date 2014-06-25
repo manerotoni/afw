@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 
 import h5py
 import numpy as np
+from collections import defaultdict
 
 class HdfError(Exception):
     pass
@@ -21,7 +22,7 @@ class HdfCache(object):
         self.gallery = None
         self.data = None
         self.features = None
-        self.contours = list()
+        self.contours = defaultdict(list)
 
         self._dt_gallery = gallery_dtype
         self._dt_data = [('label', np.uint32), ('x', np.uint16),
@@ -46,7 +47,10 @@ class HdfCache(object):
                                dtype=self._dt_data)
             features[i] = obj.features.astype(np.float32)
             gallery[:, :, :, i] = obj.gallery_image.astype(np.uint16)
-            self.contours.append(np.array(obj.contour, dtype=np.uint16).T)
+
+            for cname, contour in obj.contours.iteritems():
+                self.contours[cname].append(
+                    np.array(contour, dtype=np.uint16).T)
 
         if self.data is self.features is self.gallery:
             self.data = data
@@ -89,6 +93,12 @@ class HdfWriter(object):
                                        objectsdict.gallery_dtype)
             self._cache.appendData(objectsdict)
 
+    def _write_contours(self):
+        for cname, contours in self._cache.contours.iteritems():
+            path = "%s/%s" %(self.CONTOURS, cname.replace(" ", "_"))
+            dset = self._file.create_dataset(
+                path, data=contours, dtype=self._cache._dt_contours)
+
     def flush(self):
 
         # hdf5 allows only 64kb of header metadata
@@ -99,9 +109,7 @@ class HdfWriter(object):
                 self.FEATURES, data=self._cache.features)
             dset = self._file.create_dataset(
                 self.GALLERY, data=self._cache.gallery)
-            dset = self._file.create_dataset(
-                self.CONTOURS, data=self._cache.contours,
-                dtype=self._cache._dt_contours)
+            self._write_contours()
         except ValueError as e:
             if "Object header message is too large" in str(e):
                 raise HdfError("Cannot save data to hdf file."

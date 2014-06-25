@@ -8,7 +8,7 @@ and a minimalistic context menu.
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ["ImageWidget", "ImageViewer"]
+__all__ = ("ImageWidget", "ImageViewer")
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt

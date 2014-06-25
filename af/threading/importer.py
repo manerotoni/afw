@@ -8,7 +8,6 @@ __licence__ = 'GPL'
 __all__ = ('AfImporter', 'AbortQWorker')
 
 from os.path import isdir, dirname
-from collections import OrderedDict
 import traceback
 
 from PyQt4 import QtCore
@@ -77,6 +76,7 @@ class AfImporter(QtCore.QObject):
                 self.progressUpdate.emit(i+1)
                 self.interruption_point()
                 self.thread().msleep(self.PYDELAY)
+                # QtCore.QCoreApplication.processEvents()
                 mp = LsmProcessor(file_)
                 # first channel for primary segementation
                 mp.segmentation(self.seg_params, self.channels)
@@ -100,7 +100,6 @@ class AfImporter(QtCore.QObject):
             raise
 
         except Exception as e:
-            # writer.flush()
             self.error.emit(e)
             traceback.print_exc()
             raise
