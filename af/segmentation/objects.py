@@ -33,6 +33,7 @@ class ImageObject(object):
         self.label  = label
         self.prediction_proba = {}
         self.class_= None
+        self.gallery_image = None
         self.contours = OrderedDict()
 
         ftrs = cobj.getFeatures()

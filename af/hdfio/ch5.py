@@ -12,6 +12,7 @@ __all__ = ('Ch5Reader', 'Ch5Coord', 'HdfItem')
 
 
 import cellh5
+from af.hdfio import HdfBaseReader, HdfItem
 
 
 class Ch5Coord(dict):
@@ -36,22 +37,9 @@ class Ch5Coord(dict):
         return super(Ch5Coord, self).__setitem__(key, value)
 
 
-class HdfItem(object):
+class Ch5Reader(HdfBaseReader, cellh5.CH5File):
 
-    __slots__ = ['image', 'contour', 'features', 'frame', 'objid']
-
-    def __init__(self, image, contour, features, frame=None, objid=None):
-        self.image = image
-        self.contour = contour
-        self.features = features
-        self.frame = frame
-        self.objid = objid
-
-    def __str__(self):
-        return "%d-%d" %(self.frame, self.objid)
-
-
-class Ch5Reader(cellh5.CH5File):
+    EXTENSIONS = (".ch5", )
 
     _features_def_key = "/definition/feature/"
 
@@ -133,4 +121,4 @@ class Ch5Reader(cellh5.CH5File):
         fidx, objid = self._hdf[path][index]
         frame = self._hdf[self._timelapse_key %coord]["frame"][fidx]
 
-        return HdfItem(gal, cnt[0], ftr, frame, objid)
+        return HdfItem(gal, cnt[0], ftr, objid, frame)

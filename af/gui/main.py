@@ -35,6 +35,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.setWindowTitle("AfMainWindow")
         self.sorting.adjustSize()
 
+
         self.loaderThread = AfThread(self)
         self.loader = AfLoader()
         self._lastdir = expanduser("~")
@@ -46,8 +47,8 @@ class AfMainWindow(QtGui.QMainWindow):
         self.setupDock()
         self.setupProgressBar()
 
-        self.loader.progressUpdate.connect(self.progressbar.setValue)
         self.loader.fileOpened.connect(self.navToolBar.updateNavToolbar)
+        self.loader.progressUpdate.connect(self.progressbar.setValue)
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
         self.actionOpenCellh5.triggered.connect(self.onFileOpen)
@@ -124,6 +125,11 @@ class AfMainWindow(QtGui.QMainWindow):
         dlg = ImportDialog(self)
         dlg.exec_()
 
+    def addToToolbox(self):
+        cw = self.toolBox.currentWidget()
+        cw.addItems(self.tileview.selectedItems())
+
+
     def onFileOpen(self):
 
         file_ = QFileDialog.getOpenFileName(
@@ -132,20 +138,12 @@ class AfMainWindow(QtGui.QMainWindow):
 
         if bool(file_):
             self._lastdir = basename(file_)
-            self.openFile(file_)
-
-    def openFile(self, file_):
-
-        try:
-            self.loader.openFile(file_)
-        except Exception as e:
-            self.statusBar().showMessage(str(e))
-        else:
-            self.statusBar().showMessage(basename(file_))
-
-    def addToToolbox(self):
-        cw = self.toolBox.currentWidget()
-        cw.addItems(self.tileview.selectedItems())
+            try:
+                self.loader.openFile(file_)
+            except Exception as e:
+                self.statusBar().showMessage(str(e))
+            else:
+                self.statusBar().showMessage(basename(file_))
 
     def loadItems(self):
 

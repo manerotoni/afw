@@ -5,15 +5,12 @@ hdfwriter.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('HdfWriter', 'HdfError', )
+__all__ = ('HdfWriter', )
 
 
 import h5py
 import numpy as np
 from collections import defaultdict
-
-class HdfError(Exception):
-    pass
 
 
 class HdfCache(object):
@@ -51,8 +48,7 @@ class HdfCache(object):
             gallery[:, :, :, i] = obj.gallery_image.astype(np.uint16)
 
             for cname, contour in obj.contours.iteritems():
-                self.contours[cname].append(
-                    np.array(contour, dtype=np.uint16).T)
+                self.contours[cname].append((np.array(contour).T).tolist())
 
         if self.bbox is self.features is self.gallery:
             self.bbox = bbox
@@ -96,10 +92,16 @@ class HdfWriter(object):
             self._cache.appendData(objectsdict)
 
     def _write_contours(self):
+
         for cname, contours in self._cache.contours.iteritems():
             path = "%s/%s" %(self.CONTOURS, cname.replace(" ", "_"))
+
+            # h5py seems to be buggy, cannot set contours directly,
             dset = self._file.create_dataset(
-                path, data=contours, dtype=self._cache._dt_contours)
+                path, (len(contours), 2, ), dtype=self._cache._dt_contours)
+            for i, cnt in enumerate(contours):
+                dset[i, :] = cnt
+
 
     def flush(self):
 

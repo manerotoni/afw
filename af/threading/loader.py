@@ -10,7 +10,7 @@ __all__ = ('AfLoader', )
 
 import numpy as np
 from PyQt4 import QtCore
-from af.hdfio import Ch5Reader
+from af.hdfio.guesser import guessHdfType
 
 
 class AfLoader(QtCore.QObject):
@@ -47,7 +47,7 @@ class AfLoader(QtCore.QObject):
         if self._h5f is not None:
             self._h5f.close()
 
-        self._h5f = Ch5Reader(file_, "r", cached=True)
+        self._h5f = guessHdfType(file_)
         cmap = self._h5f.cspace()
 
         self.fileOpened.emit({'plate': cmap.keys(),
@@ -78,7 +78,7 @@ class AfLoader(QtCore.QObject):
 
         nf = self._h5f.numberItems(self._coordinate)
         indices = range(0, nf)
-        np.random.shuffle(indices)
+        # np.random.shuffle(indices)
         for i, idx in enumerate(sorted(indices[:self._nitems])):
             if self._aborted:
                 break
