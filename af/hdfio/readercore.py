@@ -5,12 +5,19 @@ readercore.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("HdfBaseReader", "HdfError", "HdfTrainingSetReader", "HdfItem")
+__all__ = ("HdfBaseReader", "HdfError", "HdfTrainingSetReader", "HdfItem",
+           "HdfFileInfo")
 
 
 import h5py
 import numpy as np
+from collections import namedtuple
 from af.pattern import Factory
+
+
+HdfFileInfo = namedtuple("HdfFileInfo",
+                         ["gal_settings_mutable", "n_items", "gallery_size",
+                          "coordspace"])
 
 
 class HdfError(Exception):
@@ -35,10 +42,19 @@ class HdfItem(object):
 class HdfBaseReader(object):
 
     __metaclass__ = Factory
+    GALLERY_SETTINGS_MUTABLE = True
 
     @classmethod
     def readers(cls):
         return cls._classes.keys()
+
+    @property
+    def fileinfo(self):
+        """Determines the default number of items to load (cellh5 files
+        contain to many items to load them at once) and wether the size of
+        the gallery images is fixed. This method must be implemented
+        by child classes."""
+        raise NotImplementedError()
 
     def close(self):
         self._hdf.close()
@@ -83,6 +99,7 @@ class HdfBaseReader(object):
 class HdfTrainingSetReader(HdfBaseReader):
 
     EXTENSIONS = (".hdf5", ".hdf", ".h5")
+    GALLERY_SETTINGS_MUTABLE = False
 
     _bbox = "/data/bbox"
     _gallery = "/data/gallery"
@@ -95,11 +112,24 @@ class HdfTrainingSetReader(HdfBaseReader):
         self._hdf = h5py.File(filename, mode)
 
     @property
+    def fileinfo(self):
+
+        cspace = self.cspace()
+        cspace = {'plate': cspace.keys(),
+                  'well': cspace.values()[0].keys(),
+                  'site': cspace.values()[0].values()[0].keys(),
+                  'region': cspace.values()[0].values()[0].values()[0]}
+
+        return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
+                           self.numberItems(), self.gsize, cspace)
+
+    @property
     def gsize(self):
+        # default size of a gallery image
         return self._hdf[self._gallery].shape[0]
 
     # XXX set attributes to hdffile
-    def numberItems(self, coordinate):
+    def numberItems(self, coordinate=None):
         return self._hdf[self._bbox].shape[0]
 
     def featureNames(self, region):

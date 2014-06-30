@@ -47,7 +47,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.setupDock()
         self.setupProgressBar()
 
-        self.loader.fileOpened.connect(self.navToolBar.updateNavToolbar)
+        self.loader.fileOpened.connect(self.updateToolbars)
         self.loader.progressUpdate.connect(self.progressbar.setValue)
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
@@ -111,6 +111,10 @@ class AfMainWindow(QtGui.QMainWindow):
         frame.hide()
         self.statusBar().addPermanentWidget(frame)
 
+    def updateToolbars(self, props):
+        self.navToolBar.updateToolbar(props.coordspace)
+        self.toolBar.updateToolbar(props)
+
     def setupToolbar(self):
         self.toolBar = ViewToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
@@ -128,7 +132,6 @@ class AfMainWindow(QtGui.QMainWindow):
     def addToToolbox(self):
         cw = self.toolBox.currentWidget()
         cw.addItems(self.tileview.selectedItems())
-
 
     def onFileOpen(self):
 

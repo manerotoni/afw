@@ -52,15 +52,16 @@ class NavToolBar(QtGui.QToolBar):
     def _cBoxChanged(self):
         self.coordUpdated.emit(self.coordinate)
 
-    def updateNavToolbar(self, coords):
+    def updateToolbar(self, coordspace):
         self.plate.clear()
         self.well.clear()
         self.site.clear()
         self.region.clear()
-        self.plate.addItems(coords['plate'])
-        self.well.addItems(coords['well'])
-        self.site.addItems(coords['site'])
-        self.region.addItems(coords['region'])
+
+        self.plate.addItems(coordspace['plate'])
+        self.well.addItems(coordspace['well'])
+        self.site.addItems(coordspace['site'])
+        self.region.addItems(coordspace['region'])
 
         self.coordUpdated.emit(self.coordinate)
 
@@ -102,6 +103,13 @@ class ViewToolBar(QtGui.QToolBar):
         self.addWidget(self.galSize)
         self.addWidget(self.nItems)
         self.addWidget(self.zoom)
+
+    def updateToolbar(self, props):
+
+        self.nItems.setEnabled(props.gal_settings_mutable)
+        self.galSize.setEnabled(props.gal_settings_mutable)
+        self.nItems.setValue(props.n_items)
+        self.galSize.setValue(props.gallery_size)
 
     def onIndexChanged(self, index):
         zfactor = self.zoom.itemData(index).toDouble()[0]

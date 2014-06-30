@@ -12,7 +12,7 @@ __all__ = ('Ch5Reader', 'Ch5Coord', 'HdfItem')
 
 
 import cellh5
-from af.hdfio import HdfBaseReader, HdfItem
+from af.hdfio import HdfBaseReader, HdfItem, HdfFileInfo
 
 
 class Ch5Coord(dict):
@@ -40,6 +40,7 @@ class Ch5Coord(dict):
 class Ch5Reader(HdfBaseReader, cellh5.CH5File):
 
     EXTENSIONS = (".ch5", )
+    GALLERY_SETTINGS_MUTABLE = True
 
     _features_def_key = "/definition/feature/"
 
@@ -54,6 +55,22 @@ class Ch5Reader(HdfBaseReader, cellh5.CH5File):
     def __init__(self, *args, **kw):
         super(Ch5Reader, self).__init__(*args, **kw)
         self._hdf = self._file_handle
+
+    @property
+    def fileinfo(self):
+        """Determines the default number of items to load (cellh5 files
+        contain to many items to load them at once) and wether the size of
+        the gallery images is fixed).
+        """
+
+        cspace = self.cspace()
+        cspace = {'plate': cspace.keys(),
+                  'well': cspace.values()[0].keys(),
+                  'site': cspace.values()[0].values()[0].keys(),
+                  'region': cspace.values()[0].values()[0].values()[0]}
+
+        return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE, 500, 65, cspace)
+
 
     def plateNames(self):
         key = self._plate_key %{"plate": ""}

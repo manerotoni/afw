@@ -20,7 +20,7 @@ class AfLoader(QtCore.QObject):
     itemLoaded = QtCore.pyqtSignal("PyQt_PyObject")
     progressUpdate = QtCore.pyqtSignal(int)
     featureNames = QtCore.pyqtSignal(tuple)
-    fileOpened = QtCore.pyqtSignal(dict)
+    fileOpened = QtCore.pyqtSignal("PyQt_PyObject")
     finished = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kw):
@@ -48,12 +48,7 @@ class AfLoader(QtCore.QObject):
             self._h5f.close()
 
         self._h5f = guessHdfType(file_)
-        cmap = self._h5f.cspace()
-
-        self.fileOpened.emit({'plate': cmap.keys(),
-                              'well': cmap.values()[0].keys(),
-                              'site': cmap.values()[0].values()[0].keys(),
-                              'region': cmap.values()[0].values()[0].values()[0]})
+        self.fileOpened.emit(self._h5f.fileinfo)
 
     def setCoordinate(self, coordinate):
         self._coordinate = coordinate
