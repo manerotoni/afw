@@ -174,6 +174,7 @@ class ImportDialog(QtGui.QDialog):
                                     self.metadata,
                                     self.outputFile.text(),
                                     self.cbar.checkedChannels(),
+                                    self.cbar.colors(),
                                     self.segdlg.segmentationParams(),
                                     self.segdlg.featureGroups())
             except Exception as e:

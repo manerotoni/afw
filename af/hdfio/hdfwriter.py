@@ -13,6 +13,12 @@ import numpy as np
 from collections import defaultdict
 
 
+class HdfAttrsNames(object):
+
+    colors = "colors"
+    channels = "channels"
+
+
 class HdfCache(object):
     """Internal cache to be able to save non-resizeable data sets to hdf5."""
 
@@ -62,6 +68,7 @@ class HdfCache(object):
 
 class HdfWriter(object):
 
+    DATA = "/data"
     IMAGES = "/data/images"
     CONTOURS = "/data/contours"
     GALLERY = "/data/gallery"
@@ -75,9 +82,16 @@ class HdfWriter(object):
     def close(self):
         self._file.close()
 
-    def setupImages(self, n_images, n_channels, size, dtype):
+    def setupFile(self, n_images, channels, colors, size, dtype):
+        n_channels = len(channels)
         shape = size + (n_channels, n_images)
+
+        grp = self._file.create_group(self.CONTOURS)
+        grp.attrs[HdfAttrsNames.channels] = [str(c.replace(" ", "_"))
+                                             for c in channels.values()]
+
         self.images = self._file.create_dataset(self.IMAGES, shape, dtype=dtype)
+        self.images.attrs[HdfAttrsNames.colors] = [str(c) for c in colors]
 
     def setImage(self, image, index):
         self.images[:, :, :, index] = image

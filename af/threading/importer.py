@@ -34,7 +34,7 @@ class AfImporter(QtCore.QObject):
     contourImage = QtCore.pyqtSignal(tuple, dict)
     error = QtCore.pyqtSignal("PyQt_PyObject")
 
-    def __init__(self, files, metadata, outfile, channels,
+    def __init__(self, files, metadata, outfile, channels, colors,
                  seg_params, feature_groups):
         super(AfImporter, self).__init__()
         self._abort = False
@@ -44,6 +44,7 @@ class AfImporter(QtCore.QObject):
 
         self.files = files
         self.channels = channels
+        self.colors = colors
         self.metadata = metadata
         self.outfile = outfile
         self.seg_params = seg_params
@@ -67,9 +68,11 @@ class AfImporter(QtCore.QObject):
         self.progressSetRange.emit(0, len(self.files))
 
         writer = HdfWriter(self.outfile)
-        writer.setupImages(self.metadata.n_images,
-                           len(self.channels),
-                           self.metadata.size, self.metadata.dtype)
+        colors = [self.colors[ch] for ch in self.channels.values()]
+        writer.setupFile(self.metadata.n_images,
+                         self.channels,
+                         colors,
+                         self.metadata.size, self.metadata.dtype)
 
         try:
             for i, file_ in enumerate(self.files):
