@@ -7,5 +7,6 @@ __licence__ = 'GPL'
 
 
 from readercore import *
-from ch5 import *
+from cellh5reader import *
+from trainingsetreader import *
 from hdfwriter import *
