@@ -10,7 +10,7 @@ __all__ = ("HdfTrainingSetReader", )
 
 import h5py
 import numpy as np
-from af.hdfio import HdfBaseReader, HdfFileInfo, HdfItem
+from af.hdfio import HdfBaseReader, HdfFileInfo, HdfItem, HdfAttrNames
 
 
 class HdfTrainingSetReader(HdfBaseReader):
@@ -58,20 +58,26 @@ class HdfTrainingSetReader(HdfBaseReader):
 
         label, cx, cy, top, bottom, left, right = self._hdf[self._bbox][index]
 
-        cnt = self._hdf[self._contours+"/Channel_1"][index]
-        x0 = cnt[0].astype(np.float32)
-        y0 = cnt[1].astype(np.float32)
-        cnt = np.array([(x-cx+hsize, y-cy+hsize)
-                        for x, y in zip(x0, y0)], dtype=np.float32)
+        channels = self._hdf[self._contours].attrs[HdfAttrNames.channels]
+        contours = list()
 
-        cnt = np.clip(cnt, 0, self.gsize)
+        for channel in channels:
+            cnt = self._hdf[self._contours+"/%s" %channel][index]
+            x0 = cnt[0].astype(np.float32)
+            y0 = cnt[1].astype(np.float32)
+            cnt = np.array([(x-cx+hsize, y-cy+hsize)
+                            for x, y in zip(x0, y0)], dtype=np.float32)
 
-        return cnt
+            cnt = np.clip(cnt, 0, self.gsize)
+            contours.append(cnt)
+
+        return contours
 
     def loadItem(self, index, *args, **kw):
         # x, y, c, stack
-        gal = self._hdf[self._gallery][:, :, 0, index]
-        cnt = self._get_contours(index)
+        colors = self._hdf[self._images].attrs[HdfAttrNames.colors]
+        gal = self._hdf[self._gallery][:, :, :, index]
+        cnts = self._get_contours(index)
         ftr = self._hdf[self._features][index]
         objid = self._hdf[self._bbox]["label"][index]
-        return HdfItem(gal, cnt, ftr, objid)
+        return HdfItem(gal, cnts, ftr, objid, colors)

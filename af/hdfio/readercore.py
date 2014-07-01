@@ -5,7 +5,8 @@ readercore.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo")
+__all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo",
+           "HdfAttrNames")
 
 
 from collections import namedtuple
@@ -17,15 +18,22 @@ HdfFileInfo = namedtuple("HdfFileInfo",
                           "coordspace"])
 
 
+class HdfAttrNames(object):
+
+    colors = "colors"
+    channels = "channels"
+
+
 class HdfError(Exception):
     pass
 
 
 class HdfItem(object):
 
-    __slots__ = ['image', 'contour', 'features', 'frame', 'objid']
+    __slots__ = ['image', 'contour', 'features', 'frame', 'objid', 'colors']
 
-    def __init__(self, image, contour, features, objid=None, frame=None):
+    def __init__(self, image, contour, features, objid=None, frame=None,
+                 colors=None):
         self.image = image
         self.contour = contour
         self.features = features
@@ -34,6 +42,12 @@ class HdfItem(object):
 
     def __str__(self):
         return "%d-%d" %(self.frame, self.objid)
+
+    def iterImages(self):
+        pass
+
+    def iterContours(self):
+        pass
 
 
 class HdfBaseReader(object):
