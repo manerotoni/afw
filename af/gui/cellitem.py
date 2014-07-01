@@ -80,6 +80,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._selrect = QtGui.QGraphicsRectItem(rect)
         self._selrect.setBrush(brush)
         self._selrect.setPen(pen)
+        self._selrect.setZValue(100)
         self._selrect.hide()
         self.addToGroup(self._selrect)
 
