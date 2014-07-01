@@ -64,6 +64,7 @@ class HdfTrainingSetReader(HdfBaseReader):
         cnt = np.array([(x-cx+hsize, y-cy+hsize)
                         for x, y in zip(x0, y0)], dtype=np.float32)
 
+        cnt = np.clip(cnt, 0, self.gsize)
 
         return cnt
 
