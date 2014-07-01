@@ -91,6 +91,10 @@ class ViewToolBar(QtGui.QToolBar):
         self.zoom.addItem("75%", QtCore.QVariant(0.75))
         self.zoom.addItem("50%", QtCore.QVariant(0.50))
         self.zoom.addItem("25%", QtCore.QVariant(0.25))
+        self.zoom.addItem("125%", QtCore.QVariant(1.25))
+        self.zoom.addItem("150%", QtCore.QVariant(1.5))
+        self.zoom.addItem("200%", QtCore.QVariant(2.0))
+        self.zoom.addItem("400%", QtCore.QVariant(4.0))
         self.zoom.currentIndexChanged.connect(self.onIndexChanged)
         self.reloadBtn = QtGui.QPushButton("load", self)
 
