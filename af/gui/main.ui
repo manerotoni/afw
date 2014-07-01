@@ -45,8 +45,7 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpenCellh5"/>
-    <addaction name="actionOpenTrainingSet"/>
+    <addaction name="actionOpenHdf"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuData">
@@ -150,9 +149,9 @@
     <string>process trainingset</string>
    </property>
   </action>
-  <action name="actionOpenCellh5">
+  <action name="actionOpenHdf">
    <property name="text">
-    <string>open cellh5</string>
+    <string>open</string>
    </property>
   </action>
  </widget>

@@ -51,7 +51,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader.progressUpdate.connect(self.progressbar.setValue)
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
-        self.actionOpenCellh5.triggered.connect(self.onFileOpen)
+        self.actionOpenHdf.triggered.connect(self.onFileOpen)
         self.actionProcessTrainingSet.triggered.connect(self.openImporter)
 
         self._restoreSettings()
