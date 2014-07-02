@@ -8,7 +8,6 @@ __licence__ = 'GPL'
 __all__ = ("CellGraphicsItem", "PainterPathItem", "Colors")
 
 
-from qimage2ndarray import array2qimage
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -41,14 +40,15 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def __init__(self, item, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
 
-        self.setImage(array2qimage(item.image))
-
+        self._pixmap = None
+        self.setPixmap(item.pixmap())
         self.features = item.features
         self.frame = item.frame
         self.objid = item.objid
 
         if item.contour is not None:
-            self.setContour(item.contour)
+            for contour, color in item.iterContours():
+                self.setContour(contour, color)
 
         self.setFlag(self.ItemIsSelectable)
         self.sortkey = None
@@ -88,8 +88,8 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def pixmap(self):
         return self._pixmap
 
-    def setImage(self, image):
-        self._pixmap = QtGui.QPixmap.fromImage(image)
+    def setPixmap(self, pixmap):
+        self._pixmap = pixmap
         item = QtGui.QGraphicsPixmapItem(self)
         item.setPixmap(self.pixmap)
         item.setPos(self.pos())
@@ -113,10 +113,10 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def setPos(self, x, y):
         super(CellGraphicsItem, self).setPos(x, y)
 
-    def setContour(self, contour):
+    def setContour(self, contour, color=Colors.neutral):
 
         pen = QtGui.QPen()
-        pen.setColor(Colors.neutral)
+        pen.setColor(color)
         polygon = QtGui.QPolygonF([QtCore.QPointF(*p) for p in contour])
         item = QtGui.QGraphicsPolygonItem(self)
         item.setPolygon(polygon)

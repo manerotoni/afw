@@ -8,14 +8,13 @@ __licence__ = 'GPL'
 __all__ = ('AfLoader', )
 
 
-import numpy as np
 from PyQt4 import QtCore
 from af.hdfio.guesser import guessHdfType
 
 
 class AfLoader(QtCore.QObject):
 
-    PYDELAY = 10 # ms
+    PYDELAY = 50 # ms
 
     itemLoaded = QtCore.pyqtSignal("PyQt_PyObject")
     progressUpdate = QtCore.pyqtSignal(int)

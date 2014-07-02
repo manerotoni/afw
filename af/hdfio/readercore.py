@@ -8,9 +8,15 @@ __licence__ = 'GPL'
 __all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo",
            "HdfAttrNames")
 
-
 from collections import namedtuple
+
+import numpy as np
+from qimage2ndarray import gray2qimage
+
+from PyQt4.QtGui import QColor
+
 from af.pattern import Factory
+from af.gui.painting import AfPainter
 
 
 HdfFileInfo = namedtuple("HdfFileInfo",
@@ -40,14 +46,38 @@ class HdfItem(object):
         self.frame = frame
         self.objid = objid
 
+        if image.ndim == 2: # gray image
+            self.colors = ["#ffffff"]
+        elif colors is None:
+            self.colors = image.shape[2]*[str("#ffffff")]
+        else:
+            self.colors = colors
+
     def __str__(self):
         return "%d-%d" %(self.frame, self.objid)
 
-    def iterImages(self):
-        pass
+    def iterQImages(self):
+        """Iterator over qimages (indexed_8) with colortable set."""
+
+        iinfo = np.iinfo(self.image.dtype)
+        ncolors = abs(iinfo.max - iinfo.min)
+        for i, color in enumerate(self.colors):
+            lut = AfPainter.lut_from_color(QColor(color), ncolors)
+            if self.image.ndim == 2:
+                image = gray2qimage(self.image, normalize=True)
+            else:
+                image = gray2qimage(self.image[:, :, i], normalize=True)
+            image.setColorTable(lut)
+            yield image
+
+    def pixmap(self):
+        # XXX be aware of thread safety
+        images = list(self.iterQImages())
+        return AfPainter.blend(images)
 
     def iterContours(self):
-        pass
+        for i, color in enumerate(self.colors):
+            yield self.contour[i], QColor(color)
 
 
 class HdfBaseReader(object):

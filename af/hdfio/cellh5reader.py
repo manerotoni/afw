@@ -138,4 +138,4 @@ class Ch5Reader(HdfBaseReader, cellh5.CH5File):
         fidx, objid = self._hdf[path][index]
         frame = self._hdf[self._timelapse_key %coord]["frame"][fidx]
 
-        return HdfItem(gal, cnt[0], ftr, objid, frame)
+        return HdfItem(gal, cnt, ftr, objid, frame)

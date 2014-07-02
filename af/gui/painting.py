@@ -5,11 +5,24 @@ painting.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
+import numpy as np
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
 
 class AfPainter(object):
+
+    @staticmethod
+    def lut_from_color(color, ncolors):
+        """Create a colormap from a single color e.g. red and return
+        a list of qRgb instances.
+        """
+
+        lut = np.zeros((ncolors, 3), dtype=int)
+        for i, col in enumerate((color.red(), color.green(), color.blue())):
+            lut[: , i] = np.array(range(ncolors)) / (ncolors - 1.0) * col
+
+        return [QtGui.qRgb(r, g, b) for r, g, b in lut]
 
     @staticmethod
     def blend(images):

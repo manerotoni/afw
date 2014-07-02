@@ -75,9 +75,10 @@ class HdfTrainingSetReader(HdfBaseReader):
 
     def loadItem(self, index, *args, **kw):
         # x, y, c, stack
-        colors = self._hdf[self._images].attrs[HdfAttrNames.colors]
+        cols = self._hdf[self._images].attrs[HdfAttrNames.colors]
+        cols = [str(c) for c in cols] # no unicode
         gal = self._hdf[self._gallery][:, :, :, index]
         cnts = self._get_contours(index)
         ftr = self._hdf[self._features][index]
         objid = self._hdf[self._bbox]["label"][index]
-        return HdfItem(gal, cnts, ftr, objid, colors)
+        return HdfItem(gal, cnts, ftr, objid, frame=0, colors=cols)
