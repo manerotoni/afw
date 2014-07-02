@@ -6,7 +6,7 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 __all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo",
-           "HdfAttrNames")
+           "HdfAttrs")
 
 from collections import namedtuple
 
@@ -24,7 +24,7 @@ HdfFileInfo = namedtuple("HdfFileInfo",
                           "coordspace"])
 
 
-class HdfAttrNames(object):
+class HdfAttrs(object):
 
     colors = "colors"
     channels = "channels"
@@ -64,9 +64,9 @@ class HdfItem(object):
         for i, color in enumerate(self.colors):
             lut = AfPainter.lut_from_color(QColor(color), ncolors)
             if self.image.ndim == 2:
-                image = gray2qimage(self.image, normalize=True)
+                image = gray2qimage(self.image, normalize=False)
             else:
-                image = gray2qimage(self.image[:, :, i], normalize=True)
+                image = gray2qimage(self.image[:, :, i], normalize=False)
             image.setColorTable(lut)
             yield image
 

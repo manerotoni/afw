@@ -10,7 +10,7 @@ __all__ = ("HdfTrainingSetReader", )
 
 import h5py
 import numpy as np
-from af.hdfio import HdfBaseReader, HdfFileInfo, HdfItem, HdfAttrNames
+from af.hdfio import HdfBaseReader, HdfFileInfo, HdfItem, HdfAttrs
 
 
 class HdfTrainingSetReader(HdfBaseReader):
@@ -58,7 +58,7 @@ class HdfTrainingSetReader(HdfBaseReader):
 
         label, cx, cy, top, bottom, left, right = self._hdf[self._bbox][index]
 
-        channels = self._hdf[self._contours].attrs[HdfAttrNames.channels]
+        channels = self._hdf[self._contours].attrs[HdfAttrs.channels]
         contours = list()
 
         for channel in channels:
@@ -75,7 +75,7 @@ class HdfTrainingSetReader(HdfBaseReader):
 
     def loadItem(self, index, *args, **kw):
         # x, y, c, stack
-        cols = self._hdf[self._images].attrs[HdfAttrNames.colors]
+        cols = self._hdf[self._images].attrs[HdfAttrs.colors]
         cols = [str(c) for c in cols] # no unicode
         gal = self._hdf[self._gallery][:, :, :, index]
         cnts = self._get_contours(index)

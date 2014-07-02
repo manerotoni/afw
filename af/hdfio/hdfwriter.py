@@ -11,7 +11,7 @@ __all__ = ('HdfWriter', )
 import h5py
 import numpy as np
 from collections import defaultdict
-from af.hdfio import HdfAttrNames
+from af.hdfio import HdfAttrs
 
 class HdfCache(object):
     """Internal cache to be able to save non-resizeable data sets to hdf5."""
@@ -81,11 +81,11 @@ class HdfWriter(object):
         shape = size + (n_channels, n_images)
 
         grp = self._file.create_group(self.CONTOURS)
-        grp.attrs[HdfAttrNames.channels] = [str(c.replace(" ", "_"))
-                                             for c in channels.values()]
+        grp.attrs[HdfAttrs.channels] = [str(c.replace(" ", "_"))
+                                       for c in channels.values()]
 
         self.images = self._file.create_dataset(self.IMAGES, shape, dtype=dtype)
-        self.images.attrs[HdfAttrNames.colors] = [str(c) for c in colors]
+        self.images.attrs[HdfAttrs.colors] = [str(c) for c in colors]
 
     def setImage(self, image, index):
         self.images[:, :, :, index] = image
