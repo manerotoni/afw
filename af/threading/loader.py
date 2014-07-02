@@ -14,7 +14,7 @@ from af.hdfio.guesser import guessHdfType
 
 class AfLoader(QtCore.QObject):
 
-    PYDELAY = 50 # ms
+    PYDELAY = 5 # ms
 
     itemLoaded = QtCore.pyqtSignal("PyQt_PyObject")
     progressUpdate = QtCore.pyqtSignal(int)
