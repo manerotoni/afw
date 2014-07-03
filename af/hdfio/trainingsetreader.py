@@ -52,33 +52,41 @@ class HdfTrainingSetReader(HdfBaseReader):
     def featureNames(self, region):
         return self._hdf[self._features].dtype.names
 
-    def _get_contours(self, index):
+    def _transposeAndClip(self, contours):
+        cnts = list()
+        for i, cnt in enumerate(contours):
+            x = np.clip(cnt[0], 0, self.gsize)
+            y = np.clip(cnt[1], 0, self.gsize)
+            cnts.append(zip(x, y))
+        return cnts
+
+    def _getAllContours(self, dtable):
 
         hsize = np.floor(self.gsize/2.0)
-
-        label, cx, cy, top, bottom, left, right = self._hdf[self._bbox][index]
-
         channels = self._hdf[self._contours].attrs[HdfAttrs.channels]
+        center = np.vstack((dtable["x"], dtable["y"])).T - hsize
+
         contours = list()
-
         for channel in channels:
-            cnt = self._hdf[self._contours+"/%s" %channel][index]
-            x0 = cnt[0].astype(np.float32)
-            y0 = cnt[1].astype(np.float32)
-            cnt = np.array([(x-cx+hsize, y-cy+hsize)
-                            for x, y in zip(x0, y0)], dtype=np.float32)
-
-            cnt = np.clip(cnt, 0, self.gsize)
+            cnt = self._hdf[self._contours+"/%s" %channel].value
+            cnt = cnt - center
+            cnt = self._transposeAndClip(cnt)
             contours.append(cnt)
 
-        return contours
+        return np.swapaxes(contours, 0, 1)
 
-    def loadItem(self, index, *args, **kw):
-        # x, y, c, stack
+
+    def iterItems(self, *args, **kw):
+        # need *magic for compatibiliy to other classes
+
         cols = self._hdf[self._images].attrs[HdfAttrs.colors]
         cols = [str(c) for c in cols] # no unicode
-        gal = self._hdf[self._gallery][:, :, :, index]
-        cnts = self._get_contours(index)
-        ftr = self._hdf[self._features][index]
-        objid = self._hdf[self._bbox]["label"][index]
-        return HdfItem(gal, cnts, ftr, objid, frame=0, colors=cols)
+
+        gal = self._hdf[self._gallery].value
+        datatbl = self._hdf[self._bbox].value
+        cnts = self._getAllContours(datatbl)
+        ftrs = self._hdf[self._features].value
+
+        for i in xrange(gal.shape[3]):
+            yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], frame=i,
+                          objid=datatbl["label"][i], colors=cols)

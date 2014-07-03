@@ -10,7 +10,8 @@ __licence__ = 'GPL'
 
 __all__ = ('Ch5Reader', 'Ch5Coord', 'HdfItem')
 
-
+import time
+import numpy as np
 import cellh5
 from af.hdfio import HdfBaseReader, HdfItem, HdfFileInfo
 
@@ -125,17 +126,24 @@ class Ch5Reader(HdfBaseReader, cellh5.CH5File):
                     coorddict[plate][well][site] = regions
         return coorddict
 
-    def loadItem(self, index, coord, size=50):
+    def iterItems(self, nitems, coord, size=50):
 
-        path = self._features_key %coord
-        site = self._open_position(coord['plate'], coord['well'], coord['site'])
-        gal = site.get_gallery_image(index, coord['region'], size)
-        cnt = site.get_crack_contour(index, coord['region'], size=size)
-        ftr = self._hdf[path][index]
+        nf = self.numberItems(coord)
+        indices = range(0, nf)
+        np.random.shuffle(indices)
 
-        # inefficient!
-        path = self._time_key %coord
-        fidx, objid = self._hdf[path][index]
-        frame = self._hdf[self._timelapse_key %coord]["frame"][fidx]
+        for index in indices[:nitems]:
+            path = self._features_key %coord
+            site = self._open_position(coord['plate'], coord['well'], coord['site'])
+            gal = site.get_gallery_image(index, coord['region'], size)
+            cnt = site.get_crack_contour(index, coord['region'], size=size)
+            ftr = self._hdf[path][index]
 
-        return HdfItem(gal, cnt, ftr, objid, frame)
+            # inefficient!
+            path = self._time_key %coord
+            fidx, objid = self._hdf[path][index]
+            frame = self._hdf[self._timelapse_key %coord]["frame"][fidx]
+
+            yield HdfItem(gal, cnt, ftr, objid, frame)
+            # loading looks more uniteruppted
+            time.sleep(0.0035)

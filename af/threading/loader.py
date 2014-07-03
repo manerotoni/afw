@@ -14,7 +14,7 @@ from af.hdfio.guesser import guessHdfType
 
 class AfLoader(QtCore.QObject):
 
-    PYDELAY = 5 # ms
+    PYDELAY = 2000 # micro seconds
 
     itemLoaded = QtCore.pyqtSignal("PyQt_PyObject")
     progressUpdate = QtCore.pyqtSignal(int)
@@ -70,13 +70,10 @@ class AfLoader(QtCore.QObject):
         if self._h5f is None:
             return
 
-        nf = self._h5f.numberItems(self._coordinate)
-        indices = range(0, nf)
-        # np.random.shuffle(indices)
-        for i, idx in enumerate(sorted(indices[:self._nitems])):
+        for i, item in enumerate(
+            self._h5f.iterItems(self._nitems, self._coordinate, self._size)):
+            self.thread().usleep(self.PYDELAY)
             if self._aborted:
                 break
-            item = self._h5f.loadItem(idx, self._coordinate, self._size)
             self.progressUpdate.emit(i+1)
             self.itemLoaded.emit(item)
-            self.thread().msleep(self.PYDELAY)
