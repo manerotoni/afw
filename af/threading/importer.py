@@ -35,7 +35,7 @@ class AfImporter(QtCore.QObject):
     error = QtCore.pyqtSignal("PyQt_PyObject")
 
     def __init__(self, files, metadata, outfile, channels, colors,
-                 seg_params, feature_groups):
+                 seg_params, feature_groups, filter_settings=None):
         super(AfImporter, self).__init__()
         self._abort = False
 
@@ -49,6 +49,7 @@ class AfImporter(QtCore.QObject):
         self.outfile = outfile
         self.seg_params = seg_params
         self.feature_groups = feature_groups
+        self.filter_settings = filter_settings
 
     def abort(self):
         self._abort = True
@@ -79,10 +80,10 @@ class AfImporter(QtCore.QObject):
                 self.progressUpdate.emit(i+1)
                 self.interruption_point()
                 self.thread().msleep(self.PYDELAY)
-                # QtCore.QCoreApplication.processEvents()
                 mp = LsmProcessor(file_)
                 # first channel for primary segementation
-                mp.segmentation(self.seg_params, self.channels)
+                mp.segmentation(self.seg_params, self.channels,
+                                self.filter_settings)
                 mp.calculateFeatures(self.feature_groups)
                 objects = mp.objects
                 # saveData ignores empty objects

@@ -24,6 +24,9 @@ class MultiChannelProcessor(object):
 
     _environ = CecogEnvironment(redirect=False, debug=False)
 
+    FILTER_SIZE = 1
+    FILTER_INTENSITY = 2
+
     def __init__(self, filename, gallery_size=50):
         super(MultiChannelProcessor, self).__init__()
 
@@ -118,7 +121,6 @@ class MultiChannelProcessor(object):
 
     def calculateFeatures(self, feature_groups):
         """Calculate the features per color channel."""
-        # assert set(feature_groups.keys()) == set(self.cnames)
 
         for name, container in self._containers.iteritems():
             fgroups = feature_groups[name]
@@ -130,7 +132,7 @@ class MultiChannelProcessor(object):
                         container.haralick_distance = param
                         container.applyFeature(group)
 
-    def segmentation(self, params, channels):
+    def segmentation(self, params, channels, filter_settings):
 
         if not isinstance(params, OrderedDict):
             raise RuntimeError("Segmentation paramters must be ordered\n"
@@ -153,6 +155,7 @@ class MultiChannelProcessor(object):
         image = self.image[:, :, imaster].copy()
         self._containers[cname] = self.threshold(image, *params[cname])
         label_image = self._containers[cname].img_labels.toArray()
+        self._filter(self._containers[cname], filter_settings)
 
         for i, name in channels.iteritems():
             if i == imaster:
@@ -194,6 +197,36 @@ class MultiChannelProcessor(object):
                                                    sep_expansion_size)
 
         return ccore.ImageMaskContainer(image, img_labels, False, True, True)
+
+
+    def _filter(self, container, filter_settings):
+
+        if not filter_settings:
+            return
+
+        # calculate features first
+        if filter_settings.has_key(self.FILTER_SIZE):
+            container.applyFeature("roisize")
+            size = filter_settings[self.FILTER_SIZE]
+        else:
+            size = None
+
+        if filter_settings.has_key(self.FILTER_INTENSITY):
+            container.applyFeature("normbase2")
+            intensity = filter_settings[self.FILTER_INTENSITY]
+        else:
+            intensity = None
+
+
+        for label, obj in container.getObjects().iteritems():
+            features = obj.getFeatures()
+
+            if size is not None and \
+                    not (size[0] <= features['roisize'] <= size[1]):
+                container.delObject(label)
+            elif intensity is not None and \
+                    not(intensity[0] <= features["n2_avg"] <= intensity[1]):
+                container.delObject(label)
 
 
 class LsmProcessor(MultiChannelProcessor):
