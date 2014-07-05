@@ -198,6 +198,8 @@ class MultiChannelProcessor(object):
 
         return ccore.ImageMaskContainer(image, img_labels, False, True, True)
 
+    def normalize(self, image):
+        return image
 
     def _filter(self, container, filter_settings):
 
@@ -220,6 +222,7 @@ class MultiChannelProcessor(object):
 
         for label, obj in container.getObjects().iteritems():
             features = obj.getFeatures()
+
 
             if size is not None and \
                     not (size[0] <= features['roisize'] <= size[1]):

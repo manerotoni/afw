@@ -22,7 +22,6 @@ class FeatureBox(QtGui.QGroupBox):
 
     def __init__(self, *args, **kw):
         super(FeatureBox, self).__init__(*args, **kw)
-        # self.setupUi()
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
 
         self.basicIntensityFeatures.stateChanged.connect(self.onFeatureChanged)
