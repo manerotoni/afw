@@ -41,7 +41,8 @@ class ExpansionWidget(QtGui.QGroupBox):
 
     def params(self):
         return ExpansionParams(
-            ccore.SrgType.KeepContours, None, 0, self.value(), 0)
+            ccore.SrgType.KeepContours, None, 0, self.value(), 0, self.normMin.value(),
+            self.normMax.value())
 
 
 class SegmentationDialog(QtGui.QWidget):
@@ -131,7 +132,9 @@ class SegmentationDialog(QtGui.QWidget):
                              self.windowSize.value(),
                              self.minContrast.value(),
                              self.removeBorderObjects.isChecked(),
-                             self.fillHoles.isChecked())
+                             self.fillHoles.isChecked(),
+                             self.normMin.value(),
+                             self.normMax.value())
 
     def segmentationParams(self):
         sparams = OrderedDict()

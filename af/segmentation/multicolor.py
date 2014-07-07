@@ -164,8 +164,9 @@ class MultiChannelProcessor(object):
                 self.image[:, :, i].copy(), label_image, *params[name])
 
     def threshold(self, image, mean_radius, window_size, min_contrast,
-                  remove_borderobjects, fill_holes):
+                  remove_borderobjects, fill_holes, norm_min=0, norm_max=255):
 
+        image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
         image = ccore.disc_median(image, mean_radius)
 
@@ -181,11 +182,13 @@ class MultiChannelProcessor(object):
     def seededExpandedRegion(self, image, label_image, srg_type, label_number,
                              region_statistics_array=0,
                              expansion_size=1,
-                             sep_expansion_size=0):
+                             sep_expansion_size=0,
+                             norm_min=0, norm_max=255):
 
         if label_number is None:
            label_number = label_image.max() + 1
 
+        image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
         limage = ccore.numpy_to_image(label_image, copy=True)
 
@@ -198,7 +201,13 @@ class MultiChannelProcessor(object):
 
         return ccore.ImageMaskContainer(image, img_labels, False, True, True)
 
-    def normalize(self, image):
+    def normalize(self, image_, norm_min=0, norm_max=255, dtype=np.uint8):
+        """Normalize input image to range and return image as dtype (numpy int-type)."""
+
+        iinfo = np.iinfo(dtype)
+        range_ = iinfo.max - iinfo.min
+        image = (image_.astype(np.float) - norm_min)/(norm_max - norm_min)*range_
+        image = np.round(np.clip(image, iinfo.min, iinfo.max), 0).astype(np.uint8)
         return image
 
     def _filter(self, container, filter_settings):
