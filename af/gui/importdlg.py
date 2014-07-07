@@ -148,12 +148,16 @@ class ImportDialog(QtGui.QDialog):
             return
 
         index = self.slider.value()
-        mp = LsmProcessor(self._files[index])
-        # first channel for primary segementation
-        mp.segmentation(self.segdlg.segmentationParams(),
+        try:
+            mp = LsmProcessor(self._files[index])
+            # first channel for primary segementation
+            mp.segmentation(self.segdlg.segmentationParams(),
                         self.cbar.checkedChannels(),
                         self.segdlg.filterSettings())
-        self.cbar.setContours(mp.objects.contours)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e))
+        finally:
+            self.cbar.setContours(mp.objects.contours)
 
     def onError(self, exc):
         self.startBtn.setText("start")
