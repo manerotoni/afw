@@ -18,7 +18,7 @@ from PyQt4.QtCore import Qt
 from cecog import ccore
 from af.gui.featurebox import FeatureBox
 from af.segmentation import PrimaryParams, ExpansionParams
-from af.segmentation import MultiChannelProcessor as mcp
+
 
 class ChLabel(QtGui.QLabel):
 
@@ -134,7 +134,11 @@ class SegmentationDialog(QtGui.QWidget):
                              self.removeBorderObjects.isChecked(),
                              self.fillHoles.isChecked(),
                              self.normMin.value(),
-                             self.normMax.value())
+                             self.normMax.value(),
+                             self.sizeMin.value(),
+                             self.sizeMax.value(),
+                             self.intensityMin.value(),
+                             self.intensityMax.value())
 
     def segmentationParams(self):
         sparams = OrderedDict()
@@ -157,28 +161,6 @@ class SegmentationDialog(QtGui.QWidget):
                 name = self.pchannel.currentText()
             fgroups[name] = self.widgetAt(i, self.FEATURES).featureGroups()
         return fgroups
-
-    def filterSettings(self):
-
-        fsettings = {}
-
-        if self.sizeMin.value() != -1 or self.sizeMax.value() != -1:
-            if self.sizeMax.value() == -1:
-                smax = sys.maxint
-            else:
-                smax = self.sizeMax.value()
-
-            fsettings[mcp.FILTER_SIZE] = \
-                (self.sizeMin.value(), smax)
-
-        if self.intensityMin.value() != -1 or self.intensityMax.value() != -1:
-            if self.intensityMax.value() == -1:
-                imax = sys.maxint
-            else:
-                imax = self.sizeMax.value()
-
-            fsettings[mcp.FILTER_INTENSITY] = (self.intensityMin.value(), imax)
-        return fsettings
 
 
 if __name__ == "__main__":

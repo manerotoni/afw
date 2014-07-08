@@ -12,6 +12,7 @@ import h5py
 import numpy as np
 from collections import defaultdict
 from af.hdfio import HdfAttrs
+from af.xmlconf import XmlConf
 
 class HdfCache(object):
     """Internal cache to be able to save non-resizeable data sets to hdf5."""
@@ -68,6 +69,7 @@ class HdfWriter(object):
     GALLERY = "/data/gallery"
     BBOX = "/data/bbox"
     FEATURES = "/data/features"
+    SETTINGS = "/data/settings"
 
     def __init__(self, filename):
         self._file = h5py.File(filename, "w")
@@ -89,6 +91,12 @@ class HdfWriter(object):
 
     def setImage(self, image, index):
         self.images[:, :, :, index] = image
+
+    def saveSettings(self , segmentation, features):
+        xml = XmlConf(segmentation, features)
+        txt = xml.toString()
+        dset = self._file.create_dataset(self.SETTINGS, data=txt)
+
 
     def saveData(self, objectsdict):
         # sometimes there are not objects found in an image

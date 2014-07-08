@@ -7,7 +7,7 @@ __licence__ = 'GPL'
 
 __all__ = ('MultiChannelProcessor', 'LsmProcessor')
 
-
+import sys
 import warnings
 import numpy as np
 from collections import OrderedDict
@@ -23,9 +23,6 @@ from af.segmentation import ObjectDict, ImageObject
 class MultiChannelProcessor(object):
 
     _environ = CecogEnvironment(redirect=False, debug=False)
-
-    FILTER_SIZE = 1
-    FILTER_INTENSITY = 2
 
     def __init__(self, filename, gallery_size=50):
         super(MultiChannelProcessor, self).__init__()
@@ -132,7 +129,7 @@ class MultiChannelProcessor(object):
                         container.haralick_distance = param
                         container.applyFeature(group)
 
-    def segmentation(self, params, channels, filter_settings):
+    def segmentation(self, params, channels):
 
         if not isinstance(params, OrderedDict):
             raise RuntimeError("Segmentation paramters must be ordered\n"
@@ -155,7 +152,7 @@ class MultiChannelProcessor(object):
         image = self.image[:, :, imaster].copy()
         self._containers[cname] = self.threshold(image, *params[cname])
         label_image = self._containers[cname].img_labels.toArray()
-        self._filter(self._containers[cname], filter_settings)
+        self._filter(self._containers[cname], params[cname])
 
         for i, name in channels.iteritems():
             if i == imaster:
@@ -164,7 +161,8 @@ class MultiChannelProcessor(object):
                 self.image[:, :, i].copy(), label_image, *params[name])
 
     def threshold(self, image, mean_radius, window_size, min_contrast,
-                  remove_borderobjects, fill_holes, norm_min=0, norm_max=255):
+                  remove_borderobjects, fill_holes, norm_min=0, norm_max=255,
+                  *args, **kw):
 
         image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
@@ -210,29 +208,33 @@ class MultiChannelProcessor(object):
         image = np.round(np.clip(image, iinfo.min, iinfo.max), 0).astype(np.uint8)
         return image
 
-    def _filter(self, container, filter_settings):
+    def _filter(self, container, params):
 
-        if not filter_settings:
-            return
-
-        # calculate features first
-        if filter_settings.has_key(self.FILTER_SIZE):
+        if params.size_min != -1 or params.size_max != -1:
             container.applyFeature("roisize")
-            size = filter_settings[self.FILTER_SIZE]
+            if params.size_max == -1:
+                size = (params.size_min, sys.maxint)
+            else:
+                size = (params.size_min, params.size_max)
         else:
             size = None
 
-        if filter_settings.has_key(self.FILTER_INTENSITY):
+
+        if params.intensity_min != -1 or params.intensity_max != -1:
             container.applyFeature("normbase2")
-            intensity = filter_settings[self.FILTER_INTENSITY]
+            if params.intensity_max == -1:
+                intensity = (params.intensity_min, sys.maxint)
+            else:
+                intensity = (params.intensity_min, params.intensity_max)
         else:
             intensity = None
 
+        # nothing to filter
+        if size is None and intensity is None:
+            return
 
         for label, obj in container.getObjects().iteritems():
             features = obj.getFeatures()
-
-
             if size is not None and \
                     not (size[0] <= features['roisize'] <= size[1]):
                 container.delObject(label)

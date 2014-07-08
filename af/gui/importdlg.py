@@ -152,8 +152,7 @@ class ImportDialog(QtGui.QDialog):
             mp = LsmProcessor(self._files[index])
             # first channel for primary segementation
             mp.segmentation(self.segdlg.segmentationParams(),
-                        self.cbar.checkedChannels(),
-                        self.segdlg.filterSettings())
+                        self.cbar.checkedChannels())
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
         finally:
@@ -181,8 +180,7 @@ class ImportDialog(QtGui.QDialog):
                                     self.cbar.checkedChannels(),
                                     self.cbar.colors(),
                                     self.segdlg.segmentationParams(),
-                                    self.segdlg.featureGroups(),
-                                    self.segdlg.filterSettings())
+                                    self.segdlg.featureGroups())
             except Exception as e:
                 QMessageBox.critical(self, str(e), traceback.format_exc())
                 return
