@@ -7,6 +7,7 @@ __licence__ = 'GPL'
 
 __all__ = ('SegmentationDialog', )
 
+import os
 import sys
 from collections import OrderedDict
 from os.path import splitext, join, dirname
@@ -18,6 +19,7 @@ from PyQt4.QtCore import Qt
 from cecog import ccore
 from af.gui.featurebox import FeatureBox
 from af.segmentation import PrimaryParams, ExpansionParams
+from af.xmlconf import XmlConfReader, XmlConfWriter
 
 
 class ChLabel(QtGui.QLabel):
@@ -61,6 +63,9 @@ class SegmentationDialog(QtGui.QWidget):
         self._rcount = 1
 
         self.pchannel.currentIndexChanged[str].connect(self.onChannelChanged)
+        self.loadBtn.clicked.connect(self.onLoadBtn)
+        self.saveBtn.clicked.connect(self.onSaveBtn)
+
 
     def closeEvent(self, event):
         print "pre"
@@ -161,6 +166,33 @@ class SegmentationDialog(QtGui.QWidget):
                 name = self.pchannel.currentText()
             fgroups[name] = self.widgetAt(i, self.FEATURES).featureGroups()
         return fgroups
+
+    def onSaveBtn(self):
+
+        dir_ = os.path.expanduser("~")
+        fname = QtGui.QFileDialog.getSaveFileName(self, "save File", dir_,
+                                                  "xml files (*.xml)")
+
+        if fname:
+            writer = XmlConfWriter(self.segmentationParams(), self.featureGroups())
+            writer.save(fname)
+
+    def onLoadBtn(self):
+        dir_ = os.path.expanduser("~")
+        fname = QtGui.QFileDialog.getOpenFileName(self, "load config file", dir_,
+                                                  "xml files (*.xml)")
+
+        if fname:
+            reader = XmlConfReader(fname)
+            # primary settings
+            pname, psettings = reader.primarySettings()
+            print pname, psettings
+
+            for i in xrange(1, self._rcount):
+                cname = self.widgetAt(i, self.NAME).text()
+                esettings = reader.expandedSettings(cname)
+
+                print cname, esettings
 
 
 if __name__ == "__main__":
