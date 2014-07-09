@@ -49,13 +49,13 @@ class FeatureBox(QtGui.QGroupBox):
             features["axes"] = None
 
         if self.convexHullFeatures.isChecked():
-            features["convhull"] = None
+            features["convexhull"] = None
 
         if self.distanceMapFeatures.isChecked():
             features["distance"] = None
 
         if self.granulometryFeatures.isChecked():
-            features["granugrey"] = None
+            features["granulometry"] = None
 
         if self.haralickFeatures.isChecked():
             features["haralick"] = (1, 2, 4, 8)
@@ -84,9 +84,9 @@ class FeatureBox(QtGui.QGroupBox):
             "irregularity2" in groups or
             "axes" in groups)
 
-        self.convexHullFeatures.setChecked("convhull" in groups)
+        self.convexHullFeatures.setChecked("convexhull" in groups)
         self.distanceMapFeatures.setChecked("distance" in groups)
-        self.granulometryFeatures.setChecked("granugrey" in groups)
+        self.granulometryFeatures.setChecked("granulometry" in groups)
         self.haralickFeatures.setChecked(
             "haralick" in groups or "haralick2" in groups)
         self.moments.setChecked("moments" in groups)
