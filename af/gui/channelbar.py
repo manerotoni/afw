@@ -51,11 +51,17 @@ class ChannelBar(QtGui.QWidget):
     def addChannels(self, n):
         self.clear()
         self._channel_count = n
+
+        if n > 1:
+            colors = lambda i: ColorButton.colors[i % len(ColorButton.colors)]
+        else:
+            colors = lambda i: ColorButton.white
+
         for i in xrange(n):
             cb = QtGui.QCheckBox("Channel %d" %(i+1))
             cb.setCheckState(QtCore.Qt.Checked)
             cb.stateChanged.connect(self.updateImage)
-            cbtn  = ColorButton()
+            cbtn  = ColorButton(colors(i))
             cbtn.colorChanged.connect(self.updateImage)
             self.gbox.addWidget(cb, i, 0)
             self.gbox.addWidget(cbtn, i, 1)
