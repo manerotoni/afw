@@ -1,5 +1,9 @@
 """
 featurebox.py
+
+Widget for selecting features groups. Currently there are 8 different
+feature groups (same as in Cellcognition)
+
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'

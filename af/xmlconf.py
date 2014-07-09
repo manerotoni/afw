@@ -1,12 +1,15 @@
 """
 xmlconf.py
+
+Classes for reading and writing xml config files of the segmentation.
+
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 
-from collections import namedtuple, OrderedDict
+from collections import OrderedDict
 from lxml import etree
 
 from af.segmentation.options import PrimaryParams
@@ -14,6 +17,9 @@ from af.segmentation.options import ExpansionParams
 from af.segmentation.options import SRG_TYPE
 
 def validate_tagname(name, reverse=False):
+    """Make strings xml-conform. If the reverse flag is true method restores
+    the original string.
+    """
     if reverse:
         return name.replace("_", " ")
     else:

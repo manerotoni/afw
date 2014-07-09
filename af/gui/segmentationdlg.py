@@ -52,11 +52,11 @@ class ExpansionWidget(QtGui.QGroupBox):
         self.setValue(params.expansion_size)
 
 
-
 class SegmentationDialog(QtGui.QWidget):
 
     _ncols = 3
 
+    # indices for widgetAt method
     NAME = 0
     SEGMENTATION = 1
     FEATURES = 2
@@ -243,6 +243,4 @@ if __name__ == "__main__":
     sd = SegmentationDialog()
     sd.setRegions(["Channel 1", "Channel 2"])
     sd.show()
-
-    # sd.deleteRegion("Channel 2")
     app.exec_()

@@ -16,6 +16,8 @@ __all__ = ["feature_groups", "PrimaryParams", "ExpansionParams", "SRG_TYPE"]
 from collections import namedtuple
 from cecog import ccore
 
+# map symbolic constants to a dict. The keys go to the xml file
+# i.e. it is easier to restore the settings
 SRG_TYPE = {"CompleteGrow": ccore.SrgType.CompleteGrow,
             "KeepContours": ccore.SrgType.KeepContours,
             "KeepContoursPlus": ccore.SrgType.KeepContoursPlus}

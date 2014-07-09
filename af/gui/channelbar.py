@@ -20,6 +20,9 @@ from af.gui.contrast import AfEnhancerWidget
 
 
 class ChannelBar(QtGui.QWidget):
+    """ChannelBar is a layer between the import dialog and the viewer widget.
+    It modifies the image drawn in the viewer i.e. it turns on/off the channels,
+    enhances the contrast and sets the color table of the image."""
 
     newPixmap = QtCore.pyqtSignal(QtGui.QPixmap)
     newContourImage = QtCore.pyqtSignal(QtGui.QPixmap, "PyQt_PyObject")
