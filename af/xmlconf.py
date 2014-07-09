@@ -11,6 +11,7 @@ from lxml import etree
 
 from af.segmentation.options import PrimaryParams
 from af.segmentation.options import ExpansionParams
+from af.segmentation.options import SRG_TYPE
 
 def validate_tagname(name, reverse=False):
     if reverse:
@@ -102,7 +103,8 @@ class XmlConfReader(XmlConf):
 
         # segmentation
         segm = self.root.xpath("%s/%s" %(primary, self.SEGMENTATION))[0]
-        settings[segm.tag] = PrimaryParams(*segm.attrib.values())
+        values = [eval(v) for v in segm.attrib.values()]
+        settings[segm.tag] = PrimaryParams(*values)
 
         # feature groups
         fgrp = self.root.xpath("%s/%s" %(primary, self.FEATUREGROUPS))[0]
@@ -112,12 +114,24 @@ class XmlConfReader(XmlConf):
     def expandedSettings(self, channel):
 
         channel = validate_tagname(channel)
-        expanded = self.root.xpath("%s/%s" %(channel, self.SEGMENTATION))[0]
         settings = dict()
 
         # segmentation
-        segm = self.root.xpath("%s/%s" %(channel, self.SEGMENTATION))[0]
-        settings[segm.tag] = ExpansionParams(*segm.attrib.values())
+        try:
+            segm = self.root.xpath("%s/%s" %(channel, self.SEGMENTATION))[0]
+        except IndexError as e:
+            raise ValueError("no settings for %s" %channel)
+
+
+        values = list()
+        for v in segm.attrib.values():
+            if v in SRG_TYPE.keys():
+                values.append(SRG_TYPE[v])
+            else:
+                values.append(eval(v))
+
+
+        settings[segm.tag] = ExpansionParams(*values)
 
         # feature groups
         fgrp = self.root.xpath("%s/%s" %(channel, self.FEATUREGROUPS))[0]

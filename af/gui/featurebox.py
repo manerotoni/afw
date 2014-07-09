@@ -71,3 +71,24 @@ class FeatureBox(QtGui.QGroupBox):
 
     def onFeatureChanged(self, state):
         self.featuresChanged.emit(self.featureGroups())
+
+    def setFeatureGroups(self, groups):
+
+        self.basicIntensityFeatures.setChecked(
+            "normbase" in groups or "normbase2" in groups)
+
+        self.basicShapeFeatures.setChecked(
+            "roisize" in groups or
+            "circularity" in groups or
+            "irregularity" in groups or
+            "irregularity2" in groups or
+            "axes" in groups)
+
+        self.convexHullFeatures.setChecked("convhull" in groups)
+        self.distanceMapFeatures.setChecked("distance" in groups)
+        self.granulometryFeatures.setChecked("granugrey" in groups)
+        self.haralickFeatures.setChecked(
+            "haralick" in groups or "haralick2" in groups)
+        self.moments.setChecked("moments" in groups)
+        self.statisticalGeometricFeatures.setChecked(
+            "levelset" in groups)

@@ -16,9 +16,8 @@ from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
-from cecog import ccore
 from af.gui.featurebox import FeatureBox
-from af.segmentation import PrimaryParams, ExpansionParams
+from af.segmentation import PrimaryParams, ExpansionParams, SRG_TYPE
 from af.xmlconf import XmlConfReader, XmlConfWriter
 
 
@@ -36,15 +35,22 @@ class ExpansionWidget(QtGui.QGroupBox):
         uic.loadUi(join(dirname(__file__), "expansionregion.ui"), self)
 
     def setValue(self, value):
-        self.spinBox.setValue(value)
+        self.expansionSize.setValue(value)
 
     def value(self):
-        return self.spinBox.value()
+        return self.expansionSize.value()
 
     def params(self):
         return ExpansionParams(
-            ccore.SrgType.KeepContours, None, 0, self.value(), 0, self.normMin.value(),
+            SRG_TYPE["KeepContours"], None, 0, self.value(), 0,
+            self.normMin.value(),
             self.normMax.value())
+
+    def setParams(self, params):
+        self.normMin.setValue(params.norm_min)
+        self.normMax.setValue(params.norm_max)
+        self.setValue(params.expansion_size)
+
 
 
 class SegmentationDialog(QtGui.QWidget):
@@ -174,25 +180,62 @@ class SegmentationDialog(QtGui.QWidget):
                                                   "xml files (*.xml)")
 
         if fname:
-            writer = XmlConfWriter(self.segmentationParams(), self.featureGroups())
+            writer = XmlConfWriter(self.segmentationParams(),
+                                   self.featureGroups())
             writer.save(fname)
 
     def onLoadBtn(self):
         dir_ = os.path.expanduser("~")
-        fname = QtGui.QFileDialog.getOpenFileName(self, "load config file", dir_,
+        fname = QtGui.QFileDialog.getOpenFileName(self, "load config file",
+                                                  dir_,
                                                   "xml files (*.xml)")
 
         if fname:
             reader = XmlConfReader(fname)
             # primary settings
-            pname, psettings = reader.primarySettings()
-            print pname, psettings
+            name, settings = reader.primarySettings()
+            self._updatePrimary(name, settings)
 
             for i in xrange(1, self._rcount):
                 cname = self.widgetAt(i, self.NAME).text()
-                esettings = reader.expandedSettings(cname)
+                try:
+                    settings = reader.expandedSettings(cname)
+                except ValueError:
+                    continue
+                self._updateExtendedRegion(i, settings)
 
-                print cname, esettings
+    def _updatePrimary(self, name, settings):
+        """Update the form for the primary segmentation."""
+
+        idx = self.pchannel.findText(name)
+        if idx != -1:
+            self.pchannel.setCurrentIndex(idx)
+
+        segpar = settings[XmlConfReader.SEGMENTATION]
+
+        self.minContrast.setValue(segpar.min_contrast)
+        self.meanRadius.setValue(segpar.mean_radius)
+        self.windowSize.setValue(segpar.window_size)
+        self.fillHoles.setChecked(segpar.fill_holes)
+        self.removeBorderObjects.setChecked(segpar.remove_borderobjects)
+        self.normMin.setValue(segpar.norm_min)
+        self.normMax.setValue(segpar.norm_max)
+        self.sizeMin.setValue(segpar.size_min)
+        self.sizeMax.setValue(segpar.size_max)
+        self.intensityMin.setValue(segpar.intensity_min)
+        self.intensityMax.setValue(segpar.intensity_max)
+
+        fwidget = self.widgetAt(0, self.FEATURES)
+        fwidget.setFeatureGroups(settings[XmlConfReader.FEATUREGROUPS])
+
+    def _updateExtendedRegion(self, index, settings):
+        """Update the form for extended segementation region by given by name"""
+
+        ewidget = self.widgetAt(index, self.SEGMENTATION)
+        ewidget.setParams(settings[XmlConfReader.SEGMENTATION])
+
+        fwidget = self.widgetAt(index, self.FEATURES)
+        fwidget.setFeatureGroups(settings[XmlConfReader.FEATUREGROUPS])
 
 
 if __name__ == "__main__":

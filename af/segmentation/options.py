@@ -11,9 +11,14 @@ PrimaryParams, ExpansionParams - tuples to set up the segmenation
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ["feature_groups", "PrimaryParams", "ExpansionParams"]
+__all__ = ["feature_groups", "PrimaryParams", "ExpansionParams", "SRG_TYPE"]
 
 from collections import namedtuple
+from cecog import ccore
+
+SRG_TYPE = {"CompleteGrow": ccore.SrgType.CompleteGrow,
+            "KeepContours": ccore.SrgType.KeepContours,
+            "KeepContoursPlus": ccore.SrgType.KeepContoursPlus}
 
 feature_groups = {'granulometry': None,
                   'normbase': None,
