@@ -46,6 +46,7 @@
      <string>File</string>
     </property>
     <addaction name="actionOpenHdf"/>
+    <addaction name="actionCloseHdf"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuData">
@@ -123,6 +124,9 @@
    <property name="text">
     <string>Quit</string>
    </property>
+   <property name="shortcut">
+    <string>Q</string>
+   </property>
   </action>
   <action name="actionImport">
    <property name="text">
@@ -151,7 +155,18 @@
   </action>
   <action name="actionOpenHdf">
    <property name="text">
-    <string>open</string>
+    <string>open File</string>
+   </property>
+   <property name="shortcut">
+    <string>O</string>
+   </property>
+  </action>
+  <action name="actionCloseHdf">
+   <property name="text">
+    <string>close File</string>
+   </property>
+   <property name="shortcut">
+    <string>C</string>
    </property>
   </action>
  </widget>

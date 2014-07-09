@@ -52,6 +52,7 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
         self.actionOpenHdf.triggered.connect(self.onFileOpen)
+        self.actionCloseHdf.triggered.connect(self.onFileClose)
         self.actionProcessTrainingSet.triggered.connect(self.openImporter)
 
         self._restoreSettings()
@@ -132,6 +133,10 @@ class AfMainWindow(QtGui.QMainWindow):
     def addToToolbox(self):
         cw = self.toolBox.currentWidget()
         cw.addItems(self.tileview.selectedItems())
+
+    def onFileClose(self):
+        self.loader.close()
+        self.tileview.clear()
 
     def onFileOpen(self):
 
