@@ -180,7 +180,8 @@ class ImportDialog(QtGui.QDialog):
                                     self.cbar.checkedChannels(),
                                     self.cbar.colors(),
                                     self.segdlg.segmentationParams(),
-                                    self.segdlg.featureGroups())
+                                    self.segdlg.featureGroups(),
+                                    self.galSize.value())
             except Exception as e:
                 QMessageBox.critical(self, str(e), traceback.format_exc())
                 return

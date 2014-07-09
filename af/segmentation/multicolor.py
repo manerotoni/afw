@@ -100,7 +100,7 @@ class MultiChannelProcessor(object):
                 else:
                     # mulitchannel gallery image
                     obj.gallery_image = self._gallery_image(obj.center,
-                                                            gallery_size=50)
+                                                            gallery_size=self.gsize)
                     odict[label] = obj
 
             # set feature names extend with a prefix
