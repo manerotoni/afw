@@ -31,7 +31,7 @@ class XmlConfWriter(XmlConf):
 
     def __init__(self, segmentation, features):
         self.root = etree.Element(self.CONFIG)
-        self.root.set(validate_tagname(self.PRIMARY), segmentation.keys()[0])
+        self.root.set(self.PRIMARY, validate_tagname(segmentation.keys()[0]))
 
         self._addElement(self.SEGMENTATION, segmentation)
         self._addElement(self.FEATUREGROUPS, features)
@@ -66,7 +66,7 @@ class XmlConfWriter(XmlConf):
         return etree.tostring(self.root, pretty_print=True)
 
     def save(self, filename):
-        with open(filename, "w") as fp:
+        with open(filename, "wb+") as fp:
             fp.write("""<?xml version="1.0" encoding="UTF-8"?>\n""")
             fp.write(self.toString())
 
