@@ -149,7 +149,8 @@ class SegmentationDialog(QtGui.QWidget):
                              self.sizeMin.value(),
                              self.sizeMax.value(),
                              self.intensityMin.value(),
-                             self.intensityMax.value())
+                             self.intensityMax.value(),
+                             self.galSize.value())
 
     def segmentationParams(self):
         sparams = OrderedDict()
@@ -224,6 +225,7 @@ class SegmentationDialog(QtGui.QWidget):
         self.sizeMax.setValue(segpar.size_max)
         self.intensityMin.setValue(segpar.intensity_min)
         self.intensityMax.setValue(segpar.intensity_max)
+        self.galSize.setValue(segpar.gallery_size)
 
         fwidget = self.widgetAt(0, self.FEATURES)
         fwidget.setFeatureGroups(settings[XmlConfReader.FEATUREGROUPS])

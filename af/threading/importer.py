@@ -35,7 +35,7 @@ class AfImporter(QtCore.QObject):
     error = QtCore.pyqtSignal("PyQt_PyObject")
 
     def __init__(self, files, metadata, outfile, channels, colors,
-                 seg_params, feature_groups, gallery_size=60):
+                 seg_params, feature_groups):
         super(AfImporter, self).__init__()
         self._abort = False
 
@@ -49,7 +49,6 @@ class AfImporter(QtCore.QObject):
         self.outfile = outfile
         self.seg_params = seg_params
         self.feature_groups = feature_groups
-        self.gallery_size = gallery_size
 
     def abort(self):
         self._abort = True
@@ -82,7 +81,8 @@ class AfImporter(QtCore.QObject):
                 self.progressUpdate.emit(i+1)
                 self.interruption_point()
                 self.thread().msleep(self.PYDELAY)
-                mp = LsmProcessor(file_, gallery_size=self.gallery_size)
+                mp = LsmProcessor(file_,
+                                  self.seg_params.values()[0].gallery_size)
                 # first channel for primary segementation
                 mp.segmentation(self.seg_params, self.channels)
                 mp.calculateFeatures(self.feature_groups)

@@ -24,13 +24,13 @@ class MultiChannelProcessor(object):
 
     _environ = CecogEnvironment(redirect=False, debug=False)
 
-    def __init__(self, filename, gallery_size=50):
+    def __init__(self, filename, gallery_size=60):
         super(MultiChannelProcessor, self).__init__()
 
         self._image = None
         self._reader = None
-        self._filename = filename
         self.gsize = gallery_size
+        self._filename = filename
         self._containers = OrderedDict()
 
     @property
@@ -99,8 +99,8 @@ class MultiChannelProcessor(object):
                     odict.concatenate(name, label, obj)
                 else:
                     # mulitchannel gallery image
-                    obj.gallery_image = self._gallery_image(obj.center,
-                                                            gallery_size=self.gsize)
+                    obj.gallery_image = self._gallery_image(
+                        obj.center, gallery_size=self.gsize)
                     odict[label] = obj
 
             # set feature names extend with a prefix

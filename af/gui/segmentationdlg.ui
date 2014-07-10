@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>687</width>
-    <height>411</height>
+    <width>716</width>
+    <height>407</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -324,16 +324,53 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
-         <number>0</number>
+         <number>-1</number>
         </property>
         <property name="margin">
          <number>0</number>
         </property>
         <item>
-         <widget class="QComboBox" name="pchannel"/>
+         <widget class="QComboBox" name="pchannel">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Channel for primary segementation. Local adaptive threshold is performed on this channel.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <spacer name="vspacer_2">
+         <layout class="QHBoxLayout" name="hbox_2">
+          <item>
+           <widget class="QLabel" name="galSizeLabel">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fixed size of a gallery image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>gallery size</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="galSize">
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fixed size of a gallery image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>65</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="spacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
