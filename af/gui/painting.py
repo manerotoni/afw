@@ -59,3 +59,14 @@ class AfPainter(object):
         painter.end()
 
         return pixmap
+
+    @staticmethod
+    def complementaryColor(color):
+        r = 255 - color.red()
+        g = 255 - color.green()
+        b = 255 - color.blue()
+
+        if r == g == b:
+            return QtGui.QColor(255, 255, 255)
+        else:
+            return QtGui.QColor(r, g, b)

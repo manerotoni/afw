@@ -11,8 +11,11 @@ __all__ = ('HdfWriter', )
 import h5py
 import numpy as np
 from collections import defaultdict
+
+from af.config import AfConfig
 from af.hdfio import HdfAttrs
 from af.xmlconf import XmlConfWriter
+
 
 class HdfCache(object):
     """Internal cache to be able to save non-resizeable data sets to hdf5."""
@@ -74,6 +77,8 @@ class HdfWriter(object):
     def __init__(self, filename):
         self._file = h5py.File(filename, "w")
         self._cache = None
+        self._compression = AfConfig().compression
+        self._copts = AfConfig().compression_opts
 
     def close(self):
         self._file.close()
@@ -86,7 +91,9 @@ class HdfWriter(object):
         grp.attrs[HdfAttrs.channels] = [str(c.replace(" ", "_"))
                                        for c in channels.values()]
 
-        self.images = self._file.create_dataset(self.IMAGES, shape, dtype=dtype)
+        self.images = self._file.create_dataset(self.IMAGES, shape, dtype=dtype,
+                                                compression=self._compression,
+                                                compression_opts=self._copts)
         self.images.attrs[HdfAttrs.colors] = [str(c) for c in colors]
 
     def setImage(self, image, index):
@@ -114,7 +121,8 @@ class HdfWriter(object):
 
             # h5py seems to be buggy, cannot set contours directly,
             dset = self._file.create_dataset(
-                path, (len(contours), 2, ), dtype=self._cache._dt_contours)
+                path, (len(contours), 2, ), dtype=self._cache._dt_contours,
+                compression=self._compression, compression_opts=self._copts)
             for i, cnt in enumerate(contours):
                 dset[i, :] = cnt
 
@@ -124,11 +132,14 @@ class HdfWriter(object):
         # hdf5 allows only 64kb of header metadata
         try:
             dset = self._file.create_dataset(
-                self.BBOX, data=self._cache.bbox)
+                self.BBOX, data=self._cache.bbox,
+                compression=self._compression, compression_opts=self._copts)
             dset = self._file.create_dataset(
-                self.FEATURES, data=self._cache.features)
+                self.FEATURES, data=self._cache.features,
+                compression=self._compression, compression_opts=self._copts)
             dset = self._file.create_dataset(
-                self.GALLERY, data=self._cache.gallery)
+                self.GALLERY, data=self._cache.gallery,
+                compression=self._compression, compression_opts=self._copts)
             self._write_contours()
         except ValueError as e:
             if "Object header message is too large" in str(e):

@@ -108,6 +108,8 @@ class ChannelBar(QtGui.QWidget):
         images = list()
         contours = dict()
 
+ #       ccolor = AfConfig().contours_complementary_color
+
         for i, n in self.checkedChannels().iteritems():
             # converting the gray image to the color defined in the button
             color = self.widgetAt(i, 1).currentColor()
@@ -116,6 +118,8 @@ class ChannelBar(QtGui.QWidget):
             image.setColorTable(lut)
             images.append(image)
             if self._contours is not None:
+                # if ccolor:
+                #     color = AfPainter.complementaryColor(color)
                 contours[color] = self._contours[n]
 
         pixmap = AfPainter.blend(images)
