@@ -88,7 +88,7 @@ class HdfTrainingSetReader(HdfBaseReader):
         ftrs = self._hdf[self._features].value
 
         # dtype read from hdf does not work for sorting, need an 2d table
-        ftrs = ftrs.view(dtype=float).reshape(ftrs.shape[0], -1)
+        ftrs = ftrs.view(dtype=np.float32).reshape(ftrs.shape[0], -1)
 
         for i in xrange(gal.shape[3]):
             yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], frame=i,
