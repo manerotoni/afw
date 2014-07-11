@@ -31,7 +31,7 @@ class AfImporter(QtCore.QObject):
     finished = QtCore.pyqtSignal()
     started = QtCore.pyqtSignal()
     imageReady = QtCore.pyqtSignal(tuple)
-    contourImage = QtCore.pyqtSignal(tuple, dict)
+    contourImage = QtCore.pyqtSignal(tuple, dict, tuple)
     error = QtCore.pyqtSignal("PyQt_PyObject")
 
     def __init__(self, files, metadata, outfile, channels, colors,
@@ -77,12 +77,12 @@ class AfImporter(QtCore.QObject):
         writer.saveSettings(self.seg_params, self.feature_groups)
 
         try:
+            gsize = self.seg_params.values()[0].gallery_size
             for i, file_ in enumerate(self.files):
                 self.progressUpdate.emit(i+1)
                 self.interruption_point()
                 self.thread().msleep(self.PYDELAY)
-                mp = LsmProcessor(file_,
-                                  self.seg_params.values()[0].gallery_size)
+                mp = LsmProcessor(file_, gsize)
                 # first channel for primary segementation
                 mp.segmentation(self.seg_params, self.channels)
                 mp.calculateFeatures(self.feature_groups)
@@ -90,6 +90,7 @@ class AfImporter(QtCore.QObject):
                 # saveData ignores empty objects
                 writer.saveData(objects)
                 writer.setImage(mp.image[:, :, self.channels.keys()], i)
+
                 self.contourImage.emit(tuple(mp.iterQImages()),
                                        objects.contours)
 

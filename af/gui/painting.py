@@ -62,6 +62,9 @@ class AfPainter(object):
 
     @staticmethod
     def complementaryColor(color):
+        """Return the complementary color of the input color. Method returns
+        white in case of a grey level input color.
+        """
         r = 255 - color.red()
         g = 255 - color.green()
         b = 255 - color.blue()

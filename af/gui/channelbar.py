@@ -7,7 +7,8 @@ __licence__ = 'GPL'
 
 __all__ = ('ChannelBar', )
 
-
+import math
+import numpy as np
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import QPointF
@@ -108,7 +109,7 @@ class ChannelBar(QtGui.QWidget):
         images = list()
         contours = dict()
 
- #       ccolor = AfConfig().contours_complementary_color
+ #      ccolor = AfConfig().contours_complementary_color
 
         for i, n in self.checkedChannels().iteritems():
             # converting the gray image to the color defined in the button
@@ -154,6 +155,14 @@ class ChannelBar(QtGui.QWidget):
 
     def clearContours(self):
         self._contours = None
+
+    def drawRectangles(self, centers, gsize):
+        hsize = int(math.floor(gsize/2.0))
+        # left, top, width, height
+        centers = np.array([(x-hsize, y-hsize) for x, y in centers])
+        centers = np.clip(centers, 0, 512-gsize)
+        rects = tuple([(x, y, gsize, gsize) for x, y in centers])
+        self.viewer.drawRects(rects)
 
     def contourImage(self, images, contours_dict):
         """Combines setImage and setContours but updates viewer only once."""

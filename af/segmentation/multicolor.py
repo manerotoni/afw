@@ -29,6 +29,7 @@ class MultiChannelProcessor(object):
 
         self._image = None
         self._reader = None
+        self._objects = None
         self.gsize = gallery_size
         self._filename = filename
         self._containers = OrderedDict()
@@ -89,32 +90,34 @@ class MultiChannelProcessor(object):
 
     @property
     def objects(self):
-        odict = ObjectDict("multicolor")
-        for i, (name, container) in enumerate(self._containers.iteritems()):
-            for label, cobj in container.getObjects().iteritems():
-                obj = ImageObject(name, cobj,
-                                  container.getCrackCoordinates(label), label)
+        if self._objects is None:
+            odict = ObjectDict("multicolor")
+            for i, (name, container) in enumerate(self._containers.iteritems()):
+                for label, cobj in container.getObjects().iteritems():
+                    obj = ImageObject(
+                        name, cobj, container.getCrackCoordinates(label), label)
 
-                if odict.has_key(label):
-                    odict.concatenate(name, label, obj)
-                else:
-                    # mulitchannel gallery image
-                    obj.gallery_image = self._gallery_image(
-                        obj.center, gallery_size=self.gsize)
-                    odict[label] = obj
+                    if odict.has_key(label):
+                        odict.concatenate(name, label, obj)
+                    else:
+                        # mulitchannel gallery image
+                        obj.gallery_image = self._gallery_image(
+                            obj.center, gallery_size=self.gsize)
+                        odict[label] = obj
 
-            # set feature names extend with a prefix
-            try:
-                odict.feature_names.extend(
-                    ["c%d-%s" %(i, n) for n in obj.feature_names])
-            except UnboundLocalError as e:
-                # empty image has no objects
-                pass
+                # set feature names extend with a prefix
+                try:
+                    odict.feature_names.extend(
+                        ["c%d-%s" %(i, n) for n in obj.feature_names])
+                except UnboundLocalError as e:
+                    # empty image has no objects
+                    pass
 
-        removed = odict.remove_incomplete()
-        if len(removed) > 0:
-            warnings.warn("%d objects have been removed" %len(removed))
-        return odict
+            removed = odict.remove_incomplete()
+            if len(removed) > 0:
+                warnings.warn("%d objects have been removed" %len(removed))
+            self._objects = odict
+        return self._objects
 
     def calculateFeatures(self, feature_groups):
         """Calculate the features per color channel."""

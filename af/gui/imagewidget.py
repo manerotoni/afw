@@ -169,7 +169,8 @@ class ImageViewer(QtGui.QGraphicsView):
     def clearPolygons(self):
         items = self.scene().items()
         for item in items:
-            if isinstance(item, QtGui.QGraphicsPolygonItem):
+            if isinstance(item, (QtGui.QGraphicsPolygonItem,
+                                 QtGui.QGraphicsRectItem)):
                 self.scene().removeItem(item)
 
 
@@ -184,6 +185,17 @@ class ImageViewer(QtGui.QGraphicsView):
                     pen.setColor(color)
                     self.scene().addPolygon(contour, pen=pen)
 
+    def drawRects(self, rects):
+
+        for x, y, w, h in rects:
+            pen = QtGui.QPen()
+            pen.setColor(Qt.white)
+            pen.setStyle(Qt.DotLine)
+
+            brush = QtGui.QBrush()
+            brush.setStyle(Qt.NoBrush)
+
+            self.scene().addRect(x, y, w, h, pen=pen, brush=brush)
 
 if __name__ == '__main__':
 

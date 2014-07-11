@@ -104,6 +104,14 @@ class ObjectDict(OrderedDict):
         return cnt
 
     @property
+    def centers(self):
+        """Return a dictionary of centers only."""
+        centers = dict()
+        for key, value in self.iteritems():
+            centers[key] = value.center
+        return centers
+
+    @property
     def gallery_shape(self):
         obj = self[self.keys()[0]]
         return obj.gallery_image.shape + (len(self), )

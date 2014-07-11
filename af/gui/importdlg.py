@@ -62,6 +62,7 @@ class ImportDialog(QtGui.QDialog):
         self.slider.sliderReleased.connect(self.showContours)
         self.slider.sliderPressed.connect(self.cbar.clearContours)
         self.contoursCb.stateChanged.connect(self.onContours)
+        self.showBBoxes.stateChanged.connect(self.showContours)
         self.segdlg.refreshBtn.clicked.connect(self.showContours)
 
         self.nextBtn.clicked.connect(self.onNextBtn)
@@ -157,6 +158,10 @@ class ImportDialog(QtGui.QDialog):
             QMessageBox.critical(self, "Error", str(e))
         finally:
             self.cbar.setContours(mp.objects.contours)
+
+            if self.showBBoxes.isChecked():
+                self.cbar.drawRectangles(mp.objects.centers.values(),
+                                         self.segdlg.galSize.value())
 
     def onError(self, exc):
         self.startBtn.setText("start")
