@@ -45,6 +45,9 @@ class HdfTrainingSetReader(HdfBaseReader):
         # default size of a gallery image
         return self._hdf[self._gallery].shape[0]
 
+    def imageSize(self):
+        return self._hdf[self._images].shape[:2]
+
     # XXX set attributes to hdffile
     def numberItems(self, coordinate=None):
         return self._hdf[self._bbox].shape[0]
@@ -64,7 +67,14 @@ class HdfTrainingSetReader(HdfBaseReader):
 
         hsize = np.floor(self.gsize/2.0)
         channels = self._hdf[self._contours].attrs[HdfAttrs.channels]
+        # shift centers to the bottom left corner of the gallery image
         center = np.vstack((dtable["x"], dtable["y"])).T - hsize
+
+        width, height = self.imageSize()
+        center[center[:, 0]<0, 0] = 0
+        center[center[:, 0]>(width-self.gsize), 0] = width - self.gsize
+        center[center[:, 1]<0, 1] = 0
+        center[center[:, 1]>(height-self.gsize), 1] = height - self.gsize
 
         contours = list()
         for channel in channels:
