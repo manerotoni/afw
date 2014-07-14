@@ -194,6 +194,9 @@ class ImportDialog(QtGui.QDialog):
             self.startBtn.setText("start")
             self.thread.worker.abort()
         else:
+            self.viewer.clearPolygons()
+            self.viewer.clearRects()
+
             try:
                 worker = AfImporter(self._files,
                                     self.metadata,
