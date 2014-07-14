@@ -169,10 +169,14 @@ class ImageViewer(QtGui.QGraphicsView):
     def clearPolygons(self):
         items = self.scene().items()
         for item in items:
-            if isinstance(item, (QtGui.QGraphicsPolygonItem,
-                                 QtGui.QGraphicsRectItem)):
+            if isinstance(item, QtGui.QGraphicsPolygonItem):
                 self.scene().removeItem(item)
 
+    def clearRects(self):
+        items = self.scene().items()
+        for item in items:
+            if isinstance(item, QtGui.QGraphicsRectItem):
+                self.scene().removeItem(item)
 
     def contourImage(self, pixmap, contours_dict=None):
         self.showPixmap(pixmap)
@@ -186,6 +190,7 @@ class ImageViewer(QtGui.QGraphicsView):
                     self.scene().addPolygon(contour, pen=pen)
 
     def drawRects(self, rects):
+        self.clearRects()
 
         for x, y, w, h in rects:
             pen = QtGui.QPen()

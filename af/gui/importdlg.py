@@ -59,32 +59,40 @@ class ImportDialog(QtGui.QDialog):
         self.segmentationBtn.clicked.connect(self.onSegmentationBtn)
 
         self.slider.valueChanged.connect(self.showImage)
-        self.slider.sliderReleased.connect(self.showContours)
+        self.slider.sliderReleased.connect(self.showObjects)
         self.slider.sliderPressed.connect(self.cbar.clearContours)
         self.contoursCb.stateChanged.connect(self.onContours)
-        self.showBBoxes.stateChanged.connect(self.showContours)
-        self.segdlg.refreshBtn.clicked.connect(self.showContours)
+        self.showBBoxes.stateChanged.connect(self.onBBoxes)
+        self.showBBoxes.stateChanged.connect(self.showObjects)
+        self.segdlg.refreshBtn.clicked.connect(self.showObjects)
 
         self.nextBtn.clicked.connect(self.onNextBtn)
         self.prevBtn.clicked.connect(self.onPrevBtn)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_F5:
-            self.showContours()
+            self.showObjects()
 
     def onNextBtn(self):
         self.slider.setValue(self.slider.value()+1)
-        self.showContours()
+        self.showObjects()
 
     def onPrevBtn(self):
         self.slider.setValue(self.slider.value()-1)
-        self.showContours()
+        self.showObjects()
 
     def onContours(self, state):
         if state == Qt.Checked:
-            self.showContours()
+            self.showObjects()
         else:
+            self.cbar.clearContours()
             self.viewer.clearPolygons()
+
+    def onBBoxes(self, state):
+        if state == Qt.Checked:
+            self.showObjects()
+        else:
+            self.viewer.clearRects()
 
     def onSegmentationBtn(self):
         self.segdlg.show()
@@ -103,6 +111,10 @@ class ImportDialog(QtGui.QDialog):
         self.outputFile.setText(ofile)
 
     def onOpenInputDir(self):
+        self.cbar.clearContours()
+        self.viewer.clearRects()
+        self.viewer.clearPolygons()
+
         idir = self.inputDir.text()
         if isdir(idir):
             path = basename(idir)
@@ -138,14 +150,17 @@ class ImportDialog(QtGui.QDialog):
         self.segdlg.setRegions(self.cbar.allChannels())
         self.slider.setRange(0, self.metadata.n_images-1)
 
+        self.showObjects()
+
     def showImage(self, index=0):
         self.viewer.clearPolygons()
+        self.viewer.clearRects()
         proc = LsmProcessor(self._files[index])
         images = list(proc.iterQImages())
         self.cbar.setImages(images, list(proc.iterprops()))
 
-    def showContours(self):
-        if not self.contoursCb.isChecked():
+    def showObjects(self):
+        if not (self.contoursCb.isChecked() or self.showBBoxes.isChecked()):
             return
 
         index = self.slider.value()
@@ -157,7 +172,8 @@ class ImportDialog(QtGui.QDialog):
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
         finally:
-            self.cbar.setContours(mp.objects.contours)
+            if self.contoursCb.isChecked():
+                self.cbar.setContours(mp.objects.contours)
 
             if self.showBBoxes.isChecked():
                 self.cbar.drawRectangles(mp.objects.centers.values(),
