@@ -5,8 +5,7 @@ readercore.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo",
-           "HdfAttrs")
+__all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo")
 
 from collections import namedtuple
 
@@ -22,12 +21,6 @@ from af.gui.painting import AfPainter
 HdfFileInfo = namedtuple("HdfFileInfo",
                          ["gal_settings_mutable", "n_items", "gallery_size",
                           "coordspace"])
-
-
-class HdfAttrs(object):
-
-    colors = "colors"
-    channels = "channels"
 
 
 class HdfError(Exception):

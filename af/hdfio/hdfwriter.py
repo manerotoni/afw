@@ -14,27 +14,28 @@ import numpy as np
 from collections import defaultdict
 
 from af.config import AfConfig
-from af.hdfio import HdfAttrs
 from af.xmlconf import XmlConfWriter
 
 
 class HdfDataModel(object):
 
-    def __init__(self, date=None):
+    TRAININGDATA = "training_data"
+    COLORS = "colors"
+    CHANNELS = "channels"
+
+    def __init__(self, data=None):
 
         if data is None:
-            self._date = time.strftime("%Y%m%d-%H%M%S")
+            self.data = "/data_%s" %time.strftime("%Y%m%d-%H%M%S")
+        else:
+            self.data = data
 
-        self.data = "/data_%s" %self._date
         self.images = "%s/images" %self.data
         self.contours = "%s/contours" %self.data
         self.gallery = "%s/gallery" %self.data
         self.bbox = "%s/bbox" %self.data
         self.features = "%s/features" %self.data
         self.settings = "/settings"
-
-    def date(self):
-        return self._date
 
 
 class HdfCache(object):
@@ -94,6 +95,14 @@ class HdfWriter(object):
         self._copts = AfConfig().compression_opts
         self.dmodel = HdfDataModel()
 
+        # save a list of the training sets as attrib of the file
+        try:
+            tsets = self._file.attrs[self.dmodel.TRAININGDATA].tolist()
+            tsets.append(self.dmodel.data)
+        except KeyError:
+            tsets = self.dmodel.data
+            self._file.attrs[self.dmodel.TRAININGDATA] = [tsets, ]
+
 
     def close(self):
         self._file.close()
@@ -103,14 +112,14 @@ class HdfWriter(object):
         shape = size + (n_channels, n_images)
 
         grp = self._file.create_group(self.dmodel.contours)
-        grp.attrs[HdfAttrs.channels] = [str(c.replace(" ", "_"))
+        grp.attrs[HdfDataModel.CHANNELS] = [str(c.replace(" ", "_"))
                                        for c in channels.values()]
 
         self.images = self._file.create_dataset(self.dmodel.images, shape,
                                                 dtype=dtype,
                                                 compression=self._compression,
                                                 compression_opts=self._copts)
-        self.images.attrs[HdfAttrs.colors] = [str(c) for c in colors]
+        self.images.attrs[HdfDataModel.COLORS] = [str(c) for c in colors]
 
     def setImage(self, image, index):
         self.images[:, :, :, index] = image
