@@ -11,6 +11,7 @@ __all__ = ("HdfTrainingSetReader", )
 import h5py
 import numpy as np
 from af.hdfio import HdfBaseReader, HdfFileInfo, HdfItem, HdfAttrs
+from af.hdfio import HdfDataModel
 
 
 class HdfTrainingSetReader(HdfBaseReader):
@@ -27,6 +28,12 @@ class HdfTrainingSetReader(HdfBaseReader):
     def __init__(self, filename, mode="r"):
         super(HdfTrainingSetReader, self).__init__()
         self._hdf = h5py.File(filename, mode)
+
+        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        import pdb; pdb.set_trace()
+
+
+        self.dmodel = HdfDataModel()
 
     @property
     def fileinfo(self):

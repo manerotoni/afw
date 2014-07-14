@@ -5,7 +5,7 @@ hdfwriter.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('HdfWriter', )
+__all__ = ('HdfWriter', 'HdfDataModel', )
 
 
 import time
@@ -20,14 +20,21 @@ from af.xmlconf import XmlConfWriter
 
 class HdfDataModel(object):
 
-    def __init__(self):
-        self.data = "/data_%s" %time.strftime("%Y%m%d-%H%M%S")
+    def __init__(self, date=None):
+
+        if data is None:
+            self._date = time.strftime("%Y%m%d-%H%M%S")
+
+        self.data = "/data_%s" %self._date
         self.images = "%s/images" %self.data
         self.contours = "%s/contours" %self.data
         self.gallery = "%s/gallery" %self.data
         self.bbox = "%s/bbox" %self.data
         self.features = "%s/features" %self.data
         self.settings = "/settings"
+
+    def date(self):
+        return self._date
 
 
 class HdfCache(object):
