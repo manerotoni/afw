@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 __all__ = ('HdfWriter', )
 
 
+import time
 import h5py
 import numpy as np
 from collections import defaultdict
@@ -15,6 +16,18 @@ from collections import defaultdict
 from af.config import AfConfig
 from af.hdfio import HdfAttrs
 from af.xmlconf import XmlConfWriter
+
+
+class HdfDataModel(object):
+
+    def __init__(self):
+        self.data = "/data_%s" %time.strftime("%Y%m%d-%H%M%S")
+        self.images = "%s/images" %self.data
+        self.contours = "%s/contours" %self.data
+        self.gallery = "%s/gallery" %self.data
+        self.bbox = "%s/bbox" %self.data
+        self.features = "%s/features" %self.data
+        self.settings = "/settings"
 
 
 class HdfCache(object):
@@ -66,19 +79,14 @@ class HdfCache(object):
 
 class HdfWriter(object):
 
-    DATA = "/data"
-    IMAGES = "/data/images"
-    CONTOURS = "/data/contours"
-    GALLERY = "/data/gallery"
-    BBOX = "/data/bbox"
-    FEATURES = "/data/features"
-    SETTINGS = "/data/settings"
 
     def __init__(self, filename):
         self._file = h5py.File(filename, "w")
         self._cache = None
         self._compression = AfConfig().compression
         self._copts = AfConfig().compression_opts
+        self.dmodel = HdfDataModel()
+
 
     def close(self):
         self._file.close()
@@ -87,11 +95,12 @@ class HdfWriter(object):
         n_channels = len(channels)
         shape = size + (n_channels, n_images)
 
-        grp = self._file.create_group(self.CONTOURS)
+        grp = self._file.create_group(self.dmodel.contours)
         grp.attrs[HdfAttrs.channels] = [str(c.replace(" ", "_"))
                                        for c in channels.values()]
 
-        self.images = self._file.create_dataset(self.IMAGES, shape, dtype=dtype,
+        self.images = self._file.create_dataset(self.dmodel.images, shape,
+                                                dtype=dtype,
                                                 compression=self._compression,
                                                 compression_opts=self._copts)
         self.images.attrs[HdfAttrs.colors] = [str(c) for c in colors]
@@ -102,7 +111,7 @@ class HdfWriter(object):
     def saveSettings(self , segmentation, features):
         xml = XmlConfWriter(segmentation, features)
         txt = xml.toString()
-        dset = self._file.create_dataset(self.SETTINGS, data=txt)
+        dset = self._file.create_dataset(self.dmodel.settings, data=txt)
 
 
     def saveData(self, objectsdict):
@@ -117,7 +126,7 @@ class HdfWriter(object):
     def _write_contours(self):
 
         for cname, contours in self._cache.contours.iteritems():
-            path = "%s/%s" %(self.CONTOURS, cname.replace(" ", "_"))
+            path = "%s/%s" %(self.dmodel.contours, cname.replace(" ", "_"))
 
             # h5py seems to be buggy, cannot set contours directly,
             dset = self._file.create_dataset(
@@ -132,13 +141,13 @@ class HdfWriter(object):
         # hdf5 allows only 64kb of header metadata
         try:
             dset = self._file.create_dataset(
-                self.BBOX, data=self._cache.bbox,
+                self.dmodel.bbox, data=self._cache.bbox,
                 compression=self._compression, compression_opts=self._copts)
             dset = self._file.create_dataset(
-                self.FEATURES, data=self._cache.features,
+                self.dmodel.features, data=self._cache.features,
                 compression=self._compression, compression_opts=self._copts)
             dset = self._file.create_dataset(
-                self.GALLERY, data=self._cache.gallery,
+                self.dmodel.gallery, data=self._cache.gallery,
                 compression=self._compression, compression_opts=self._copts)
             self._write_contours()
         except ValueError as e:
