@@ -31,7 +31,7 @@ class AfImporter(QtCore.QObject):
     finished = QtCore.pyqtSignal()
     started = QtCore.pyqtSignal()
     imageReady = QtCore.pyqtSignal(tuple)
-    contourImage = QtCore.pyqtSignal(tuple, dict, tuple)
+    contourImage = QtCore.pyqtSignal(tuple, dict)
     error = QtCore.pyqtSignal("PyQt_PyObject")
 
     def __init__(self, files, metadata, outfile, channels, colors,

@@ -169,10 +169,10 @@ class MultiChannelProcessor(object):
 
         image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
-        image = ccore.disc_median(image, mean_radius)
+        image_median = ccore.disc_median(image, mean_radius)
 
         seg_image = ccore.window_average_threshold(
-            image, window_size, min_contrast)
+            image_median, window_size, min_contrast)
 
         if fill_holes:
             ccore.fill_holes(seg_image)
@@ -203,7 +203,9 @@ class MultiChannelProcessor(object):
         return ccore.ImageMaskContainer(image, img_labels, False, True, True)
 
     def normalize(self, image_, norm_min=0, norm_max=255, dtype=np.uint8):
-        """Normalize input image to range and return image as dtype (numpy int-type)."""
+        """Normalize input image to range and return image as dtype
+        (numpy int-type).
+        """
 
         iinfo = np.iinfo(dtype)
         range_ = iinfo.max - iinfo.min
