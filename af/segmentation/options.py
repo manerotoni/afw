@@ -39,7 +39,7 @@ feature_groups = {'granulometry': None,
 
 
 PrimaryParams = namedtuple(
-    'PrimaryParams', ['mean_radius',  'window_size', 'min_contrast',
+    'PrimaryParams', ['median_radius',  'window_size', 'min_contrast',
                       'remove_borderobjects', 'fill_holes', 'norm_min',
                       'norm_max','size_min', 'size_max', 'intensity_min',
                       'intensity_max', 'gallery_size'])

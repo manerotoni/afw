@@ -139,7 +139,7 @@ class SegmentationDialog(QtGui.QWidget):
                 self.pchannel.setCurrentIndex(0)
 
     def _primaryParams(self):
-        return PrimaryParams(self.meanRadius.value(),
+        return PrimaryParams(self.medianRadius.value(),
                              self.windowSize.value(),
                              self.minContrast.value(),
                              self.removeBorderObjects.isChecked(),
@@ -215,7 +215,7 @@ class SegmentationDialog(QtGui.QWidget):
         segpar = settings[XmlConfReader.SEGMENTATION]
 
         self.minContrast.setValue(segpar.min_contrast)
-        self.meanRadius.setValue(segpar.mean_radius)
+        self.medianRadius.setValue(segpar.median_radius)
         self.windowSize.setValue(segpar.window_size)
         self.fillHoles.setChecked(segpar.fill_holes)
         self.removeBorderObjects.setChecked(segpar.remove_borderobjects)

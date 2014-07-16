@@ -163,13 +163,13 @@ class MultiChannelProcessor(object):
             self._containers[name] = self.seededExpandedRegion(
                 self.image[:, :, i].copy(), label_image, *params[name])
 
-    def threshold(self, image, mean_radius, window_size, min_contrast,
+    def threshold(self, image, median_radius, window_size, min_contrast,
                   remove_borderobjects, fill_holes, norm_min=0, norm_max=255,
                   *args, **kw):
 
         image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
-        image_median = ccore.disc_median(image, mean_radius)
+        image_median = ccore.disc_median(image, median_radius)
 
         seg_image = ccore.window_average_threshold(
             image_median, window_size, min_contrast)

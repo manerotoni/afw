@@ -97,7 +97,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QSpinBox" name="meanRadius">
+           <widget class="QSpinBox" name="medianRadius">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -481,7 +481,7 @@
   <tabstop>closeBtn</tabstop>
   <tabstop>refreshBtn</tabstop>
   <tabstop>minContrast</tabstop>
-  <tabstop>meanRadius</tabstop>
+  <tabstop>medianRadius</tabstop>
   <tabstop>windowSize</tabstop>
   <tabstop>removeBorderObjects</tabstop>
   <tabstop>fillHoles</tabstop>
