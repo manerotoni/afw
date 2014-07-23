@@ -106,6 +106,7 @@ class AfGraphicsView(MouseWheelView):
         self.actionAdd = QtGui.QAction(
             "&add to panel", self, triggered=self.parent().addToToolbox)
 
+
     def selectedItems(self):
         return self.scene().selectedItems()
 

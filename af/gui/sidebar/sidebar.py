@@ -5,7 +5,7 @@ sortwidget.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('AfSortWidget', )
+__all__ = ('AfSortWidget', 'AfAnnotationWidget')
 
 
 from os.path import dirname, join
@@ -18,15 +18,10 @@ from PyQt4 import QtCore
 from PyQt4.QtGui import QMessageBox
 
 from af.sorters import Sorter
+from af.classifiers import Classifier
 
-class AfTreeWidgetItem(QtGui.QTreeWidgetItem):
-
-    def __init__(self, item, *args, **kw):
-        super(AfTreeWidgetItem, self).__init__(*args, **kw)
-        self.cellitem = item
-        self.setIcon(0, QtGui.QIcon(item.pixmap))
-        self.setData(1, QtCore.Qt.DisplayRole, str(item.frame))
-        self.setData(2, QtCore.Qt.DisplayRole, str(item.objid))
+from af.gui.sidebar.treewidgetitem import AfTreeWidgetItem
+from af.gui.sidebar.models import AfOneClassSvmItemModel
 
 
 class AfSideBarWidget(QtGui.QWidget):
@@ -41,24 +36,21 @@ class AfSideBarWidget(QtGui.QWidget):
                 self.items.addTopLevelItem(AfTreeWidgetItem(item))
                 self._items.append(item)
 
+    def onAdd(self):
+        items = self.parent.selectedItems()
+        self.addItems(items)
+
+
     def onRemoveAll(self):
         self.items.clear()
         self._items = list()
+
 
     def onRemove(self):
         for item in self.items.selectedItems():
             index = self.items.indexOfTopLevelItem(item)
             topitem = self.items.takeTopLevelItem(index)
             self._items.remove(topitem.cellitem)
-
-class AfAnnotationWidget(AfSideBarWidget):
-
-    def __init__(self, parent, *args, **kw):
-        super(AfAnnotationWidget, self).__init__(parent, *args, **kw)
-        # qtmethod does not return the real parent!
-        self.parent = parent
-        uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
-        uic.loadUi(uifile, self)
 
 
 class AfSortWidget(AfSideBarWidget):
@@ -127,3 +119,42 @@ class AfSortWidget(AfSideBarWidget):
             item.sortkey = d
 
         self.startSorting.emit()
+
+
+class AfAnnotationWidget(AfSideBarWidget):
+
+    def __init__(self, parent, *args, **kw):
+        super(AfAnnotationWidget, self).__init__(parent, *args, **kw)
+        # qtmethod does not return the real parent!
+        self.parent = parent
+        uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
+        uic.loadUi(uifile, self)
+
+        self.saveBtn.clicked.connect(self.onSave)
+        self.classifiers.addItems(Classifier.classifiers())
+
+        self.model = AfOneClassSvmItemModel(self)
+        self.treeview.setModel(self.model)
+
+        self.removeBtn.clicked.connect(self.onRemove)
+        self.removeAllBtn.clicked.connect(self.onRemoveAll)
+        self.addBtn.clicked.connect(self.onAdd)
+
+    def onSave(self):
+        QtGui.QMessageBox.critical(self, "Error", "Not implemented!")
+
+    def onRemove(self):
+        model_indices =  self.treeview.selectionModel().selectedRows()
+        model_indices.reverse()
+        # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        # import pdb; pdb.set_trace()
+
+        for mi in model_indices:
+            self.model.removeRow(mi.row())
+
+    def onRemoveAll(self):
+        self.model.clear()
+
+    def addItems(self, items):
+        for item in items:
+            self.model.addItem(item)

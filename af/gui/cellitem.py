@@ -45,6 +45,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.features = item.features
         self.frame = item.frame
         self.objid = item.objid
+        self.index = item.index
 
         if item.contour is not None:
             for contour, color in item.iterContours():

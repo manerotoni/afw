@@ -7,9 +7,11 @@ __licence__ = 'GPL'
 
 __all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo")
 
-from collections import namedtuple
+
+
 
 import numpy as np
+from collections import namedtuple
 from qimage2ndarray import gray2qimage
 
 from PyQt4.QtGui import QColor
@@ -29,13 +31,15 @@ class HdfError(Exception):
 
 class HdfItem(object):
 
-    __slots__ = ['image', 'contour', 'features', 'frame', 'objid', 'colors']
+    __slots__ = ['image', 'contour', 'features', 'index', 'frame',
+                 'objid', 'colors']
 
-    def __init__(self, image, contour, features, objid=None, frame=None,
+    def __init__(self, image, contour, features, index, objid=None, frame=None,
                  colors=None):
         self.image = image
         self.contour = contour
         self.features = features
+        self.index = index
         self.frame = frame
         self.objid = objid
 

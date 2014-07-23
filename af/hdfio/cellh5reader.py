@@ -144,6 +144,6 @@ class Ch5Reader(HdfBaseReader, cellh5.CH5File):
             fidx, objid = self._hdf[path][index]
             frame = self._hdf[self._timelapse_key %coord]["frame"][fidx]
 
-            yield HdfItem(gal, cnt, ftr, objid, frame)
+            yield HdfItem(gal, cnt, ftr, index, objid, frame)
             # loading looks more uniteruppted
             time.sleep(0.0035)

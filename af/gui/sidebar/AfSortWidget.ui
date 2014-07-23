@@ -23,7 +23,17 @@
       <number>-1</number>
      </property>
      <item>
-      <widget class="QTreeWidget" name="classifier">
+      <widget class="QPushButton" name="sortBtn">
+       <property name="text">
+        <string>sort</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="sortAlgorithm"/>
+     </item>
+     <item>
+      <widget class="QTreeWidget" name="items">
        <property name="frameShape">
         <enum>QFrame::Box</enum>
        </property>
@@ -31,7 +41,7 @@
         <enum>QFrame::Sunken</enum>
        </property>
        <property name="selectionMode">
-        <enum>QAbstractItemView::ContiguousSelection</enum>
+        <enum>QAbstractItemView::MultiSelection</enum>
        </property>
        <property name="iconSize">
         <size>
@@ -40,7 +50,7 @@
         </size>
        </property>
        <property name="indentation">
-        <number>15</number>
+        <number>0</number>
        </property>
        <property name="rootIsDecorated">
         <bool>true</bool>
@@ -49,7 +59,7 @@
         <bool>false</bool>
        </property>
        <property name="itemsExpandable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="sortingEnabled">
         <bool>true</bool>
@@ -84,74 +94,6 @@
          <string>object-id</string>
         </property>
        </column>
-       <item>
-        <property name="text">
-         <string>prophase</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>sample1</string>
-         </property>
-        </item>
-       </item>
-       <item>
-        <property name="text">
-         <string>prometa</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>sample2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>sample1</string>
-         </property>
-        </item>
-       </item>
-       <item>
-        <property name="text">
-         <string>interphase</string>
-        </property>
-        <property name="background">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>255</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </property>
-        <property name="foreground">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </property>
-        <item>
-         <property name="text">
-          <string>sample4</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>sample3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>sample2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>sample1</string>
-         </property>
-        </item>
-       </item>
       </widget>
      </item>
      <item>
@@ -160,14 +102,35 @@
         <number>0</number>
        </property>
        <item>
+        <layout class="QVBoxLayout" name="vbox1">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="addBtn">
+           <property name="text">
+            <string>add Selection</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="hbox1">
          <property name="spacing">
           <number>-1</number>
          </property>
          <item>
-          <widget class="QPushButton" name="save">
+          <widget class="QPushButton" name="removeBtn">
            <property name="text">
-            <string>save</string>
+            <string>remove</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeAllBtn">
+           <property name="text">
+            <string>remove all</string>
            </property>
           </widget>
          </item>
