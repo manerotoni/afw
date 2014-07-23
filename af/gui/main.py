@@ -90,8 +90,8 @@ class AfMainWindow(QtGui.QMainWindow):
             pass
 
     def setupDock(self):
-        self.sorting = AfSortWidget(self.tileview)
-        self.annotation = AfAnnotationWidget(self.tileview)
+        self.sorting = AfSortWidget(self, self.tileview)
+        self.annotation = AfAnnotationWidget(self, self.tileview)
 
         self.toolBox.addItem(self.sorting, "sorting")
         self.toolBox.addItem(self.annotation, "annotation")

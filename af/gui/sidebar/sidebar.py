@@ -25,8 +25,9 @@ from af.gui.sidebar.models import AfOneClassSvmItemModel, AfSorterItemModel
 
 class AfSideBarWidget(QtGui.QWidget):
 
-    def __init__(self, *args, **kw):
-        super(AfSideBarWidget, self).__init__(*args, **kw)
+    def __init__(self, parent, tileview, *args, **kw):
+        super(AfSideBarWidget, self).__init__(parent, *args, **kw)
+        self.tileview = tileview
         self._items = list()
 
     def onRemove(self):
@@ -44,7 +45,7 @@ class AfSideBarWidget(QtGui.QWidget):
             self.model.addItem(item)
 
     def onAdd(self):
-        items = self.parent.selectedItems()
+        items = self.tileview.selectedItems()
         self.addItems(items)
 
 
@@ -52,10 +53,8 @@ class AfSortWidget(AfSideBarWidget):
 
     startSorting = QtCore.pyqtSignal()
 
-    def __init__(self, parent=None, *args, **kw):
-        super(AfSortWidget, self).__init__(parent, *args, **kw)
-        # qtmethod does not return the real parent!
-        self.parent = parent
+    def __init__(self, *args, **kw):
+        super(AfSortWidget, self).__init__(*args, **kw)
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
 
@@ -68,7 +67,8 @@ class AfSortWidget(AfSideBarWidget):
         self.removeAllBtn.clicked.connect(self.onRemoveAll)
         self.addBtn.clicked.connect(self.onAdd)
         self.sortBtn.clicked.connect(self.onSort)
-        self.startSorting.connect(lambda: parent.reorder(force_update=True))
+        self.startSorting.connect(
+            lambda: self.tileview.reorder(force_update=True))
 
     def _featuresFromSidebar(self):
         """Yields a feature matrix from the items in the Sidebar. One feature
@@ -83,7 +83,7 @@ class AfSortWidget(AfSideBarWidget):
 
     def onSort(self):
 
-        all_items = self.parent.items
+        all_items = self.tileview.items
         nitems = len(all_items)
         nfeatures = all_items[0].features.size
         data = np.empty((nitems, nfeatures))
@@ -112,10 +112,8 @@ class AfSortWidget(AfSideBarWidget):
 
 class AfAnnotationWidget(AfSideBarWidget):
 
-    def __init__(self, parent, *args, **kw):
-        super(AfAnnotationWidget, self).__init__(parent, *args, **kw)
-        # qtmethod does not return the real parent!
-        self.parent = parent
+    def __init__(self, *args, **kw):
+        super(AfAnnotationWidget, self).__init__(*args, **kw)
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
 
