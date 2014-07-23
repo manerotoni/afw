@@ -8,7 +8,7 @@ __licence__ = 'GPL'
 __all__ = ('AfSortWidget', 'AfAnnotationWidget')
 
 
-from os.path import dirname, join
+from os.path import dirname, join, expanduser
 import numpy as np
 
 
@@ -16,6 +16,7 @@ from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QFileDialog
 
 from af.sorters import Sorter
 from af.classifiers import Classifier
@@ -28,6 +29,7 @@ class AfSideBarWidget(QtGui.QWidget):
     def __init__(self, parent, tileview, *args, **kw):
         super(AfSideBarWidget, self).__init__(parent, *args, **kw)
         self.tileview = tileview
+        self.parent = parent
         self._items = list()
 
     def onRemove(self):
@@ -47,6 +49,17 @@ class AfSideBarWidget(QtGui.QWidget):
     def onAdd(self):
         items = self.tileview.selectedItems()
         self.addItems(items)
+
+    def _featureTable(self):
+        """Yields a feature matrix from the items in the Sidebar. One feature
+        vector per row."""
+        nitems = self.model.rowCount()
+        nfeatures = self.model.items[0].features.size
+        ftrs = np.empty((nitems, nfeatures))
+
+        for i, item in enumerate(self.model.iterItems()):
+            ftrs[i, :] = item.features
+        return ftrs
 
 
 class AfSortWidget(AfSideBarWidget):
@@ -70,17 +83,6 @@ class AfSortWidget(AfSideBarWidget):
         self.startSorting.connect(
             lambda: self.tileview.reorder(force_update=True))
 
-    def _featuresFromSidebar(self):
-        """Yields a feature matrix from the items in the Sidebar. One feature
-        vector per row."""
-        nitems = self.model.rowCount()
-        nfeatures = self.model.items[0].features.size
-        ftrs = np.empty((nitems, nfeatures))
-
-        for i, item in enumerate(self.model.iterItems()):
-            ftrs[i, :] = item.features
-        return ftrs
-
     def onSort(self):
 
         all_items = self.tileview.items
@@ -100,7 +102,7 @@ class AfSortWidget(AfSideBarWidget):
             return
 
         elif sorter.needs_treedata:
-            sorter.treedata = self._featuresFromSidebar()
+            sorter.treedata = self._featureTable()
 
         dist = sorter()
 
@@ -128,4 +130,13 @@ class AfAnnotationWidget(AfSideBarWidget):
         self.addBtn.clicked.connect(self.onAdd)
 
     def onSave(self):
-        QtGui.QMessageBox.critical(self, "Error", "Not implemented!")
+
+        fname = QFileDialog.getSaveFileName(self, "save Feature Table",
+                                            expanduser("~"))
+        if not fname:
+            return
+
+        ftrnames = self.parent.loader.featureNames
+        ftrs = self._featureTable()
+        np.savetxt(fname, ftrs, delimiter=",", header=",".join(ftrnames))
+        QMessageBox.information(self, "information", "data successfully saved")

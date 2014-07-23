@@ -18,7 +18,7 @@ class AfLoader(QtCore.QObject):
 
     itemLoaded = QtCore.pyqtSignal("PyQt_PyObject")
     progressUpdate = QtCore.pyqtSignal(int)
-    featureNames = QtCore.pyqtSignal(tuple)
+    # featureNames = QtCore.pyqtSignal(tuple)
     fileOpened = QtCore.pyqtSignal("PyQt_PyObject")
     finished = QtCore.pyqtSignal()
 
@@ -29,6 +29,7 @@ class AfLoader(QtCore.QObject):
         self._size = None
         self._nitems = None
         self._aborted = False
+        self._feature_names = None
 
     def __call__(self):
         self._aborted = False
@@ -40,6 +41,13 @@ class AfLoader(QtCore.QObject):
     @property
     def filename(self):
         return self._h5f.filename
+
+    @property
+    def featureNames(self):
+        """Return the feature names of the last dataset loaded"""
+        if self._feature_names is None:
+            raise RuntimeError("No dataset loaded yet")
+        return self._feature_names
 
     def openFile(self, file_):
 
@@ -61,6 +69,7 @@ class AfLoader(QtCore.QObject):
     def close(self):
         if self._h5f is not None:
             self._h5f.close()
+            self._feature_names = None
 
     def abort(self):
         self._aborted = True
@@ -70,6 +79,8 @@ class AfLoader(QtCore.QObject):
         if self._h5f is None:
             return
 
+        # feature names of the last dataset loaded
+        self._feature_names = self._h5f.featureNames(self._coordinate['region'])
         for i, item in enumerate(
             self._h5f.iterItems(self._nitems, self._coordinate, self._size)):
             self.thread().usleep(self.PYDELAY)

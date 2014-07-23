@@ -50,7 +50,7 @@ class HdfTrainingSetReader(HdfBaseReader):
     def numberItems(self, coordinate=None):
         return self._hdf[self.dmodel.bbox].shape[0]
 
-    def featureNames(self, region):
+    def featureNames(self, region=None):
         return self._hdf[self.dmodel.features].dtype.names
 
     def _transposeAndClip(self, contours):
