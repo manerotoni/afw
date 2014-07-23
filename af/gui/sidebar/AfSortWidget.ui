@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>250</width>
-    <height>698</height>
+    <height>678</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,17 +23,10 @@
       <number>-1</number>
      </property>
      <item>
-      <widget class="QPushButton" name="sortBtn">
-       <property name="text">
-        <string>sort</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QComboBox" name="sortAlgorithm"/>
      </item>
      <item>
-      <widget class="QTreeWidget" name="items">
+      <widget class="QTreeView" name="treeview">
        <property name="frameShape">
         <enum>QFrame::Box</enum>
        </property>
@@ -76,65 +69,37 @@
        <property name="expandsOnDoubleClick">
         <bool>false</bool>
        </property>
-       <attribute name="headerStretchLastSection">
-        <bool>true</bool>
-       </attribute>
-       <column>
-        <property name="text">
-         <string>item</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>frame</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>object-id</string>
-        </property>
-       </column>
       </widget>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="vbox2">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <item>
-        <layout class="QVBoxLayout" name="vbox1">
-         <property name="spacing">
-          <number>0</number>
+      <layout class="QGridLayout" name="gbox">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="removeBtn">
+         <property name="text">
+          <string>remove items</string>
          </property>
-         <item>
-          <widget class="QPushButton" name="addBtn">
-           <property name="text">
-            <string>add Selection</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        </widget>
        </item>
-       <item>
-        <layout class="QHBoxLayout" name="hbox1">
-         <property name="spacing">
-          <number>-1</number>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="addBtn">
+         <property name="text">
+          <string>add items</string>
          </property>
-         <item>
-          <widget class="QPushButton" name="removeBtn">
-           <property name="text">
-            <string>remove</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="removeAllBtn">
-           <property name="text">
-            <string>remove all</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="removeAllBtn">
+         <property name="text">
+          <string>remove all</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="sortBtn">
+         <property name="text">
+          <string>sort</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

@@ -40,6 +40,15 @@ class AfStandardItemModel(QtGui.QStandardItemModel):
         del self._items[int(self.item(row).text())]
         super(AfStandardItemModel, self).removeRow(row)
 
+    @property
+    def items(self):
+        return self._items.values()
+
+    def iterItems(self):
+        """Iterator over all items ordered from top to bottom."""
+        for i in xrange(self.rowCount()):
+            yield self._items[int(self.item(i).text())]
+
 
 class AfSorterItemModel(AfStandardItemModel):
 
@@ -47,10 +56,12 @@ class AfSorterItemModel(AfStandardItemModel):
         super(AfSorterItemModel, self).__init__(*args, **kw)
 
     def prepareRowItems(self, item):
-        return [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
-                QtGui.QStandardItem(str(item.frame)),
-                QtGui.QStandardItem(str(item.objid))]
-
+        items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
+                 QtGui.QStandardItem(str(item.frame)),
+                 QtGui.QStandardItem(str(item.objid))]
+        for item in items:
+            item.setEditable(False)
+        return items
 
 class AfOneClassSvmItemModel(AfStandardItemModel):
 
@@ -58,6 +69,9 @@ class AfOneClassSvmItemModel(AfStandardItemModel):
         super(AfOneClassSvmItemModel, self).__init__(*args, **kw)
 
     def prepareRowItems(self, item):
-        return [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
-                QtGui.QStandardItem(str(item.frame)),
-                QtGui.QStandardItem(str(item.objid))]
+        items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
+                 QtGui.QStandardItem(str(item.frame)),
+                 QtGui.QStandardItem(str(item.objid))]
+        for item in items:
+            item.setEditable(False)
+        return items

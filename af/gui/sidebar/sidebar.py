@@ -20,8 +20,7 @@ from PyQt4.QtGui import QMessageBox
 from af.sorters import Sorter
 from af.classifiers import Classifier
 
-from af.gui.sidebar.treewidgetitem import AfTreeWidgetItem
-from af.gui.sidebar.models import AfOneClassSvmItemModel
+from af.gui.sidebar.models import AfOneClassSvmItemModel, AfSorterItemModel
 
 
 class AfSideBarWidget(QtGui.QWidget):
@@ -30,27 +29,23 @@ class AfSideBarWidget(QtGui.QWidget):
         super(AfSideBarWidget, self).__init__(*args, **kw)
         self._items = list()
 
+    def onRemove(self):
+        model_indices =  self.treeview.selectionModel().selectedRows()
+        model_indices.reverse()
+
+        for mi in model_indices:
+            self.model.removeRow(mi.row())
+
+    def onRemoveAll(self):
+        self.model.clear()
+
     def addItems(self, items):
         for item in items:
-            if item not in self._items:
-                self.items.addTopLevelItem(AfTreeWidgetItem(item))
-                self._items.append(item)
+            self.model.addItem(item)
 
     def onAdd(self):
         items = self.parent.selectedItems()
         self.addItems(items)
-
-
-    def onRemoveAll(self):
-        self.items.clear()
-        self._items = list()
-
-
-    def onRemove(self):
-        for item in self.items.selectedItems():
-            index = self.items.indexOfTopLevelItem(item)
-            topitem = self.items.takeTopLevelItem(index)
-            self._items.remove(topitem.cellitem)
 
 
 class AfSortWidget(AfSideBarWidget):
@@ -66,30 +61,24 @@ class AfSortWidget(AfSideBarWidget):
 
         self.sortAlgorithm.addItems(Sorter.sorters())
 
+        self.model = AfSorterItemModel(self)
+        self.treeview.setModel(self.model)
+
         self.removeBtn.clicked.connect(self.onRemove)
         self.removeAllBtn.clicked.connect(self.onRemoveAll)
         self.addBtn.clicked.connect(self.onAdd)
         self.sortBtn.clicked.connect(self.onSort)
-
         self.startSorting.connect(lambda: parent.reorder(force_update=True))
-
-        for i in xrange(self.items.columnCount()):
-            self.items.setColumnWidth(i, 50)
-
-    def onAdd(self):
-        items = self.parent.selectedItems()
-        self.addItems(items)
 
     def _featuresFromSidebar(self):
         """Yields a feature matrix from the items in the Sidebar. One feature
         vector per row."""
-        nitems = self.items.topLevelItemCount()
-        nfeatures = self.items.topLevelItem(0).cellitem.features.size
+        nitems = self.model.rowCount()
+        nfeatures = self.model.items[0].features.size
         ftrs = np.empty((nitems, nfeatures))
 
-        for i in xrange(nitems):
-            ftrs[i, :] = \
-                self.items.topLevelItem(i).cellitem.features
+        for i, item in enumerate(self.model.iterItems()):
+            ftrs[i, :] = item.features
         return ftrs
 
     def onSort(self):
@@ -105,7 +94,7 @@ class AfSortWidget(AfSideBarWidget):
 
         sorter = Sorter(self.sortAlgorithm.currentText(), data)
 
-        if self.items.topLevelItemCount() == 0 and sorter.needs_treedata:
+        if self.model.rowCount() == 0 and sorter.needs_treedata:
             QMessageBox.warning(self, 'no items added',
                                 'You need to add items to the sidebar')
             return
@@ -142,19 +131,3 @@ class AfAnnotationWidget(AfSideBarWidget):
 
     def onSave(self):
         QtGui.QMessageBox.critical(self, "Error", "Not implemented!")
-
-    def onRemove(self):
-        model_indices =  self.treeview.selectionModel().selectedRows()
-        model_indices.reverse()
-        # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        # import pdb; pdb.set_trace()
-
-        for mi in model_indices:
-            self.model.removeRow(mi.row())
-
-    def onRemoveAll(self):
-        self.model.clear()
-
-    def addItems(self, items):
-        for item in items:
-            self.model.addItem(item)
