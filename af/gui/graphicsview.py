@@ -98,14 +98,16 @@ class AfGraphicsView(MouseWheelView):
     def createContextMenu(self):
         self.context_menu = QtGui.QMenu(self)
         self.context_menu.addAction(self.actionReorder)
+        self.context_menu.addAction(self.actionSelectAll)
         self.context_menu.addAction(self.actionAdd)
 
     def createActions(self):
         self.actionReorder = QtGui.QAction(
             "&refresh", self, triggered=lambda: self.reorder(True))
+        self.actionSelectAll = QtGui.QAction("select &all", self,
+                                             triggered=self.scene().selectAll)
         self.actionAdd = QtGui.QAction(
             "&add to panel", self, triggered=self.parent().addToToolbox)
-
 
     def selectedItems(self):
         return self.scene().selectedItems()

@@ -81,3 +81,7 @@ class AfGraphicsScene(QtGui.QGraphicsScene):
         all items."""
         # slow according to qt-doc
         self.setSceneRect(self.itemsBoundingRect())
+
+    def selectAll(self):
+        for item in self.items():
+            item.setSelected(True)
