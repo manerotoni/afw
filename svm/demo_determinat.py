@@ -13,13 +13,14 @@ sys.path.append("../")
 
 import argparse
 import numpy as np
-
+import numpy.linalg as la
 from sklearn import svm
 import matplotlib.cm as cm
 
 
 import matplotlib.pyplot as plt
 from preprocessor import PreProcessor
+from af.mining import PCA
 
 def volume(data, nu, gamma):
     """Return the volumen unter the decission function for the area inside
@@ -59,23 +60,40 @@ if __name__ == "__main__":
     traindata = pp.traindata[:, idx]
     testdata = pp.testdata[:, idx]
 
-    nus = np.linspace(0.01, 0.9, 100)
-    gammas = np.linspace(0.01, 0.9, 100)
-    NU, GAMMA = np.meshgrid(nus, gammas)
-    VOL = np.empty(NU.shape)
-
-    for i, nu in enumerate(nus):
-        for j, gamma in enumerate(gammas):
-            VOL[i, j] = \
-                volume(pp.traindata[:, idx], nu, gamma)
-
+    cov0 = np.cov(pp.traindata.T)
+    corr0 = np.corrcoef(pp.traindata.T)
+    det0 = la.det(corr0)
     fig = plt.figure()
     axes = fig.add_subplot(1,1,1)
-    axes.contourf(NU, GAMMA, VOL)
-    axes.set_title("Volum(nu, gamma)")
-    axes.set_xlabel("gamma")
-    axes.set_ylabel("nu")
+    axes.matshow(cov0, cmap=cm.Greens)
+    axes.set_title("covariance of training data")
 
-    # fig.savefig("/Users/hoefler/assistant/volume.pdf")
+    pca =  PCA(pp.traindata)
+    cov0pca = np.cov(pca.project(pp.traindata).T)
+    corr0pca = np.corrcoef(pca.project(pp.traindata).T)
+    det0pca = la.det(cov0pca)
+    fig = plt.figure()
+    axes = fig.add_subplot(1,1,1)
+    axes.matshow(cov0pca, cmap=cm.Greens)
+    axes.set_title("covariance of PCA training data")
+
+    # print "rank:", np.rank(corr0)
+    # print "det(pca)=%g" %(la.det(corr0))
+    # print "det(pca)=%g" %(np.trace(corr0pca))
+
+    # #pca =  PCA(pp.testdata)
+    # cov1 = np.cov(pp.testdata.T)
+    # fig = plt.figure()
+    # axes = fig.add_subplot(1,1,1)
+    # axes.matshow(cov1, cmap=cm.Greens)
+    # axes.set_title("covariance of test data")
+
+    # cov1_pca = np.cov(pca.project(pp.testdata).T)
+    # fig = plt.figure()
+    # axes = fig.add_subplot(1,1,1)
+    # axes.matshow(cov1_pca, cmap=cm.Greens)
+    # axes.set_title("covariance of PCA training data")
+
+
 
     plt.show()
