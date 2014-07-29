@@ -86,6 +86,8 @@ class ViewToolBar(QtGui.QToolBar):
         self.nItems.setSingleStep(50)
         self.nItems.setValue(250)
 
+        self.classification = QtGui.QCheckBox("classifcation", self)
+
         self.zoom =  QtGui.QComboBox(self)
         self.zoom.addItem("100%", QtCore.QVariant(1.0))
         self.zoom.addItem("75%", QtCore.QVariant(0.75))
@@ -107,6 +109,7 @@ class ViewToolBar(QtGui.QToolBar):
         self.addWidget(self.galSize)
         self.addWidget(self.nItems)
         self.addWidget(self.zoom)
+        self.addWidget(self.classification)
 
     def updateToolbar(self, props):
 

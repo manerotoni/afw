@@ -43,6 +43,8 @@ class AfMainWindow(QtGui.QMainWindow):
         self.setupToolbar()
         self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
         self.toolBar.valueChanged.connect(self.tileview.zoom)
+        self.toolBar.classification.stateChanged.connect(
+            self.tileview.toggleClassIndicators)
         self.setCentralWidget(self.tileview)
         self.setupDock()
         self.setupProgressBar()

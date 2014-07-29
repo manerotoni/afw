@@ -76,6 +76,7 @@ class AfGraphicsView(MouseWheelView):
         self.gsize = gsize
         self._grid = ItemGrid(self.gsize+CellGraphicsItem.BOUNDARY)
         self._hdf = None
+        self._show_classes = False
 
         scene = AfGraphicsScene()
         scene.setBackgroundBrush(QtCore.Qt.darkGray)
@@ -108,6 +109,11 @@ class AfGraphicsView(MouseWheelView):
                                              triggered=self.scene().selectAll)
         self.actionAdd = QtGui.QAction(
             "&add to panel", self, triggered=self.parent().addToToolbox)
+
+    def toggleClassIndicators(self, state):
+        self._show_classes = state
+        for item in self.items:
+            item.toggleClassIndicator(state)
 
     def selectedItems(self):
         return self.scene().selectedItems()
@@ -149,5 +155,6 @@ class AfGraphicsView(MouseWheelView):
     def addItem(self, item):
         citem = CellGraphicsItem(item)
         citem.setPos(*self._grid.newPos(citem))
+        citem.toggleClassIndicator(self._show_classes)
         self.scene().addItem(citem)
         self.scene().setSceneRect(self._grid.rect(5.0))

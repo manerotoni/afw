@@ -71,13 +71,13 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     def _addClassRect(self):
         brush = QtGui.QBrush()
-        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush.setStyle(QtCore.Qt.NoBrush)
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
-#        pen.setColor(Colors.neutral)
+        pen.setColor(Colors.neutral)
 
-        pen.setWidthF(0.0)
-        #pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        # pen.setWidthF(0.0)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
 
         rect = self._classRect()
         self._classrect = QtGui.QGraphicsRectItem(rect)
@@ -112,15 +112,22 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._selrect.hide()
         self.addToGroup(self._selrect)
 
-    def setClassColor(self, color):
+    def setClass(self, class_):
+
         brush = QtGui.QBrush()
         brush.setStyle(QtCore.Qt.SolidPattern)
-        brush.setColor(Colors.neutral)
+        brush.setColor(class_.color)
+        pen = QtGui.QPen()
+        pen.setColor(class_.color)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
 
-
-        #pen = QtGui.QPen()
-        #pen.setColor(color)
         self._classrect.setBrush(brush)
+
+    def toggleClassIndicator(self, state):
+        if state:
+            self._classrect.show()
+        else:
+            self._classrect.hide()
 
     @property
     def pixmap(self):
