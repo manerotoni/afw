@@ -60,6 +60,33 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def __str__(self):
         return "%s-%s" %(self.frame, self.objid)
 
+    def _classRect(self):
+        rect0 = self.childrenBoundingRect()
+        rect = QtCore.QRectF()
+        size = self.BOUNDARY*5
+        rect.setX(rect0.x())
+        rect.setY(rect0.y() + rect0.height() - size)
+        rect.setSize(QtCore.QSizeF(size, size))
+        return rect
+
+    def _addClassRect(self):
+        brush = QtGui.QBrush()
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush.setColor(Colors.neutral)
+        pen = QtGui.QPen()
+#        pen.setColor(Colors.neutral)
+
+        pen.setWidthF(0.0)
+        #pen.setJoinStyle(QtCore.Qt.MiterJoin)
+
+        rect = self._classRect()
+        self._classrect = QtGui.QGraphicsRectItem(rect)
+        self._classrect.setBrush(brush)
+        self._classrect.setPen(pen)
+        self._classrect.setZValue(90)
+        self._classrect.show()
+        self.addToGroup(self._classrect)
+
     def _selectorRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
@@ -85,6 +112,16 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._selrect.hide()
         self.addToGroup(self._selrect)
 
+    def setClassColor(self, color):
+        brush = QtGui.QBrush()
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush.setColor(Colors.neutral)
+
+
+        #pen = QtGui.QPen()
+        #pen.setColor(color)
+        self._classrect.setBrush(brush)
+
     @property
     def pixmap(self):
         return self._pixmap
@@ -96,6 +133,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         item.setPos(self.pos())
         self.addToGroup(item)
         self._addSelectorRect()
+        self._addClassRect()
 
     def paint(self, painter, option, widget):
         if self.isSelected():
