@@ -94,7 +94,7 @@ class Ch5Reader(HdfBaseReader, cellh5.CH5File):
         return self._hdf[self._features_def_key].keys()
 
     def featureNames(self, region):
-        path = "%s/%s/objcect_features" %(self._features_def_key, region)
+        path = "%s/%s/object_features" %(self._features_def_key, region)
         return self._hdf[path]["name"]
 
     def numberItems(self, coordinate):
