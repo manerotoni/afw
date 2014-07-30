@@ -50,17 +50,6 @@ class AfSideBarWidget(QtGui.QWidget):
         items = self.tileview.selectedItems()
         self.addItems(items)
 
-    def _featureTable(self):
-        """Yields a feature matrix from the items in the Sidebar. One feature
-        vector per row."""
-        nitems = self.model.rowCount()
-        nfeatures = self.model.items[0].features.size
-        ftrs = np.empty((nitems, nfeatures))
-
-        for i, item in enumerate(self.model.iterItems()):
-            ftrs[i, :] = item.features
-        return ftrs
-
 
 class AfSortWidget(AfSideBarWidget):
 
@@ -102,7 +91,7 @@ class AfSortWidget(AfSideBarWidget):
             return
 
         elif sorter.needs_treedata:
-            sorter.treedata = self._featureTable()
+            sorter.treedata = self.model.features
 
         dist = sorter()
 
@@ -119,15 +108,38 @@ class AfAnnotationWidget(AfSideBarWidget):
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
 
-        self.saveBtn.clicked.connect(self.onSave)
-        self.classifiers.addItems(Classifier.classifiers())
+        self.stack = QtGui.QStackedWidget(self)
+        self.stack.setSizePolicy(
+            QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum,
+                              QtGui.QSizePolicy.Maximum)
+            )
 
-        self.model = AfOneClassSvmItemModel(self)
+        self.sbox.addWidget(self.stack)
+        self.saveBtn.clicked.connect(self.onSave)
+
+        self._setupClassifiers()
+        self.classifiers.currentIndexChanged.connect(
+            self.stack.setCurrentIndex)
+
         self.treeview.setModel(self.model)
 
         self.removeBtn.clicked.connect(self.onRemove)
         self.removeAllBtn.clicked.connect(self.onRemoveAll)
         self.addBtn.clicked.connect(self.onAdd)
+
+    def _setupClassifiers(self):
+        for name in Classifier.classifiers():
+            clf = Classifier(name)
+            self.classifiers.addItem(name)
+            self.stack.addWidget(clf.parameterWidget(self))
+            setattr(self, name, clf)
+
+    def currentClassifier(self):
+        return getattr(self, self.classifiers.currentText())
+
+    @property
+    def model(self):
+        return self.currentClassifier().model
 
     def onSave(self):
 
@@ -137,6 +149,17 @@ class AfAnnotationWidget(AfSideBarWidget):
             return
 
         ftrnames = self.parent.loader.featureNames
-        ftrs = self._featureTable()
-        np.savetxt(fname, ftrs, delimiter=",", header=",".join(ftrnames))
+        np.savetxt(fname, self.model.features,
+                   delimiter=",", header=",".join(ftrnames))
         QMessageBox.information(self, "information", "data successfully saved")
+
+    def addItems(self, items):
+        super(AfAnnotationWidget, self).addItems(items)
+
+        clf = self.currentClassifier()
+        clf.train(self.model.features)
+
+    def classify(self, item):
+        clf = self.currentClassifier()
+        predition = clf.predict(item.features)
+        print preditions

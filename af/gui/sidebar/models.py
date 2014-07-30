@@ -11,6 +11,7 @@ __licence__ = 'GPL'
 __all__ =("AfOneClassSvmItemModel", )
 
 
+import numpy as np
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
@@ -48,6 +49,18 @@ class AfStandardItemModel(QtGui.QStandardItemModel):
         """Iterator over all items ordered from top to bottom."""
         for i in xrange(self.rowCount()):
             yield self._items[int(self.item(i).text())]
+
+    @property
+    def features(self):
+        """Yields a feature matrix from the items in the Sidebar. One feature
+        vector per row."""
+        nitems = self.rowCount()
+        nfeatures = self.items[0].features.size
+        features = np.empty((nitems, nfeatures))
+
+        for i, item in enumerate(self.iterItems()):
+            features[i, :] = item.features
+        return features
 
 
 class AfSorterItemModel(AfStandardItemModel):

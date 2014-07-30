@@ -240,7 +240,7 @@ class AfEnhancerWidget(QtGui.QWidget):
 
         vbox = QtGui.QVBoxLayout(self)
         self.channelBox = QtGui.QComboBox(self)
-        self.stack = QtGui.QStackedWidget()
+        self.stack = QtGui.QStackedWidget(self)
 
         vbox.addWidget(self.channelBox)
         vbox.addWidget(self.stack)

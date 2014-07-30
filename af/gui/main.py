@@ -41,7 +41,10 @@ class AfMainWindow(QtGui.QMainWindow):
         self._lastdir = expanduser("~")
 
         self.setupToolbar()
-        self.tileview = AfGraphicsView(parent=self, gsize=self.toolBar.galsize)
+        self.tileview = AfGraphicsView(
+            parent=self,
+            gsize=self.toolBar.galsize,
+            show_classes=self.toolBar.classification.isChecked())
         self.toolBar.valueChanged.connect(self.tileview.zoom)
         self.toolBar.classification.stateChanged.connect(
             self.tileview.toggleClassIndicators)
