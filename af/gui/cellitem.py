@@ -119,10 +119,14 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._classrect.setPen(class_.pen)
 
     def toggleClassIndicator(self, state):
+
         if state:
             self._classrect.show()
         else:
+            # item group does not keep the selection state
+            isSelected = self.isSelected()
             self._classrect.hide()
+            self.setSelected(isSelected)
 
     @property
     def pixmap(self):

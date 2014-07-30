@@ -75,15 +75,7 @@ class AfSortWidget(AfSideBarWidget):
     def onSort(self):
 
         all_items = self.tileview.items
-        nitems = len(all_items)
-        nfeatures = all_items[0].features.size
-        data = np.empty((nitems, nfeatures))
-
-        # all featurs of all items
-        for i, item in enumerate(all_items):
-            data[i, :] = item.features
-
-        sorter = Sorter(self.sortAlgorithm.currentText(), data)
+        sorter = Sorter(self.sortAlgorithm.currentText(), all_items)
 
         if self.model.rowCount() == 0 and sorter.needs_treedata:
             QMessageBox.warning(self, 'no items added',
@@ -94,7 +86,6 @@ class AfSortWidget(AfSideBarWidget):
             sorter.treedata = self.model.features
 
         dist = sorter()
-
         for d, item in zip(dist, all_items):
             item.sortkey = d
 

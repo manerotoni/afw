@@ -32,6 +32,18 @@ class Sorter(object):
         return cls._classes.keys()
 
 
+    def _data_from_items(self, items):
+
+        nitems = len(items)
+        nfeatures = items[0].features.size
+        data = np.empty((nitems, nfeatures))
+
+        for i, item in enumerate(items):
+            data[i, :] = item.features
+
+        return data
+
+
 class PcaBackProjectedDistance(Sorter):
     """Sorting data by performing a PCA, taking only 99% of the variance,
     back projecting the the reduced feature set and sort after the difference
@@ -39,10 +51,9 @@ class PcaBackProjectedDistance(Sorter):
 
     needs_treedata = False
 
-    def __init__(self, data, *args, **kw):
+    def __init__(self, items, *args, **kw):
         super(PcaBackProjectedDistance, self).__init__(*args, **kw)
-        self.data = data
-
+        self.data = self._data_from_items(items)
 
     def __call__(self):
 
@@ -70,9 +81,9 @@ class EucledianDistance(Sorter):
 
     needs_treedata = True
 
-    def __init__(self, data, *args, **kw):
+    def __init__(self, items, *args, **kw):
         super(EucledianDistance, self).__init__(*args, **kw)
-        self.data = data
+        self.data = self._data_from_items(items)
         self.treedata = None
 
     def __call__(self):
@@ -90,8 +101,14 @@ class EucledianDistance(Sorter):
         return np.sqrt(distsq)
 
 
-# class ClassLabel(Sorter):
+class ClassLabel(Sorter):
+    """Sorts items by class label."""
 
-#     def __init__(self, data, *args, **kw):
-#         super(PcaBackProjectedDistance, self).__init__(*args, **kw)
-#         self.data = data
+    needs_treedata = False
+
+    def __init__(self, items, *args, **kw):
+        super(ClassLabel, self).__init__(*args, **kw)
+        self.class_labels = [i.class_.label for i in items]
+
+    def __call__(self):
+        return -1*np.array(self.class_labels)

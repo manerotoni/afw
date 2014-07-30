@@ -41,7 +41,10 @@ class ItemClass(QtCore.QObject):
     def brush(self):
         brush = QtGui.QBrush()
         brush.setColor(self.color)
-        brush.setStyle(Qt.SolidPattern)
+        if self.label is None:
+            brush.setStyle(Qt.NoBrush)
+        else:
+            brush.setStyle(Qt.SolidPattern)
         return brush
 
 # TODO need design pattern QFactory
@@ -49,11 +52,13 @@ class Classifier(object):
     """Parent factory for all classifier classes."""
 
     __metaclass__ = Factory
+    UNCLASSIFIED = ItemClass("unclassifier", QtGui.QColor("white"), None)
 
     def __init__(self, *args, **kw):
         super(Classifier, self).__init__(*args, **kw)
         self._pp = None # setup preprocessor in the train method
         self.model = None
+        self._clf = None
 
     @classmethod
     def classifiers(cls):
@@ -64,6 +69,10 @@ class Classifier(object):
 
     def train(self, features):
         raise NotImplementedError
+
+    def predict(self, features):
+        return [self.UNCLASSIFIED]*features.shape[0]
+
 
 
 class OneClassSvm(Classifier):
@@ -117,5 +126,8 @@ class OneClassSvm(Classifier):
         print("classifier trained")
 
     def predict(self, features):
-        predictions = self._clf.predict(self._pp(features))
-        return [self.classes[pred] for pred in predictions]
+        if self._clf is None:
+            return super(OneClassSvm, self).predict(features)
+        else:
+            predictions = self._clf.predict(self._pp(features))
+            return [self.classes[pred] for pred in predictions]
