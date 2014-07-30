@@ -1,7 +1,7 @@
 """
 pattern.py
 
-Some design pattern collected
+Some design pattern collected.
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
@@ -11,7 +11,6 @@ __all__ = ["Singleton", "QSingleton", "Factory"]
 
 
 from PyQt4.QtCore import pyqtWrapperType
-import os
 
 
 class Singleton(type):

@@ -41,6 +41,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         super(CellGraphicsItem, self).__init__(*args, **kw)
 
         self._pixmap = None
+        self.class_ = None
         self.setPixmap(item.pixmap())
         self.features = item.features
         self.frame = item.frame
@@ -113,15 +114,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.addToGroup(self._selrect)
 
     def setClass(self, class_):
-
-        brush = QtGui.QBrush()
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        brush.setColor(class_.color)
-        pen = QtGui.QPen()
-        pen.setColor(class_.color)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
-
-        self._classrect.setBrush(brush)
+        self.class_ = class_
+        self._classrect.setBrush(class_.brush)
+        self._classrect.setPen(class_.pen)
 
     def toggleClassIndicator(self, state):
         if state:

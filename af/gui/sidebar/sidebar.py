@@ -159,7 +159,8 @@ class AfAnnotationWidget(AfSideBarWidget):
         clf = self.currentClassifier()
         clf.train(self.model.features)
 
-    def classify(self, item):
+    def classify(self, items):
         clf = self.currentClassifier()
-        predition = clf.predict(item.features)
-        print preditions
+        for item in items:
+            prediction = clf.predict(item.features.reshape((1, -1)))
+            item.setClass(prediction[0])

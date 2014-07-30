@@ -11,6 +11,7 @@ from os.path import splitext, basename, expanduser
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFileDialog
 
 from af import version
@@ -35,7 +36,6 @@ class AfMainWindow(QtGui.QMainWindow):
         self.setWindowTitle("AfMainWindow")
         self.sorting.adjustSize()
 
-
         self.loaderThread = AfThread(self)
         self.loader = AfLoader()
         self._lastdir = expanduser("~")
@@ -47,7 +47,9 @@ class AfMainWindow(QtGui.QMainWindow):
             show_classes=self.toolBar.classification.isChecked())
         self.toolBar.valueChanged.connect(self.tileview.zoom)
         self.toolBar.classification.stateChanged.connect(
-            self.tileview.toggleClassIndicators)
+            self.tileview.toggleClassIndicators, Qt.QueuedConnection)
+
+        self.toolBar.classification.stateChanged.connect(self.classifyItems)
         self.setCentralWidget(self.tileview)
         self.setupDock()
         self.setupProgressBar()
@@ -116,6 +118,10 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loaderThread.finished.connect(frame.hide)
         frame.hide()
         self.statusBar().addPermanentWidget(frame)
+
+    def classifyItems(self, state):
+        if state:
+            self.annotation.classify(self.tileview.items)
 
     def updateToolbars(self, props):
         self.navToolBar.updateToolbar(props.coordspace)

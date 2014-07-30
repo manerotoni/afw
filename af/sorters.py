@@ -88,3 +88,10 @@ class EucledianDistance(Sorter):
         distsq = [np.power((x - mu), 2).sum() for x in data_zs]
 
         return np.sqrt(distsq)
+
+
+# class ClassLabel(Sorter):
+
+#     def __init__(self, data, *args, **kw):
+#         super(PcaBackProjectedDistance, self).__init__(*args, **kw)
+#         self.data = data
