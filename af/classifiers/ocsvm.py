@@ -5,7 +5,7 @@ classifier.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("Classifier")
+__all__ = ("OneClassSvm", )
 
 from sklearn import svm
 from PyQt4 import QtGui
@@ -13,6 +13,7 @@ from PyQt4 import QtGui
 from af.preprocessor import PreProcessor
 from af.gui.sidebar.models import AfOneClassSvmItemModel
 from .itemclass import ItemClass
+from .classifiers import Classifier
 
 
 class OneClassSvm(Classifier):
@@ -61,10 +62,8 @@ class OneClassSvm(Classifier):
 
     def train(self, features):
         self._pp = PreProcessor(features)
-        self._clf = svm.OneClassSVM(C=0.66, nu=self.nu, kernel="rbf",
-                                    gamma=self.gamma)
+        self._clf = svm.OneClassSVM(nu=self.nu, kernel="rbf", gamma=self.gamma)
         self._clf.fit(self._pp.traindata)
-        print("classifier trained")
 
     def predict(self, features):
         if self._clf is None:
