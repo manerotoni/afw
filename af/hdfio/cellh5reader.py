@@ -134,7 +134,9 @@ class Ch5Reader(HdfBaseReader, cellh5.CH5File):
 
         for index in indices[:nitems]:
             path = self._features_key %coord
-            site = self._open_position(coord['plate'], coord['well'], coord['site'])
+            site = self._open_position(coord['plate'],
+                                       coord['well'],
+                                       coord['site'])
             gal = site.get_gallery_image(index, coord['region'], size)
             cnt = site.get_crack_contour(index, coord['region'], size=size)
             ftr = self._hdf[path][index]

@@ -49,7 +49,6 @@ class AfMainWindow(QtGui.QMainWindow):
         self.toolBar.classification.stateChanged.connect(
             self.tileview.toggleClassIndicators, Qt.QueuedConnection)
 
-        self.toolBar.classification.stateChanged.connect(self.classifyItems)
         self.setCentralWidget(self.tileview)
         self.setupDock()
         self.setupProgressBar()
@@ -118,10 +117,6 @@ class AfMainWindow(QtGui.QMainWindow):
         self.loaderThread.finished.connect(frame.hide)
         frame.hide()
         self.statusBar().addPermanentWidget(frame)
-
-    def classifyItems(self, state):
-        if state:
-            self.annotation.classify(self.tileview.items)
 
     def updateToolbars(self, props):
         self.navToolBar.updateToolbar(props.coordspace)

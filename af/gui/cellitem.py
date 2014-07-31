@@ -8,9 +8,10 @@ __licence__ = 'GPL'
 __all__ = ("CellGraphicsItem", "PainterPathItem", "Colors")
 
 
-
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+
+from af.classifiers.itemclass import UnClassified
 
 
 class Colors(object):
@@ -41,7 +42,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         super(CellGraphicsItem, self).__init__(*args, **kw)
 
         self._pixmap = None
-        self.class_ = None
+        self.class_ = UnClassified
         self.setPixmap(item.pixmap())
         self.features = item.features
         self.frame = item.frame

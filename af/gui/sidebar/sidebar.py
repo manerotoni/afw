@@ -19,9 +19,8 @@ from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QFileDialog
 
 from af.sorters import Sorter
-from af.classifiers import Classifier
-
-from af.gui.sidebar.models import AfOneClassSvmItemModel, AfSorterItemModel
+from af.classifiers.classifiers import Classifier
+from .models import  AfSorterItemModel
 
 
 class AfSideBarWidget(QtGui.QWidget):
@@ -30,7 +29,6 @@ class AfSideBarWidget(QtGui.QWidget):
         super(AfSideBarWidget, self).__init__(parent, *args, **kw)
         self.tileview = tileview
         self.parent = parent
-        self._items = list()
 
     def onRemove(self):
         model_indices =  self.treeview.selectionModel().selectedRows()
@@ -149,6 +147,8 @@ class AfAnnotationWidget(AfSideBarWidget):
 
         clf = self.currentClassifier()
         clf.train(self.model.features)
+
+        self.classify(self.tileview.items)
 
     def classify(self, items):
         clf = self.currentClassifier()

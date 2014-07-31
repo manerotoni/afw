@@ -38,8 +38,13 @@ class AfStandardItemModel(QtGui.QStandardItemModel):
             root.appendRow(self.prepareRowItems(item))
 
     def removeRow(self, row):
+        print "deleteing item", row, "index: ", self.item(row).text()
         del self._items[int(self.item(row).text())]
         super(AfStandardItemModel, self).removeRow(row)
+
+    def clear(self):
+        super(AfStandardItemModel, self).clear()
+        self._items.clear()
 
     @property
     def items(self):
