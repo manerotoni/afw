@@ -23,15 +23,15 @@ from af.gui.importdlg import ImportDialog
 from af.threading import AfThread
 from af.threading import AfLoader
 
-from af import af_rc
+from af import at_rc
 
-class AfMainWindow(QtGui.QMainWindow):
+class AtMainWindow(QtGui.QMainWindow):
 
     coordUpdated = QtCore.pyqtSignal("PyQt_PyObject")
     abort = QtCore.pyqtSignal()
 
     def __init__(self, file_=None, *args, **kw):
-        super(AfMainWindow, self).__init__(*args, **kw)
+        super(AtMainWindow, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle(version.appstr)
         self.sorting.adjustSize()

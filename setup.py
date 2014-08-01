@@ -15,8 +15,8 @@ from distutils.core import setup
 
 import build_helpers
 
-pyrcc_opts = {'infile': join('qrc', 'af_rc.qrc'),
-              'outfile': join('af', 'af_rc.py'),
+pyrcc_opts = {'infile': join('qrc', 'at_rc.qrc'),
+              'outfile': join('af', 'at_rc.py'),
               'pyrccbin': 'pyrcc4'}
 
 setup(name='AnnotationTool',

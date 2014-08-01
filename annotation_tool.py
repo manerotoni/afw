@@ -15,7 +15,7 @@ sip.setapi('QString', 2)
 sip.setapi('QVariant', 1)
 
 from PyQt4 import QtGui
-from af.gui import AfMainWindow
+from af.gui import AtMainWindow
 
 
 if __name__ == '__main__':
@@ -26,6 +26,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     app = QtGui.QApplication(sys.argv)
-    mw = AfMainWindow(args.file)
+    mw = AtMainWindow(args.file)
     mw.show()
     sys.exit(app.exec_())
