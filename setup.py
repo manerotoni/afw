@@ -15,7 +15,7 @@ from distutils.core import setup
 
 import build_helpers
 
-pyrcc_opts = {'infile': join('qresources', 'af_rc.qrc'),
+pyrcc_opts = {'infile': join('qrc', 'af_rc.qrc'),
               'outfile': join('af', 'af_rc.py'),
               'pyrccbin': 'pyrcc4'}
 
