@@ -5,14 +5,18 @@ Functions and classes for the build process.
 
 """
 
+
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'LGPL'
+
+__all__ = ('Build', 'PyRcc')
 
 
 from os.path import isfile
 import subprocess
 from  distutils.core import Command
 from  distutils.command.build import build as _build
+
 
 class Build(_build):
     """Custom build command for distutils to have the qrc files compiled before
@@ -22,6 +26,7 @@ class Build(_build):
     def run(self):
         self.run_command('pyrcc')
         _build.run(self)
+
 
 class PyRcc(Command):
     """Custom command to compile Qt4-qrc files"""
