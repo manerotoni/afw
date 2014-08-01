@@ -10,6 +10,6 @@ MAJOR = 0
 MINOR = 1
 
 organisation = "IMBA"
-appname = "Assistant"
+appname = "AnnotationTool"
 version = "%s.%s" %(MAJOR, MINOR)
 appstr = '%s-%s' %(appname, version)

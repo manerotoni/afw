@@ -33,7 +33,7 @@ class AfMainWindow(QtGui.QMainWindow):
     def __init__(self, file_=None, *args, **kw):
         super(AfMainWindow, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
-        self.setWindowTitle("AfMainWindow")
+        self.setWindowTitle(version.appstr)
         self.sorting.adjustSize()
 
         self.loaderThread = AfThread(self)
