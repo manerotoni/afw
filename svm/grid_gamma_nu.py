@@ -37,7 +37,7 @@ if __name__ == "__main__":
     fig, axes = plt.subplots(5, 5, sharex=True, sharey=True,
                              **{"figsize": (25, 25)})
 
-    nus= np.linspace(0.01, 0.9, 5)
+    nus = np.linspace(0.01, 0.9, 5)
     gammas = np.linspace(0.01, 0.9, 5)
 
 
