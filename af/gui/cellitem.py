@@ -114,6 +114,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._selrect.hide()
         self.addToGroup(self._selrect)
 
+    def clearClass(self):
+        self.setClass(UnClassified)
+
     def setClass(self, class_):
         self.class_ = class_
         self._classrect.setBrush(class_.brush)

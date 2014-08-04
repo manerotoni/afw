@@ -142,16 +142,23 @@ class AfAnnotationWidget(AfSideBarWidget):
                    delimiter=",", header=",".join(ftrnames))
         QMessageBox.information(self, "information", "data successfully saved")
 
+    def onRemoveAll(self):
+        super(AfAnnotationWidget, self).onRemoveAll()
+        for item in self.tileview.items:
+            item.clearClass()
+
+    def onRemove(self):
+        super(AfAnnotationWidget, self).onRemove()
+        self.classify(self.tileview.items)
+
     def addItems(self, items):
         super(AfAnnotationWidget, self).addItems(items)
-
-        clf = self.currentClassifier()
-        clf.train(self.model.features)
-
         self.classify(self.tileview.items)
 
     def classify(self, items):
         clf = self.currentClassifier()
+        clf.train(self.model.features)
+
         for item in items:
             prediction = clf.predict(item.features.reshape((1, -1)))
             item.setClass(prediction[0])
