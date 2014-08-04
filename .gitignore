@@ -3,6 +3,7 @@
 .DS_Store
 .#*
 #.*
-af_rc.py
+at_rc.py
 *.tif
 *.tiff
+build
