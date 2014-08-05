@@ -23,27 +23,31 @@ class AfStandardItemModel(QtGui.QStandardItemModel):
         super(AfStandardItemModel, self).__init__(*args, **kw)
         self._items = dict()
         self.insertColumns(0, 3)
+        self._setHeader()
+
+    def _setHeader(self):
         # default columns
         self.setHeaderData(0, Qt.Horizontal, QtCore.QVariant("item"))
         self.setHeaderData(1, Qt.Horizontal, QtCore.QVariant("frame"))
-        self.setHeaderData(2, Qt.Horizontal, QtCore.QVariant("objed-id"))
+        self.setHeaderData(2, Qt.Horizontal, QtCore.QVariant("label"))
 
     def prepareRowItems(self, *args, **kw):
         raise NotImplementedError
 
     def addItem(self, item):
+
         if not self._items.has_key(item.index):
             self._items[item.index] = item
             root = self.invisibleRootItem()
             root.appendRow(self.prepareRowItems(item))
 
     def removeRow(self, row):
-        print "deleteing item", row, "index: ", self.item(row).text()
         del self._items[int(self.item(row).text())]
         super(AfStandardItemModel, self).removeRow(row)
 
     def clear(self):
-        super(AfStandardItemModel, self).clear()
+        for i in range(len(self._items)):
+            self.removeRow(0)
         self._items.clear()
 
     @property

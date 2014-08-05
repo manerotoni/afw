@@ -50,10 +50,7 @@ class AfLoader(QtCore.QObject):
         return self._feature_names
 
     def openFile(self, file_):
-
-        if self._h5f is not None:
-            self._h5f.close()
-
+        self.close()
         self._h5f = guessHdfType(file_)
         self.fileOpened.emit(self._h5f.fileinfo)
 
@@ -70,6 +67,7 @@ class AfLoader(QtCore.QObject):
         if self._h5f is not None:
             self._h5f.close()
             self._feature_names = None
+            self._h5f = None
 
     def abort(self):
         self._aborted = True
