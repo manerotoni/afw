@@ -176,7 +176,8 @@ class ImportDialog(QtGui.QDialog):
 
             if self.showBBoxes.isChecked():
                 self.cbar.drawRectangles(mp.objects.centers.values(),
-                                         self.segdlg.galSize.value())
+                                         self.segdlg.galSize.value(),
+                                         isize=self.metadata.size)
 
     def onError(self, exc):
         self.startBtn.setText("start")
