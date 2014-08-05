@@ -158,3 +158,11 @@ class AfGraphicsView(MouseWheelView):
         citem.toggleClassIndicator(self._show_classes)
         self.scene().addItem(citem)
         self.scene().setSceneRect(self._grid.rect(5.0))
+
+    def selectByIndex(self, index):
+        for item in self.items:
+            if item.index == index:
+                item.setSelected(True)
+                self.centerOn(item)
+            else:
+                item.setSelected(False)

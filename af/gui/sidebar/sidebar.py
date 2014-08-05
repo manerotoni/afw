@@ -48,6 +48,10 @@ class AfSideBarWidget(QtGui.QWidget):
         items = self.tileview.selectedItems()
         self.addItems(items)
 
+    def onActivated(self, index):
+        item = self.model.item(index.row())
+        self.tileview.selectByIndex(int(item.text()))
+
 
 class AfSortWidget(AfSideBarWidget):
 
@@ -57,6 +61,7 @@ class AfSortWidget(AfSideBarWidget):
         super(AfSortWidget, self).__init__(*args, **kw)
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
+        self.treeview.activated.connect(self.onActivated)
 
         self.sortAlgorithm.addItems(Sorter.sorters())
 
@@ -92,10 +97,12 @@ class AfSortWidget(AfSideBarWidget):
 
 class AfAnnotationWidget(AfSideBarWidget):
 
+
     def __init__(self, *args, **kw):
         super(AfAnnotationWidget, self).__init__(*args, **kw)
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
+        self.treeview.activated.connect(self.onActivated)
 
         self.stack = QtGui.QStackedWidget(self)
         self.stack.setSizePolicy(

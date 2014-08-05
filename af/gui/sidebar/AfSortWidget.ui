@@ -41,7 +41,7 @@
         <enum>QFrame::Sunken</enum>
        </property>
        <property name="selectionMode">
-        <enum>QAbstractItemView::MultiSelection</enum>
+        <enum>QAbstractItemView::ContiguousSelection</enum>
        </property>
        <property name="iconSize">
         <size>

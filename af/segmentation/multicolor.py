@@ -64,7 +64,7 @@ class MultiChannelProcessor(object):
 
     def _gallery_image(self, center, gallery_size=50):
         height, width, nchannels = self.image.shape
-        halfsize = np.floor(gallery_size/2.0)
+        halfsize = int(np.floor(gallery_size/2.0))
 
         xmin = center.x - halfsize
         xmax = xmin + gallery_size
