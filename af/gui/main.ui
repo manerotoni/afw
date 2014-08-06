@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -125,7 +125,10 @@
     <string>Quit</string>
    </property>
    <property name="shortcut">
-    <string>Q</string>
+    <string>Ctrl+Q</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
    </property>
   </action>
   <action name="actionImport">
@@ -158,7 +161,7 @@
     <string>open File</string>
    </property>
    <property name="shortcut">
-    <string>O</string>
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionCloseHdf">
@@ -166,12 +169,12 @@
     <string>close File</string>
    </property>
    <property name="shortcut">
-    <string>C</string>
+    <string>Ctrl+C</string>
    </property>
   </action>
  </widget>
  <resources>
-  <include location="../../qresources/af_rc.qrc"/>
+  <include location="../../qrc/at_rc.qrc"/>
  </resources>
  <connections>
   <connection>
