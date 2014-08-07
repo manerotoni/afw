@@ -64,6 +64,8 @@ class AfStandardItemModel(QtGui.QStandardItemModel):
         """Yields a feature matrix from the items in the Sidebar. One feature
         vector per row."""
         nitems = self.rowCount()
+        if not nitems:
+            return
         nfeatures = self.items[0].features.size
         features = np.empty((nitems, nfeatures))
 

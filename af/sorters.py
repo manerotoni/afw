@@ -12,7 +12,7 @@ from af.mining import filter_nans
 from af.mining import ZScore, PCA
 
 
-class MinNumberSamplesError(Exception):
+class SortingError(Exception):
     pass
 
 
@@ -49,8 +49,6 @@ class PcaBackProjectedDistance(Sorter):
     back projecting the the reduced feature set and sort after the difference
     to the original features."""
 
-    needs_treedata = False
-
     def __init__(self, items, *args, **kw):
         super(PcaBackProjectedDistance, self).__init__(*args, **kw)
         self.data = self._data_from_items(items)
@@ -79,7 +77,6 @@ class EucledianDistance(Sorter):
     similarity measurement. Sorting is not performed, the __call__() method
     computes only the distance measure."""
 
-    needs_treedata = True
 
     def __init__(self, items, *args, **kw):
         super(EucledianDistance, self).__init__(*args, **kw)
@@ -88,6 +85,10 @@ class EucledianDistance(Sorter):
 
     def __call__(self):
         # z-scoring
+
+        if self.treedata is None:
+            raise SortingError("No examples for similarity measure available!")
+
         zs = ZScore(self.data)
         data_zs = zs.normalize(self.data)
 
@@ -104,11 +105,12 @@ class EucledianDistance(Sorter):
 class ClassLabel(Sorter):
     """Sorts items by class label."""
 
-    needs_treedata = False
-
     def __init__(self, items, *args, **kw):
         super(ClassLabel, self).__init__(*args, **kw)
         self.class_labels = [i.class_.label for i in items]
 
     def __call__(self):
-        return -1*np.array(self.class_labels)
+        try:
+            return -1*np.array(self.class_labels)
+        except TypeError:
+            raise SortingError("No class labels available yet!")

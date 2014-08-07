@@ -80,19 +80,20 @@ class AfSortWidget(AfSideBarWidget):
         all_items = self.tileview.items
         sorter = Sorter(self.sortAlgorithm.currentText(), all_items)
 
-        if self.model.rowCount() == 0 and sorter.needs_treedata:
-            QMessageBox.warning(self, 'no items added',
-                                'You need to add items to the sidebar')
+
+        sorter.treedata = self.model.features
+
+        try:
+            dist = sorter()
+        except Exception as e:
+            QMessageBox.warning(self, 'Warning', str(e))
             return
 
-        elif sorter.needs_treedata:
-            sorter.treedata = self.model.features
+        if dist is not None:
+            for d, item in zip(dist, all_items):
+                item.sortkey = d
+            self.startSorting.emit()
 
-        dist = sorter()
-        for d, item in zip(dist, all_items):
-            item.sortkey = d
-
-        self.startSorting.emit()
 
 
 class AfAnnotationWidget(AfSideBarWidget):
