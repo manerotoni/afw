@@ -22,11 +22,10 @@ class AtTrainingSetIO(HdfBaseReader):
     EXTENSIONS = (".hdf5", ".hdf", ".h5")
     GALLERY_SETTINGS_MUTABLE = False
 
-    def __init__(self, filename, mode="r"):
-        super(AtTrainingSetIO, self).__init__()
-        self._hdf = h5py.File(filename, mode)
+    def __init__(self, *args, **kw):
+        super(AtTrainingSetIO, self).__init__(*args, **kw)
 
-        tset = self._hdf.attrs[HdfDataModel.TRAININGDATA][0]
+        tset = self.attrs[HdfDataModel.TRAININGDATA][0]
         self.dmodel = HdfDataModel(tset)
 
     @property
@@ -44,17 +43,17 @@ class AtTrainingSetIO(HdfBaseReader):
     @property
     def gsize(self):
         # default size of a gallery image
-        return self._hdf[self.dmodel.gallery].shape[0]
+        return self[self.dmodel.gallery].shape[0]
 
     def imageSize(self):
-        return self._hdf[self.dmodel.images].shape[:2]
+        return self[self.dmodel.images].shape[:2]
 
     # XXX set attributes to hdffile
     def numberItems(self, coordinate=None):
-        return self._hdf[self.dmodel.bbox].shape[0]
+        return self[self.dmodel.bbox].shape[0]
 
     def featureNames(self, region=None):
-        return self._hdf[self.dmodel.features].dtype.names
+        return self[self.dmodel.features].dtype.names
 
     def _transposeAndClip(self, contours):
         cnts = list()
@@ -67,7 +66,7 @@ class AtTrainingSetIO(HdfBaseReader):
     def _getAllContours(self, dtable):
 
         hsize = np.floor(self.gsize/2.0)
-        channels = self._hdf[self.dmodel.contours].attrs[self.dmodel.CHANNELS]
+        channels = self[self.dmodel.contours].attrs[self.dmodel.CHANNELS]
         # shift centers to the bottom left corner of the gallery image
         center = np.vstack((dtable["x"], dtable["y"])).T - hsize
 
@@ -79,7 +78,7 @@ class AtTrainingSetIO(HdfBaseReader):
 
         contours = list()
         for channel in channels:
-            cnt = self._hdf[self.dmodel.contours+"/%s" %channel].value
+            cnt = self[self.dmodel.contours+"/%s" %channel].value
             cnt = cnt - center
             cnt = self._transposeAndClip(cnt)
             contours.append(cnt)
@@ -90,13 +89,13 @@ class AtTrainingSetIO(HdfBaseReader):
     def iterItems(self, *args, **kw):
         # need *magic for compatibiliy to other classes
 
-        cols = self._hdf[self.dmodel.images].attrs[self.dmodel.COLORS]
+        cols = self[self.dmodel.images].attrs[self.dmodel.COLORS]
         cols = [str(c) for c in cols] # no unicode
 
-        gal = self._hdf[self.dmodel.gallery].value
-        datatbl = self._hdf[self.dmodel.bbox].value
+        gal = self[self.dmodel.gallery].value
+        datatbl = self[self.dmodel.bbox].value
         cnts = self._getAllContours(datatbl)
-        ftrs = self._hdf[self.dmodel.features].value
+        ftrs = self[self.dmodel.features].value
 
         # dtype read from hdf does not work for sorting, need an 2d table
         ftrs = ftrs.view(dtype=np.float32).reshape(ftrs.shape[0], -1)

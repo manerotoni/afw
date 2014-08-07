@@ -9,7 +9,7 @@ __all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo")
 
 
 
-
+import h5py
 import numpy as np
 from collections import namedtuple
 from qimage2ndarray import gray2qimage
@@ -79,7 +79,7 @@ class HdfItem(object):
             yield self.contour[i], QColor(color)
 
 
-class HdfBaseReader(object):
+class HdfBaseReader(h5py.File):
 
     __metaclass__ = Factory
     GALLERY_SETTINGS_MUTABLE = True
