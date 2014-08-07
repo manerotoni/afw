@@ -48,9 +48,9 @@ class Factory(type):
 
     def __init__(cls, name, bases, dct):
 
-        if len(cls.__mro__) == 2:
+        if not hasattr(cls, "_classes"):
             setattr(cls , "_classes", {})
-        elif len(cls.__mro__)  >= 3:
+        elif hasattr(cls, "_classes"):
             bases[0]._classes[name] = cls
             setattr(bases[0], name, name) # perhaps an int?
         return type.__init__(cls, name, bases, dct)
