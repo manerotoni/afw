@@ -1,11 +1,11 @@
 """
-traininsetreader.py
+traininset.py
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("HdfTrainingSetReader", )
+__all__ = ("AtTrainingSetIO", )
 
 
 import h5py
@@ -14,13 +14,16 @@ from af.hdfio import HdfBaseReader, HdfFileInfo, HdfItem
 from af.hdfio import HdfDataModel
 
 
-class HdfTrainingSetReader(HdfBaseReader):
+class AtTrainingSetIO(HdfBaseReader):
+    """Reader and writer for the annotation tool trainingset data. The file
+    format is a simple hdf5.
+    """
 
     EXTENSIONS = (".hdf5", ".hdf", ".h5")
     GALLERY_SETTINGS_MUTABLE = False
 
     def __init__(self, filename, mode="r"):
-        super(HdfTrainingSetReader, self).__init__()
+        super(AtTrainingSetIO, self).__init__()
         self._hdf = h5py.File(filename, mode)
 
         tset = self._hdf.attrs[HdfDataModel.TRAININGDATA][0]

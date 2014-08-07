@@ -14,7 +14,9 @@ import numpy as np
 from collections import namedtuple
 from qimage2ndarray import gray2qimage
 
+
 from PyQt4.QtGui import QColor
+
 
 from af.pattern import Factory
 from af.gui.painting import AfPainter

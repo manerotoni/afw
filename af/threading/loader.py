@@ -18,7 +18,6 @@ class AfLoader(QtCore.QObject):
 
     itemLoaded = QtCore.pyqtSignal("PyQt_PyObject")
     progressUpdate = QtCore.pyqtSignal(int)
-    # featureNames = QtCore.pyqtSignal(tuple)
     fileOpened = QtCore.pyqtSignal("PyQt_PyObject")
     finished = QtCore.pyqtSignal()
 
