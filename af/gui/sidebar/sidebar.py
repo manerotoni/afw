@@ -122,6 +122,7 @@ class AfAnnotationWidget(AfSideBarWidget):
 
         self.removeBtn.clicked.connect(self.onRemove)
         self.removeAllBtn.clicked.connect(self.onRemoveAll)
+        self.predictBtn.clicked.connect(self.onPredict)
         self.addBtn.clicked.connect(self.onAdd)
 
     def _setupClassifiers(self):
@@ -161,12 +162,18 @@ class AfAnnotationWidget(AfSideBarWidget):
 
     def addItems(self, items):
         super(AfAnnotationWidget, self).addItems(items)
+        self.train()
         self.classify(self.tileview.items)
 
-    def classify(self, items):
+    def onPredict(self):
+        self.classify(self.tileview.items)
+
+    def train(self):
         clf = self.currentClassifier()
         clf.train(self.model.features)
 
+    def classify(self, items):
+        clf = self.currentClassifier()
         for item in items:
             prediction = clf.predict(item.features.reshape((1, -1)))
             item.setClass(prediction[0])

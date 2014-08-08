@@ -103,17 +103,24 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="3" column="1">
         <widget class="QPushButton" name="saveBtn">
          <property name="text">
           <string>save</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="3" column="0">
         <widget class="QPushButton" name="addBtn">
          <property name="text">
           <string>add items</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="predictBtn">
+         <property name="text">
+          <string>predict</string>
          </property>
         </widget>
        </item>
