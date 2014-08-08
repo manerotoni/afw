@@ -40,6 +40,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     def __init__(self, item, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
+        self.setAcceptHoverEvents(True)
 
         self._pixmap = None
         self.class_ = UnClassified
@@ -61,6 +62,11 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     def __str__(self):
         return "%s-%s" %(self.frame, self.objid)
+
+    def hoverEnterEvent(self, event):
+        txt = ("item: %d\n"
+               "class: %s") %(self.index, self.class_.name)
+        QtGui.QToolTip.showText(QtGui.QCursor.pos(), txt)
 
     def _classRect(self):
         rect0 = self.childrenBoundingRect()
