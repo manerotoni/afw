@@ -20,8 +20,8 @@ from af.gui.toolbars import NavToolBar, ViewToolBar
 from af.gui.sidebar import AfSortWidget
 from af.gui.sidebar import AfAnnotationWidget
 from af.gui.importdlg import ImportDialog
-from af.threading import AfThread
-from af.threading import AfLoader
+from af.threading import AtThread
+from af.threading import AtLoader
 
 from af import at_rc
 
@@ -36,8 +36,8 @@ class AtMainWindow(QtGui.QMainWindow):
         self.setWindowTitle(version.appstr)
         self.sorting.adjustSize()
 
-        self.loaderThread = AfThread(self)
-        self.loader = AfLoader()
+        self.loaderThread = AtThread(self)
+        self.loader = AtLoader()
         self._lastdir = expanduser("~")
 
         self.setupToolbar()

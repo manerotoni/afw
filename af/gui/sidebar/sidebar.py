@@ -166,6 +166,7 @@ class AfAnnotationWidget(AfSideBarWidget):
         self.classify(self.tileview.items)
 
     def onPredict(self):
+        self.train()
         self.classify(self.tileview.items)
 
     def train(self):

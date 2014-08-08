@@ -5,7 +5,7 @@ importer.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('AfImporter', 'AbortQWorker')
+__all__ = ('AtImporter', 'AbortQWorker')
 
 from os.path import isdir, dirname
 import traceback
@@ -22,7 +22,7 @@ class AbortQWorker(Exception):
     pass
 
 
-class AfImporter(QtCore.QObject):
+class AtImporter(QtCore.QObject):
 
     PYDELAY = 50 # ms
 
@@ -36,7 +36,7 @@ class AfImporter(QtCore.QObject):
 
     def __init__(self, files, metadata, outfile, channels, colors,
                  seg_params, feature_groups):
-        super(AfImporter, self).__init__()
+        super(AtImporter, self).__init__()
         self._abort = False
 
         if not isdir(dirname(outfile)):

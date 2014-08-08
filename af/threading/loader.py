@@ -5,14 +5,14 @@ loader.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('AfLoader', )
+__all__ = ('AtLoader', )
 
 
 from PyQt4 import QtCore
 from af.hdfio.guesser import guessHdfType
 
 
-class AfLoader(QtCore.QObject):
+class AtLoader(QtCore.QObject):
 
     PYDELAY = 2000 # micro seconds
 
@@ -22,7 +22,7 @@ class AfLoader(QtCore.QObject):
     finished = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kw):
-        super(AfLoader, self).__init__(*args, **kw)
+        super(AtLoader, self).__init__(*args, **kw)
         self._h5f = None
         self._coordinate = None
         self._size = None

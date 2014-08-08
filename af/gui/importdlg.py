@@ -20,8 +20,8 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QMessageBox
 
-from af.threading import AfThread
-from af.threading import AfImporter
+from af.threading import AtThread
+from af.threading import AtImporter
 from af.gui.channelbar import ChannelBar
 from af.gui.segmentationdlg import SegmentationDialog
 from af.segmentation.multicolor import LsmProcessor
@@ -41,7 +41,7 @@ class ImportDialog(QtGui.QDialog):
         self.segdlg = SegmentationDialog(self)
         self.segdlg.hide()
 
-        self.thread = AfThread(self)
+        self.thread = AtThread(self)
         self.viewer.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
                                   QtGui.QSizePolicy.MinimumExpanding)
 
@@ -198,7 +198,7 @@ class ImportDialog(QtGui.QDialog):
             self.viewer.clearRects()
 
             try:
-                worker = AfImporter(self._files,
+                worker = AtImporter(self._files,
                                     self.metadata,
                                     self.outputFile.text(),
                                     self.cbar.checkedChannels(),

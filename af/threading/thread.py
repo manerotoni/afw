@@ -5,7 +5,7 @@ loader.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('AfThread', )
+__all__ = ('AtThread', )
 
 
 import warnings
@@ -15,18 +15,18 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 
-class AfThread(QtCore.QThread):
+class AtThread(QtCore.QThread):
 
     error = QtCore.pyqtSignal("PyQt_PyObject")
 
     def __init__(self, *args, **kw):
-        super(AfThread, self).__init__(*args, **kw)
+        super(AtThread, self).__init__(*args, **kw)
         self.worker = None
 
     def start(self, worker):
         self.worker = worker
         self.worker.moveToThread(self)
-        super(AfThread, self).start()
+        super(AtThread, self).start()
 
     def run(self):
 
