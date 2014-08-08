@@ -61,9 +61,9 @@ class OneClassSvm(Classifier):
         return self._gamma.value()
 
     def train(self, features):
-        self._pp = PreProcessor(features)
+        self._pp = PreProcessor(features)#, index=[6, 7, 17])
         self._clf = svm.OneClassSVM(nu=self.nu, kernel="rbf", gamma=self.gamma)
-        self._clf.fit(self._pp.traindata)
+        self._clf.fit(self._pp(features))
 
     def predict(self, features):
         if self._clf is None:
