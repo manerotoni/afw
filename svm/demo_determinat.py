@@ -68,7 +68,7 @@ if __name__ == "__main__":
     axes.matshow(cov0, cmap=cm.Greens)
     axes.set_title("covariance of training data")
 
-    pca =  PCA(pp.traindata)
+    pca =  PCA(pp.traindata, minfrac=0.01)
     cov0pca = np.cov(pca.project(pp.traindata).T)
     corr0pca = np.corrcoef(pca.project(pp.traindata).T)
     det0pca = la.det(cov0pca)
