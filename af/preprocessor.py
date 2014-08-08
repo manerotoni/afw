@@ -8,22 +8,41 @@ __licence__ = 'GPL'
 
 import numpy as np
 from af.mining import ZScore
+from af.mining import PCA
 
 
 class PreProcessor(object):
     """PreProcessor is used to normalize the data and remove columns that
-    contain NaN's and have zero variance.
+    contain NaN's and have zero variance. If index is None all features are
+    taken into account otherwise only those specified with index. Index can
+    be an integer or a list of integers.
     """
 
-    def __init__(self, data):
+    def __init__(self, data, index=None, pca=False):
+
+        self._pca = None
 
         # to remove columns that contaim nan's and have zero variance
-        self._mask = np.invert(np.isnan(data.sum(axis=0)))* \
-            (data.std(axis=0) > 0.0)
+        mask_nan = np.invert(np.isnan(data.sum(axis=0)))* \
+                   (data.std(axis=0) > 0.0)
+        self._mask = np.ones(mask_nan.shape).astype(bool)
+
+        if index is not None:
+            self._mask[:] = False
+            self._mask[index] = True
+
+        self._mask*=mask_nan
+
 
         data = self.filter(data)
         self._zs = ZScore(data)
-        self.traindata = self.normalize(data)
+
+        if pca:
+            data1 = self.normalize(data)
+            self._pca = PCA(data1, minfrac=0.05)
+            self.traindata = self._pca.project(data1)
+        else:
+            self.traindata = self.normalize(data)
 
     def normalize(self, data):
         return self._zs.normalize(data)
@@ -32,4 +51,8 @@ class PreProcessor(object):
         return data[:, self._mask]
 
     def __call__(self, data):
-        return self.normalize(self.filter(data))
+        data1 = self.normalize(self.filter(data))
+        if self._pca is None:
+            return data1
+        else:
+            return self._pca.project(data1)
