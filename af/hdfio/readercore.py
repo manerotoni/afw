@@ -96,9 +96,6 @@ class HdfBaseReader(h5py.File):
         by child classes."""
         raise NotImplementedError()
 
-    def close(self):
-        self._hdf.close()
-
     def plateNames(self):
         return ["---"]
 

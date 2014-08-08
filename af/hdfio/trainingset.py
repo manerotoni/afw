@@ -8,7 +8,6 @@ __licence__ = 'GPL'
 __all__ = ("AtTrainingSetIO", )
 
 
-import h5py
 import numpy as np
 from af.hdfio import HdfBaseReader, HdfFileInfo, HdfItem
 from af.hdfio import HdfDataModel
@@ -70,7 +69,7 @@ class AtTrainingSetIO(HdfBaseReader):
         # shift centers to the bottom left corner of the gallery image
         center = np.vstack((dtable["x"], dtable["y"])).T - hsize
 
-        width, height = self.imageSize()
+        height, width = self.imageSize()
         center[center[:, 0]<0, 0] = 0
         center[center[:, 0]>(width-self.gsize), 0] = width - self.gsize
         center[center[:, 1]<0, 1] = 0
