@@ -10,7 +10,7 @@ __all__ = ("NavToolBar", "ViewToolBar")
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from af.hdfio import Ch5Coord
+from af.hdfio.cellh5reader import Ch5Coord
 
 
 class NavToolBar(QtGui.QToolBar):

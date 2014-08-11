@@ -115,8 +115,11 @@ class HdfWriter(object):
         grp.attrs[HdfDataModel.CHANNELS] = [str(c.replace(" ", "_"))
                                        for c in channels.values()]
 
+        chunksize = size + (1, 1)
+
         self.images = self._file.create_dataset(self.dmodel.images, shape,
                                                 dtype=dtype,
+                                                chunks=chunksize,
                                                 compression=self._compression,
                                                 compression_opts=self._copts)
         self.images.attrs[HdfDataModel.COLORS] = [str(c) for c in colors]
@@ -164,6 +167,7 @@ class HdfWriter(object):
                 compression=self._compression, compression_opts=self._copts)
             dset = self._file.create_dataset(
                 self.dmodel.gallery, data=self._cache.gallery,
+                chunks=(self._cache.gallery.shape[:2] + (1, 1)),
                 compression=self._compression, compression_opts=self._copts)
             self._write_contours()
         except ValueError as e:

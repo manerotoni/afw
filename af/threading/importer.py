@@ -13,8 +13,8 @@ import traceback
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
-from af.hdfio import HdfWriter
-from af.hdfio import HdfError
+from af.hdfio.hdfwriter import HdfWriter
+from af.hdfio.readercore import HdfError
 from af.segmentation.multicolor import LsmProcessor
 
 
@@ -83,6 +83,7 @@ class AtImporter(QtCore.QObject):
                 self.interruption_point()
                 self.thread().msleep(self.PYDELAY)
                 mp = LsmProcessor(file_, gsize)
+
                 # first channel for primary segementation
                 mp.segmentation(self.seg_params, self.channels)
                 mp.calculateFeatures(self.feature_groups)
