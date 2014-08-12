@@ -6,4 +6,8 @@
 at_rc.py
 *.tif
 *.tiff
+*.hdf
+*.h5
+*.ch5
+*.hdf5
 build
