@@ -41,12 +41,15 @@ class HdfDataModel(object):
 class HdfCache(object):
     """Internal cache to be able to save non-resizeable data sets to hdf5."""
 
-    def __init__(self, feature_names, gallery_dtype):
+    def __init__(self, feature_names, gallery_dtype, colors):
 
         self.gallery = None
         self.bbox = None
         self.features = None
+        self.images = None
         self.contours = defaultdict(list)
+        self.colors = colors
+        self._images = list()
 
         self._dt_gallery = gallery_dtype
         self._dt_bbox = [('label', np.uint32), ('x', np.uint16),
@@ -57,7 +60,8 @@ class HdfCache(object):
         self._dt_features = [(n, np.float32) for n in feature_names]
         self._dt_contours = h5py.special_dtype(vlen=np.uint16)
 
-    def appendData(self, objectsdict):
+
+    def appendData(self, objectsdict, image):
         nobj = len(objectsdict)
         nftrs = len(objectsdict.feature_names)
 
@@ -83,6 +87,15 @@ class HdfCache(object):
             self.bbox = np.append(self.bbox, bbox)
             self.features = np.append(self.features, features)
             self.gallery = np.concatenate((self.gallery, gallery), axis=3)
+        self._images.append(image)
+
+    @property
+    def image(self):
+        shape = self._images[0].shape + (len(self._images), )
+        images = np.empty(shape, self._images[0].dtype)
+        for i, image in enumerate(self._images):
+            images[:, :, :, i] = image
+        return images
 
 
 class HdfWriter(object):
@@ -107,40 +120,27 @@ class HdfWriter(object):
     def close(self):
         self._file.close()
 
-    def setupFile(self, n_images, channels, colors, size, dtype):
-        n_channels = len(channels)
-        shape = size + (n_channels, n_images)
+    def setupFile(self, n_images, channels, colors):
 
         grp = self._file.create_group(self.dmodel.contours)
         grp.attrs[HdfDataModel.CHANNELS] = [str(c.replace(" ", "_"))
                                        for c in channels.values()]
-
-        chunksize = size + (1, 1)
-
-        self.images = self._file.create_dataset(self.dmodel.images, shape,
-                                                dtype=dtype,
-                                                chunks=chunksize,
-                                                compression=self._compression,
-                                                compression_opts=self._copts)
-        self.images.attrs[HdfDataModel.COLORS] = [str(c) for c in colors]
-
-    def setImage(self, image, index):
-        self.images[:, :, :, index] = image
+        self._colors = colors
 
     def saveSettings(self , segmentation, features):
         xml = XmlConfWriter(segmentation, features)
         txt = xml.toString()
         dset = self._file.create_dataset(self.dmodel.settings, data=txt)
 
-
-    def saveData(self, objectsdict):
+    def saveData(self, objectsdict, image):
         # sometimes there are not objects found in an image
         # and objectsdict is empty
         if objectsdict:
             if self._cache is None:
                 self._cache = HdfCache(objectsdict.feature_names,
-                                       objectsdict.gallery_dtype)
-            self._cache.appendData(objectsdict)
+                                       objectsdict.gallery_dtype,
+                                       self._colors)
+            self._cache.appendData(objectsdict, image)
 
     def _write_contours(self):
 
@@ -170,6 +170,16 @@ class HdfWriter(object):
                 chunks=(self._cache.gallery.shape[:2] + (1, 1)),
                 compression=self._compression, compression_opts=self._copts)
             self._write_contours()
+
+            images = self._cache.image
+            chunksize = images.shape[:2] + (1, 1)
+            dset = self._file.create_dataset(self.dmodel.images,
+                                             data=images,
+                                             chunks=chunksize,
+                                             compression=self._compression,
+                                             compression_opts=self._copts)
+            dset.attrs[HdfDataModel.COLORS] = [str(c) for c in self._cache.colors]
+
         except ValueError as e:
             if "Object header message is too large" in str(e):
                 raise HdfError("Cannot save data to hdf file."

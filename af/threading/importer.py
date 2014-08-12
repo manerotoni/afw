@@ -69,11 +69,7 @@ class AtImporter(QtCore.QObject):
 
         writer = HdfWriter(self.outfile)
         colors = [self.colors[ch] for ch in self.channels.values()]
-        writer.setupFile(self.metadata.n_images,
-                         self.channels,
-                         colors,
-                         self.metadata.size, self.metadata.dtype)
-
+        writer.setupFile(self.metadata.n_images, self.channels, colors)
         writer.saveSettings(self.seg_params, self.feature_groups)
 
         try:
@@ -89,8 +85,8 @@ class AtImporter(QtCore.QObject):
                 mp.calculateFeatures(self.feature_groups)
                 objects = mp.objects
                 # saveData ignores empty objects
-                writer.saveData(objects)
-                writer.setImage(mp.image[:, :, self.channels.keys()], i)
+                image = mp.image[:, :, self.channels.keys()]
+                writer.saveData(objects, image)
 
                 self.contourImage.emit(tuple(mp.iterQImages()),
                                        objects.contours)
