@@ -81,15 +81,12 @@ def import_images(files, outfile, params):
     metadata = proc.metadata
     writer = HdfWriter(outfile)
     colors = [params.colors[c] for c in params.channels.values()]
-    writer.setupFile(len(files), params.channels)
+    writer.setupFile(len(files), params.channels, colors)
     writer.saveSettings(params.seg_params, params.feature_groups)
 
     pool = Pool(processes=8)#, initializer=initfunc, initargs=("Hello world!", ))
     fprm = zip(files, len(files)*[params])
     result = pool.map(process_image, fprm)
-
-    isize = metadata.size + (len(params.channels), len(files))
-    imagestack = np.empty(isize, metadata.dtype)
 
     for i, (image, image_objects, feature_names) in enumerate(result):
         # reconstruct the ObjectDict
@@ -98,10 +95,7 @@ def import_images(files, outfile, params):
         for obj in image_objects:
             objects[obj.label] = obj
 
-        imagestack[:, :, :, i] = image
-        writer.saveData(objects)
-
-    writer.saveImageStack(imagestack, colors)
+        writer.saveData(objects, image)
     writer.flush()
 
 def process_image((file_, params)):
