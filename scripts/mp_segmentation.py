@@ -11,24 +11,31 @@ __licence__ = 'GPL'
 import sys
 sys.path.append("../")
 
+
 import time
-from os.path import basename
+import os
+# from os.path import basename
 
 import argparse
+import numpy as np
 from collections import OrderedDict
 
 from cecog import ccore
 from af.hdfio.hdfwriter import HdfWriter
 from af.segmentation import LsmProcessor
 from af.segmentation import PrimaryParams, ExpansionParams
+from af.segmentation import ObjectDict
+
+from multiprocessing import Pool, Manager
+
 
 class Params(object):
 
     gsize =  50
-    channels = OrderedDict(((0, 'Channel 1'), )) # (1, 'Channel 2')))
+    channels = OrderedDict(((0, 'Channel 1'), ))#,  (1, 'Channel 2')))
 
     seg_params = OrderedDict([('Channel 1',
-                               PrimaryParams(3, 20, 5, True, True, 0, 255, -1,
+                               PrimaryParams(3, 20, 5, True, True, 0, 255, 200,
                                              -1, -1, -1, 65)),
                               ('Channel 2',
                                ExpansionParams(ccore._cecog.SrgType.KeepContours,
@@ -73,28 +80,40 @@ def import_images(files, outfile, params):
     proc = LsmProcessor(files[0], params.gsize)
     metadata = proc.metadata
     writer = HdfWriter(outfile)
-    writer.setupFile(len(files), params.channels, params.colors,
-                     metadata.size, metadata.dtype)
+    colors = [params.colors[c] for c in params.channels.values()]
+    writer.setupFile(len(files), params.channels)
     writer.saveSettings(params.seg_params, params.feature_groups)
 
+    pool = Pool(processes=8)#, initializer=initfunc, initargs=("Hello world!", ))
+    fprm = zip(files, len(files)*[params])
+    result = pool.map(process_image, fprm)
 
-    t0 = time.time()
-    for i, file_ in enumerate(files):
-        _, image, objects = process_image(file_, i, params)
+    isize = metadata.size + (len(params.channels), len(files))
+    imagestack = np.empty(isize, metadata.dtype)
+
+    for i, (image, image_objects, feature_names) in enumerate(result):
+        # reconstruct the ObjectDict
+        objects = ObjectDict("multicolor")
+        objects.feature_names = feature_names
+        for obj in image_objects:
+            objects[obj.label] = obj
+
+        imagestack[:, :, :, i] = image
         writer.saveData(objects)
-        writer.setImage(image, i)
-        print  i, time.time() - t0
-        t0 = time.time()
 
+    writer.saveImageStack(imagestack, colors)
     writer.flush()
 
-def process_image(file_, index, params):
+def process_image((file_, params)):
+
     mp = LsmProcessor(file_, params.gsize)
     mp.segmentation(params.seg_params, params.channels)
     mp.calculateFeatures(params.feature_groups)
     image = mp.image[:, :, params.channels.keys()]
     objects = mp.objects
-    return (index, image, objects)
+    # cannot return OrderedDict from multiprocessing, so I split the dict
+    # and reconstruct it in the main process
+    return (image, objects.values(), objects.feature_names)
 
 
 if __name__ == "__main__":
@@ -106,4 +125,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    t0 = time.time()
     import_images(args.files, args.outfile, Params)
+
+    print ("%d images were processed in %.2f seconds"
+           %(len(args.files), time.time()-t0))
