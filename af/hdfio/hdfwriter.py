@@ -57,7 +57,7 @@ class HdfCache(object):
                          ('bottom', np.uint16), ('left', np.uint16),
                          ('right', np.uint16)]
 
-        self._dt_features = [(n, np.float32) for n in feature_names]
+        self._dt_features = [(str(n), np.float32) for n in feature_names]
         self._dt_contours = h5py.special_dtype(vlen=np.uint16)
 
 

@@ -107,8 +107,9 @@ class MultiChannelProcessor(object):
 
                 # set feature names extend with a prefix
                 try:
+                    cn = name.split()[1]
                     odict.feature_names.extend(
-                        ["c%d-%s" %(i, n) for n in obj.feature_names])
+                        ["ch%s-%s" %(cn, n) for n in obj.feature_names])
                 except UnboundLocalError as e:
                     # empty image has no objects
                     pass
