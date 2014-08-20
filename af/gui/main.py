@@ -64,7 +64,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self._restoreSettings()
         self.show()
         if file_ is not None:
-            self.openFile(file_)
+            self.loader.openFile(file_)
             self.loadItems()
 
     def _saveSettings(self):

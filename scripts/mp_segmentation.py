@@ -32,12 +32,12 @@ from multiprocessing import Pool, Manager
 class Params(object):
 
     gsize =  50
-    channels = OrderedDict(((0, 'Channel 1'), ))#,  (1, 'Channel 2')))
+    channels = OrderedDict(((0, 'Channel 2'), ))#,  (1, 'Channel 2')))
 
-    seg_params = OrderedDict([('Channel 1',
+    seg_params = OrderedDict([('Channel 2',
                                PrimaryParams(3, 20, 5, True, True, 0, 255, 200,
                                              -1, -1, -1, 65)),
-                              ('Channel 2',
+                              ('Channel 1',
                                ExpansionParams(ccore._cecog.SrgType.KeepContours,
                                                None, 0, 5, 0, 0, 255))])
 

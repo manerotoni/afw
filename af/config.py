@@ -21,7 +21,11 @@ class AfConfig(object):
         # szip is not available on every platform
         self.compression = "gzip"
         # 0-9 if gzip else None
-        self.compression_opts = 9
+
+        if self.compression  is None:
+            self.compression_opts = None
+        else:
+            self.compression_opts = 4
 
         # uses complemenatary color to draw conturs to improve contrast
         self.contours_complementary_color = True
