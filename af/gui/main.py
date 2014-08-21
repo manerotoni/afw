@@ -25,6 +25,7 @@ from af.threading import AtLoader
 
 from af import at_rc
 
+
 class AtMainWindow(QtGui.QMainWindow):
 
     coordUpdated = QtCore.pyqtSignal("PyQt_PyObject")
@@ -60,12 +61,14 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionOpenHdf.triggered.connect(self.onFileOpen)
         self.actionCloseHdf.triggered.connect(self.onFileClose)
         self.actionProcessTrainingSet.triggered.connect(self.openImporter)
+        self.loader.finished.connect(self.onLoadingFinished)
 
         self._restoreSettings()
         self.show()
         if file_ is not None:
             self.loader.openFile(file_)
             self.loadItems()
+
 
     def _saveSettings(self):
         settings = QtCore.QSettings(version.organisation, version.appname)
@@ -158,6 +161,9 @@ class AtMainWindow(QtGui.QMainWindow):
                 self.statusBar().showMessage(str(e))
             else:
                 self.statusBar().showMessage(basename(file_))
+
+    def onLoadingFinished(self):
+        self.annotation.setFeatureNames(self.loader.featureNames)
 
     def loadItems(self):
 

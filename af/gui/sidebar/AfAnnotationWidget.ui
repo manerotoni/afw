@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>244</width>
+    <width>263</width>
     <height>677</height>
    </rect>
   </property>
@@ -124,6 +124,13 @@
          </property>
          <property name="text">
           <string>predict</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QPushButton" name="featureBtn">
+         <property name="text">
+          <string>feature selection</string>
          </property>
         </widget>
        </item>

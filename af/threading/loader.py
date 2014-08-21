@@ -85,3 +85,5 @@ class AtLoader(QtCore.QObject):
                 break
             self.progressUpdate.emit(i+1)
             self.itemLoaded.emit(item)
+
+        self.finished.emit()

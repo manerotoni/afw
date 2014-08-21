@@ -21,6 +21,7 @@ from PyQt4.QtGui import QFileDialog
 from af.sorters import Sorter
 from af.classifiers.classifiers import Classifier
 from .models import  AfSorterItemModel
+from .featuredlg import AtFeatureSelectionDlg
 
 
 class AfSideBarWidget(QtGui.QWidget):
@@ -61,6 +62,7 @@ class AfSortWidget(AfSideBarWidget):
         super(AfSortWidget, self).__init__(*args, **kw)
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
+
         self.treeview.activated.connect(self.onActivated)
 
         self.sortAlgorithm.addItems(Sorter.sorters())
@@ -104,6 +106,8 @@ class AfAnnotationWidget(AfSideBarWidget):
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
         self.treeview.activated.connect(self.onActivated)
+        self.featureDlg = AtFeatureSelectionDlg(self)
+        self.featureDlg.hide()
 
         self.stack = QtGui.QStackedWidget(self)
         self.stack.setSizePolicy(
@@ -124,6 +128,7 @@ class AfAnnotationWidget(AfSideBarWidget):
         self.removeAllBtn.clicked.connect(self.onRemoveAll)
         self.predictBtn.clicked.connect(self.onPredict)
         self.addBtn.clicked.connect(self.onAdd)
+        self.featureBtn.clicked.connect(self.onFeatureBtn)
 
     def _setupClassifiers(self):
         for name in Classifier.classifiers():
@@ -138,6 +143,15 @@ class AfAnnotationWidget(AfSideBarWidget):
     @property
     def model(self):
         return self.currentClassifier().model
+
+    def setFeatureNames(self, features):
+        self.featureDlg.addFeatureList(features)
+
+    def onFeatureBtn(self):
+        if self.featureDlg.isHidden():
+            self.featureDlg.show()
+        else:
+            self.featureDlg.hide()
 
     def onSave(self):
 
@@ -156,6 +170,17 @@ class AfAnnotationWidget(AfSideBarWidget):
         for item in self.tileview.items:
             item.clearClass()
 
+    def filterFeatures(self, features):
+        """Filter the feature matrix by column wise. Indices of the cols are
+        determined by the FeatureSelection Dialog."""
+
+        ftrs_indices = self.featureDlg.indicesOfCheckedItems()
+
+        if not(ftrs_indices):
+            raise RuntimeError("no features selected for classifier training")
+
+        return features[:, ftrs_indices]
+
     def onRemove(self):
         super(AfAnnotationWidget, self).onRemove()
         self.classify(self.tileview.items)
@@ -170,11 +195,13 @@ class AfAnnotationWidget(AfSideBarWidget):
         self.classify(self.tileview.items)
 
     def train(self):
+        features = self.filterFeatures(self.model.features)
         clf = self.currentClassifier()
-        clf.train(self.model.features)
+        clf.train(features)
 
     def classify(self, items):
         clf = self.currentClassifier()
         for item in items:
-            prediction = clf.predict(item.features.reshape((1, -1)))
+            features = self.filterFeatures(item.features.reshape((1, -1)))
+            prediction = clf.predict(features)
             item.setClass(prediction[0])
