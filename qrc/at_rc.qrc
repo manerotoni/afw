@@ -3,5 +3,9 @@
     <file>next.png</file>
     <file>previous.png</file>
     <file>hdf5-logo.png</file>
+    <file>eraser.png</file>
+    <file>clear.png</file>
+    <file>clear2.ico</file>
+    <file>clear3.png</file>
   </qresource>
 </RCC>
