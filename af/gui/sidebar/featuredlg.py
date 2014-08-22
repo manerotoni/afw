@@ -109,9 +109,14 @@ class AtFeatureSelectionDlg(QtGui.QWidget):
     def addFeatureList(self, feature_names):
 
         self.selectAll.setChecked(Qt.Checked)
+        self.model.clear()
 
         for i, feature_name in enumerate(feature_names):
-            channel, name = feature_name.split("-")
+            try:
+                channel, name = feature_name.split("-")
+            except ValueError:
+                channel = "--"
+                name = feature_name
 
             name_item = QtGui.QStandardItem(name)
             name_item.setCheckable(True)
