@@ -42,6 +42,10 @@ class AtLoader(QtCore.QObject):
         return self._h5f.filename
 
     @property
+    def file(self):
+        return self._h5f
+
+    @property
     def featureNames(self):
         """Return the feature names of the last dataset loaded"""
         if self._feature_names is None:

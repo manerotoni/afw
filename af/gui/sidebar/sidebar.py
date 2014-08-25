@@ -20,6 +20,7 @@ from PyQt4.QtGui import QFileDialog
 
 from af.sorters import Sorter
 from af.classifiers.classifiers import Classifier
+
 from .models import  AfSorterItemModel
 from .featuredlg import AtFeatureSelectionDlg
 
@@ -155,14 +156,21 @@ class AfAnnotationWidget(AfSideBarWidget):
 
     def onSave(self):
 
-        fname = QFileDialog.getSaveFileName(self, "save Feature Table",
-                                            expanduser("~"))
-        if not fname:
-            return
+        try:
+            file_ = self.parent.loader.file
+            if file_.mode != file_.READWRITE:
+                raise IOError("file is read only")
+        except (AttributeError, IOError):
+            file_ = QFileDialog.getSaveFileName(self, "save Feature Table",
+                                                expanduser("~"))
+
+            if not file_:
+                return
 
         ftrnames = self.parent.loader.featureNames
-        np.savetxt(fname, self.model.features,
-                   delimiter=",", header=",".join(ftrnames))
+        clf = self.currentClassifier()
+        clf.saveToHdf(file_, self.featureDlg.checkedItems())
+
         QMessageBox.information(self, "information", "data successfully saved")
 
     def onRemoveAll(self):

@@ -6,6 +6,7 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 from os.path import splitext
+from collections import OrderedDict
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -25,6 +26,7 @@ class AtFeatureModel(QtGui.QStandardItemModel):
         self.setHeaderData(self.NAME, QtCore.Qt.Horizontal, "Name")
         self.setHeaderData(self.CHANNEL, QtCore.Qt.Horizontal, "Channel")
         self.setHeaderData(self.INDEX, QtCore.Qt.Horizontal, "Index")
+
 
 class AtContextTreeView(QtGui.QTreeView):
 
@@ -105,6 +107,17 @@ class AtFeatureSelectionDlg(QtGui.QWidget):
                 indices.append(int(idx_item.text()))
 
         return tuple(indices)
+
+    def checkedItems(self):
+        odict = OrderedDict()
+
+        for i in xrange(self.model.rowCount()):
+            idx_item = self.model.item(i, self.model.INDEX)
+            name_item = self.model.item(i, self.model.NAME)
+            if name_item.checkState() == Qt.Checked:
+                odict[int(idx_item.text())] = name_item.text()
+
+        return odict
 
     def addFeatureList(self, feature_names):
 

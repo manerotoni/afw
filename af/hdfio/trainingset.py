@@ -9,11 +9,11 @@ __all__ = ("AtTrainingSetIO", )
 
 
 import numpy as np
-from af.hdfio.readercore import HdfBaseReader, HdfFileInfo, HdfItem
+from af.hdfio.readercore import HdfFile, HdfFileInfo, HdfItem
 from af.hdfio.hdfwriter import HdfDataModel
 
 
-class AtTrainingSetIO(HdfBaseReader):
+class AtTrainingSetIO(HdfFile):
     """Reader and writer for the annotation tool trainingset data. The file
     format is a simple hdf5.
     """

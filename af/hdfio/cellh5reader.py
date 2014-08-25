@@ -15,7 +15,7 @@ import base64
 
 import time
 import numpy as np
-from af.hdfio.readercore import HdfBaseReader, HdfItem, HdfFileInfo
+from af.hdfio.readercore import HdfFile, HdfItem, HdfFileInfo
 
 def uncompress_contour(contour):
     contour = np.asarray(zlib.decompress(
@@ -46,7 +46,7 @@ class Ch5Coord(dict):
         return super(Ch5Coord, self).__setitem__(key, value)
 
 
-class Ch5Reader(HdfBaseReader):
+class Ch5Reader(HdfFile):
 
     EXTENSIONS = (".ch5", )
     GALLERY_SETTINGS_MUTABLE = True

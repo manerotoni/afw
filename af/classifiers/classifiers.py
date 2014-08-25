@@ -37,3 +37,6 @@ class Classifier(object):
 
     def predict(self, features):
         return [UnClassified]*features.shape[0]
+
+    def saveToHdf(self, file_, feature_names):
+        raise NotImplementedError

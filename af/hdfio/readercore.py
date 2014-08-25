@@ -5,7 +5,7 @@ readercore.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("HdfBaseReader", "HdfError", "HdfItem", "HdfFileInfo")
+__all__ = ("HdfFile", "HdfError", "HdfItem", "HdfFileInfo")
 
 
 
@@ -79,10 +79,17 @@ class HdfItem(object):
             yield self.contour[i], QColor(color)
 
 
-class HdfBaseReader(h5py.File):
+class HdfFile(h5py.File):
 
     __metaclass__ = Factory
     GALLERY_SETTINGS_MUTABLE = True
+
+    # h5py file modes
+    READWRITE = "r+"
+    READONLY = "r"
+    WRITE = "w"
+    WRITEFAIL = "w-"
+    READWRITECREATE = "a"
 
     @classmethod
     def readers(cls):

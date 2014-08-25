@@ -20,6 +20,7 @@ class PreProcessor(object):
 
     def __init__(self, data, index=None, pca=False):
 
+        self.data = data
         self._pca = None
 
         # to remove columns that contaim nan's and have zero variance
@@ -43,6 +44,22 @@ class PreProcessor(object):
             self.traindata = self._pca.project(data1)
         else:
             self.traindata = self.normalize(data)
+
+    @property
+    def std(self):
+        return self._zs.std
+
+    @property
+    def mean(self):
+        return self._zs.mean
+
+    @property
+    def mask(self):
+        return self._mask
+
+    @property
+    def nfeatures(self):
+        return self.traindata.shape[1]
 
     def normalize(self, data):
         return self._zs.normalize(data)
