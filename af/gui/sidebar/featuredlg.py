@@ -22,10 +22,38 @@ class AtFeatureModel(QtGui.QStandardItemModel):
 
     def __init__(self, *args, **kw):
         super(AtFeatureModel, self).__init__(*args, **kw)
+        self._setupHeader()
+
+    def _setupHeader(self):
         self.insertColumns(0, 3)
         self.setHeaderData(self.NAME, QtCore.Qt.Horizontal, "Name")
         self.setHeaderData(self.CHANNEL, QtCore.Qt.Horizontal, "Channel")
         self.setHeaderData(self.INDEX, QtCore.Qt.Horizontal, "Index")
+
+    def clear(self):
+        super(AtFeatureModel, self).clear()
+        self._setupHeader()
+
+
+class AtSortFilterProxyModel(QtGui.QSortFilterProxyModel):
+
+    def __init__(self, *args, **kw):
+        super(AtSortFilterProxyModel, self).__init__(*args, **kw)
+        self._state_filter = Qt.Unchecked
+
+    def setStateFilter(self, state):
+        self._state_filter = state
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, sourceRow, sourceParent):
+
+        m_index = self.sourceModel().index(sourceRow, 0, sourceParent)
+        item = self.sourceModel().item(m_index.row(), 0)
+
+        if item.checkState() == Qt.Unchecked and self._state_filter == Qt.Checked:
+            return False
+        else:
+            return super(AtSortFilterProxyModel, self).filterAcceptsRow(sourceRow, sourceParent)
 
 
 class AtContextTreeView(QtGui.QTreeView):
@@ -34,7 +62,6 @@ class AtContextTreeView(QtGui.QTreeView):
         super(AtContextTreeView, self).__init__(*args, **kw)
         self.createActions()
         self.createContextMenu()
-
 
     def createActions(self):
         self.actionCheckSelected= QtGui.QAction(
@@ -79,12 +106,13 @@ class AtFeatureSelectionDlg(QtGui.QWidget):
         self.regexLbl.setBuddy(self.regex)
         self.regex.textChanged.connect(self.filterChanged)
 
-        self.proxyModel = QtGui.QSortFilterProxyModel()
+        self.proxyModel = AtSortFilterProxyModel()
         self.proxyModel.setDynamicSortFilter(False)
         self.view.setModel(self.proxyModel)
         self.model = AtFeatureModel(self)
         self.setSourceModel(self.model)
         self.selectAll.stateChanged.connect(self.toggleAll)
+        self.selectedOnly.stateChanged.connect(self.view.model().setStateFilter)
 
     def setSourceModel(self, model):
         self.proxyModel.setSourceModel(model)
