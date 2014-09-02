@@ -81,7 +81,12 @@ out = plt.scatter(mixed[:, 0][omask], mixed[:, 1][omask], label="outlier",
 
 plt.legend([a.collections[0], trn, inl, out],
            ["learned frontier", "training observations",
-            "inliers", "outliers"], frameon=False)
+            "inliers", "outliers"], frameon=False, loc=2)
+
+
+plt.xlabel("size (norm.)")
+plt.ylabel("intesity (norm.)")
+
 
 plt.ylim((-2, 4))
 plt.xlim((-4, 3))
