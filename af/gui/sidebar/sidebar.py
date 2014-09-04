@@ -138,6 +138,11 @@ class AfAnnotationWidget(AfSideBarWidget):
             self.stack.addWidget(clf.parameterWidget(self))
             setattr(self, name, clf)
 
+    def estimateParameters(self):
+        features = self.filterFeatures(self.model.features)
+        clf = self.currentClassifier()
+        clf.estimateParameters(features)
+
     def currentClassifier(self):
         return getattr(self, self.classifiers.currentText())
 

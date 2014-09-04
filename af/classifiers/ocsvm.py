@@ -14,6 +14,7 @@ import sklearn.svm
 import numpy as np
 from PyQt4 import QtGui
 
+from af.config import AfConfig
 from af.hdfio.readercore import HdfFile
 from af.preprocessor import PreProcessor
 from af.gui.sidebar.models import AfOneClassSvmItemModel
@@ -33,6 +34,7 @@ class OcSvmDataModel(object):
     training_set = "%s/training_set" %path
     classdef = "%s/class_definition" %path
     normalization = "%s/normalization" %path
+
 
 class OcSvmWriter(object):
 
@@ -88,6 +90,9 @@ class OcSvmWriter(object):
 class OneClassSvm(Classifier):
     """Class for training and parameter tuning of a one class svm."""
 
+    self.KERNEL = "rbf"
+
+
     # TODO method to set the item classes
     INLIER = ItemClass("inlier", QtGui.QColor("green"), 1)
     OUTLIER = ItemClass("outlier", QtGui.QColor("red"), -1)
@@ -97,29 +102,51 @@ class OneClassSvm(Classifier):
     def __init__(self, *args, **kw):
         super(OneClassSvm, self).__init__(*args, **kw)
         self.model = AfOneClassSvmItemModel()
+        self._pp = None
 
     def parameterWidget(self, parent):
 
         self._frame = QtGui.QFrame(parent)
 
-        vbox = QtGui.QHBoxLayout(self._frame)
+        vbox = QtGui.QGridLayout(self._frame)
 
         self._nu = QtGui.QDoubleSpinBox(self._frame)
         self._nu.setRange(0.0, 1.0)
         self._nu.setSingleStep(0.05)
         self._nu.setValue(0.01)
+        self._nu.setDecimals(5)
 
         self._gamma = QtGui.QDoubleSpinBox(self._frame)
         self._gamma.setRange(0.0, 100.0)
         self._gamma.setSingleStep(0.01)
         self._gamma.setValue(0.5)
+        self._gamma.setDecimals(5)
 
-        vbox.addWidget(QtGui.QLabel("nu", self._nu))
-        vbox.addWidget(self._nu)
-        vbox.addWidget(QtGui.QLabel("gamma", self._gamma))
-        vbox.addWidget(self._gamma)
+        self._estBtn = QtGui.QPushButton("estimate")
+        self._estBtn.clicked.connect(parent.estimateParameters)
+
+        vbox.addWidget(QtGui.QLabel("nu", self._nu), 0, 0)
+        vbox.addWidget(self._nu, 0, 1)
+        vbox.addWidget(QtGui.QLabel("gamma", self._gamma), 1, 0)
+        vbox.addWidget(self._gamma, 1, 1)
+        vbox.addWidget(self._estBtn, 1, 2, 1, 2)
 
         return self._frame
+
+    def estimateParameters(self, testdata):
+
+        pp = PreProcessor(testdata)
+
+        # check all gammas from 2^-16 to 2^2
+        for gamma in 2**np.linspace(-16, 2, 100):
+            clf = sklearn.svm.OneClassSVM(kernel=self.KERNEL, nu=self.nu,
+                                          gamma=gamma)
+            clf.fit(pp(testdata))
+            sv_frac = clf.support_.size/float(pp.nsamples)
+
+            if sv_frac >= AfConfig().max_sv_fraction:
+                self._gamma.setValue(gamma)
+                break
 
     @property
     def nu(self):
@@ -132,7 +159,7 @@ class OneClassSvm(Classifier):
     def train(self, features):
         self._pp = PreProcessor(features)
         self._clf = sklearn.svm.OneClassSVM(
-            nu=self.nu, kernel="rbf", gamma=self.gamma)
+            nu=self.nu, kernel=self.KERNEL, gamma=self.gamma)
         self._clf.fit(self._pp(features))
 
     def predict(self, features):

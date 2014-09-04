@@ -29,3 +29,7 @@ class AfConfig(object):
 
         # uses complemenatary color to draw conturs to improve contrast
         self.contours_complementary_color = True
+
+        # maximum fraction of support vectors for the one class svm
+        # classifier
+        self.max_sv_fraction = 0.25

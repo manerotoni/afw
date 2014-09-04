@@ -61,6 +61,10 @@ class PreProcessor(object):
     def nfeatures(self):
         return self.traindata.shape[1]
 
+    @property
+    def nsamples(self):
+        return self.data.shape[0]
+
     def normalize(self, data):
         return self._zs.normalize(data)
 
