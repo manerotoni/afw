@@ -90,8 +90,7 @@ class OcSvmWriter(object):
 class OneClassSvm(Classifier):
     """Class for training and parameter tuning of a one class svm."""
 
-    self.KERNEL = "rbf"
-
+    KERNEL = "rbf"
 
     # TODO method to set the item classes
     INLIER = ItemClass("inlier", QtGui.QColor("green"), 1)
