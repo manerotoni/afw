@@ -5,21 +5,29 @@ toolbars.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("NavToolBar", "ViewToolBar")
+__all__ = ("NavToolBar", "ViewToolBar", "SortToolBar")
 
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+
+from af.sorters import Sorter
 from af.hdfio.cellh5reader import Ch5Coord
 
 
-class NavToolBar(QtGui.QToolBar):
+class AtToolBar(QtGui.QToolBar):
+
+    def __init__(self, *args, **kw):
+        super(AtToolBar, self).__init__(*args, **kw)
+        self.setObjectName(self.__class__.__name__)
+
+
+class NavToolBar(AtToolBar):
 
     coordUpdated = QtCore.pyqtSignal("PyQt_PyObject")
 
     def __init__(self, *args, **kw):
         super(NavToolBar, self).__init__(*args, **kw)
-        self.setObjectName('NavigationToolbar')
 
         self.plate = QtGui.QComboBox(self)
         self.well = QtGui.QComboBox(self)
@@ -66,7 +74,7 @@ class NavToolBar(QtGui.QToolBar):
         self.coordUpdated.emit(self.coordinate)
 
 
-class ViewToolBar(QtGui.QToolBar):
+class ViewToolBar(AtToolBar):
 
     valueChanged = QtCore.pyqtSignal(float)
 
@@ -129,3 +137,30 @@ class ViewToolBar(QtGui.QToolBar):
     @property
     def nitems(self):
         return self.nItems.value()
+
+
+class SortToolBar(AtToolBar):
+
+    def __init__(self, *args, **kw):
+        super(SortToolBar, self).__init__(*args, **kw)
+
+        self.sortBtn = QtGui.QPushButton("sort", self)
+        self.sortAlgorithm = QtGui.QComboBox(self)
+        self.sortAlgorithm.addItems(Sorter.sorters())
+        self.sortWidgetBtn = QtGui.QPushButton("foobar", self)
+        self.sortWidgetBtn.clicked.connect(self.onSortWidgetBtn)
+
+        self.sortWidgetBtn.setIconSize(QtCore.QSize(16, 16))
+
+        self.addWidget(self.sortBtn)
+        self.addWidget(self.sortAlgorithm)
+        self.addWidget(self.sortWidgetBtn)
+
+
+    def onSortWidgetBtn(self):
+
+        sw = self.parent().sorting
+        if sw.isHidden():
+            sw.show()
+        else:
+            sw.hide()

@@ -16,7 +16,7 @@ from PyQt4.QtGui import QFileDialog
 
 from af import version
 from af.gui.graphicsview import AfGraphicsView
-from af.gui.toolbars import NavToolBar, ViewToolBar
+from af.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from af.gui.sidebar import AfSortWidget
 from af.gui.sidebar import AfAnnotationWidget
 from af.gui.importdlg import ImportDialog
@@ -134,6 +134,9 @@ class AtMainWindow(QtGui.QMainWindow):
         self.navToolBar = NavToolBar(self)
         self.addToolBar(QtCore.Qt.BottomToolBarArea, self.navToolBar)
         self.navToolBar.coordUpdated.connect(self.loader.setCoordinate)
+
+        self.sortToolBar = SortToolBar(self)
+        self.addToolBar(QtCore.Qt.TopToolBarArea, self.sortToolBar)
 
     def openImporter(self):
         dlg = ImportDialog(self)
