@@ -20,6 +20,7 @@ from af.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from af.gui.sidebar import AfSortWidget
 from af.gui.sidebar import AfAnnotationWidget
 from af.gui.importdlg import ImportDialog
+
 from af.threading import AtThread
 from af.threading import AtLoader
 
@@ -35,7 +36,6 @@ class AtMainWindow(QtGui.QMainWindow):
         super(AtMainWindow, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle(version.appstr)
-        self.sorting.adjustSize()
 
         self.loaderThread = AtThread(self)
         self.loader = AtLoader()
@@ -102,8 +102,30 @@ class AtMainWindow(QtGui.QMainWindow):
         self.sorting = AfSortWidget(self, self.tileview)
         self.annotation = AfAnnotationWidget(self, self.tileview)
 
-        self.toolBox.addItem(self.sorting, "sorting")
-        self.toolBox.addItem(self.annotation, "annotation")
+        self.sortdock = QtGui.QDockWidget("Sorting", self)
+        self.sortdock.setWidget(self.sorting)
+        self.sortdock.setObjectName("sorting")
+        self.addDockWidget(Qt.RightDockWidgetArea, self.sortdock)
+
+        self.annodock = QtGui.QDockWidget("Annotation", self)
+        self.annodock.setWidget(self.annotation)
+        self.annodock.setObjectName("annotation")
+        self.addDockWidget(Qt.RightDockWidgetArea, self.annodock)
+
+        self.tabifyDockWidget(self.sortdock, self.annodock)
+
+        self.menuView.addAction(self.sortdock.toggleViewAction())
+        self.menuView.addAction(self.annodock.toggleViewAction())
+
+        # crosslink sorter dock and sorter toolbar
+        self.sortToolBar.sortAlgorithm.currentIndexChanged.connect(
+            self.sorting.sortAlgorithm.setCurrentIndex)
+        self.sorting.sortAlgorithm.currentIndexChanged.connect(
+            self.sortToolBar.sortAlgorithm.setCurrentIndex)
+
+        self.sortToolBar.sortBtn.clicked.connect(
+            self.sorting.sort)
+
 
     def setupProgressBar(self):
         frame = QtGui.QFrame(self)
@@ -142,9 +164,16 @@ class AtMainWindow(QtGui.QMainWindow):
         dlg = ImportDialog(self)
         dlg.exec_()
 
-    def addToToolbox(self):
-        cw = self.toolBox.currentWidget()
-        cw.addItems(self.tileview.selectedItems())
+    def onThrowAnchor(self):
+        self.sorting.removeAll()
+        self.sorting.addItems(self.tileview.selectedItems())
+        self.sorting.sort()
+
+    def addToAnnotationPanel(self):
+        self.annotation.addItems(self.tileview.selectedItems())
+
+    def addToSortPanel(self):
+        self.sorting.addItems(self.tileview.selectedItems())
 
     def onFileClose(self):
         self.loader.close()

@@ -32,14 +32,14 @@ class AfSideBarWidget(QtGui.QWidget):
         self.tileview = tileview
         self.parent = parent
 
-    def onRemove(self):
+    def removeSelected(self):
         model_indices =  self.treeview.selectionModel().selectedRows()
         model_indices.reverse()
 
         for mi in model_indices:
             self.model.removeRow(mi.row())
 
-    def onRemoveAll(self):
+    def removeAll(self):
         self.model.clear()
 
     def addItems(self, items):
@@ -71,19 +71,22 @@ class AfSortWidget(AfSideBarWidget):
         self.model = AfSorterItemModel(self)
         self.treeview.setModel(self.model)
 
-        self.removeBtn.clicked.connect(self.onRemove)
-        self.removeAllBtn.clicked.connect(self.onRemoveAll)
+        self.removeBtn.clicked.connect(self.removeSelected)
+        self.removeAllBtn.clicked.connect(self.removeAll)
         self.addBtn.clicked.connect(self.onAdd)
-        self.sortBtn.clicked.connect(self.onSort)
+        self.sortBtn.clicked.connect(self.sort)
         self.startSorting.connect(
             lambda: self.tileview.reorder(force_update=True))
 
-    def onSort(self):
+    def sort(self):
 
         all_items = self.tileview.items
+
+        # nothing to sort
+        if not all_items:
+            return
+
         sorter = Sorter(self.sortAlgorithm.currentText(), all_items)
-
-
         sorter.treedata = self.model.features
 
         try:

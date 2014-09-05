@@ -147,20 +147,5 @@ class SortToolBar(AtToolBar):
         self.sortBtn = QtGui.QPushButton("sort", self)
         self.sortAlgorithm = QtGui.QComboBox(self)
         self.sortAlgorithm.addItems(Sorter.sorters())
-        self.sortWidgetBtn = QtGui.QPushButton("foobar", self)
-        self.sortWidgetBtn.clicked.connect(self.onSortWidgetBtn)
-
-        self.sortWidgetBtn.setIconSize(QtCore.QSize(16, 16))
-
         self.addWidget(self.sortBtn)
         self.addWidget(self.sortAlgorithm)
-        self.addWidget(self.sortWidgetBtn)
-
-
-    def onSortWidgetBtn(self):
-
-        sw = self.parent().sorting
-        if sw.isHidden():
-            sw.show()
-        else:
-            sw.hide()

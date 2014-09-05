@@ -100,15 +100,27 @@ class AfGraphicsView(MouseWheelView):
         self.context_menu = QtGui.QMenu(self)
         self.context_menu.addAction(self.actionReorder)
         self.context_menu.addAction(self.actionSelectAll)
-        self.context_menu.addAction(self.actionAdd)
+        self.context_menu.addAction(self.actionThrowAnchor)
+#        self.context_menu.addAction(self.actionAddSorter)
+        self.context_menu.addAction(self.actionAddAnnotation)
 
     def createActions(self):
         self.actionReorder = QtGui.QAction(
             "&refresh", self, triggered=lambda: self.reorder(True))
         self.actionSelectAll = QtGui.QAction("select &all", self,
                                              triggered=self.scene().selectAll)
-        self.actionAdd = QtGui.QAction(
-            "&add to panel", self, triggered=self.parent().addToToolbox)
+
+        self.actionThrowAnchor = QtGui.QAction(
+            "&throw sort anchor", self,
+            triggered=self.parent().onThrowAnchor)
+
+        self.actionAddSorter = QtGui.QAction(
+            "add to &sorter panel", self,
+            triggered=self.parent().addToSortPanel)
+
+        self.actionAddAnnotation = QtGui.QAction(
+            "add to &annotation panel", self,
+            triggered=self.parent().addToAnnotationPanel)
 
     def toggleClassIndicators(self, state):
         self._show_classes = state
