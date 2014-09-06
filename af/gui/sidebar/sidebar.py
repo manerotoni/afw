@@ -9,8 +9,6 @@ __all__ = ('AfSortWidget', 'AfAnnotationWidget')
 
 
 from os.path import dirname, join, expanduser
-import numpy as np
-
 
 from PyQt4 import uic
 from PyQt4 import QtGui
@@ -128,8 +126,8 @@ class AfAnnotationWidget(AfSideBarWidget):
 
         self.treeview.setModel(self.model)
 
-        self.removeBtn.clicked.connect(self.onRemove)
-        self.removeAllBtn.clicked.connect(self.onRemoveAll)
+        self.removeBtn.clicked.connect(self.removeSelected)
+        self.removeAllBtn.clicked.connect(self.removeAll)
         self.predictBtn.clicked.connect(self.onPredict)
         self.addBtn.clicked.connect(self.onAdd)
         self.featureBtn.clicked.connect(self.onFeatureBtn)
@@ -181,8 +179,8 @@ class AfAnnotationWidget(AfSideBarWidget):
 
         QMessageBox.information(self, "information", "data successfully saved")
 
-    def onRemoveAll(self):
-        super(AfAnnotationWidget, self).onRemoveAll()
+    def removeAll(self):
+        super(AfAnnotationWidget, self).removeAll()
         for item in self.tileview.items:
             item.clearClass()
 
@@ -197,8 +195,8 @@ class AfAnnotationWidget(AfSideBarWidget):
 
         return features[:, ftrs_indices]
 
-    def onRemove(self):
-        super(AfAnnotationWidget, self).onRemove()
+    def removeSelected(self):
+        super(AfAnnotationWidget, self).removeSelected()
         self.classify(self.tileview.items)
 
     def addItems(self, items):
