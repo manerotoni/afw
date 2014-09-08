@@ -108,9 +108,13 @@ class ClassLabel(Sorter):
     def __init__(self, items, *args, **kw):
         super(ClassLabel, self).__init__(*args, **kw)
         self.class_labels = [i.class_.label for i in items]
+        self.annotations = [i.isTrainingSample() for i in items]
+
 
     def __call__(self):
         try:
-            return -1*np.array(self.class_labels)
+            return -1*(np.array(self.class_labels)*10 + \
+                       np.array(self.annotations, dtype=bool))
+
         except TypeError:
             raise SortingError("No class labels available yet!")

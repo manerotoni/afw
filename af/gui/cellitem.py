@@ -151,6 +151,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         assert isinstance(state, bool)
         self._is_training_sample = state
 
+    def isTrainingSample(self):
+        return self._is_training_sample
+
     def setPixmap(self, pixmap):
         self._pixmap = pixmap
         item = QtGui.QGraphicsPixmapItem(self)
