@@ -98,7 +98,6 @@ class EucledianDistance(Sorter):
 
         mu = mu.mean(axis=0)
         distsq = [np.power((x - mu), 2).sum() for x in data_zs]
-
         return np.sqrt(distsq)
 
 

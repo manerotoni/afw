@@ -149,10 +149,18 @@ class OneClassSvm(Classifier):
 
     @property
     def nu(self):
+        if not (0.0 < self._nu.value() <= 1.0):
+            raise ValueError(("parameter nu is invalid. "
+                              "It's constrained between 0 an 1"))
+
         return self._nu.value()
 
     @property
     def gamma(self):
+        if self._gamma.value() <= 0.0:
+            raise ValueError(("parameter gamma is invalid. "
+                              "It must be larger than zero."))
+
         return self._gamma.value()
 
     def train(self, features):

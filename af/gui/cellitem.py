@@ -8,6 +8,8 @@ __licence__ = 'GPL'
 __all__ = ("CellGraphicsItem", "PainterPathItem", "Colors")
 
 
+import warnings
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
@@ -122,8 +124,12 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.addToGroup(self._selrect)
 
     def clear(self):
-        self.setClass(UnClassified)
-        self.setTrainingSample(False)
+        try:
+            self.setClass(UnClassified)
+            self.setTrainingSample(False)
+        except RuntimeError as e:
+            warnings.warn(str(e))
+
 
     def setClass(self, class_):
         self.class_ = class_
