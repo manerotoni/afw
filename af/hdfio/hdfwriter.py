@@ -106,7 +106,7 @@ class HdfWriter(object):
         self._cache = None
         self._compression = AfConfig().compression
         self._copts = AfConfig().compression_opts
-        self.dmodel = HdfDataModel()
+        self.dmodel = HdfDataModel("data")
 
         # save a list of the training sets as attrib of the file
         try:
