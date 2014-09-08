@@ -49,6 +49,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.frame = item.frame
         self.objid = item.objid
         self.index = item.index
+        self._is_training_sample = False
 
         if item.contour is not None:
             for contour, color in item.iterContours():
@@ -120,12 +121,16 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._selrect.hide()
         self.addToGroup(self._selrect)
 
-    def clearClass(self):
+    def clear(self):
         self.setClass(UnClassified)
+        self.setTrainingSample(False)
 
     def setClass(self, class_):
         self.class_ = class_
-        self._classrect.setBrush(class_.brush)
+        if self._is_training_sample:
+            self._classrect.setBrush(class_.brush_trainingsample)
+        else:
+            self._classrect.setBrush(class_.brush)
         self._classrect.setPen(class_.pen)
 
     def toggleClassIndicator(self, state):
@@ -141,6 +146,10 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     @property
     def pixmap(self):
         return self._pixmap
+
+    def setTrainingSample(self, state):
+        assert isinstance(state, bool)
+        self._is_training_sample = state
 
     def setPixmap(self, pixmap):
         self._pixmap = pixmap

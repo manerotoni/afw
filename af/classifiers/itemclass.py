@@ -43,4 +43,15 @@ class ItemClass(QtCore.QObject):
             brush.setStyle(Qt.SolidPattern)
         return brush
 
+    @property
+    def brush_trainingsample(self):
+        brush = QtGui.QBrush()
+        brush.setColor(self.color)
+        if self.label is None:
+            brush.setStyle(Qt.NoBrush)
+        else:
+            brush.setStyle(Qt.Dense3Pattern)
+        return brush
+
+
 UnClassified = ItemClass("unclassified", QtGui.QColor("white"), None)

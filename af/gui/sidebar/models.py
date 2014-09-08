@@ -42,7 +42,9 @@ class AfStandardItemModel(QtGui.QStandardItemModel):
             root.appendRow(self.prepareRowItems(item))
 
     def removeRow(self, row):
-        del self._items[int(self.item(row).text())]
+        key = int(self.item(row).text())
+        self._items[key].clear()
+        del self._items[key]
         super(AfStandardItemModel, self).removeRow(row)
 
     def clear(self):

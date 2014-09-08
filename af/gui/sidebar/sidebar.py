@@ -179,11 +179,6 @@ class AfAnnotationWidget(AfSideBarWidget):
 
         QMessageBox.information(self, "information", "data successfully saved")
 
-    def removeAll(self):
-        super(AfAnnotationWidget, self).removeAll()
-        for item in self.tileview.items:
-            item.clearClass()
-
     def filterFeatures(self, features):
         """Filter the feature matrix by column wise. Indices of the cols are
         determined by the FeatureSelection Dialog."""
@@ -200,6 +195,10 @@ class AfAnnotationWidget(AfSideBarWidget):
         self.classify(self.tileview.items)
 
     def addItems(self, items):
+
+        for item in items:
+            item.setTrainingSample(True)
+
         super(AfAnnotationWidget, self).addItems(items)
         self.train()
         self.classify(self.tileview.items)
