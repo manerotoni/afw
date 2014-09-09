@@ -8,9 +8,10 @@ __licence__ = 'GPL'
 __all__ = ("SaveClassifierDialog", )
 
 
-from os.path import splitext
+from os.path import splitext, expanduser
 from PyQt4 import uic
 from PyQt4 import QtGui
+from PyQt4.QtGui import QFileDialog
 
 
 class SaveClassifierDialog(QtGui.QDialog):
@@ -19,6 +20,8 @@ class SaveClassifierDialog(QtGui.QDialog):
         super(SaveClassifierDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
         uic.loadUi(uifile, self)
+
+        self.pathBtn.clicked.connect(self.onPathBtn)
 
     @property
     def overwrite(self):
@@ -47,3 +50,12 @@ class SaveClassifierDialog(QtGui.QDialog):
             return txt
         else:
             return None
+
+    def onPathBtn(self):
+
+        file_ = QFileDialog.getSaveFileName(self, "Save File as...",
+                                            expanduser("~"),
+                                            "hdf files (*.hdf *.h5 *.hdf5 *.he5 *.ch5)")
+
+        if file_:
+            self.path = file_

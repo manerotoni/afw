@@ -49,10 +49,11 @@ class OcSvmWriter(object):
 
         self.dmodel = OcSvmDataModel(name)
 
-        if isinstance(file, basestring):
-            self.h5f = h5py.File(file_, HdfFile.READWRITE)
-        elif isinstance(file_, HdfFile):
+        if isinstance(file_, HdfFile):
             self.h5f = file_
+        elif isinstance(file_, basestring):
+
+            self.h5f = h5py.File(file_, HdfFile.READWRITECREATE)
 
         if remove_existing:
             try:

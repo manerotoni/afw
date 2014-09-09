@@ -25,6 +25,9 @@ from .models import  AfSorterItemModel
 from .featuredlg import AtFeatureSelectionDlg
 
 
+class NoSampleError(Exception):
+    pass
+
 
 class AfSideBarWidget(QtGui.QWidget):
 
@@ -143,9 +146,12 @@ class AfAnnotationWidget(AfSideBarWidget):
             setattr(self, name, clf)
 
     def estimateParameters(self):
-        features = self.filterFeatures(self.model.features)
-        clf = self.currentClassifier()
-        clf.estimateParameters(features)
+        try:
+            features = self.filterFeatures(self.model.features)
+            clf = self.currentClassifier()
+            clf.estimateParameters(features)
+        except NoSampleError:
+            pass
 
     def currentClassifier(self):
         return getattr(self, self.classifiers.currentText())
@@ -166,12 +172,16 @@ class AfAnnotationWidget(AfSideBarWidget):
     def onSave(self):
 
         clf = self.currentClassifier()
+        if not clf.model.rowCount():
+            QMessageBox.information(self, "information", "Nothing to save!")
+            return
+
         dlg = SaveClassifierDialog(self)
         dlg.name = clf.name
 
         hdffile = self.parent.loader.file
         if hdffile is None or hdffile.mode != hdffile.READWRITE:
-            dlg.path = expanduser("~")
+            dlg.path = ""
         else:
             dlg.path = hdffile.filename
 
@@ -202,7 +212,7 @@ class AfAnnotationWidget(AfSideBarWidget):
         ftrs_indices = self.featureDlg.indicesOfCheckedItems()
 
         if not(ftrs_indices):
-            raise RuntimeError("no features selected for classifier training")
+            raise NoSampleError("no features selected for classifier training")
 
         return features[:, ftrs_indices]
 
@@ -224,9 +234,12 @@ class AfAnnotationWidget(AfSideBarWidget):
         self.classify(self.tileview.items)
 
     def train(self):
-        features = self.filterFeatures(self.model.features)
-        clf = self.currentClassifier()
-        clf.train(features)
+        try:
+            features = self.filterFeatures(self.model.features)
+            clf = self.currentClassifier()
+            clf.train(features)
+        except NoSampleError:
+            pass
 
     def classify(self, items):
         clf = self.currentClassifier()

@@ -207,6 +207,7 @@ class AtMainWindow(QtGui.QMainWindow):
 
         if bool(file_):
             self._fileOpen(file_)
+            self.loadItems()
 
     def _fileOpen(self, file_):
         self._lastdir = basename(file_)
