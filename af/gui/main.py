@@ -36,6 +36,7 @@ class AtMainWindow(QtGui.QMainWindow):
         super(AtMainWindow, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle(version.appstr)
+        self.setAcceptDrops(True)
 
         self.loaderThread = AtThread(self)
         self.loader = AtLoader()
@@ -68,6 +69,25 @@ class AtMainWindow(QtGui.QMainWindow):
         if file_ is not None:
             self.loader.openFile(file_)
             self.loadItems()
+
+    def dragEnterEvent(self, event):
+        event.acceptProposedAction()
+
+    def dragMoveEvent(self, event):
+        event.acceptProposedAction()
+
+    def dropEvent(self, event):
+        mimeData = event.mimeData()
+        if mimeData.hasUrls():
+            if len(mimeData.urls()) == 1:
+                self.abort.emit()
+                self.loaderThread.wait()
+                self.loader.close()
+                self.onDropEvent(mimeData.urls()[0].path())
+        event.acceptProposedAction()
+
+    def dragLeaveEvent(self, event):
+        event.accept()
 
 
     def _saveSettings(self):
@@ -186,16 +206,23 @@ class AtMainWindow(QtGui.QMainWindow):
             "Hdf files (*.hdf5 *.ch5 *.hdf *.h5)")
 
         if bool(file_):
-            self._lastdir = basename(file_)
-            try:
-                self.loader.openFile(file_)
-            except Exception as e:
-                self.statusBar().showMessage(str(e))
-            else:
-                self.statusBar().showMessage(basename(file_))
+            self._fileOpen(file_)
+
+    def _fileOpen(self, file_):
+        self._lastdir = basename(file_)
+        try:
+            self.loader.openFile(file_)
+        except Exception as e:
+            self.statusBar().showMessage(str(e))
+        else:
+            self.statusBar().showMessage(basename(file_))
 
     def onLoadingFinished(self):
         self.annotation.setFeatureNames(self.loader.featureNames)
+
+    def onDropEvent(self, path):
+        self._fileOpen(path)
+        self.loadItems()
 
     def loadItems(self):
 
