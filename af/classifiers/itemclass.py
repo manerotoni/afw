@@ -50,7 +50,7 @@ class ItemClass(QtCore.QObject):
         if self.label is None:
             brush.setStyle(Qt.NoBrush)
         else:
-            brush.setStyle(Qt.Dense3Pattern)
+            brush.setStyle(Qt.Dense5Pattern)
         return brush
 
 
