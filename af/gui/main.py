@@ -13,6 +13,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFileDialog
+from PyQt4.QtGui import QMessageBox
 
 from af import version
 from af.gui.graphicsview import AfGraphicsView
@@ -215,6 +216,8 @@ class AtMainWindow(QtGui.QMainWindow):
             self.loader.openFile(file_)
         except Exception as e:
             self.statusBar().showMessage(str(e))
+            msg = "Could not open file\n %s" %str(e)
+            QMessageBox.critical(self, "Error", msg)
         else:
             self.statusBar().showMessage(basename(file_))
 
