@@ -11,7 +11,7 @@ __all__ = ("Classifier", )
 from PyQt4 import QtGui
 
 from af.pattern import Factory
-from af.classifiers.itemclass import  UnClassified
+from af.classifiers.itemclass import UnClassified
 
 # TODO need design pattern QFactory
 class Classifier(object):

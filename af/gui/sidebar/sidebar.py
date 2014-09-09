@@ -17,10 +17,13 @@ from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QFileDialog
 
 from af.sorters import Sorter
+from af.hdfio.readercore import HdfError
 from af.classifiers.classifiers import Classifier
+from af.gui.savehdfdlg import SaveClassifierDialog
 
 from .models import  AfSorterItemModel
 from .featuredlg import AtFeatureSelectionDlg
+
 
 
 class AfSideBarWidget(QtGui.QWidget):
@@ -162,22 +165,35 @@ class AfAnnotationWidget(AfSideBarWidget):
 
     def onSave(self):
 
-        try:
-            file_ = self.parent.loader.file
-            if file_.mode != file_.READWRITE:
-                raise IOError("file is read only")
-        except (AttributeError, IOError):
-            file_ = QFileDialog.getSaveFileName(self, "save Feature Table",
-                                                expanduser("~"))
+        clf = self.currentClassifier()
+        dlg = SaveClassifierDialog(self)
+        dlg.name = clf.name
 
-            if not file_:
-                return
+        hdffile = self.parent.loader.file
+        if hdffile is None or hdffile.mode != hdffile.READWRITE:
+            dlg.path = expanduser("~")
+        else:
+            dlg.path = hdffile.filename
+
+        dlg.exec_()
+
+        if dlg.result() == dlg.Rejected:
+            return
+
+        if hdffile.filename != dlg.path:
+            hdffile = dlg.path
 
         ftrnames = self.parent.loader.featureNames
-        clf = self.currentClassifier()
-        clf.saveToHdf(file_, self.featureDlg.checkedItems())
-
-        QMessageBox.information(self, "information", "data successfully saved")
+        try:
+            clf.saveToHdf(dlg.name,
+                          hdffile,
+                          self.featureDlg.checkedItems(),
+                          dlg.description,
+                          dlg.overwrite)
+        except HdfError as e:
+            QMessageBox.critical(self, "error", str(e))
+        else:
+            QMessageBox.information(self, "information", "data successfully saved")
 
     def filterFeatures(self, features):
         """Filter the feature matrix by column wise. Indices of the cols are

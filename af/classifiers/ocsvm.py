@@ -16,6 +16,7 @@ from PyQt4 import QtGui
 
 from af.config import AfConfig
 from af.hdfio.readercore import HdfFile
+from af.hdfio.readercore import HdfError
 from af.preprocessor import PreProcessor
 from af.gui.sidebar.models import AfOneClassSvmItemModel
 from .itemclass import ItemClass
@@ -28,33 +29,54 @@ class OcSvmDataModel(object):
     NAME = "name"
     LIB = "library"
     FEATURE_SELECTION = "feature_selection"
+    DESCRIPTION = "description"
 
-    path = "classifiers/ocsvm"
-    parameters = "%s/parameters" %path
-    training_set = "%s/training_set" %path
-    classdef = "%s/class_definition" %path
-    normalization = "%s/normalization" %path
+
+    def __init__(self, name):
+
+        self.path = "/classifiers/%s" %name
+        self.parameters = "%s/parameters" %self.path
+        self.training_set = "%s/training_set" %self.path
+        self.classdef = "%s/class_definition" %self.path
+        self.normalization = "%s/normalization" %self.path
 
 
 class OcSvmWriter(object):
 
-    def __init__(self, file_):
+    def __init__(self, name, file_, description=None, remove_existing=False):
+
+        assert isinstance(remove_existing, bool)
+
+        self.dmodel = OcSvmDataModel(name)
 
         if isinstance(file, basestring):
             self.h5f = h5py.File(file_, HdfFile.READWRITE)
         elif isinstance(file_, HdfFile):
             self.h5f = file_
 
-        grp = self.h5f.create_group(OcSvmDataModel.path)
-        grp.attrs[OcSvmDataModel.NAME] = "one class support vector machine"
-        grp.attrs[OcSvmDataModel.LIB] = "sklearn-%s" %sklearn.__version__
+        if remove_existing:
+            try:
+                del self.h5f[self.dmodel.path]
+            except KeyError:
+                pass
+
+        try:
+            grp = self.h5f.create_group(self.dmodel.path)
+        except ValueError as e:
+            raise HdfError("Classifer with name %s exists already" %name + str(e))
+
+        grp.attrs[self.dmodel.NAME] = "one class support vector machine"
+        grp.attrs[self.dmodel.LIB] = "sklearn-%s" %sklearn.__version__
+
+        if description is not None:
+            grp.attrs[self.dmodel.DESCRIPTION] = description
 
     def saveTrainingSet(self, features, feature_names):
 
         dtype = [(str(fn), np.float32) for fn in feature_names]
         f2 = features.copy().astype(np.float32).view(dtype)
 
-        dset = self.h5f.create_dataset(OcSvmDataModel.training_set, data=f2)
+        dset = self.h5f.create_dataset(self.dmodel.training_set, data=f2)
 
     def saveClassDef(self, classes, classifier_params=None):
 
@@ -64,7 +86,7 @@ class OcSvmWriter(object):
         for i, class_ in enumerate(classes.itervalues()):
             classdef[i] = (class_.name, class_.label, class_.color.name())
 
-        dset = self.h5f.create_dataset(OcSvmDataModel.classdef, data=classdef)
+        dset = self.h5f.create_dataset(self.dmodel.classdef, data=classdef)
 
         if classifier_params is not None:
             # save classifier parameters
@@ -84,13 +106,14 @@ class OcSvmWriter(object):
         for i  in xrange(preproc.nfeatures):
             norm[i] = (offset[i], scale[i], preproc.mask[i])
 
-        dset = self.h5f.create_dataset(OcSvmDataModel.normalization, data=norm)
+        dset = self.h5f.create_dataset(self.dmodel.normalization, data=norm)
 
 
 class OneClassSvm(Classifier):
     """Class for training and parameter tuning of a one class svm."""
 
     KERNEL = "rbf"
+    name = "ocsvm"
 
     # TODO method to set the item classes
     INLIER = ItemClass("inlier", QtGui.QColor("green"), 1)
@@ -176,9 +199,10 @@ class OneClassSvm(Classifier):
             predictions = self._clf.predict(self._pp(features))
             return [self.classes[pred] for pred in predictions]
 
-    def saveToHdf(self, file_, feature_selection):
+    def saveToHdf(self, name, file_, feature_selection, description,
+                  overwrite=False):
 
-        writer = OcSvmWriter(file_)
+        writer = OcSvmWriter(name, file_, description, overwrite)
         writer.saveTrainingSet(self._pp.data, feature_selection.values())
         writer.saveClassDef(self.classes, self._clf.get_params())
         writer.saveNormalization(self._pp)
