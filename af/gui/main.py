@@ -63,6 +63,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionOpenHdf.triggered.connect(self.onFileOpen)
         self.actionCloseHdf.triggered.connect(self.onFileClose)
         self.actionProcessTrainingSet.triggered.connect(self.openImporter)
+        self.actionExportViewPanel.triggered.connect(self.saveImage)
         self.loader.finished.connect(self.onLoadingFinished)
 
         self._restoreSettings()
@@ -147,7 +148,6 @@ class AtMainWindow(QtGui.QMainWindow):
         self.sortToolBar.sortBtn.clicked.connect(
             self.sorting.sort)
 
-
     def setupProgressBar(self):
         frame = QtGui.QFrame(self)
         self.progressbar = QtGui.QProgressBar(frame)
@@ -163,6 +163,24 @@ class AtMainWindow(QtGui.QMainWindow):
         self.loaderThread.finished.connect(frame.hide)
         frame.hide()
         self.statusBar().addPermanentWidget(frame)
+
+    def saveImage(self):
+
+        filename = QFileDialog.getSaveFileName(self, "Save as ...",
+                                               self._lastdir,
+                                               "png - Image (*.png)")
+
+        if filename:
+            scene = self.tileview.scene()
+            size = scene.sceneRect().size().toSize()
+            image = QtGui.QImage(size, QtGui.QImage.Format_RGB32)
+            painter = QtGui.QPainter(image)
+
+            image.fill(QtCore.Qt.white)
+            scene.render(painter)
+            painter.end()
+            image.save(filename)
+            self.statusBar().showMessage("Image saved to %s" %filename)
 
     def updateToolbars(self, props):
         self.navToolBar.updateToolbar(props.coordspace)
