@@ -28,6 +28,10 @@ class AtTrainingSetIO(HdfFile):
         self.dmodel = HdfDataModel(tset)
 
     @property
+    def settings(self):
+       return self[self.dmodel.settings].value
+
+    @property
     def fileinfo(self):
 
         cspace = self.cspace()

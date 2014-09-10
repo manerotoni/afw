@@ -70,7 +70,8 @@ class AtImporter(QtCore.QObject):
         writer = HdfWriter(self.outfile)
         colors = [self.colors[ch] for ch in self.channels.values()]
         writer.setupFile(self.metadata.n_images, self.channels, colors)
-        writer.saveSettings(self.seg_params, self.feature_groups)
+        writer.saveSettings(self.seg_params, self.feature_groups,
+                            self.channels.values())
 
         try:
             gsize = self.seg_params.values()[0].gallery_size

@@ -29,6 +29,7 @@ def validate_tagname(name, reverse=False):
 class XmlConf(object):
 
     PRIMARY = "primary_segmentation"
+    ACTIVE_CHANNELS = "active_channels"
     SEGMENTATION = "segmentation"
     FEATUREGROUPS = "feature_groups"
     CONFIG = "config"
@@ -36,9 +37,11 @@ class XmlConf(object):
 
 class XmlConfWriter(XmlConf):
 
-    def __init__(self, segmentation, features):
+    def __init__(self, segmentation, features, active_channels):
         self.root = etree.Element(self.CONFIG)
         self.root.set(self.PRIMARY, validate_tagname(segmentation.keys()[0]))
+        active_channels = [validate_tagname(ac) for ac in active_channels]
+        self.root.set(self.ACTIVE_CHANNELS, " ".join(active_channels))
 
         self._addElement(self.SEGMENTATION, segmentation)
         self._addElement(self.FEATUREGROUPS, features)
@@ -80,17 +83,22 @@ class XmlConfWriter(XmlConf):
 
 class XmlConfReader(XmlConf):
 
-    def __init__(self, filename):
+    def __init__(self, xmldata):
         super(XmlConfReader, self).__init__()
         rparser = etree.XMLParser(remove_comments=True,
                                   remove_blank_text=True)
-        self.root = etree.parse(filename, rparser).getroot()
+
+        self.root = etree.fromstring(xmldata, rparser)
 
     def element2NamedTuple(self, element):
 
         rparser = etree.XMLParser(remove_comments=True,
                                   remove_blank_text=True)
         root = etree.parse(self.filename, rparser).getroot()
+
+    def activeChannels(self):
+        return [validate_tagname(ac, reverse=True) for ac in
+                self.root.attrib[self.ACTIVE_CHANNELS].split()]
 
     def _attrib2dict(self, attrib):
         evalattrib = dict()

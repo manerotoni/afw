@@ -68,6 +68,15 @@ class ChannelBar(QtGui.QWidget):
             self.gbox.addWidget(cbtn, i, 1)
             self.enhancer.addChannel(cb.text())
 
+    def activateChannels(self, channels):
+
+        for i in xrange(self._channel_count):
+            cb = self.widgetAt(i, 0)
+            if cb.text() in channels:
+                cb.setCheckState(QtCore.Qt.Checked)
+            else:
+                cb.setCheckState(QtCore.Qt.Unchecked)
+
     def widgetAt(self, row, column):
         return self.gbox.itemAtPosition(row, column).widget()
 

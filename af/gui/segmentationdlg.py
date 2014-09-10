@@ -12,13 +12,27 @@ import sys
 from collections import OrderedDict
 from os.path import splitext, join, dirname
 
+import magic
+import h5py
+
 from PyQt4 import uic
 from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
+from PyQt4.QtCore import Qt, pyqtSignal
 
 from af.gui.featurebox import FeatureBox
+from af.hdfio.trainingset import AtTrainingSetIO
 from af.segmentation import PrimaryParams, ExpansionParams, SRG_TYPE
 from af.xmlconf import XmlConfReader, XmlConfWriter
+
+
+def settings_from(filename):
+
+    if magic.from_file(filename, mime=True) == "application/xml":
+        with open(filename, "r") as fp:
+            return fp.read()
+    elif magic.from_file(filename, mime=True) == "application/x-hdf":
+        fp = AtTrainingSetIO(filename)
+        return fp.settings
 
 
 class ChLabel(QtGui.QLabel):
@@ -60,6 +74,8 @@ class SegmentationDialog(QtGui.QWidget):
     NAME = 0
     SEGMENTATION = 1
     FEATURES = 2
+
+    activateChannels = pyqtSignal(list)
 
     def __init__(self, *args, **kw):
         super(SegmentationDialog, self).__init__(*args, **kw)
@@ -177,22 +193,28 @@ class SegmentationDialog(QtGui.QWidget):
     def onSaveBtn(self):
 
         dir_ = os.path.expanduser("~")
-        fname = QtGui.QFileDialog.getSaveFileName(self, "save File", dir_,
-                                                  "xml files (*.xml)")
+        fname = QtGui.QFileDialog.getSaveFileName(
+            self, "save File", dir_, "xml files (*.xml)")
+
+        active_channels = self.parent().cbar.checkedChannels()
 
         if fname:
             writer = XmlConfWriter(self.segmentationParams(),
-                                   self.featureGroups())
+                                   self.featureGroups(),
+                                   active_channels.values())
             writer.save(fname)
 
     def onLoadBtn(self):
         dir_ = os.path.expanduser("~")
-        fname = QtGui.QFileDialog.getOpenFileName(self, "load config file",
-                                                  dir_,
-                                                  "xml files (*.xml)")
+        fname = QtGui.QFileDialog.getOpenFileName(
+            self, "load config file", dir_,
+            ("xml files (*.xml);"
+             "hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5"))
 
         if fname:
-            reader = XmlConfReader(fname)
+            xmldata = settings_from(fname)
+            reader = XmlConfReader(xmldata)
+            self.activateChannels.emit(reader.activeChannels())
             # primary settings
             name, settings = reader.primarySettings()
             self._updatePrimary(name, settings)

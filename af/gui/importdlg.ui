@@ -100,7 +100,7 @@
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="../../qresources/af_rc.qrc">
+           <iconset resource="../../qrc/at_rc.qrc">
             <normaloff>:/previous.png</normaloff>:/previous.png</iconset>
           </property>
           <property name="shortcut">
@@ -151,7 +151,7 @@
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="../../qresources/af_rc.qrc">
+           <iconset resource="../../qrc/at_rc.qrc">
             <normaloff>:/next.png</normaloff>:/next.png</iconset>
           </property>
           <property name="shortcut">
@@ -344,7 +344,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../qresources/af_rc.qrc"/>
+  <include location="../../qrc/at_rc.qrc"/>
  </resources>
  <connections/>
 </ui>

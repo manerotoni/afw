@@ -65,6 +65,7 @@ class ImportDialog(QtGui.QDialog):
         self.showBBoxes.stateChanged.connect(self.onBBoxes)
         self.showBBoxes.stateChanged.connect(self.showObjects)
         self.segdlg.refreshBtn.clicked.connect(self.showObjects)
+        self.segdlg.activateChannels.connect(self.cbar.activateChannels)
 
         self.nextBtn.clicked.connect(self.onNextBtn)
         self.prevBtn.clicked.connect(self.onPrevBtn)
