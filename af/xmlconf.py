@@ -9,12 +9,11 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 
-from collections import OrderedDict
 from lxml import etree
-
 from af.segmentation.options import PrimaryParams
 from af.segmentation.options import ExpansionParams
 from af.segmentation.options import SRG_TYPE
+
 
 def validate_tagname(name, reverse=False):
     """Make strings xml-conform. If the reverse flag is true method restores
@@ -32,12 +31,13 @@ class XmlConf(object):
     ACTIVE_CHANNELS = "active_channels"
     SEGMENTATION = "segmentation"
     FEATUREGROUPS = "feature_groups"
+    COLOR = "color"
     CONFIG = "config"
 
 
 class XmlConfWriter(XmlConf):
 
-    def __init__(self, segmentation, features, active_channels):
+    def __init__(self, segmentation, features, active_channels, colors):
         self.root = etree.Element(self.CONFIG)
         self.root.set(self.PRIMARY, validate_tagname(segmentation.keys()[0]))
         active_channels = [validate_tagname(ac) for ac in active_channels]
@@ -45,6 +45,14 @@ class XmlConfWriter(XmlConf):
 
         self._addElement(self.SEGMENTATION, segmentation)
         self._addElement(self.FEATUREGROUPS, features)
+        self._addAttribs(self.COLOR, colors)
+
+    def _addAttribs(self, name, dict_):
+
+        for key, value in dict_.iteritems():
+            key = validate_tagname(key)
+            element = self.root.find(key)
+            element.attrib[name] = value
 
     def _addElement(self, name, dict_):
         for key, value in dict_.items():
@@ -99,6 +107,11 @@ class XmlConfReader(XmlConf):
     def activeChannels(self):
         return [validate_tagname(ac, reverse=True) for ac in
                 self.root.attrib[self.ACTIVE_CHANNELS].split()]
+
+    def color(self, channel):
+        """Return the predefined color of a channel as hexcolor."""
+        element = self.root.xpath(validate_tagname(channel))[0]
+        return element.attrib[self.COLOR]
 
     def _attrib2dict(self, attrib):
         evalattrib = dict()

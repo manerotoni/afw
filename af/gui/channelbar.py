@@ -68,6 +68,11 @@ class ChannelBar(QtGui.QWidget):
             self.gbox.addWidget(cbtn, i, 1)
             self.enhancer.addChannel(cb.text())
 
+    def setColor(self, name, color):
+        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        import pdb; pdb.set_trace()
+        pass
+
     def activateChannels(self, channels):
 
         for i in xrange(self._channel_count):

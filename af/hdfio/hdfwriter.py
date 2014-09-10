@@ -127,8 +127,8 @@ class HdfWriter(object):
                                        for c in channels.values()]
         self._colors = colors
 
-    def saveSettings(self , segmentation, features, active_channels):
-        xml = XmlConfWriter(segmentation, features, active_channels)
+    def saveSettings(self , segmentation, features, active_channels, colors):
+        xml = XmlConfWriter(segmentation, features, active_channels, colors)
         txt = xml.toString()
         dset = self._file.create_dataset(self.dmodel.settings, data=txt)
 

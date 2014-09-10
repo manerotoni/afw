@@ -31,8 +31,11 @@ def settings_from(filename):
         with open(filename, "r") as fp:
             return fp.read()
     elif magic.from_file(filename, mime=True) == "application/x-hdf":
-        fp = AtTrainingSetIO(filename)
-        return fp.settings
+        try:
+            fp = AtTrainingSetIO(filename)
+            return fp.settings
+        finally:
+            fp.close()
 
 
 class ChLabel(QtGui.QLabel):
@@ -76,6 +79,7 @@ class SegmentationDialog(QtGui.QWidget):
     FEATURES = 2
 
     activateChannels = pyqtSignal(list)
+    changeColor = pyqtSignal(str, str)
 
     def __init__(self, *args, **kw):
         super(SegmentationDialog, self).__init__(*args, **kw)
@@ -87,7 +91,6 @@ class SegmentationDialog(QtGui.QWidget):
         self.pchannel.currentIndexChanged[str].connect(self.onChannelChanged)
         self.loadBtn.clicked.connect(self.onLoadBtn)
         self.saveBtn.clicked.connect(self.onSaveBtn)
-
 
     def closeEvent(self, event):
         print "pre"
@@ -106,7 +109,6 @@ class SegmentationDialog(QtGui.QWidget):
             widget = self.widgetAt(i, self.NAME)
             if widget.text() == channel:
                 widget.setText(missing[0])
-
 
     def addExpandedRegion(self, name):
         expw = ExpansionWidget(self)
@@ -197,18 +199,20 @@ class SegmentationDialog(QtGui.QWidget):
             self, "save File", dir_, "xml files (*.xml)")
 
         active_channels = self.parent().cbar.checkedChannels()
+        colors = self.parent().cbar.colors()
 
         if fname:
             writer = XmlConfWriter(self.segmentationParams(),
                                    self.featureGroups(),
-                                   active_channels.values())
+                                   active_channels.values(),
+                                   colors)
             writer.save(fname)
 
     def onLoadBtn(self):
         dir_ = os.path.expanduser("~")
         fname = QtGui.QFileDialog.getOpenFileName(
             self, "load config file", dir_,
-            ("xml files (*.xml);"
+            ("xml files (*.xml);;"
              "hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5"))
 
         if fname:
@@ -218,11 +222,14 @@ class SegmentationDialog(QtGui.QWidget):
             # primary settings
             name, settings = reader.primarySettings()
             self._updatePrimary(name, settings)
+            # reads predifined color for channel
+            self.changeColor.emit(name, reader.color(name))
 
             for i in xrange(1, self._rcount):
                 cname = self.widgetAt(i, self.NAME).text()
                 try:
                     settings = reader.expandedSettings(cname)
+                    self.changeColor.emit(cname, reader.color(cname))
                 except ValueError:
                     continue
                 self._updateExtendedRegion(i, settings)

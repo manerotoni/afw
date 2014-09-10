@@ -71,7 +71,7 @@ class AtImporter(QtCore.QObject):
         colors = [self.colors[ch] for ch in self.channels.values()]
         writer.setupFile(self.metadata.n_images, self.channels, colors)
         writer.saveSettings(self.seg_params, self.feature_groups,
-                            self.channels.values())
+                            self.channels.values(), self.colors)
 
         try:
             gsize = self.seg_params.values()[0].gallery_size
