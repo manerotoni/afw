@@ -8,7 +8,9 @@ __licence__ = 'GPL'
 __all__ = ('ChannelBar', )
 
 import math
+import warnings
 import numpy as np
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import QPointF
@@ -69,9 +71,16 @@ class ChannelBar(QtGui.QWidget):
             self.enhancer.addChannel(cb.text())
 
     def setColor(self, name, color):
-        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        import pdb; pdb.set_trace()
-        pass
+
+        chnames = self.allChannels()
+        try:
+            i = chnames.index(name)
+        except ValueError:
+            warnings.warn("can not set color for channel %s" %name)
+        else:
+            cb = self.widgetAt(i, 1)
+            cb.setColor(QtGui.QColor(color))
+
 
     def activateChannels(self, channels):
 

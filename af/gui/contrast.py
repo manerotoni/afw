@@ -7,6 +7,7 @@ __licence__ = 'GPL'
 
 __all__ = ('AfEnhancerWidget', 'AfContrasSliderWidget')
 
+
 from os.path import splitext
 import numpy as np
 
@@ -158,17 +159,16 @@ class AfContrastSliderWidget(QtGui.QWidget):
         self.brightness.setRange(*range_)
         self.contrast.setRange(*range_)
 
-
         self.settings.valuesUpdated.connect(self.updateSliders)
         self.minMaxBtn.clicked.connect(self.settings.setImageToMinMax)
         self.resetBtn.clicked.connect(self.settings.reset)
         self.autoBtn.clicked.connect(self.settings.setAuto)
+        self.autoBtn.setToolTip("cuts of 1% of the histogram")
 
         self.minimum.valueChanged.connect(self.settings.setMinimum)
         self.maximum.valueChanged.connect(self.settings.setMaximum)
         self.contrast.valueChanged.connect(self.settings.setContrast)
         self.brightness.valueChanged.connect(self.settings.setBrightness)
-
 
         self.minimum.valueChanged.connect(self.valuesToolTip)
         self.maximum.valueChanged.connect(self.valuesToolTip)
