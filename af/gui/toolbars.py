@@ -83,12 +83,10 @@ class ViewToolBar(AtToolBar):
         self.setObjectName("ViewToolbar")
 
         self.galSize = QtGui.QSpinBox(self)
-        self.galSize.setPrefix("gallery size: ")
         self.galSize.setRange(0, 256)
         self.galSize.setValue(65)
 
         self.nItems = QtGui.QSpinBox(self)
-        self.nItems.setPrefix("number items: ")
         self.nItems.setRange(0, 1e9)
         self.nItems.setSingleStep(50)
         self.nItems.setValue(250)
@@ -113,7 +111,9 @@ class ViewToolBar(AtToolBar):
         self.addAction(self.actionOpen)
         self.addWidget(self.reloadBtn)
         self.addSeparator()
+        self.addWidget(QtGui.QLabel("gallery size:", self))
         self.addWidget(self.galSize)
+        self.addWidget(QtGui.QLabel("number items:", self))
         self.addWidget(self.nItems)
         self.addWidget(self.zoom)
         self.addWidget(self.classification)
