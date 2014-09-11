@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="/">
     <file>next.png</file>
+    <file>open.png</file>
     <file>previous.png</file>
     <file>hdf5-logo.png</file>
     <file>eraser.png</file>

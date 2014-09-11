@@ -81,7 +81,6 @@ class ViewToolBar(AtToolBar):
     def __init__(self, *args, **kw):
         super(ViewToolBar, self).__init__(*args, **kw)
         self.setObjectName("ViewToolbar")
-        self.setIconSize(QtCore.QSize(16, 16))
 
         self.galSize = QtGui.QSpinBox(self)
         self.galSize.setPrefix("gallery size: ")
@@ -108,7 +107,7 @@ class ViewToolBar(AtToolBar):
         self.zoom.currentIndexChanged.connect(self.onIndexChanged)
         self.reloadBtn = QtGui.QPushButton("load", self)
 
-        icon = QtGui.QIcon(":/hdf5-logo.png")
+        icon = QtGui.QIcon(":/open.png")
         self.actionOpen = QtGui.QAction(
             icon, "open", self)
         self.addAction(self.actionOpen)
