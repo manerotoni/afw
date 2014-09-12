@@ -70,6 +70,7 @@ class Ch5Reader(HdfFile):
     _image_key = _site_key + "/image/channel"
 
     _rname = "region_name"
+    _channel_index = "channel_idx"
     _tidx = "time_idx"
 
 
@@ -170,9 +171,9 @@ class Ch5Reader(HdfFile):
     def _gallery_image(self, index, coord, size, (height, width), (cx, cy)):
         """Read position correceted gallery image"""
 
-        ci = self[self._region_name_key][self._rname] == \
-             "region___%s" %coord['region'][0]
-
+        rname = self[self._region_name_key][self._rname].tolist()
+        ci = self[self._region_name_key][self._channel_index]
+        ci = ci[rname.index("region___%s" %coord['region'])]
         ti = self[self._time_key %coord][self._tidx][index]
 
         hsize = int(np.floor(size/2.0))

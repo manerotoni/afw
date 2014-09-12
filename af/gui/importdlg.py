@@ -151,6 +151,7 @@ class ImportDialog(QtGui.QDialog):
 
         self.segdlg.setRegions(self.cbar.allChannels())
         self.slider.setRange(0, self.metadata.n_images-1)
+        self.slider.setValue(0)
         self.showObjects()
 
     def showImage(self, index=0):

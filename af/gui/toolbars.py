@@ -20,6 +20,8 @@ class AtToolBar(QtGui.QToolBar):
     def __init__(self, *args, **kw):
         super(AtToolBar, self).__init__(*args, **kw)
         self.setObjectName(self.__class__.__name__)
+        self.setWindowTitle(self.__class__.__name__)
+        self.setIconSize(QtCore.QSize(16, 16))
 
 
 class NavToolBar(AtToolBar):
