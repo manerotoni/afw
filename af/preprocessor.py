@@ -47,11 +47,17 @@ class PreProcessor(object):
 
     @property
     def std(self):
-        return self._zs.std
+        imask = np.invert(self._mask)
+        data = self.data.copy()
+        data[:, imask] = np.nan
+        return data.std(axis=0)
 
     @property
     def mean(self):
-        return self._zs.mean
+        imask = np.invert(self._mask)
+        data = self.data.copy()
+        data[:, imask] = np.nan
+        return data.mean(axis=0)
 
     @property
     def mask(self):

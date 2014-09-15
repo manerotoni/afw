@@ -6,4 +6,4 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 
-from main import *
+# from main import *

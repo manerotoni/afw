@@ -76,7 +76,6 @@ class Params(object):
 
 def import_images(files, outfile, params):
 
-
     proc = LsmProcessor(files[0], params.gsize)
     metadata = proc.metadata
     writer = HdfWriter(outfile)

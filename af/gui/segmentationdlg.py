@@ -213,7 +213,8 @@ class SegmentationDialog(QtGui.QWidget):
         fname = QtGui.QFileDialog.getOpenFileName(
             self, "load config file", dir_,
             ("xml files (*.xml);;"
-             "hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5"))
+             "hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5;;"
+             "All files (*.*)"))
 
         if fname:
             xmldata = settings_from(fname)

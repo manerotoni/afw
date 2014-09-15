@@ -34,6 +34,7 @@ class OcSvmDataModel(object):
 
     def __init__(self, name):
 
+        self.name = name
         self.path = "/classifiers/%s" %name
         self.parameters = "%s/parameters" %self.path
         self.training_set = "%s/training_set" %self.path
