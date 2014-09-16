@@ -103,10 +103,10 @@ class OcSvmWriter(object):
         dt = [("offset", np.float32), ("scale", np.float32), ("colmask", bool)]
         offset = preproc.mean.astype(np.float32)
         scale = preproc.std.astype(np.float32)
-        norm = np.empty( (preproc.nfeatures, ), dtype=dt)
+        norm = np.empty( (offset.size, ), dtype=dt)
 
-        for i  in xrange(preproc.nfeatures):
-            norm[i] = (offset[i], scale[i], preproc.mask[i])
+        for i, line in enumerate(zip(offset, scale, preproc.mask)):
+            norm[i] = line
 
         dset = self.h5f.create_dataset(self.dmodel.normalization, data=norm)
 
