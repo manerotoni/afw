@@ -27,6 +27,11 @@ class ItemClass(QtCore.QObject):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def fromItemClass(itemclass):
+        """Returns a new ItemClass instance cloned from an existing one."""
+        return ItemClass(itemclass.name, itemclass.color, itemclass.label)
+
     @property
     def pen(self):
         pen = QtGui.QPen()
