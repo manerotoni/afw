@@ -8,13 +8,13 @@ __licence__ = 'GPL'
 __all__ = ('AfSortWidget', 'AfAnnotationWidget')
 
 
-from os.path import dirname, join, expanduser
+from os.path import dirname, join
 
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QMessageBox
-from PyQt4.QtGui import QFileDialog
 
 from af.sorters import Sorter
 from af.hdfio.readercore import HdfError
@@ -105,7 +105,6 @@ class AfSortWidget(AfSideBarWidget):
             self.startSorting.emit()
 
 
-
 class AfAnnotationWidget(AfSideBarWidget):
 
 
@@ -137,6 +136,18 @@ class AfAnnotationWidget(AfSideBarWidget):
         self.predictBtn.clicked.connect(self.onPredict)
         self.addBtn.clicked.connect(self.onAdd)
         self.featureBtn.clicked.connect(self.onFeatureBtn)
+
+    def setButtonColor(self, color):
+
+        # print color
+        # pal = QtGui.QPalette()
+        # pal.setColor(QtGui.QPalette.Button, color)
+        # self.predictBtn.setPalette(pal)
+
+        color = QtGui.QColor(color).name()
+        qss = "QPushButton#predictBtn {color: %s}" %color
+
+        self.predictBtn.setStyleSheet(qss)
 
     def _setupClassifiers(self):
         for name in Classifier.classifiers():
@@ -217,21 +228,22 @@ class AfAnnotationWidget(AfSideBarWidget):
         return features[:, ftrs_indices]
 
     def removeSelected(self):
+        self.setButtonColor(Qt.red)
         super(AfAnnotationWidget, self).removeSelected()
-        self.classify(self.tileview.items)
 
     def addItems(self, items):
 
+        self.setButtonColor(Qt.red)
         for item in items:
             item.setTrainingSample(True)
 
         super(AfAnnotationWidget, self).addItems(items)
-        self.train()
-        self.classify(self.tileview.items)
+
 
     def onPredict(self):
         self.train()
         self.classify(self.tileview.items)
+        self.setButtonColor(Qt.darkGreen)
 
     def train(self):
         try:
