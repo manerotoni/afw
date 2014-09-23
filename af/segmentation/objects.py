@@ -13,7 +13,7 @@ from collections import namedtuple, OrderedDict
 import numpy as np
 
 
-Orientation = namedtuple("Orientation", ["angle", "excentricity"])
+Orientation = namedtuple("Orientation", ["angle", "eccentricity"])
 BBox = namedtuple("BBox", ["left", "right", "top", "bottom"])
 Center = namedtuple("Center", ["x", "y"])
 Class = namedtuple("Class", ["name", "label","color"])
