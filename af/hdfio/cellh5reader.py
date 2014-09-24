@@ -17,6 +17,7 @@ import time
 import numpy as np
 from af.hdfio.readercore import HdfFile, HdfItem, HdfFileInfo
 
+
 def uncompress_contour(contour):
     contour = np.asarray(zlib.decompress(
         base64.b64decode(contour)).split(','), dtype=np.int16)

@@ -139,12 +139,14 @@ class OneClassSvm(Classifier):
         self._nu.setSingleStep(0.05)
         self._nu.setValue(0.01)
         self._nu.setDecimals(5)
+        self._nu.valueChanged.connect(parent.predictionInvalid)
 
         self._gamma = QtGui.QDoubleSpinBox(self._frame)
         self._gamma.setRange(0.0, 100.0)
         self._gamma.setSingleStep(0.01)
         self._gamma.setValue(0.5)
         self._gamma.setDecimals(5)
+        self._gamma.valueChanged.connect(parent.predictionInvalid)
 
         self._estBtn = QtGui.QPushButton("estimate")
         self._estBtn.clicked.connect(parent.estimateParameters)

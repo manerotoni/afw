@@ -138,16 +138,12 @@ class AfAnnotationWidget(AfSideBarWidget):
         self.featureBtn.clicked.connect(self.onFeatureBtn)
 
     def setButtonColor(self, color):
-
-        # print color
-        # pal = QtGui.QPalette()
-        # pal.setColor(QtGui.QPalette.Button, color)
-        # self.predictBtn.setPalette(pal)
-
         color = QtGui.QColor(color).name()
         qss = "QPushButton#predictBtn {color: %s}" %color
-
         self.predictBtn.setStyleSheet(qss)
+
+    def predictionInvalid(self, dummy):
+        self.setButtonColor(Qt.red)
 
     def _setupClassifiers(self):
         for name in Classifier.classifiers():
@@ -204,7 +200,6 @@ class AfAnnotationWidget(AfSideBarWidget):
         if hdffile.filename != dlg.path:
             hdffile = dlg.path
 
-        ftrnames = self.parent.loader.featureNames
         try:
             clf.saveToHdf(dlg.name,
                           hdffile,
@@ -214,7 +209,8 @@ class AfAnnotationWidget(AfSideBarWidget):
         except HdfError as e:
             QMessageBox.critical(self, "error", str(e))
         else:
-            QMessageBox.information(self, "information", "data successfully saved")
+            QMessageBox.information(self, "information",
+                                    "data successfully saved")
 
     def filterFeatures(self, features):
         """Filter the feature matrix by column wise. Indices of the cols are
@@ -239,13 +235,13 @@ class AfAnnotationWidget(AfSideBarWidget):
 
         super(AfAnnotationWidget, self).addItems(items)
 
-
     def onPredict(self):
         self.train()
         self.classify(self.tileview.items)
         self.setButtonColor(Qt.darkGreen)
 
     def train(self):
+
         try:
             features = self.filterFeatures(self.model.features)
             clf = self.currentClassifier()

@@ -32,4 +32,4 @@ class AfConfig(object):
 
         # maximum fraction of support vectors for the one class svm
         # classifier
-        self.max_sv_fraction = 0.25
+        self.max_sv_fraction = 0.20
