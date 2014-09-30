@@ -12,7 +12,6 @@ import sys
 from collections import OrderedDict
 from os.path import splitext, join, dirname
 
-import magic
 import h5py
 
 from PyQt4 import uic
@@ -24,18 +23,38 @@ from af.hdfio.trainingset import AtTrainingSetIO
 from af.segmentation import PrimaryParams, ExpansionParams, SRG_TYPE
 from af.xmlconf import XmlConfReader, XmlConfWriter
 
+# windows sucks!
+try:
+    import magic
 
-def settings_from(filename):
+    def settings_from(filename):
+        if magic.from_file(filename, mime=True) == "application/xml":
+            with open(filename, "r") as fp:
+                return fp.read()
+        elif magic.from_file(filename, mime=True) == "application/x-hdf":
+            try:
+                fp = AtTrainingSetIO(filename)
+                return fp.settings
+            finally:
+                fp.close()
+        raise IOError("Unknown extenstion!")
 
-    if magic.from_file(filename, mime=True) == "application/xml":
-        with open(filename, "r") as fp:
-            return fp.read()
-    elif magic.from_file(filename, mime=True) == "application/x-hdf":
-        try:
-            fp = AtTrainingSetIO(filename)
-            return fp.settings
-        finally:
-            fp.close()
+except ImportError:
+    def settings_from(filename):
+        extenstion = os.path.splitext()[0]
+        if extenstion == "xml":
+            with open(filename, "r") as fp:
+                return fp.read()
+        elif extenstion in ("hdf", "ch5", "h5", "hdf5"):
+            try:
+                fp = AtTrainingSetIO(filename)
+                return fp.settings
+            finally:
+                fp.close()
+
+        raise IOError("Unknown extenstion!")
+
+
 
 
 class ChLabel(QtGui.QLabel):
