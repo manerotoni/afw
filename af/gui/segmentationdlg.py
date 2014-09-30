@@ -78,7 +78,7 @@ class ExpansionWidget(QtGui.QGroupBox):
 
     def params(self):
         return ExpansionParams(
-            SRG_TYPE["KeepContours"], None, 0, self.value(), 0,
+            SRG_TYPE["KeepContours"], 0, 0, self.value(), 0,
             self.normMin.value(),
             self.normMax.value())
 
