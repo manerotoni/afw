@@ -41,18 +41,18 @@ try:
 
 except ImportError:
     def settings_from(filename):
-        extenstion = os.path.splitext()[0]
-        if extenstion == "xml":
+        extenstion = os.path.splitext(filename)[1]
+        if extenstion == ".xml":
             with open(filename, "r") as fp:
                 return fp.read()
-        elif extenstion in ("hdf", "ch5", "h5", "hdf5"):
+        elif extenstion in (".hdf", ".ch5", ".h5", ".hdf5"):
             try:
                 fp = AtTrainingSetIO(filename)
                 return fp.settings
             finally:
                 fp.close()
 
-        raise IOError("Unknown extenstion!")
+        raise IOError("Unknown extenstion! (%s)" %extenstion)
 
 
 

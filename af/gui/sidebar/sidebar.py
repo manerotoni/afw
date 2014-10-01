@@ -218,7 +218,7 @@ class AfAnnotationWidget(AfSideBarWidget):
 
         ftrs_indices = self.featureDlg.indicesOfCheckedItems()
 
-        if not(ftrs_indices):
+        if not ftrs_indices or features is None:
             raise NoSampleError("no features selected for classifier training")
 
         return features[:, ftrs_indices]
@@ -236,18 +236,18 @@ class AfAnnotationWidget(AfSideBarWidget):
         super(AfAnnotationWidget, self).addItems(items)
 
     def onPredict(self):
-        self.train()
-        self.classify(self.tileview.items)
-        self.setButtonColor(Qt.darkGreen)
-
-    def train(self):
-
         try:
-            features = self.filterFeatures(self.model.features)
-            clf = self.currentClassifier()
-            clf.train(features)
+            self.train()
         except NoSampleError:
             pass
+        else:
+            self.classify(self.tileview.items)
+            self.setButtonColor(Qt.darkGreen)
+
+    def train(self):
+        features = self.filterFeatures(self.model.features)
+        clf = self.currentClassifier()
+        clf.train(features)
 
     def classify(self, items):
         clf = self.currentClassifier()
