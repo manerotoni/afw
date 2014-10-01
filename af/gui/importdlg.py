@@ -155,9 +155,12 @@ class ImportDialog(QtGui.QDialog):
         self.showObjects()
 
     def showImage(self, index=0):
+        try:
+            proc = LsmProcessor(self._files[index])
+        except IndexError:
+            return
         self.viewer.clearPolygons()
         self.viewer.clearRects()
-        proc = LsmProcessor(self._files[index])
         images = list(proc.iterQImages())
         self.cbar.setImages(images, list(proc.iterprops()))
 
@@ -191,6 +194,14 @@ class ImportDialog(QtGui.QDialog):
         self.startBtn.setText("start")
         QMessageBox.information(self, "finished", "training set saved")
 
+    def showSlider(self):
+        self.progressBar.hide()
+        self.sliderframe.show()
+
+    def hideSlider(self):
+        self.progressBar.show()
+        self.sliderframe.hide()
+
     def raw2hdf(self):
 
         if self.thread.isRunning():
@@ -213,6 +224,8 @@ class ImportDialog(QtGui.QDialog):
                 return
 
             worker.connetToProgressBar(self.progressBar, Qt.QueuedConnection)
+            worker.started.connect(self.hideSlider)
+            worker.finished.connect(self.showSlider)
             worker.finished.connect(self.onFinished, Qt.QueuedConnection)
             worker.error.connect(self.onError, Qt.QueuedConnection)
             worker.contourImage.connect(self.cbar.contourImage,

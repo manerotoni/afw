@@ -60,8 +60,6 @@ class AtImporter(QtCore.QObject):
     def connetToProgressBar(self, pbar, connectiontype=Qt.QueuedConnection):
         self.progressUpdate.connect(pbar.setValue, connectiontype)
         self.progressSetRange.connect(pbar.setRange, connectiontype)
-        self.finished.connect(pbar.hide, connectiontype)
-        self.started.connect(pbar.show, connectiontype)
 
     def __call__(self):
         self.started.emit()

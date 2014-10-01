@@ -56,7 +56,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -65,8 +65,8 @@
     </property>
     <addaction name="actionOpenHdf"/>
     <addaction name="actionCloseHdf"/>
-    <addaction name="actionQuit"/>
     <addaction name="actionExportViewPanel"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
