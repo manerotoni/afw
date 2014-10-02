@@ -20,7 +20,7 @@ import matplotlib.cm as cm
 
 import matplotlib.pyplot as plt
 from preprocessor import PreProcessor
-from af.mining import PCA
+from annot.mining import PCA
 
 def volume(data, nu, gamma):
     """Return the volumen unter the decission function for the area inside

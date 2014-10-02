@@ -3,7 +3,7 @@ import sys
 sys.path.append("../")
 
 
-from af.mining import ZScore
+from annot.mining import ZScore
 
 import numpy as np
 import matplotlib.pyplot as plt

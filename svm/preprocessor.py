@@ -9,7 +9,7 @@ import sys
 sys.path.append("../")
 
 import numpy as np
-from af.mining import ZScore
+from annot.mining import ZScore
 
 
 class PreProcessor(object):

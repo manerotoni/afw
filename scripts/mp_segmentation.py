@@ -21,10 +21,10 @@ import numpy as np
 from collections import OrderedDict
 
 from cecog import ccore
-from af.hdfio.hdfwriter import HdfWriter
-from af.segmentation import LsmProcessor
-from af.segmentation import PrimaryParams, ExpansionParams
-from af.segmentation import ObjectDict
+from annot.hdfio.hdfwriter import HdfWriter
+from annot.segmentation import LsmProcessor
+from annot.segmentation import PrimaryParams, ExpansionParams
+from annot.segmentation import ObjectDict
 
 from multiprocessing import Pool, Manager
 

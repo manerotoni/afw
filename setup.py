@@ -17,7 +17,7 @@ from distutils.core import setup
 import build_helpers
 
 pyrcc_opts = {'infile': join('qrc', 'at_rc.qrc'),
-              'outfile': join('af', 'at_rc.py'),
+              'outfile': join('annot', 'at_rc.py'),
               'pyrccbin': 'pyrcc4'}
 
 setup(name='AnnotationTool',
@@ -25,9 +25,9 @@ setup(name='AnnotationTool',
       description='Gallery image based tool for easy class anntotation.',
       author='Rudolf Hoefler',
       author_email='rudolf.hoefler@gmail.com',
-      packages = build_helpers.find_submodules("./af", "af"),
+      packages = build_helpers.find_submodules("./annot", "annot"),
       data_files=[(join('share','AnnotationTool'), glob.glob('./qrc/*.ico'))],
-      package_data = {'af': ['gui/*.ui', 'gui/sidebar/*.ui']},
+      package_data = {'annot': ['gui/*.ui', 'gui/sidebar/*.ui']},
       scripts = ['AnnotationTool.py', 'postinstall.py'],
       cmdclass = {'pyrcc': build_helpers.PyRcc,
                   'build': build_helpers.Build},
