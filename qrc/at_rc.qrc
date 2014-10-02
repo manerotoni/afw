@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
+    <file>annotationtool.svg</file>
     <file>next.png</file>
     <file>open.png</file>
     <file>previous.png</file>
