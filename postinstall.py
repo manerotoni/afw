@@ -5,7 +5,7 @@ Create a shortcut in the start menu after installation.
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
-__licence__ = 'LGPL'
+__licence__ = 'GPL'
 
 import os
 import sys
