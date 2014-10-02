@@ -11,3 +11,4 @@ at_rc.py
 *.ch5
 *.hdf5
 build
+dist
