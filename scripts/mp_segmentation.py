@@ -1,3 +1,4 @@
+#!/usr/bin/env Python
 """
 mp_importer.py
 
@@ -81,7 +82,8 @@ def import_images(files, outfile, params):
     writer = HdfWriter(outfile)
     colors = [params.colors[c] for c in params.channels.values()]
     writer.setupFile(len(files), params.channels, colors)
-    writer.saveSettings(params.seg_params, params.feature_groups)
+    writer.saveSettings(params.seg_params, params.feature_groups,
+                        params.channels.values(), params.colors)
 
     pool = Pool(processes=8)#, initializer=initfunc, initargs=("Hello world!", ))
     fprm = zip(files, len(files)*[params])
