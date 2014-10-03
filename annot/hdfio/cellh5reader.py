@@ -152,11 +152,17 @@ class Ch5Reader(HdfFile):
         indices = range(0, nf)
         np.random.shuffle(indices)
 
+        rname = self[self._region_name_key][self._rname].tolist()
+        ci = self[self._region_name_key][self._channel_index]
+        ci = ci[rname.index("region___%s" %coord['region'])]
+
         for index in indices[:nitems]:
             path = self._features_key %coord
             isize = self[self._image_key %coord].shape[3:5]
             centers = self[self._center_key %coord][index]
-            gal = self._gallery_image(index, coord, size, isize, centers)
+
+            ti = self[self._time_key %coord][self._tidx][index]
+            gal = self._gallery_image(coord, size, isize, centers, ci, ti)
             cnt = self._contour(index, coord, size, isize, centers)
             ftr = self[path][index]
 
@@ -169,13 +175,8 @@ class Ch5Reader(HdfFile):
             # loading looks more uniteruppted
             time.sleep(0.0035)
 
-    def _gallery_image(self, index, coord, size, (height, width), (cx, cy)):
+    def _gallery_image(self, coord, size, (height, width), (cx, cy), ci, ti):
         """Read position correceted gallery image"""
-
-        rname = self[self._region_name_key][self._rname].tolist()
-        ci = self[self._region_name_key][self._channel_index]
-        ci = ci[rname.index("region___%s" %coord['region'])]
-        ti = self[self._time_key %coord][self._tidx][index]
 
         hsize = int(np.floor(size/2.0))
         xmin = cx - hsize
@@ -199,7 +200,7 @@ class Ch5Reader(HdfFile):
             ymax = height
 
         gimg = self[self._image_key %coord][ci, ti, 0, ymin:ymax, xmin:xmax]
-        return gimg
+        return  gimg
 
     def _contour(self, index, coord, size, (height, width), (cx, cy)):
         """Read position corrected contour"""
