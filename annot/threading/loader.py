@@ -10,7 +10,7 @@ __all__ = ('AtLoader', )
 
 from PyQt4 import QtCore
 from annot.hdfio.guesser import guessHdfType
-
+from annot.config import AtConfig
 
 class AtLoader(QtCore.QObject):
 
@@ -82,12 +82,33 @@ class AtLoader(QtCore.QObject):
 
         # feature names of the last dataset loaded
         self._feature_names = self._h5f.featureNames(self._coordinate['region'])
+
+        if AtConfig().interactive_item_limit < self._h5f.numberItems(self._coordinate):
+            self._loadItemsSingle()
+        else:
+            self._loadItemsBulk()
+
+        self.finished.emit()
+
+    def _loadItemsSingle(self):
+        """Load Item from hdf file and display it immediately."""
         for i, item in enumerate(
-            self._h5f.iterItems(self._nitems, self._coordinate, self._size)):
+                self._h5f.iterItems(self._nitems, self._coordinate,
+                                    self._size, delayed=True)):
             self.thread().usleep(self.PYDELAY)
             if self._aborted:
                 break
             self.progressUpdate.emit(i+1)
             self.itemLoaded.emit(item)
 
-        self.finished.emit()
+
+    def _loadItemsBulk(self):
+        """Load items from hdf and display all items after loading is finished."""
+        items = list()
+        for i, item in enumerate(
+                self._h5f.iterItems(self._nitems, self._coordinate, self._size)):
+            if self._aborted:
+                break
+            self.progressUpdate.emit(i+1)
+            items.append(item)
+        self.itemLoaded.emit(items)

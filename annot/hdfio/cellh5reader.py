@@ -146,7 +146,7 @@ class Ch5Reader(HdfFile):
                     coorddict[plate][well][site] = regions
         return coorddict
 
-    def iterItems(self, nitems, coord, size=50):
+    def iterItems(self, nitems, coord, size=50, delayed=False):
 
         nf = self.numberItems(coord)
         indices = range(0, nf)
@@ -155,25 +155,26 @@ class Ch5Reader(HdfFile):
         rname = self[self._region_name_key][self._rname].tolist()
         ci = self[self._region_name_key][self._channel_index]
         ci = ci[rname.index("region___%s" %coord['region'])]
+        path = self._features_key %coord
+        isize = self[self._image_key %coord].shape[3:5]
+        tpath = self._time_key %coord
+        tpath2 = self._timelapse_key %coord
 
         for index in indices[:nitems]:
-            path = self._features_key %coord
-            isize = self[self._image_key %coord].shape[3:5]
-            centers = self[self._center_key %coord][index]
 
+            centers = self[self._center_key %coord][index]
             ti = self[self._time_key %coord][self._tidx][index]
             gal = self._gallery_image(coord, size, isize, centers, ci, ti)
             cnt = self._contour(index, coord, size, isize, centers)
             ftr = self[path][index]
 
-            # inefficient!
-            path = self._time_key %coord
-            fidx, objid = self[path][index]
-            frame = self[self._timelapse_key %coord]["frame"][fidx]
+            fidx, objid = self[tpath][index]
+            frame = self[tpath2]["frame"][fidx]
 
             yield HdfItem(gal, cnt, ftr, index, objid, frame)
             # loading looks more uniteruppted
-            time.sleep(0.0035)
+            if delayed:
+                time.sleep(0.0035)
 
     def _gallery_image(self, coord, size, (height, width), (cx, cy), ci, ti):
         """Read position correceted gallery image"""

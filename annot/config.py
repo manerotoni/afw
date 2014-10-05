@@ -34,3 +34,7 @@ class AtConfig(object):
         # maximum fraction of support vectors for the one class svm
         # classifier
         self.max_sv_fraction = 0.20
+
+        # if hdf contains more items, than the loading strategy changeds to
+        # "interactive", otherwise all item are loaded at oncec
+        self.interactive_item_limit = 5000

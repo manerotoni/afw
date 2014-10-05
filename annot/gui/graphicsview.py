@@ -164,12 +164,17 @@ class AtGraphicsView(MouseWheelView):
         self.scene().setSceneRect(QtCore.QRectF())
         self._grid.reset()
 
-    def addItem(self, item):
-        citem = CellGraphicsItem(item)
-        citem.setPos(*self._grid.newPos(citem))
-        citem.toggleClassIndicator(self._show_classes)
-        self.scene().addItem(citem)
-        self.scene().setSceneRect(self._grid.rect(5.0))
+    def addItem(self, items):
+
+        if not isinstance(items, list):
+            items = [items]
+
+        for item in items:
+            citem = CellGraphicsItem(item)
+            citem.setPos(*self._grid.newPos(citem))
+            citem.toggleClassIndicator(self._show_classes)
+            self.scene().addItem(citem)
+            self.scene().setSceneRect(self._grid.rect(5.0))
 
     def selectByIndex(self, index):
         for item in self.items:
