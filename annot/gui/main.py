@@ -21,6 +21,7 @@ from annot.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from annot.gui.sidebar import AtSortWidget
 from annot.gui.sidebar import AtAnnotationWidget
 from annot.gui.importdlg import ImportDialog
+from annot.gui.aboutdialog import AtAboutDialog
 
 from annot.threading import AtThread
 from annot.threading import AtLoader
@@ -64,6 +65,8 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionCloseHdf.triggered.connect(self.onFileClose)
         self.actionProcessTrainingSet.triggered.connect(self.openImporter)
         self.actionExportViewPanel.triggered.connect(self.saveImage)
+        self.actionAboutQt.triggered.connect(self.onAboutQt)
+        self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
         self.loader.finished.connect(self.onLoadingFinished)
 
         self._restoreSettings()
@@ -91,6 +94,12 @@ class AtMainWindow(QtGui.QMainWindow):
     def dragLeaveEvent(self, event):
         event.accept()
 
+    def onAboutQt(self):
+        dlg = QMessageBox.aboutQt(self, "about Qt")
+
+    def onAbout(self):
+        dlg = AtAboutDialog(self)
+        dlg.show()
 
     def _saveSettings(self):
         settings = QtCore.QSettings(version.organisation, version.appname)
