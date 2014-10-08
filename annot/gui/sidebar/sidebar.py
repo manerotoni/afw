@@ -146,11 +146,26 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.setButtonColor(Qt.red)
 
     def _setupClassifiers(self):
+
+        # import pdb; pdb.set_trace()
+
         for name in Classifier.classifiers():
             clf = Classifier(name)
+            clf.createActions(self.tileview, self)
+            print clf.actions
             self.classifiers.addItem(name)
             self.stack.addWidget(clf.parameterWidget(self))
             setattr(self, name, clf)
+
+        clf = self.currentClassifier()
+        self.setAnnotationActions(clf.actions)
+
+    def setAnnotationActions(self, actions):
+        self.tileview.clearActions()
+        self.tileview.addActions(actions)
+
+    def addAnnotation(self, class_name):
+        self.addItems(self.tileview.selectedItems(), class_name)
 
     def estimateParameters(self):
         try:
@@ -227,13 +242,13 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.setButtonColor(Qt.red)
         super(AtAnnotationWidget, self).removeSelected()
 
-    def addItems(self, items):
+
+    def addItems(self, items, class_name):
 
         self.setButtonColor(Qt.red)
         for item in items:
             item.setTrainingSample(True)
-
-        super(AtAnnotationWidget, self).addItems(items)
+            self.model.addItem(item)
 
     def onPredict(self):
         try:

@@ -95,7 +95,7 @@ class AtMainWindow(QtGui.QMainWindow):
         event.accept()
 
     def onAboutQt(self):
-        dlg = QMessageBox.aboutQt(self, "about Qt")
+        QMessageBox.aboutQt(self, "about Qt")
 
     def onAbout(self):
         dlg = AtAboutDialog(self)

@@ -19,11 +19,22 @@ class Classifier(object):
 
     __metaclass__ = Factory
 
-    def __init__(self, *args, **kw):
-        super(Classifier, self).__init__(*args, **kw)
+    def __init__(self):
+        super(Classifier, self).__init__()
         self._pp = None # setup preprocessor in the train method
         self.model = None
         self._clf = None
+        self._actions = list()
+
+    @property
+    def actions(self):
+        return self._actions
+
+    def createActions(self, parent, panel):
+        pass
+
+    def addToClassActions(self):
+        raise NotImplementedError
 
     @classmethod
     def classifiers(cls):

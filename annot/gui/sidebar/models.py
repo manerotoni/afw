@@ -8,7 +8,7 @@ Implementation of ItemModels for the sidebar
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ =("AtOneClassSvmItemModel", )
+__all__ =("AtOneClassSvmItemModel", "AtMultiClassSvmItemModel")
 
 
 import numpy as np
@@ -89,6 +89,7 @@ class AtSorterItemModel(AtStandardItemModel):
             item.setEditable(False)
         return items
 
+
 class AtOneClassSvmItemModel(AtStandardItemModel):
 
     def __init__(self, *args, **kw):
@@ -101,3 +102,23 @@ class AtOneClassSvmItemModel(AtStandardItemModel):
         for item in items:
             item.setEditable(False)
         return items
+
+
+class AtMultiClassSvmItemModel(AtStandardItemModel):
+
+    def __init__(self, *args, **kw):
+        super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
+
+    def prepareRowItems(self, item):
+        items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
+                 QtGui.QStandardItem(str(item.frame)),
+                 QtGui.QStandardItem(str(item.objid))]
+        for item in items:
+            item.setEditable(False)
+        return items
+
+    # def addItem(self, item, klass):
+    #     if not self._items.has_key(item.index):
+    #         self._items[item.index] = item
+    #         root = self.invisibleRootItem()
+    #         root.appendRow(self.prepareRowItems(item))

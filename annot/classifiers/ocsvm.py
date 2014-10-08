@@ -128,6 +128,12 @@ class OneClassSvm(Classifier):
         self.model = AtOneClassSvmItemModel()
         self._pp = None
 
+    def createActions(self, parent, panel):
+
+        self._actions.append(
+            QtGui.QAction( "add %s to panel" %self.INLIER.name, parent,
+                triggered=lambda: panel.addAnnotation(self.INLIER.name)))
+
     def parameterWidget(self, parent):
 
         self._frame = QtGui.QFrame(parent)

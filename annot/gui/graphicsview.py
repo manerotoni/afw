@@ -98,11 +98,10 @@ class AtGraphicsView(MouseWheelView):
 
     def createContextMenu(self):
         self.context_menu = QtGui.QMenu(self)
+        self.context_menu.setTearOffEnabled(True)
         self.context_menu.addAction(self.actionReorder)
         self.context_menu.addAction(self.actionSelectAll)
         self.context_menu.addAction(self.actionThrowAnchor)
-#        self.context_menu.addAction(self.actionAddSorter)
-        self.context_menu.addAction(self.actionAddAnnotation)
 
     def createActions(self):
         self.actionReorder = QtGui.QAction(
@@ -117,10 +116,18 @@ class AtGraphicsView(MouseWheelView):
         self.actionAddSorter = QtGui.QAction(
             "add to &sorter panel", self,
             triggered=self.parent().addToSortPanel)
+        self._no_permanent_actions = 4
 
-        self.actionAddAnnotation = QtGui.QAction(
-            "add to &annotation panel", self,
-            triggered=self.parent().addToAnnotationPanel)
+    def addActions(self, actions):
+        """Add transient actions to the context menu."""
+        for action in actions:
+            self.context_menu.addAction(action)
+
+    def clearActions(self):
+        """Remove all transient actions from the context menu."""
+        actions = self.context_menu.actions()[self._no_permanent_actions:]
+        for action in actions:
+            self.context_menu.removeAction(action)
 
     def toggleClassIndicators(self, state):
         self._show_classes = state
