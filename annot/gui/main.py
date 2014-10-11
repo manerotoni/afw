@@ -106,6 +106,8 @@ class AtMainWindow(QtGui.QMainWindow):
         settings.beginGroup('Gui')
         settings.setValue('state', self.saveState())
         settings.setValue('geometry', self.saveGeometry())
+        settings.setValue('classifier',
+                          self.annotation.classifiers.currentText())
         settings.endGroup()
 
     def _restoreSettings(self):
@@ -113,11 +115,16 @@ class AtMainWindow(QtGui.QMainWindow):
         settings.beginGroup('Gui')
 
         geometry = settings.value('geometry')
-        if geometry is not None:
+        if geometry.isValid():
             self.restoreGeometry(geometry.toByteArray())
         state = settings.value('state')
-        if state is not None:
+        if state.isValid():
             self.restoreState(state.toByteArray())
+
+        clfname = settings.value("classifier")
+        if clfname.isValid():
+            self.annotation.setCurrentClassifier(clfname.toString())
+
         settings.endGroup()
 
     def closeEvent(self, event):
@@ -217,8 +224,8 @@ class AtMainWindow(QtGui.QMainWindow):
         self.sorting.addItems(self.tileview.selectedItems())
         self.sorting.sort()
 
-    def addToAnnotationPanel(self):
-        self.annotation.addItems(self.tileview.selectedItems())
+    # def addToAnnotationPanel(self):
+    #     self.annotation.addItems(self.tileview.selectedItems())
 
     def addToSortPanel(self):
         self.sorting.addItems(self.tileview.selectedItems())

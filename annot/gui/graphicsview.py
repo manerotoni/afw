@@ -102,6 +102,7 @@ class AtGraphicsView(MouseWheelView):
         self.context_menu.addAction(self.actionReorder)
         self.context_menu.addAction(self.actionSelectAll)
         self.context_menu.addAction(self.actionThrowAnchor)
+        self.context_menu.addSeparator()
 
     def createActions(self):
         self.actionReorder = QtGui.QAction(
@@ -116,7 +117,7 @@ class AtGraphicsView(MouseWheelView):
         self.actionAddSorter = QtGui.QAction(
             "add to &sorter panel", self,
             triggered=self.parent().addToSortPanel)
-        self._no_permanent_actions = 4
+        self._no_permanent_actions = 3
 
     def addActions(self, actions):
         """Add transient actions to the context menu."""

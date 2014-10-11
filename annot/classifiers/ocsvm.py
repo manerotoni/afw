@@ -120,13 +120,16 @@ class OneClassSvm(Classifier):
     # TODO method to set the item classes
     INLIER = ItemClass("inlier", QtGui.QColor("green"), 1)
     OUTLIER = ItemClass("outlier", QtGui.QColor("red"), -1)
-    classes = {INLIER.label: INLIER,
-               OUTLIER.label: OUTLIER}
 
     def __init__(self, *args, **kw):
         super(OneClassSvm, self).__init__(*args, **kw)
         self.model = AtOneClassSvmItemModel()
         self._pp = None
+
+    @property
+    def classes(self):
+        return {self.INLIER.label: self.INLIER,
+                self.OUTLIER.label: self.OUTLIER}
 
     def createActions(self, parent, panel):
 
