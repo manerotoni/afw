@@ -121,7 +121,8 @@ class OcSvmParameterWidget(QtGui.QFrame):
         super(OcSvmParameterWidget, self).__init__(parent, *args, **kw)
 
         gbox = QtGui.QGridLayout(self)
-        gbox.setContentsMargins(2, 2, 2, 2)
+        gbox.setContentsMargins(5, 2, 2, 2)
+        gbox.setSpacing(1)
 
         self.nu = QtGui.QDoubleSpinBox(self)
         self.nu.setRange(0.0, 1.0)
@@ -140,17 +141,23 @@ class OcSvmParameterWidget(QtGui.QFrame):
         self.estBtn = QtGui.QPushButton("estimate")
         self.estBtn.clicked.connect(parent.estimateParameters)
 
+        self.addBtn = QtGui.QPushButton("add items")
+        # one class svm does not need the class name
+        func = lambda: parent.addAnnotation(OneClassSvm.INLIER.name)
+        self.addBtn.clicked.connect(func)
+
         self.treeview = QtGui.QTreeView(self)
         self.treeview.activated.connect(parent.onActivated)
         self.treeview.setModel(AtOneClassSvmItemModel())
-        self.treeview.setSelectionMode(self.treeview.MultiSelection)
+        self.treeview.setSelectionMode(self.treeview.ContiguousSelection)
 
         gbox.addWidget(QtGui.QLabel("nu", self.nu), 0, 0)
         gbox.addWidget(self.nu, 0, 1)
         gbox.addWidget(QtGui.QLabel("gamma", self.gamma), 1, 0)
         gbox.addWidget(self.gamma, 1, 1)
-        gbox.addWidget(self.estBtn, 1, 2, 1, 2)
-        gbox.addWidget(self.treeview, 2, 0, 2, 0)
+        gbox.addWidget(self.estBtn, 1, 2)
+        gbox.addWidget(self.addBtn, 2, 2)
+        gbox.addWidget(self.treeview, 3, 0, 2, 0)
 
 
 class OneClassSvm(Classifier):

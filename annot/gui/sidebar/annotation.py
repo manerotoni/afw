@@ -43,7 +43,6 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.removeBtn.clicked.connect(self.removeSelected)
         self.removeAllBtn.clicked.connect(self.removeAll)
         self.predictBtn.clicked.connect(self.onPredict)
-        self.addBtn.clicked.connect(self.onAdd)
         self.featureBtn.clicked.connect(self.onFeatureBtn)
 
     def classifierChanged(self, index):
@@ -115,7 +114,7 @@ class AtAnnotationWidget(AtSideBarWidget):
     def onSave(self):
 
         clf = self.currentClassifier()
-        if not clf.model.rowCount():
+        if not self.itemView().model().rowCount():
             QMessageBox.information(self, "information", "Nothing to save!")
             return
 
@@ -164,7 +163,6 @@ class AtAnnotationWidget(AtSideBarWidget):
         super(AtAnnotationWidget, self).removeSelected()
 
     def addItems(self, items, class_name):
-
         self.setButtonColor(Qt.red)
         for item in items:
             item.setTrainingSample(True)

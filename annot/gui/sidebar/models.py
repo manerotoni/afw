@@ -8,7 +8,7 @@ Implementation of ItemModels for the sidebar
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ =("AtOneClassSvmItemModel", "AtMultiClassSvmItemModel")
+__all__ =("AtOneClassSvmItemModel", )
 
 
 import numpy as np
@@ -40,12 +40,6 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
             self._items[item.index] = item
             root = self.invisibleRootItem()
             root.appendRow(self.prepareRowItems(item))
-
-    def removeRow(self, row):
-        key = int(self.item(row).text())
-        self._items[key].clear()
-        del self._items[key]
-        super(AtStandardItemModel, self).removeRow(row)
 
     def clear(self):
         for i in range(len(self._items)):
@@ -81,6 +75,12 @@ class AtSorterItemModel(AtStandardItemModel):
     def __init__(self, *args, **kw):
         super(AtSorterItemModel, self).__init__(*args, **kw)
 
+    def removeRow(self, row):
+        key = int(self.item(row).text())
+        self._items[key].clear()
+        del self._items[key]
+        super(AtStandardItemModel, self).removeRow(row)
+
     def prepareRowItems(self, item):
         items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
                  QtGui.QStandardItem(str(item.frame)),
@@ -103,22 +103,8 @@ class AtOneClassSvmItemModel(AtStandardItemModel):
             item.setEditable(False)
         return items
 
-
-class AtMultiClassSvmItemModel(AtStandardItemModel):
-
-    def __init__(self, *args, **kw):
-        super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
-
-    def prepareRowItems(self, item):
-        items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
-                 QtGui.QStandardItem(str(item.frame)),
-                 QtGui.QStandardItem(str(item.objid))]
-        for item in items:
-            item.setEditable(False)
-        return items
-
-    # def addItem(self, item, klass):
-    #     if not self._items.has_key(item.index):
-    #         self._items[item.index] = item
-    #         root = self.invisibleRootItem()
-    #         root.appendRow(self.prepareRowItems(item))
+    def removeRow(self, row):
+        key = int(self.item(row).text())
+        self._items[key].clear()
+        del self._items[key]
+        super(AtStandardItemModel, self).removeRow(row)

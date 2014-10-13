@@ -9,9 +9,7 @@ __licence__ = 'GPL'
 __all__ =("AtMultiClassSvmItemModel", )
 
 
-import numpy as np
 from PyQt4 import QtGui
-from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
 from .models import AtStandardItemModel
@@ -25,7 +23,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def __init__(self, *args, **kw):
         super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
-        self.insertColumns(0, 3)
 
     def _setHeader(self):
         # default columns
@@ -46,11 +43,11 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             self.item(index.row(), index.column()).setBackground(
                 self._brushFromColor(value))
 
-        return super(ClassDefModel, self).setData(index, value, role)
+        return super(AtMultiClassSvmItemModel, self).setData(index, value, role)
 
     def findClassItems(self, class_name, match=Qt.MatchExactly):
 
-        items = super(ClassDefModel, self).findItems(
+        items = super(AtMultiClassSvmItemModel, self).findItems(
             class_name, match, self.ClassColumn)
 
         if not items:
@@ -62,7 +59,9 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
         items = self.findItems(name, Qt.MatchStartsWith, self.ClassColumn)
         if items:
-            name = '-'.join([name, str(len(items))])
+            name = ''.join([name, str(len(items))])
+        elif name == "unnamed":
+            name = "unnamed0"
 
         name_item = QtGui.QStandardItem(name)
         color_item = QtGui.QStandardItem(color)
@@ -76,6 +75,11 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         self.parent().openPersistentEditor(
             self.index(self.rowCount()-1, self.ButtonColumn))
 
+        self.layoutChanged.emit()
+
+    def removeClass(self, modelindex):
+        self.removeRow(modelindex.row())
+
     def prepareRowItems(self, item):
         """Prepare annotation items which are added as childs to
         to a top level item a.k.a. class item"""
@@ -88,6 +92,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         return items
 
     def addAnnotation(self, item, class_name):
-        item = self.findClassItems(class_name)
+        item = self.findClassItems(class_name)[0]
         childs = self.prepareRowItems(item)
         item.appendRow(childs)
