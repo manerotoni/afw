@@ -1,5 +1,8 @@
 """
-classifier.py
+ocsvm.py
+
+Implementation of a one class support vector machine
+
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
@@ -65,7 +68,8 @@ class OcSvmWriter(object):
         try:
             grp = self.h5f.create_group(self.dmodel.path)
         except ValueError as e:
-            raise HdfError("Classifer with name %s exists already" %name + str(e))
+            raise HdfError("Classifer with name %s exists already"
+                           %name + str(e))
 
         grp.attrs[self.dmodel.NAME] = "one class support vector machine"
         grp.attrs[self.dmodel.LIB] = "sklearn-%s" %sklearn.__version__
@@ -111,6 +115,44 @@ class OcSvmWriter(object):
         dset = self.h5f.create_dataset(self.dmodel.normalization, data=norm)
 
 
+class OcSvmParameterWidget(QtGui.QFrame):
+
+    def __init__(self, parent, *args, **kw):
+        super(OcSvmParameterWidget, self).__init__(parent, *args, **kw)
+
+        gbox = QtGui.QGridLayout(self)
+        gbox.setContentsMargins(2, 2, 2, 2)
+
+        self.nu = QtGui.QDoubleSpinBox(self)
+        self.nu.setRange(0.0, 1.0)
+        self.nu.setSingleStep(0.05)
+        self.nu.setValue(0.01)
+        self.nu.setDecimals(5)
+        self.nu.valueChanged.connect(parent.predictionInvalid)
+
+        self.gamma = QtGui.QDoubleSpinBox(self)
+        self.gamma.setRange(0.0, 100.0)
+        self.gamma.setSingleStep(0.01)
+        self.gamma.setValue(0.5)
+        self.gamma.setDecimals(5)
+        self.gamma.valueChanged.connect(parent.predictionInvalid)
+
+        self.estBtn = QtGui.QPushButton("estimate")
+        self.estBtn.clicked.connect(parent.estimateParameters)
+
+        self.treeview = QtGui.QTreeView(self)
+        self.treeview.activated.connect(parent.onActivated)
+        self.treeview.setModel(AtOneClassSvmItemModel())
+        self.treeview.setSelectionMode(self.treeview.MultiSelection)
+
+        gbox.addWidget(QtGui.QLabel("nu", self.nu), 0, 0)
+        gbox.addWidget(self.nu, 0, 1)
+        gbox.addWidget(QtGui.QLabel("gamma", self.gamma), 1, 0)
+        gbox.addWidget(self.gamma, 1, 1)
+        gbox.addWidget(self.estBtn, 1, 2, 1, 2)
+        gbox.addWidget(self.treeview, 2, 0, 2, 0)
+
+
 class OneClassSvm(Classifier):
     """Class for training and parameter tuning of a one class svm."""
 
@@ -123,8 +165,8 @@ class OneClassSvm(Classifier):
 
     def __init__(self, *args, **kw):
         super(OneClassSvm, self).__init__(*args, **kw)
-        self.model = AtOneClassSvmItemModel()
         self._pp = None
+        self._params = None
 
     @property
     def classes(self):
@@ -138,35 +180,8 @@ class OneClassSvm(Classifier):
                 triggered=lambda: panel.addAnnotation(self.INLIER.name)))
 
     def parameterWidget(self, parent):
-
-        self._frame = QtGui.QFrame(parent)
-
-        vbox = QtGui.QGridLayout(self._frame)
-
-        self._nu = QtGui.QDoubleSpinBox(self._frame)
-        self._nu.setRange(0.0, 1.0)
-        self._nu.setSingleStep(0.05)
-        self._nu.setValue(0.01)
-        self._nu.setDecimals(5)
-        self._nu.valueChanged.connect(parent.predictionInvalid)
-
-        self._gamma = QtGui.QDoubleSpinBox(self._frame)
-        self._gamma.setRange(0.0, 100.0)
-        self._gamma.setSingleStep(0.01)
-        self._gamma.setValue(0.5)
-        self._gamma.setDecimals(5)
-        self._gamma.valueChanged.connect(parent.predictionInvalid)
-
-        self._estBtn = QtGui.QPushButton("estimate")
-        self._estBtn.clicked.connect(parent.estimateParameters)
-
-        vbox.addWidget(QtGui.QLabel("nu", self._nu), 0, 0)
-        vbox.addWidget(self._nu, 0, 1)
-        vbox.addWidget(QtGui.QLabel("gamma", self._gamma), 1, 0)
-        vbox.addWidget(self._gamma, 1, 1)
-        vbox.addWidget(self._estBtn, 1, 2, 1, 2)
-
-        return self._frame
+        self._params = OcSvmParameterWidget(parent)
+        return self._params
 
     def estimateParameters(self, testdata):
 
@@ -180,24 +195,24 @@ class OneClassSvm(Classifier):
             sv_frac = clf.support_.size/float(pp.nsamples)
 
             if sv_frac >= AtConfig().max_sv_fraction:
-                self._gamma.setValue(gamma)
+                self._params.gamma.setValue(gamma)
                 break
 
     @property
     def nu(self):
-        if not (0.0 < self._nu.value() <= 1.0):
+        if not (0.0 < self._params.nu.value() <= 1.0):
             raise ValueError(("parameter nu is invalid. "
                               "It's constrained between 0 an 1"))
 
-        return self._nu.value()
+        return self._params.nu.value()
 
     @property
     def gamma(self):
-        if self._gamma.value() <= 0.0:
+        if self._params.gamma.value() <= 0.0:
             raise ValueError(("parameter gamma is invalid. "
                               "It must be larger than zero."))
 
-        return self._gamma.value()
+        return self._params.gamma.value()
 
     def train(self, features):
         self._pp = PreProcessor(features)

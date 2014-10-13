@@ -31,17 +31,9 @@ class AtAnnotationWidget(AtSideBarWidget):
         super(AtAnnotationWidget, self).__init__(*args, **kw)
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
-        self.treeview.activated.connect(self.onActivated)
+
         self.featureDlg = AtFeatureSelectionDlg(self)
         self.featureDlg.hide()
-
-        self.stack = QtGui.QStackedWidget(self)
-        self.stack.setSizePolicy(
-            QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum,
-                              QtGui.QSizePolicy.Maximum)
-            )
-
-        self.sbox.addWidget(self.stack)
         self.saveBtn.clicked.connect(self.onSave)
 
         self._setupClassifiers()
@@ -59,7 +51,6 @@ class AtAnnotationWidget(AtSideBarWidget):
 
         clf = self.currentClassifier()
         self.setAnnotationActions(clf.actions)
-        self.treeview.setModel(self.model)
 
     def setCurrentClassifier(self, name):
 
@@ -105,9 +96,12 @@ class AtAnnotationWidget(AtSideBarWidget):
     def currentClassifier(self):
         return getattr(self, self.classifiers.currentText())
 
+    def itemView(self):
+        return self.stack.currentWidget().treeview
+
     @property
     def model(self):
-        return self.currentClassifier().model
+        return self.itemView().model()
 
     def setFeatureNames(self, features):
         self.featureDlg.addFeatureList(features)
@@ -168,7 +162,6 @@ class AtAnnotationWidget(AtSideBarWidget):
     def removeSelected(self):
         self.setButtonColor(Qt.red)
         super(AtAnnotationWidget, self).removeSelected()
-
 
     def addItems(self, items, class_name):
 
