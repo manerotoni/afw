@@ -127,6 +127,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         return items
 
     def addAnnotation(self, item, class_name):
-        item = self.findClassItems(class_name)[0]
+        class_item = self.findClassItems(class_name)
         childs = self.prepareRowItems(item)
-        item.appendRow(childs)
+        class_item.appendRow(childs)

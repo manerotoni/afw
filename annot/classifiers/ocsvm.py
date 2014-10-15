@@ -187,7 +187,7 @@ class OneClassSvm(Classifier):
     def createActions(self, parent, panel):
 
         self._actions.append(
-            QtGui.QAction( "add %s to panel" %self.INLIER.name, parent,
+            QtGui.QAction( "add to %s" %self.INLIER.name, parent,
                 triggered=lambda: panel.addAnnotation(self.INLIER.name)))
 
     def parameterWidget(self, parent):

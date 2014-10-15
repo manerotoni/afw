@@ -88,6 +88,11 @@ class AtAnnotationWidget(AtSideBarWidget):
     def addAnnotation(self, class_name):
         self.addItems(self.tileview.selectedItems(), class_name)
 
+    def addItems(self, items, class_name):
+        self.setButtonColor(Qt.red)
+        for item in items:
+            self.model.addAnnotation(item, class_name)
+
     def estimateParameters(self):
         try:
             features = self.filterFeatures(self.model.features)
@@ -165,12 +170,6 @@ class AtAnnotationWidget(AtSideBarWidget):
     def removeSelected(self):
         self.setButtonColor(Qt.red)
         super(AtAnnotationWidget, self).removeSelected()
-
-    def addItems(self, items, class_name):
-        self.setButtonColor(Qt.red)
-        for item in items:
-            item.setTrainingSample(True)
-            self.model.addItem(item)
 
     def onPredict(self):
         try:

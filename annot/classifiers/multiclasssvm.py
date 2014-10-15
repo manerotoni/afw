@@ -74,22 +74,23 @@ class ColorDelegate(QtGui.QItemDelegate):
 
 class TreeView(QtGui.QTreeView):
 
-    def __init__(self, *args, **kw):
+    def __init__(self, annotation_widget, *args, **kw):
         super(TreeView, self).__init__(*args, **kw)
+        self._awidget = annotation_widget
 
     def onAnnotationButtonClicked(self, class_name):
-        self.parent().addAnnotaton(class_name)
+        self._awidget.addAnnotation(class_name)
 
 
 class McSvmParameterWidget(QtGui.QFrame):
 
     def __init__(self, parent, *args, **kw):
-        super(McSvmParameterWidget, self).__init__(parent, *args, **kw)
+        super(McSvmParameterWidget, self).__init__(parent=parent, *args, **kw)
 
         gbox = QtGui.QGridLayout(self)
         gbox.setContentsMargins(2, 2, 2, 2)
 
-        self.treeview = TreeView(self)
+        self.treeview = TreeView(parent, self)
         model = AtMultiClassSvmItemModel(self.treeview)
         model.classesChanged.connect(parent.updateClassifier)
         self.treeview.setModel(model)
@@ -102,7 +103,6 @@ class McSvmParameterWidget(QtGui.QFrame):
 
         gbox.addWidget(self.addClassBtn, 0, 0)
         gbox.addWidget(self.removeClassBtn, 0, 1)
-
 
         self.treeview.activated.connect(parent.onActivated)
         self.treeview.setItemDelegateForColumn(1, ColorDelegate(self.treeview))
