@@ -16,7 +16,6 @@ from PyQt4 import QtCore
 from PyQt4.QtGui import QMessageBox
 
 from annot.sorters import Sorter
-
 from .models import  AtSorterItemModel
 
 

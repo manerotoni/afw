@@ -10,8 +10,10 @@ __all__ =("AtMultiClassSvmItemModel", )
 
 
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
+from annot.classifiers.itemclass import ItemClass
 from .models import AtStandardItemModel
 
 
@@ -21,8 +23,13 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
     ColorColumn = 1
     ButtonColumn = 2
 
+    classesChanged = QtCore.pyqtSignal(dict)
+
     def __init__(self, *args, **kw):
         super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
+
+        # only top level items are editable
+        self.dataChanged.connect(self.onDataChanged)
 
     def _setHeader(self):
         # default columns
@@ -55,6 +62,32 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         else:
             return items[0]
 
+    def onDataChanged(self, topleft, bottomright):
+        self.emitClassesChanged()
+
+    def currentClasses(self):
+        """Construct a class defintion from the model by iteration over
+        the 'toplevel items'."""
+
+        classes = dict()
+        for i in range(self.rowCount()):
+            class_item = self.item(i, self.ClassColumn)
+            color_item = self.item(i, self.ColorColumn)
+
+            name = class_item.text()
+            color = color_item.text()
+            classes[i] = ItemClass(name, QtGui.QColor(color), i)
+
+        return classes
+
+    def emitClassesChanged(self):
+        """Read the class defintion and emit the 'classesChanged' signal.
+        This method must be called whenever a class is add or remove or the
+        name or color of a class has changed."""
+
+        classes = self.currentClasses()
+        self.classesChanged.emit(classes)
+
     def addClass(self, name='unnamed', color='#e3e3e3'):
 
         items = self.findItems(name, Qt.MatchStartsWith, self.ClassColumn)
@@ -76,9 +109,11 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             self.index(self.rowCount()-1, self.ButtonColumn))
 
         self.layoutChanged.emit()
+        self.emitClassesChanged()
 
     def removeClass(self, modelindex):
         self.removeRow(modelindex.row())
+        self.emitClassesChanged()
 
     def prepareRowItems(self, item):
         """Prepare annotation items which are added as childs to

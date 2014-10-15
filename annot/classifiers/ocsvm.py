@@ -180,6 +180,10 @@ class OneClassSvm(Classifier):
         return {self.INLIER.label: self.INLIER,
                 self.OUTLIER.label: self.OUTLIER}
 
+    def setClasses(self, *args, **kw):
+        raise RuntimeError("OneClassSvm has a static class definition. "
+                           "You can not overwrite the class definition.")
+
     def createActions(self, parent, panel):
 
         self._actions.append(

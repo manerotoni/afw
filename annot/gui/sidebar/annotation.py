@@ -47,8 +47,12 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def classifierChanged(self, index):
         self.stack.setCurrentIndex(index)
-
         clf = self.currentClassifier()
+        self.setAnnotationActions(clf.actions)
+
+    def updateClassifier(self, classes):
+        clf = self.currentClassifier()
+        clf.setClasses(classes, self.tileview, self)
         self.setAnnotationActions(clf.actions)
 
     def setCurrentClassifier(self, name):

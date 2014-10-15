@@ -7,6 +7,7 @@ __licence__ = 'GPL'
 
 __all__ = ("Classifier", )
 
+from collections import OrderedDict
 
 from PyQt4 import QtGui
 
@@ -25,13 +26,32 @@ class Classifier(object):
         self.model = None
         self._clf = None
         self._actions = list()
+        self._classes = OrderedDict()
 
     @property
     def actions(self):
         return self._actions
 
+    @property
+    def classes(self):
+        return self._classes
+
+    def setClasses(self, classes, parent, panel):
+        """Update the dictionary of the class definition and the list of
+        the context menu actions."""
+
+        self._classes.clear()
+        self._classes.update(classes)
+        self.createActions(parent, panel)
+
     def createActions(self, parent, panel):
-        pass
+        """Create context menu actions according to the class definition."""
+
+        self._actions = list()
+        for name in self._classes.keys():
+            self.actions.append(
+                QtGui.QAction( "add to %s" %name, parent,
+                    triggered=lambda: panel.addAnnotation(name)))
 
     def addToClassActions(self):
         raise NotImplementedError

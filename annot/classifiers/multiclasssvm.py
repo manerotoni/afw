@@ -91,6 +91,7 @@ class McSvmParameterWidget(QtGui.QFrame):
 
         self.treeview = TreeView(self)
         model = AtMultiClassSvmItemModel(self.treeview)
+        model.classesChanged.connect(parent.updateClassifier)
         self.treeview.setModel(model)
 
         self.addClassBtn = QtGui.QPushButton("add class")
