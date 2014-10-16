@@ -48,15 +48,14 @@ class AtAnnotationWidget(AtSideBarWidget):
     def classifierChanged(self, index):
         self.stack.setCurrentIndex(index)
         clf = self.currentClassifier()
-        self.setAnnotationActions(clf.actions)
 
     def updateClassifier(self, classes):
+        # XXX workaround slot. Parent of a classifier uses the Factory metaclass
+        # and is not a QObject --> it segfaults if it is a QObject
         clf = self.currentClassifier()
         clf.setClasses(classes, self.tileview, self)
-        self.setAnnotationActions(clf.actions)
 
     def setCurrentClassifier(self, name):
-
         index = self.classifiers.findText(name)
         if index >= 0:
             self.classifiers.setCurrentIndex(index)
@@ -79,7 +78,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             setattr(self, name, clf)
 
         clf = self.currentClassifier()
-        self.setAnnotationActions(clf.actions)
 
     def setAnnotationActions(self, actions):
         self.tileview.clearActions()

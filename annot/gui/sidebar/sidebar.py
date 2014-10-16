@@ -50,7 +50,8 @@ class AtSideBarWidget(QtGui.QWidget):
 
     def onActivated(self, index):
         item = self.model.item(index.row())
-        self.tileview.selectByIndex(int(item.text()))
+        hashkey = item.data().toPyObject()
+        self.tileview.selectByKey(hashkey)
 
     def itemView(self):
         raise NotImplementedError

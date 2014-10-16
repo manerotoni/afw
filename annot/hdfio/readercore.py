@@ -17,7 +17,6 @@ from qimage2ndarray import gray2qimage
 
 from PyQt4.QtGui import QColor
 
-
 from annot.pattern import Factory
 from annot.gui.painting import AtPainter
 
@@ -34,7 +33,7 @@ class HdfError(Exception):
 class HdfItem(object):
 
     __slots__ = ['image', 'contour', 'features', 'index', 'frame',
-                 'objid', 'colors']
+                 'objid', 'colors', 'hash']
 
     def __init__(self, image, contour, features, index, objid=None, frame=None,
                  colors=None):
@@ -51,6 +50,12 @@ class HdfItem(object):
             self.colors = image.shape[2]*[str("#ffffff")]
         else:
             self.colors = colors
+
+        cnt = tuple(zip(*contour.tolist()))
+        self.hash = hash(cnt)
+
+    def __eq__(self, other):
+        return self.hash == other.hash
 
     def __str__(self):
         return "%d-%d" %(self.frame, self.objid)

@@ -51,6 +51,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.frame = item.frame
         self.objid = item.objid
         self.index = item.index
+        self.hash = item.hash
         self._is_training_sample = False
 
         if item.contour is not None:

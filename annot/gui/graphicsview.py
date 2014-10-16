@@ -184,9 +184,9 @@ class AtGraphicsView(MouseWheelView):
             self.scene().addItem(citem)
             self.scene().setSceneRect(self._grid.rect(5.0))
 
-    def selectByIndex(self, index):
+    def selectByKey(self, hashkey):
         for item in self.items:
-            if item.index == index:
+            if item.hash == hashkey:
                 item.setSelected(True)
                 self.centerOn(item)
             else:
