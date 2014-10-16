@@ -42,6 +42,9 @@ class AtSortWidget(AtSideBarWidget):
         self.startSorting.connect(
             lambda: self.tileview.reorder(force_update=True))
 
+    def itemView(self):
+        return self.treeview
+
     def sort(self):
 
         all_items = self.tileview.items

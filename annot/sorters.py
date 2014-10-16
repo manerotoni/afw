@@ -73,7 +73,6 @@ class Sorter(object):
 
 
 
-
 class CosineSimilarity(Sorter):
     """Sorting data by using the Euclidic distance of the z-scored data as
     similarity measurement."""
@@ -97,10 +96,7 @@ class CosineSimilarity(Sorter):
         mu = zs.normalize(self.treedata)
         data_zs, mu = filter_nans(data_zs, mu)
 
-        # from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        # import pdb; pdb.set_trace()
-
-
+        mu = mu.mean(axis=0)
         denom = np.sqrt((mu**2).sum())*np.sqrt((data_zs**2).sum(axis=1))
         s_cos = np.sum(mu*data_zs, axis=1)/denom
         return -1.0*s_cos
