@@ -89,6 +89,7 @@ class AtAnnotationWidget(AtSideBarWidget):
     def addItems(self, items, class_name):
         self.setButtonColor(Qt.red)
         for item in items:
+            item.setTrainingSample(True)
             self.model.addAnnotation(item, class_name)
 
     def estimateParameters(self):
@@ -189,3 +190,18 @@ class AtAnnotationWidget(AtSideBarWidget):
             features = self.filterFeatures(item.features.reshape((1, -1)))
             prediction = clf.predict(features)
             item.setClass(prediction[0])
+
+    def removeSelected(self):
+
+        model_indices =  self.itemView().selectionModel().selectedRows()
+        model_indices.reverse()
+
+        for mi in model_indices:
+            parent = self.model.item(mi.parent().row(), 0)
+            if parent is not None:
+                parent.removeRow(mi.row())
+
+    def onActivated(self, index):
+        parent = self.model.item(index.parent().row(), 0)
+        hashkey = parent.child(index.row(), 0).data().toPyObject()
+        self.tileview.selectByKey(hashkey)

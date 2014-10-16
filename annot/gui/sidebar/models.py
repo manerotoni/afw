@@ -70,18 +70,6 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
             features[i, :] = item.features
         return features
 
-
-class AtSorterItemModel(AtStandardItemModel):
-
-    def __init__(self, *args, **kw):
-        super(AtSorterItemModel, self).__init__(*args, **kw)
-
-    def removeRow(self, row):
-        key = self.item(row, 0).data().toPyObject()
-        self._items[key].clear()
-        del self._items[key]
-        super(AtStandardItemModel, self).removeRow(row)
-
     def prepareRowItems(self, item):
         items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
                  QtGui.QStandardItem(str(item.frame)),
@@ -94,18 +82,27 @@ class AtSorterItemModel(AtStandardItemModel):
         return items
 
 
+class AtSorterItemModel(AtStandardItemModel):
+
+    def __init__(self, *args, **kw):
+        super(AtSorterItemModel, self).__init__(*args, **kw)
+
+    def removeRow(self, row):
+        key = self.item(row, 0).data().toPyObject()
+        self._items[key].clear()
+        del self._items[key]
+        super(AtStandardItemModel, self).removeRow(row)
+
+
 class AtOneClassSvmItemModel(AtStandardItemModel):
 
     def __init__(self, *args, **kw):
         super(AtOneClassSvmItemModel, self).__init__(*args, **kw)
 
-    def prepareRowItems(self, item):
-        items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
-                 QtGui.QStandardItem(str(item.frame)),
-                 QtGui.QStandardItem(str(item.objid))]
-        for item in items:
-            item.setEditable(False)
-        return items
+    def addAnnotation(self, item, class_name):
+        # No class_names in the one class support vector machine -->
+        # calling directly add item.
+        self.addItem(item)
 
     def removeRow(self, row):
         key = self.item(row, 0).data().toPyObject()

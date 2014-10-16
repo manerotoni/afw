@@ -115,17 +115,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         self.removeRow(modelindex.row())
         self.emitClassesChanged()
 
-    def prepareRowItems(self, item):
-        """Prepare annotation items which are added as childs to
-        to a top level item a.k.a. class item"""
-
-        items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
-                 QtGui.QStandardItem(str(item.frame)),
-                 QtGui.QStandardItem(str(item.objid))]
-        for item in items:
-            item.setEditable(False)
-        return items
-
     def addAnnotation(self, item, class_name):
         class_item = self.findClassItems(class_name)
         childs = self.prepareRowItems(item)

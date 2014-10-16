@@ -53,9 +53,6 @@ class Classifier(object):
                 QtGui.QAction( "add to %s" %name, parent,
                     triggered=lambda: panel.addAnnotation(name)))
 
-    def addToClassActions(self):
-        raise NotImplementedError
-
     @classmethod
     def classifiers(cls):
         return cls._classes.keys()

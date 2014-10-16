@@ -8,15 +8,7 @@ __licence__ = 'GPL'
 __all__ = ('AtSideBarWidget', )
 
 
-from os.path import dirname, join
-
-from PyQt4 import uic
 from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtGui import QMessageBox
-
-from annot.sorters import Sorter
-from .models import  AtSorterItemModel
 
 
 class NoSampleError(Exception):
