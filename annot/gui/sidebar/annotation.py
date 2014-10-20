@@ -22,6 +22,7 @@ from annot.gui.savehdfdlg import SaveClassifierDialog
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
 from .featuredlg import AtFeatureSelectionDlg
+from .annotation_model import DoubleAnnotationError
 
 
 class AtAnnotationWidget(AtSideBarWidget):
@@ -44,6 +45,11 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.removeAllBtn.clicked.connect(self.removeAll)
         self.predictBtn.clicked.connect(self.onPredict)
         self.featureBtn.clicked.connect(self.onFeatureBtn)
+
+    def onActivated(self, index):
+        parent = self.model.item(index.parent().row(), 0)
+        hashkey = parent.child(index.row(), 0).data().toPyObject()
+        self.tileview.selectByKey(hashkey)
 
     def classifierChanged(self, index):
         self.stack.setCurrentIndex(index)
@@ -84,7 +90,11 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.tileview.addActions(actions)
 
     def addAnnotation(self, class_name):
-        self.addItems(self.tileview.selectedItems(), class_name)
+        try:
+            self.addItems(self.tileview.selectedItems(), class_name)
+        except DoubleAnnotationError as e:
+            QMessageBox.warning(self, "Warning", str(e))
+
 
     def addItems(self, items, class_name):
         self.setButtonColor(Qt.red)
@@ -166,10 +176,6 @@ class AtAnnotationWidget(AtSideBarWidget):
 
         return features[:, ftrs_indices]
 
-    def removeSelected(self):
-        self.setButtonColor(Qt.red)
-        super(AtAnnotationWidget, self).removeSelected()
-
     def onPredict(self):
         try:
             self.train()
@@ -190,18 +196,3 @@ class AtAnnotationWidget(AtSideBarWidget):
             features = self.filterFeatures(item.features.reshape((1, -1)))
             prediction = clf.predict(features)
             item.setClass(prediction[0])
-
-    def removeSelected(self):
-
-        model_indices =  self.itemView().selectionModel().selectedRows()
-        model_indices.reverse()
-
-        for mi in model_indices:
-            parent = self.model.item(mi.parent().row(), 0)
-            if parent is not None:
-                parent.removeRow(mi.row())
-
-    def onActivated(self, index):
-        parent = self.model.item(index.parent().row(), 0)
-        hashkey = parent.child(index.row(), 0).data().toPyObject()
-        self.tileview.selectByKey(hashkey)

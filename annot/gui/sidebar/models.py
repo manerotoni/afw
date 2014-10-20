@@ -35,13 +35,6 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
     def prepareRowItems(self, *args, **kw):
         raise NotImplementedError
 
-    def addItem(self, item):
-
-        if not self._items.has_key(item.index):
-            self._items[item.hash] = item
-            root = self.invisibleRootItem()
-            root.appendRow(self.prepareRowItems(item))
-
     def clear(self):
         for i in range(len(self._items)):
             self.removeRow(0)
@@ -81,6 +74,10 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
             item.setEditable(False)
         return items
 
+    def removeItems(self, indices):
+        for index in indices:
+            self.removeRow(index.row())
+
 
 class AtSorterItemModel(AtStandardItemModel):
 
@@ -91,7 +88,13 @@ class AtSorterItemModel(AtStandardItemModel):
         key = self.item(row, 0).data().toPyObject()
         self._items[key].clear()
         del self._items[key]
-        super(AtStandardItemModel, self).removeRow(row)
+        super(AtSorterItemModel, self).removeRow(row)
+
+    def addItem(self, item):
+        if not self._items.has_key(item.hash):
+            self._items[item.hash] = item
+            root = self.invisibleRootItem()
+            root.appendRow(self.prepareRowItems(item))
 
 
 class AtOneClassSvmItemModel(AtStandardItemModel):
@@ -99,13 +102,16 @@ class AtOneClassSvmItemModel(AtStandardItemModel):
     def __init__(self, *args, **kw):
         super(AtOneClassSvmItemModel, self).__init__(*args, **kw)
 
-    def addAnnotation(self, item, class_name):
-        # No class_names in the one class support vector machine -->
-        # calling directly add item.
-        self.addItem(item)
+    def addAnnotation(self, item, class_name=None):
+        # No class_names in the one class support vector machine..
+
+        if not self._items.has_key(item.hash):
+            self._items[item.hash] = item
+            root = self.invisibleRootItem()
+            root.appendRow(self.prepareRowItems(item))
 
     def removeRow(self, row):
         key = self.item(row, 0).data().toPyObject()
         self._items[key].clear()
         del self._items[key]
-        super(AtStandardItemModel, self).removeRow(row)
+        super(AtOneClassSvmItemModel, self).removeRow(row)

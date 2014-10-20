@@ -16,6 +16,8 @@ from PyQt4.QtCore import Qt
 from annot.classifiers.itemclass import ItemClass
 from .models import AtStandardItemModel
 
+class DoubleAnnotationError(Exception):
+    pass
 
 class AtMultiClassSvmItemModel(AtStandardItemModel):
 
@@ -27,6 +29,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def __init__(self, *args, **kw):
         super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
+        self._item_classnames = dict()
 
         # only top level items are editable
         self.dataChanged.connect(self.onDataChanged)
@@ -43,6 +46,11 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         brush.setColor(color)
         brush.setStyle(Qt.SolidPattern)
         return brush
+
+    def removeRow(self, row):
+        key = self.item(row, 0).data().toPyObject()
+        del self._items_class[key]
+        super(AtMultiClassSvmItemModel, self).removeRow(row)
 
     def setData(self, index, value, role):
 
@@ -112,10 +120,25 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         self.emitClassesChanged()
 
     def removeClass(self, modelindex):
+
         self.removeRow(modelindex.row())
         self.emitClassesChanged()
 
     def addAnnotation(self, item, class_name):
-        class_item = self.findClassItems(class_name)
-        childs = self.prepareRowItems(item)
-        class_item.appendRow(childs)
+
+        if not self._items.has_key(item.hash):
+            self._items[item.hash] = item
+            self._item_classnames[item.hash] = class_name
+            class_item = self.findClassItems(class_name)
+            childs = self.prepareRowItems(item)
+            class_item.appendRow(childs)
+        elif class_name != self._item_classnames[item.hash]:
+            raise DoubleAnnotationError("Item %d already annotated as %s"
+                                        %(item.index, class_name))
+
+    # removeAnnoations
+    def removeItems(self, indices):
+        for index in indices:
+            parent = self.item(index.parent().row(), 0)
+            if parent is not None:
+                parent.removeRow(index.row())

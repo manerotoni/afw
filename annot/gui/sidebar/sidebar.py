@@ -23,12 +23,9 @@ class AtSideBarWidget(QtGui.QWidget):
         self.parent = parent
 
     def removeSelected(self):
-
         model_indices =  self.itemView().selectionModel().selectedRows()
         model_indices.reverse()
-
-        for mi in model_indices:
-            self.model.removeRow(mi.row())
+        self.model.removeItems(model_indices)
 
     def removeAll(self):
         self.model.clear()
