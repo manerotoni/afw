@@ -15,6 +15,7 @@ from PyQt4 import QtCore
 from PyQt4.QtGui import QMessageBox
 
 from annot.sorters import Sorter
+from annot.config import AtConfig
 from .sidebar import AtSideBarWidget
 from .models import  AtSorterItemModel
 
@@ -44,6 +45,13 @@ class AtSortWidget(AtSideBarWidget):
 
     def itemView(self):
         return self.treeview
+
+    def defaultSortAlgorithm(self):
+        return AtConfig().default_sorter
+
+    def applyDefaultSortAlgorithm(self):
+        index = self.sortAlgorithm.findText(self.defaultSortAlgorithm())
+        self.sortAlgorithm.setCurrentIndex(index)
 
     def sort(self):
 

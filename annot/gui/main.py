@@ -222,10 +222,8 @@ class AtMainWindow(QtGui.QMainWindow):
     def onThrowAnchor(self):
         self.sorting.removeAll()
         self.sorting.addItems(self.tileview.selectedItems())
+        self.sorting.applyDefaultSortAlgorithm()
         self.sorting.sort()
-
-    # def addToAnnotationPanel(self):
-    #     self.annotation.addItems(self.tileview.selectedItems())
 
     def addToSortPanel(self):
         self.sorting.addItems(self.tileview.selectedItems())

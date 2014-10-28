@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 __all__ = ("AtConfig", )
 
 from annot.pattern import Singleton
+from annot.sorters import Sorter
 
 class AtConfig(object):
     """Global settings (currently) not visible to the user."""
@@ -38,3 +39,5 @@ class AtConfig(object):
         # if hdf contains more items, than the loading strategy changeds to
         # "interactive", otherwise all item are loaded at oncec
         self.interactive_item_limit = 5000
+
+        self.default_sorter = Sorter.CosineSimilarity
