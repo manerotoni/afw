@@ -36,7 +36,7 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
         raise NotImplementedError
 
     def clear(self):
-        for i in range(len(self._items)):
+        for i in range(self.rowCount()):
             self.removeRow(0)
         self._items.clear()
 

@@ -8,6 +8,8 @@ __licence__ = 'GPL'
 
 __all__ =("AtMultiClassSvmItemModel", )
 
+
+from itertools import cycle
 import numpy as np
 
 from PyQt4 import QtGui
@@ -34,10 +36,13 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     classesChanged = QtCore.pyqtSignal(dict)
 
+    _colors = ("#4daf4a", "#ffff33", "#ff7f00", "#f781bf", "#984ea3",
+               "#377eb8", "#e41a1c", "#a65628", "#999999")
+
     def __init__(self, *args, **kw):
         super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
         self._item_classnames = dict()
-
+        self._color_cycle = cycle(self._colors)
         # only top level items are editable
         self.dataChanged.connect(self.onDataChanged)
 
@@ -55,6 +60,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         return brush
 
     def clear(self):
+        # reset the color cycle
+        self._color_cycle = cycle(self._colors)
         # clear last classification result
         for item in self._items.values():
             item.clear()
@@ -105,7 +112,10 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         classes = self.currentClasses()
         self.classesChanged.emit(classes)
 
-    def addClass(self, name='unnamed', color='#e3e3e3'):
+    def addClass(self, name='unnamed', color=None):
+
+        if color is None:
+            color = self._color_cycle.next()
 
         items = self.findItems(name, Qt.MatchStartsWith, self.ClassColumn)
         if items:
