@@ -225,7 +225,7 @@ class OneClassSvm(Classifier):
 
         return self._params.gamma.value()
 
-    def train(self, features):
+    def train(self, features, *args, **kw):
         self._pp = PreProcessor(features)
         self._clf = sklearn.svm.OneClassSVM(
             nu=self.nu, kernel=self.KERNEL, gamma=self.gamma)

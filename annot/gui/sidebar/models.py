@@ -50,6 +50,10 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
             yield value
 
     @property
+    def labels(self):
+        return None
+
+    @property
     def features(self):
         """Yields a feature matrix from the items in the Sidebar. One feature
         vector per row."""

@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 
 __all__ =("AtMultiClassSvmItemModel", )
 
+import numpy as np
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -16,8 +17,14 @@ from PyQt4.QtCore import Qt
 from annot.classifiers.itemclass import ItemClass
 from .models import AtStandardItemModel
 
+
 class DoubleAnnotationError(Exception):
     pass
+
+
+class IncompleteAnnotationError(Exception):
+    pass
+
 
 class AtMultiClassSvmItemModel(AtStandardItemModel):
 
@@ -47,10 +54,12 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         brush.setStyle(Qt.SolidPattern)
         return brush
 
-    def removeRow(self, row):
-        key = self.item(row, 0).data().toPyObject()
-        del self._items_class[key]
-        super(AtMultiClassSvmItemModel, self).removeRow(row)
+    def clear(self):
+        # clear last classification result
+        for item in self._items.values():
+            item.clear()
+        self._item_classnames.clear()
+        super(AtMultiClassSvmItemModel, self).clear()
 
     def setData(self, index, value, role):
 
@@ -121,6 +130,14 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def removeClass(self, modelindex):
 
+        # remove items from the bookkeeping dictionaries
+        parent = self.item(modelindex.row(), 0)
+        for row in range(parent.rowCount()-1, -1, -1):
+            key = parent.child(row).data().toPyObject()
+            self._items[key].clear()
+            del self._items[key]
+            del self._item_classnames[key]
+
         self.removeRow(modelindex.row())
         self.emitClassesChanged()
 
@@ -141,4 +158,61 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         for index in indices:
             parent = self.item(index.parent().row(), 0)
             if parent is not None:
+                key = parent.child(index.row()).data().toPyObject()
+                self._items[key].clear()
+                del self._items[key]
+                del self._item_classnames[key]
                 parent.removeRow(index.row())
+
+    def iterItems(self, parent):
+        for i in range(parent.rowCount()):
+            key = parent.child(i).data().toPyObject()
+            yield self._items[key]
+
+    @property
+    def labels(self):
+
+        all_labels = np.array([])
+        nfeatures = self.items[0].features.size
+        classes = self.currentClasses()
+
+        # class label equals row
+        for label, class_ in classes.iteritems():
+            parent = self.item(label, 0)
+            nitems = parent.rowCount()
+            labels = label*np.ones(nitems, dtype=int)
+            all_labels = np.append(all_labels, labels)
+
+        return all_labels
+
+    @property
+    def features(self):
+        """Yields a feature matrix from the items in the Sidebar. One feature
+        vector per row."""
+
+        nclasses = self.rowCount()
+        if not nclasses:
+            return
+
+        all_features = None
+        nfeatures = self.items[0].features.size
+        classes = self.currentClasses()
+
+        # class label equals row
+        for label, class_ in classes.iteritems():
+            parent = self.item(label, 0)
+            nitems = parent.rowCount()
+
+            if not nitems:
+                raise IncompleteAnnotationError(
+                    "There are not samples annotated for class %s" %class_.name)
+
+            features = np.empty((nitems, nfeatures))
+            for i, item in enumerate(self.iterItems(parent)):
+                features[i, :] = item.features
+            try:
+                all_features = np.vstack((all_features, features))
+            except ValueError:
+                all_features = features
+
+        return all_features

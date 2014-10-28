@@ -95,7 +95,6 @@ class AtAnnotationWidget(AtSideBarWidget):
         except DoubleAnnotationError as e:
             QMessageBox.warning(self, "Warning", str(e))
 
-
     def addItems(self, items, class_name):
         self.setButtonColor(Qt.red)
         for item in items:
@@ -188,7 +187,7 @@ class AtAnnotationWidget(AtSideBarWidget):
     def train(self):
         features = self.filterFeatures(self.model.features)
         clf = self.currentClassifier()
-        clf.train(features)
+        clf.train(features, self.model.labels)
 
     def classify(self, items):
         clf = self.currentClassifier()

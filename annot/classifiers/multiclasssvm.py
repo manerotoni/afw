@@ -8,11 +8,13 @@ __licence__ = 'GPL'
 __all__ = ("MultiClassSvm", )
 
 
+import sklearn.svm
 from PyQt4 import QtGui
 from PyQt4.QtGui import QMessageBox
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
+from annot.preprocessor import PreProcessor
 from annot.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
 from .classifiers import Classifier
 
@@ -101,8 +103,12 @@ class McSvmParameterWidget(QtGui.QFrame):
         self.removeClassBtn = QtGui.QPushButton("remove class")
         self.removeClassBtn.pressed.connect(self.onRemoveBtn)
 
+        self.crossValidBtn = QtGui.QPushButton("cross validation")
+        self.crossValidBtn.clicked.connect(parent.estimateParameters)
+
         gbox.addWidget(self.addClassBtn, 0, 0)
         gbox.addWidget(self.removeClassBtn, 0, 1)
+        gbox.addWidget(self.crossValidBtn, 2, 0, 1, 0)
 
         self.treeview.activated.connect(parent.onActivated)
         self.treeview.setItemDelegateForColumn(1, ColorDelegate(self.treeview))
@@ -114,7 +120,7 @@ class McSvmParameterWidget(QtGui.QFrame):
                 model.index(row, model.ButtonColumn))
         model.layoutChanged.emit()
 
-        gbox.addWidget(self.treeview, 1, 0, 1, 0)
+        gbox.addWidget(self.treeview, 3, 0, 1, 0)
 
     def onAddBtn(self):
         self.treeview.model().addClass()
@@ -143,6 +149,9 @@ class McSvmParameterWidget(QtGui.QFrame):
 
 class MultiClassSvm(Classifier):
 
+    KERNEL = "rbf"
+    name = "scv"
+
     def __init__(self, *args, **kw):
         super(MultiClassSvm, self).__init__(*args, **kw)
         self._pp = None
@@ -154,8 +163,15 @@ class MultiClassSvm(Classifier):
     def saveToHdf(self, *args, **kw):
         pass
 
-    def train(self, *args, **kw):
-        pass
+    def train(self, features, labels):
+        self._pp = PreProcessor(features)
+        self._clf = sklearn.svm.SVC(C=1, kernel=self.KERNEL, gamma=0.0)
+        self._clf.fit(self._pp(features), labels)
 
-    def predict(self, *args, **kw):
-        pass
+    def predict(self, features):
+
+        if self._clf is None:
+            return super(OneClassSvm, self).predict(features)
+        else:
+            predictions = self._clf.predict(self._pp(features))
+            return [self.classes[pred] for pred in predictions]
