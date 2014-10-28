@@ -122,7 +122,7 @@ class ClassLabel(Sorter):
 class ClassLabelReversed(ClassLabel):
 
     def __call__(self):
-        return -1*super(ClassLabelReversed, self).__call__
+        return -1*super(ClassLabelReversed, self).__call__()
 
 
 class EucledianDistance(Sorter):
