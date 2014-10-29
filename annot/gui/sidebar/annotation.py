@@ -102,12 +102,22 @@ class AtAnnotationWidget(AtSideBarWidget):
             self.model.addAnnotation(item, class_name)
 
     def estimateParameters(self):
+
         try:
             features = self.filterFeatures(self.model.features)
             clf = self.currentClassifier()
             clf.estimateParameters(features)
         except NoSampleError:
             pass
+
+    def validateClassifier(self):
+
+        labels = self.model.labels
+        features = self.filterFeatures(self.model.features)
+
+        # np.savetxt("./features.csv", self.model.features)
+        # np.savetxt("./labels.csv", self.model.labels)
+
 
     def currentClassifier(self):
         return getattr(self, self.classifiers.currentText())
