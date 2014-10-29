@@ -162,6 +162,13 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
                 return child.index()
 
     def addAnnotation(self, item, class_name):
+        """Add samples to class definitions. Distinguish 3 cases:
+
+        1) sample is annotated the first time
+        2) samplle is already annotated to an other class, but shall
+           be reassigned.
+        3) sample is already annotated and can't be reassigned
+        """
 
         if not self._items.has_key(item.hash):
             self._items[item.hash] = item
@@ -169,8 +176,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_item = self.findClassItems(class_name)
             childs = self.prepareRowItems(item)
             class_item.appendRow(childs)
-        elif self._reassign:
 
+        elif self._reassign:
             old_class = self._item_classnames[item.hash]
             oclass_item = self.findClassItems(old_class)
             index = self.findChildIndex(item.hash, oclass_item)
@@ -179,8 +186,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_item = self.findClassItems(class_name)
             class_item.appendRow(childs)
             self._item_classnames[item.hash] = class_name
-
-
         elif class_name != self._item_classnames[item.hash]:
             raise DoubleAnnotationError("Item %d already annotated as %s"
                                         %(item.index, class_name))
