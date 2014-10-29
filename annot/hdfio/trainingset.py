@@ -86,7 +86,8 @@ class AtTrainingSetIO(HdfFile):
             cnt = self._transposeAndClip(cnt)
             contours.append(cnt)
 
-        return np.swapaxes(contours, 0, 1)
+        contours = np.swapaxes(contours, 0, 1)
+        return contours.tolist()
 
 
     def iterItems(self, *args, **kw):

@@ -51,8 +51,7 @@ class HdfItem(object):
         else:
             self.colors = colors
 
-        cnt = tuple(zip(*contour.tolist()))
-        self.hash = hash(cnt)
+        self.hash = hash(tuple(zip(*contour)))
 
     def __eq__(self, other):
         return self.hash == other.hash

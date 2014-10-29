@@ -224,4 +224,7 @@ class Ch5Reader(HdfFile):
         contour[:, 0] -= cx - hsize
         contour[:, 1] -= cy - hsize
         contour = contour.clip(0, size)
+
+        # no ndarrays to calculate the hash values
+        contour =  [(x, y) for x, y in contour]
         return [contour]
