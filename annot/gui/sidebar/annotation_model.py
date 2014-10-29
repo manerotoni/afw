@@ -43,6 +43,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
         self._item_classnames = dict()
         self._color_cycle = cycle(self._colors)
+        self._reassign = False
         # only top level items are editable
         self.dataChanged.connect(self.onDataChanged)
 
@@ -58,6 +59,9 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         brush.setColor(color)
         brush.setStyle(Qt.SolidPattern)
         return brush
+
+    def allowReassign(self, state):
+        self._reassign = (state == Qt.Checked)
 
     def clear(self):
         # reset the color cycle
@@ -151,6 +155,12 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         self.removeRow(modelindex.row())
         self.emitClassesChanged()
 
+    def findChildIndex(self, hashvalue, class_item):
+        for row in range(class_item.rowCount()):
+            child = class_item.child(row)
+            if child.data().toPyObject() == hashvalue:
+                return child.index()
+
     def addAnnotation(self, item, class_name):
 
         if not self._items.has_key(item.hash):
@@ -159,6 +169,18 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_item = self.findClassItems(class_name)
             childs = self.prepareRowItems(item)
             class_item.appendRow(childs)
+        elif self._reassign:
+
+            old_class = self._item_classnames[item.hash]
+            oclass_item = self.findClassItems(old_class)
+            index = self.findChildIndex(item.hash, oclass_item)
+
+            childs = oclass_item.takeRow(index.row())
+            class_item = self.findClassItems(class_name)
+            class_item.appendRow(childs)
+            self._item_classnames[item.hash] = class_name
+
+
         elif class_name != self._item_classnames[item.hash]:
             raise DoubleAnnotationError("Item %d already annotated as %s"
                                         %(item.index, class_name))

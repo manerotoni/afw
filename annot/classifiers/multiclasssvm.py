@@ -103,12 +103,20 @@ class McSvmParameterWidget(QtGui.QFrame):
         self.removeClassBtn = QtGui.QPushButton("remove class")
         self.removeClassBtn.pressed.connect(self.onRemoveBtn)
 
+        # disable the sanity check whether a sample is already reassign to
+        # an other class
+        self.allowReassign = QtGui.QCheckBox("allow reassign")
+        self.allowReassign.stateChanged.connect(model.allowReassign)
+        model.allowReassign(self.allowReassign.isChecked())
+
         self.crossValidBtn = QtGui.QPushButton("cross validation")
         self.crossValidBtn.clicked.connect(parent.estimateParameters)
 
+
         gbox.addWidget(self.addClassBtn, 0, 0)
         gbox.addWidget(self.removeClassBtn, 0, 1)
-        gbox.addWidget(self.crossValidBtn, 2, 0, 1, 0)
+        gbox.addWidget(self.crossValidBtn, 2, 0)
+        gbox.addWidget(self.allowReassign, 2, 1)
 
         self.treeview.activated.connect(parent.onActivated)
         self.treeview.setItemDelegateForColumn(1, ColorDelegate(self.treeview))
