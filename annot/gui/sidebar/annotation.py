@@ -112,12 +112,14 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def validateClassifier(self):
 
+        import numpy as np
         labels = self.model.labels
         features = self.filterFeatures(self.model.features)
 
-        # np.savetxt("./features.csv", self.model.features)
-        # np.savetxt("./labels.csv", self.model.labels)
-
+        clf = self.currentClassifier()
+        features = clf.normalize(features)
+        np.savetxt("./features.csv", features)
+        np.savetxt("./labels.csv", self.model.labels)
 
     def currentClassifier(self):
         return getattr(self, self.classifiers.currentText())

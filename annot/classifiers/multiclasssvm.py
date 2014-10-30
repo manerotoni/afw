@@ -110,7 +110,7 @@ class McSvmParameterWidget(QtGui.QFrame):
         model.allowReassign(self.allowReassign.isChecked())
 
         self.crossValidBtn = QtGui.QPushButton("cross validation")
-        self.crossValidBtn.clicked.connect(parent.estimateParameters)
+        self.crossValidBtn.clicked.connect(parent.validateClassifier)
 
 
         gbox.addWidget(self.addClassBtn, 0, 0)

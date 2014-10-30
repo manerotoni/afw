@@ -68,3 +68,6 @@ class Classifier(object):
 
     def saveToHdf(self, file_, feature_names):
         raise NotImplementedError
+
+    def normalize(self, features):
+        return self._pp(features)
