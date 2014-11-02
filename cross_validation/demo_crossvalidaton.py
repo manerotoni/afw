@@ -4,14 +4,14 @@ from sklearn import svm
 from sklearn import cross_validation
 from sklearn.cross_validation import StratifiedKFold
 
+
 if __name__ == "__main__":
-    Y= np.loadtxt("labels.csv")
+    Y = np.loadtxt("labels.csv")
     X = np.loadtxt("features.csv")
 
 
     Xtrain, Xtest, ytrain, ytest = cross_validation.train_test_split(
         X, Y, test_size=0.1, random_state=0)
-
 
     # compare different scoring methods.
 

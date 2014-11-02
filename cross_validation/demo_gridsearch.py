@@ -49,7 +49,9 @@ for sm in scoring_methods:
 
 X, Y = np.meshgrid(gamma, C)
 plt.figure()
+plt.contour(X, Y, S)
 plt.pcolormesh(X, Y, S, shading='gouraud', cmap=cm.coolwarm)
+# plt.pcolormesh(X, Y, S,  cmap=cm.coolwarm)
 plt.colorbar()
 plt.axvline(est.gamma, linewidth=1, color='k')
 plt.axhline(est.C, linewidth=1, color='k')
