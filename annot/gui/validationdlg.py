@@ -80,7 +80,8 @@ class ValidationDialog(QtGui.QDialog):
 
     def gridSearch(self):
 
-        self.showMessage('Grid search using %d-fold cross_validation')
+        self.showMessage('Grid search using %d-fold cross_validation'
+                         %self.kfold)
         C = np.logspace(-3, 3, self.grid_C.value())
         gamma = np.logspace(-5, 2, self.grid_gamma.value())
         param_grid = dict(gamma=gamma, C=C)
