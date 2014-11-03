@@ -20,8 +20,8 @@ from PyQt4 import QtGui
 from annot.config import AtConfig
 from annot.hdfio.readercore import HdfFile
 from annot.hdfio.readercore import HdfError
-from annot.preprocessor import PreProcessor
 from annot.gui.sidebar.models import AtOneClassSvmItemModel
+from annot.preprocessor import PreProcessor
 from .itemclass import ItemClass
 from .classifiers import Classifier
 
@@ -226,7 +226,7 @@ class OneClassSvm(Classifier):
         return self._params.gamma.value()
 
     def train(self, features, *args, **kw):
-        self._pp = PreProcessor(features)
+        self.setupPreProcessor(features)
         self._clf = sklearn.svm.OneClassSVM(
             nu=self.nu, kernel=self.KERNEL, gamma=self.gamma)
         self._clf.fit(self._pp(features))

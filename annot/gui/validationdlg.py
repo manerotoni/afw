@@ -19,14 +19,18 @@ from sklearn.cross_validation import StratifiedKFold
 
 from annot.qmpl import QFigureWidget
 
+
 class ValidationDialog(QtGui.QDialog):
 
     gridSearchFinished = QtCore.pyqtSignal()
     crossValidationFinished = QtCore.pyqtSignal()
 
-    def __init__(self, features, labels, *args, **kw):
-        super(ValidationDialog, self).__init__(*args, **kw)
+    def __init__(self, parent, features, labels, *args, **kw):
+        super(ValidationDialog, self).__init__(parent=parent, *args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
+
+        self.cancelBtn.clicked.connect(self.onCancelBtn)
+        self.okBtn.clicked.connect(self.onOkBtn)
 
         self.crossValBtn.clicked.connect(self.onCrossValiation)
         self.gridSearchBtn.clicked.connect(self.onGridSearch)
@@ -37,6 +41,17 @@ class ValidationDialog(QtGui.QDialog):
         self.features =  features
         self.labels =  labels
 
+    def onCancelBtn(self):
+        self.reject()
+
+    def onOkBtn(self):
+        self.accept()
+
+    @property
+    def parameters(self):
+        return {"gamma": self.gamma.value(),
+                "C": self.regConst.value()}
+
     def showMessage(self, message=''):
         self.output.append(message)
 
@@ -45,6 +60,7 @@ class ValidationDialog(QtGui.QDialog):
         self.tabWidget.addTab(qfw, title)
         self.tabWidget.setCurrentWidget(qfw)
         qfw.show()
+        figure.tight_layout()
 
     @property
     def kfold(self):
@@ -86,7 +102,7 @@ class ValidationDialog(QtGui.QDialog):
         gamma = np.logspace(-5, 2, self.grid_gamma.value())
         param_grid = dict(gamma=gamma, C=C)
 
-        cv = StratifiedKFold(y=labels, n_folds=self.kfold)
+        cv = StratifiedKFold(y=self.labels, n_folds=self.kfold)
         grid = GridSearchCV(SVC(), param_grid=param_grid, cv=cv,
                             n_jobs=cpu_count()-1)
         grid.fit(self.features, self.labels)
@@ -97,8 +113,11 @@ class ValidationDialog(QtGui.QDialog):
         self.showMessage()
 
         scores = grid.grid_scores_
+
+
         scores = np.array([s.mean_validation_score for s in scores])
         S = scores.reshape((C.size, gamma.size))
+
         X, Y = np.meshgrid(gamma, C)
 
         self.gamma.setValue(est.gamma)
@@ -121,8 +140,9 @@ class ValidationDialog(QtGui.QDialog):
         ax.set_ylabel('C')
         ax.set_title('gamma=%g, C=%g' %(gamma, C))
         ax.loglog()
-
         self.addFigure('Grid Search', fig)
+
+
 
 
 

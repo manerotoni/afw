@@ -112,14 +112,16 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def validateClassifier(self):
 
-        import numpy as np
-        labels = self.model.labels
-        features = self.filterFeatures(self.model.features)
-
-        clf = self.currentClassifier()
-        features = clf.normalize(features)
-        np.savetxt("./features.csv", features)
-        np.savetxt("./labels.csv", self.model.labels)
+        try:
+            features = self.filterFeatures(self.model.features)
+            clf = self.currentClassifier()
+            vd = clf.validationDialog(self, features, self.model.labels)
+            vd.exec_()
+        except (NoSampleError, IndexError):
+            pass
+        else:
+            if vd.result() == vd.Accepted:
+                clf.setParameters(vd.parameters)
 
     def currentClassifier(self):
         return getattr(self, self.classifiers.currentText())

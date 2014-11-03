@@ -13,6 +13,8 @@ from PyQt4 import QtGui
 
 from annot.pattern import Factory
 from annot.classifiers.itemclass import UnClassified
+from annot.preprocessor import PreProcessor
+
 
 # TODO need design pattern QFactory
 class Classifier(object):
@@ -27,6 +29,12 @@ class Classifier(object):
         self._clf = None
         self._actions = list()
         self._classes = OrderedDict()
+
+    def setParameters(self, *args, **kw):
+        raise NotImplementedError
+
+    def setupPreProcessor(self, features):
+        self._pp = PreProcessor(features)
 
     @property
     def actions(self):
@@ -68,6 +76,3 @@ class Classifier(object):
 
     def saveToHdf(self, file_, feature_names):
         raise NotImplementedError
-
-    def normalize(self, features):
-        return self._pp(features)

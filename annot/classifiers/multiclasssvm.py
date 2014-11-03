@@ -14,8 +14,9 @@ from PyQt4.QtGui import QMessageBox
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
-from annot.preprocessor import PreProcessor
+
 from annot.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
+from annot.gui.validationdlg import ValidationDialog
 from .classifiers import Classifier
 
 
@@ -163,23 +164,33 @@ class MultiClassSvm(Classifier):
     def __init__(self, *args, **kw):
         super(MultiClassSvm, self).__init__(*args, **kw)
         self._pp = None
+        self._clf = sklearn.svm.SVC(C=1.0, kernel=self.KERNEL, gamma=0.0)
+
+    def setParameters(self, params):
+        assert isinstance(params, dict)
+        self._clf.set_params(**params)
 
     def parameterWidget(self, parent):
-        self._params = McSvmParameterWidget(parent)
-        return self._params
+        self._pwidget = McSvmParameterWidget(parent)
+        return self._pwidget
+
+    def validationDialog(self, parent, features, labels):
+        self.setupPreProcessor(features)
+        features = self._pp(features)
+        dlg = ValidationDialog(parent, features, labels)
+        return dlg
 
     def saveToHdf(self, *args, **kw):
         pass
 
     def train(self, features, labels):
-        self._pp = PreProcessor(features)
-        self._clf = sklearn.svm.SVC(C=1, kernel=self.KERNEL, gamma=0.0)
+        self.setupPreProcessor(features)
         self._clf.fit(self._pp(features), labels)
 
     def predict(self, features):
 
         if self._clf is None:
-            return super(OneClassSvm, self).predict(features)
+            return super(MultiClassSvm, self).predict(features)
         else:
             predictions = self._clf.predict(self._pp(features))
             return [self.classes[pred] for pred in predictions]
