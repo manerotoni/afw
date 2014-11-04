@@ -28,7 +28,7 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import StratifiedKFold
 
 from annot.qmpl import QFigureWidget
-
+from annot.gui.sidebar.sidebar import NoSampleError
 
 class CrossValidationDialog(QtGui.QWidget):
 
@@ -66,7 +66,11 @@ class CrossValidationDialog(QtGui.QWidget):
         """Update the current feature table (and the corresponding labels)
         from the model that belongs to the classifier."""
 
-        features = self.parent().filterFeatures(self.parent().model.features)
+        try:
+            features = self.parent().filterFeatures(
+                self.parent().model.features)
+        except NoSampleError:
+            return
         preprocessor = self.classifier.setupPreProcessor(features)
         features = self.classifier.normalize(features)
 
@@ -105,6 +109,8 @@ class CrossValidationDialog(QtGui.QWidget):
 
     def onCrossValiation(self):
         self.requestDataUpdate.emit()
+        if self.features is None:
+            return
         try:
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.crossValidation()
@@ -127,6 +133,8 @@ class CrossValidationDialog(QtGui.QWidget):
 
     def onGridSearch(self):
         self.requestDataUpdate.emit()
+        if self.features is None:
+            return
         try:
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.gridSearch()

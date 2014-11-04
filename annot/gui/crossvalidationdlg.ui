@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Cross Validation &amp; Grid Search</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../../qrc/at_rc.qrc">
