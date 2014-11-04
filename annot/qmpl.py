@@ -68,6 +68,9 @@ class QFigureWidget(QtGui.QWidget):
         vbox.setContentsMargins(0, 0, 0, 0)
         vbox.setSpacing(0)
 
+    def close(self):
+        super(QFigureWidget, self).close()
+
     def on_key_press(self, event):
         # sometimes mpl has a weird ideas what oo-programing is.
         # any could overwrite method by my self

@@ -36,6 +36,9 @@ class Classifier(object):
     def setupPreProcessor(self, features):
         self._pp = PreProcessor(features)
 
+    def normalize(self, features):
+        return self._pp(features)
+
     @property
     def actions(self):
         return self._actions

@@ -16,7 +16,7 @@ from PyQt4.QtCore import Qt
 
 
 from annot.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
-from annot.gui.validationdlg import ValidationDialog
+from annot.gui.crossvalidationdlg import CrossValidationDialog
 from .classifiers import Classifier
 
 
@@ -92,13 +92,14 @@ class McSvmParameterWidget(QtGui.QFrame):
 
         gbox = QtGui.QGridLayout(self)
         gbox.setContentsMargins(2, 2, 2, 2)
+        gbox.setSpacing(2)
 
         self.treeview = TreeView(parent, self)
         model = AtMultiClassSvmItemModel(self.treeview)
         model.classesChanged.connect(parent.updateClassifier)
         self.treeview.setModel(model)
 
-        self.addClassBtn = QtGui.QPushButton("add class")
+        self.addClassBtn = QtGui.QPushButton("new class")
         self.addClassBtn.pressed.connect(self.onAddBtn)
 
         self.removeClassBtn = QtGui.QPushButton("remove class")
@@ -159,11 +160,13 @@ class McSvmParameterWidget(QtGui.QFrame):
 class MultiClassSvm(Classifier):
 
     KERNEL = "rbf"
-    name = "scv"
+    name = "svc"
 
     def __init__(self, *args, **kw):
         super(MultiClassSvm, self).__init__(*args, **kw)
         self._pp = None
+        self._cvwidget = None
+        self._pwidget = None
         self._clf = sklearn.svm.SVC(C=1.0, kernel=self.KERNEL, gamma=0.0)
 
     def setParameters(self, params):
@@ -171,14 +174,17 @@ class MultiClassSvm(Classifier):
         self._clf.set_params(**params)
 
     def parameterWidget(self, parent):
-        self._pwidget = McSvmParameterWidget(parent)
+        """Returns the classifier specific parameter widget."""
+        if self._pwidget is None:
+            self._pwidget = McSvmParameterWidget(parent)
         return self._pwidget
 
-    def validationDialog(self, parent, features, labels):
-        self.setupPreProcessor(features)
-        features = self._pp(features)
-        dlg = ValidationDialog(parent, features, labels)
-        return dlg
+    def validationDialog(self, parent):
+        """Return the classifier specific (cross-)validation widget."""
+
+        if self._cvwidget is None:
+            self._cvwidget = CrossValidationDialog(parent, self)
+        return self._cvwidget
 
     def saveToHdf(self, *args, **kw):
         pass

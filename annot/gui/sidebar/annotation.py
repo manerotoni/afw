@@ -112,16 +112,11 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def validateClassifier(self):
 
-        try:
-            features = self.filterFeatures(self.model.features)
-            clf = self.currentClassifier()
-            vd = clf.validationDialog(self, features, self.model.labels)
-            vd.exec_()
-        except (NoSampleError, IndexError):
-            pass
+        vd = self.currentClassifier().validationDialog(self)
+        if vd.isHidden():
+            vd.show()
         else:
-            if vd.result() == vd.Accepted:
-                clf.setParameters(vd.parameters)
+            vd.hide()
 
     def currentClassifier(self):
         return getattr(self, self.classifiers.currentText())
