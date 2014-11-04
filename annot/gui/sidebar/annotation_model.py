@@ -36,8 +36,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     classesChanged = QtCore.pyqtSignal(dict)
 
-    _colors = ("#4daf4a", "#ffff33", "#ff7f00", "#f781bf", "#984ea3",
-               "#377eb8", "#e41a1c", "#a65628", "#999999")
+    _colors = ("#4daf4a", "#ff7f00", "#f781bf", "#984ea3",
+               "#377eb8", "#e41a1c", "#a65628", "#999999", "#ffff33")
 
     def __init__(self, *args, **kw):
         super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
