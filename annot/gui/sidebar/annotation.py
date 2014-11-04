@@ -102,7 +102,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             self.model.addAnnotation(item, class_name)
 
     def estimateParameters(self):
-
         try:
             features = self.filterFeatures(self.model.features)
             clf = self.currentClassifier()
@@ -111,7 +110,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             pass
 
     def validateClassifier(self):
-
         vd = self.currentClassifier().validationDialog(self)
         if vd.isHidden():
             vd.show()
@@ -138,7 +136,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             self.featureDlg.hide()
 
     def onSave(self):
-
         clf = self.currentClassifier()
         if not self.itemView().model().rowCount():
             QMessageBox.information(self, "information", "Nothing to save!")

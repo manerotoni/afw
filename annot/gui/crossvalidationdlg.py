@@ -159,10 +159,7 @@ class CrossValidationDialog(QtGui.QWidget):
         self.showMessage("C: %g, gamma: %g" %(est.C, est.gamma))
         self.showMessage()
 
-        scores = grid.grid_scores_
-
-
-        scores = np.array([s.mean_validation_score for s in scores])
+        scores = np.array([s.mean_validation_score for s in grid.grid_scores_])
         S = scores.reshape((C.size, gamma.size))
 
         X, Y = np.meshgrid(gamma, C)
