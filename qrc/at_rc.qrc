@@ -10,5 +10,17 @@
     <file>clear2.ico</file>
     <file>clear3.png</file>
     <file>annotationtool_about.png</file>
+    <file>oxygen/clear.png</file>
+    <file>oxygen/code-block.png</file>
+    <file>oxygen/code-class.png</file>
+    <file>oxygen/delete-class.png</file>
+    <file>oxygen/document-open-folder.png</file>
+    <file>oxygen/edit-table-insert-row-below.png</file>
+    <file>oxygen/emblem-important.png</file>
+    <file>oxygen/grid.png</file>
+    <file>oxygen/new-class.png</file>
+    <file>oxygen/sort-ascending.png</file>
+    <file>oxygen/sort-descending.png</file>
+    <file>oxygen/system-help.png</file>
   </qresource>
 </RCC>

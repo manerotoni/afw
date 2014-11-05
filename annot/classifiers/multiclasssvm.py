@@ -24,7 +24,6 @@ class AnnotationButton(QtGui.QToolButton):
     """Custom QToolButton that emits the 'buttonClicked(class_name)' signal.
     The class name is the current text of the name_item."""
 
-
     buttonClicked = QtCore.pyqtSignal(str)
 
     def __init__(self, name_item, *args, **kw):
