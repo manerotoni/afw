@@ -161,8 +161,10 @@ class AtMainWindow(QtGui.QMainWindow):
         self.sorting.sortAlgorithm.currentIndexChanged.connect(
             self.sortToolBar.sortAlgorithm.setCurrentIndex)
 
-        self.sortToolBar.sortBtn.clicked.connect(
-            self.sorting.sort)
+        self.sortToolBar.sortAscendingBtn.clicked.connect(
+            self.sorting.sortAscending)
+        self.sortToolBar.sortDescendingBtn.clicked.connect(
+            self.sorting.sortDescending)
 
     def setupProgressBar(self):
         frame = QtGui.QFrame(self)
@@ -223,7 +225,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.sorting.removeAll()
         self.sorting.addItems(self.tileview.selectedItems())
         self.sorting.applyDefaultSortAlgorithm()
-        self.sorting.sort()
+        self.sorting.sortAscending()
 
     def addToSortPanel(self):
         self.sorting.addItems(self.tileview.selectedItems())

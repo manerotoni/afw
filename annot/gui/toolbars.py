@@ -21,7 +21,7 @@ class AtToolBar(QtGui.QToolBar):
         super(AtToolBar, self).__init__(*args, **kw)
         self.setObjectName(self.__class__.__name__)
         self.setWindowTitle(self.__class__.__name__)
-        self.setIconSize(QtCore.QSize(16, 16))
+        self.setIconSize(QtCore.QSize(24, 24))
 
 
 class NavToolBar(AtToolBar):
@@ -107,7 +107,7 @@ class ViewToolBar(AtToolBar):
         self.zoom.currentIndexChanged.connect(self.onIndexChanged)
         self.reloadBtn = QtGui.QPushButton("load", self)
 
-        icon = QtGui.QIcon(":/open.png")
+        icon = QtGui.QIcon(":/oxygen/document-open-folder.png")
         self.actionOpen = QtGui.QAction(
             icon, "open", self)
         self.addAction(self.actionOpen)
@@ -145,8 +145,18 @@ class SortToolBar(AtToolBar):
     def __init__(self, *args, **kw):
         super(SortToolBar, self).__init__(*args, **kw)
 
-        self.sortBtn = QtGui.QPushButton("sort", self)
+        self.sortAscendingBtn = QtGui.QToolButton(self)
+        self.sortAscendingBtn.setToolTip("sort ascending")
+        self.sortAscendingBtn.setIcon(
+            QtGui.QIcon(":/oxygen/sort-ascending.png"))
+        self.sortDescendingBtn = QtGui.QToolButton(self)
+        self.sortDescendingBtn.setToolTip("sort descending")
+        self.sortDescendingBtn.setIcon(
+            QtGui.QIcon(":/oxygen/sort-descending.png"))
+
         self.sortAlgorithm = QtGui.QComboBox(self)
         self.sortAlgorithm.addItems(Sorter.sorters())
-        self.addWidget(self.sortBtn)
+
+        self.addWidget(self.sortAscendingBtn)
+        self.addWidget(self.sortDescendingBtn)
         self.addWidget(self.sortAlgorithm)

@@ -53,7 +53,13 @@ class AtSortWidget(AtSideBarWidget):
         index = self.sortAlgorithm.findText(self.defaultSortAlgorithm())
         self.sortAlgorithm.setCurrentIndex(index)
 
-    def sort(self):
+    def sortAscending(self):
+        self.sort()
+
+    def sortDescending(self):
+        self.sort(reversed_=True)
+
+    def sort(self, reversed_=False):
 
         all_items = self.tileview.items
 
@@ -69,6 +75,9 @@ class AtSortWidget(AtSideBarWidget):
         except Exception as e:
             QMessageBox.warning(self, 'Warning', str(e))
             return
+
+        if reversed_:
+            dist = -1*dist
 
         if dist is not None:
             for d, item in zip(dist, all_items):

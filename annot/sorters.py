@@ -112,17 +112,11 @@ class ClassLabel(Sorter):
 
     def __call__(self):
         try:
-            return (np.array(self.class_labels)*10 + \
-                    np.array(self.annotations, dtype=bool))
+            return -1*(np.array(self.class_labels)*10 + \
+                       np.array(self.annotations, dtype=bool))
 
         except TypeError:
             raise SortingError("No class labels available yet!")
-
-
-class ClassLabelReversed(ClassLabel):
-
-    def __call__(self):
-        return -1*super(ClassLabelReversed, self).__call__()
 
 
 class EucledianDistance(Sorter):
