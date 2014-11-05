@@ -12,3 +12,4 @@ at_rc.py
 *.hdf5
 build
 dist
+_oxygen_
