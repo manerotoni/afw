@@ -112,8 +112,8 @@ class ClassLabel(Sorter):
 
     def __call__(self):
         try:
-            return -1*(np.array(self.class_labels)*10 + \
-                       np.array(self.annotations, dtype=bool))
+            return (np.array(self.class_labels)*10 + \
+                    np.array(self.annotations, dtype=bool))
 
         except TypeError:
             raise SortingError("No class labels available yet!")
