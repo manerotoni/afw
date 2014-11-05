@@ -21,7 +21,7 @@ class AtLineEdit(QtGui.QLineEdit):
         super(AtLineEdit, self).__init__(*args, **kw)
 
         self._button = QtGui.QToolButton(self)
-        self._button.setIcon(QtGui.QIcon(":/eraser.png"))
+        self._button.setIcon(QtGui.QIcon(":/oxygen/clear.png"))
         self._button.setStyleSheet('border: 0px; padding: 0px;')
         self._button.setCursor(QtCore.Qt.ArrowCursor)
 
