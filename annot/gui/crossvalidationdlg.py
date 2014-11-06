@@ -1,7 +1,7 @@
 """
 crossvalidation.py
 
-Popup dialog to perform cross validation and gridsearch easily.
+Popup dialog to perform cross validation and gridsearch.
 
 """
 
@@ -30,6 +30,7 @@ from sklearn.cross_validation import StratifiedKFold
 from annot.qmpl import QFigureWidget
 from annot.gui.sidebar.sidebar import NoSampleError
 
+
 class CrossValidationDialog(QtGui.QWidget):
 
     requestDataUpdate = QtCore.pyqtSignal()
@@ -50,6 +51,7 @@ class CrossValidationDialog(QtGui.QWidget):
         self.crossValBtn.clicked.connect(self.onCrossValiation)
         self.gridSearchBtn.clicked.connect(self.onGridSearch)
         self.gridSearchFinished.connect(self.crossValidation)
+        self.gridSearchFinished.connect(self.onApplyBtn)
         self.requestDataUpdate.connect(self.updateData)
 
         self.features = None
