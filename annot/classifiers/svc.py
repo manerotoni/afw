@@ -5,19 +5,20 @@ multiclasssvm.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("MultiClassSvm", )
+__all__ = ("Svc", )
 
 
+import numpy as np
 import sklearn.svm
-from PyQt4 import QtGui
-from PyQt4.QtGui import QMessageBox
+
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
-
+from PyQt4 import QtGui
+from PyQt4.QtGui import QMessageBox
 
 from annot.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
 from annot.gui.crossvalidationdlg import CrossValidationDialog
-from .classifiers import Classifier
+from .classifiers import Classifier, ClfWriter, ClfDataModel
 
 
 class AnnotationButton(QtGui.QToolButton):
@@ -84,10 +85,10 @@ class TreeView(QtGui.QTreeView):
         self._awidget.addAnnotation(class_name)
 
 
-class McSvmParameterWidget(QtGui.QFrame):
+class SvcParameterWidget(QtGui.QFrame):
 
     def __init__(self, parent, *args, **kw):
-        super(McSvmParameterWidget, self).__init__(parent=parent, *args, **kw)
+        super(SvcParameterWidget, self).__init__(parent=parent, *args, **kw)
 
         gbox = QtGui.QGridLayout(self)
         gbox.setContentsMargins(2, 2, 2, 2)
@@ -112,7 +113,6 @@ class McSvmParameterWidget(QtGui.QFrame):
 
         self.crossValidBtn = QtGui.QPushButton("cross validation")
         self.crossValidBtn.clicked.connect(parent.validateClassifier)
-
 
         gbox.addWidget(self.addClassBtn, 0, 0)
         gbox.addWidget(self.removeClassBtn, 0, 1)
@@ -156,13 +156,54 @@ class McSvmParameterWidget(QtGui.QFrame):
                     self.treeview.model().removeClass(mi)
 
 
-class MultiClassSvm(Classifier):
+class SvcDataModel(ClfDataModel):
+    """Data model to save a Support Vector classifier to hdf5."""
+
+    def __init__(self, *args, **kw):
+        super(SvcDataModel, self).__init__(*args, **kw)
+        self.annotations = "%s/annotations" %self.path
+
+
+class SvcWriter(ClfWriter):
+
+    def __init__(self, name, file_, description=None, remove_existing=False):
+        super(SvcWriter, self).__init__(file_)
+        assert isinstance(remove_existing, bool)
+
+        self.dmodel = SvcDataModel(name)
+
+        if remove_existing:
+            try:
+                del self.h5f[self.dmodel.path]
+            except KeyError:
+                pass
+
+        try:
+            grp = self.h5f.create_group(self.dmodel.path)
+        except ValueError as e:
+            raise HdfError("Classifer with name %s exists already"
+                           %name + str(e))
+
+        grp.attrs[self.dmodel.NAME] = "support vector classifier"
+        grp.attrs[self.dmodel.LIB] = "sklearn.svm.SVC"
+        grp.attrs[self.dmodel.VERSION] = sklearn.__version__
+
+        if description is not None:
+            grp.attrs[self.dmodel.DESCRIPTION] = description
+
+    def saveAnnotations(self, labels):
+        # not more than 256 classess
+        labels = labels.astype(np.uint8)
+        dset = self.h5f.create_dataset(self.dmodel.annotations, data=labels)
+
+
+class Svc(Classifier):
 
     KERNEL = "rbf"
     name = "svc"
 
     def __init__(self, *args, **kw):
-        super(MultiClassSvm, self).__init__(*args, **kw)
+        super(Svc, self).__init__(*args, **kw)
         self._pp = None
         self._cvwidget = None
         self._pwidget = None
@@ -175,7 +216,7 @@ class MultiClassSvm(Classifier):
     def parameterWidget(self, parent):
         """Returns the classifier specific parameter widget."""
         if self._pwidget is None:
-            self._pwidget = McSvmParameterWidget(parent)
+            self._pwidget = SvcParameterWidget(parent)
         return self._pwidget
 
     def validationDialog(self, parent):
@@ -185,8 +226,6 @@ class MultiClassSvm(Classifier):
             self._cvwidget = CrossValidationDialog(parent, self)
         return self._cvwidget
 
-    def saveToHdf(self, *args, **kw):
-        pass
 
     def train(self, features, labels):
         self.setupPreProcessor(features)
@@ -195,7 +234,17 @@ class MultiClassSvm(Classifier):
     def predict(self, features):
 
         if self._clf is None:
-            return super(MultiClassSvm, self).predict(features)
+            return super(Svc, self).predict(features)
         else:
             predictions = self._clf.predict(self._pp(features))
             return [self.classes[pred] for pred in predictions]
+
+
+    def saveToHdf(self, name, file_, feature_selection, description,
+                  overwrite=False, labels=None):
+
+        writer = SvcWriter(name, file_, description, overwrite)
+        writer.saveTrainingSet(self._pp.data, feature_selection.values())
+        writer.saveAnnotations(labels)
+        writer.saveClassDef(self.classes, self._clf.get_params())
+        writer.saveNormalization(self._pp)

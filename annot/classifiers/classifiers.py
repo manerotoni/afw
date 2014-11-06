@@ -5,8 +5,10 @@ classifier.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("Classifier", )
+__all__ = ("Classifier", "ClfWriter", "ClfDataModel")
 
+import h5py
+import numpy as np
 from collections import OrderedDict
 
 from PyQt4 import QtGui
@@ -14,9 +16,74 @@ from PyQt4 import QtGui
 from annot.pattern import Factory
 from annot.classifiers.itemclass import UnClassified
 from annot.preprocessor import PreProcessor
+from annot.hdfio.readercore import HdfFile
 
 
-# TODO need design pattern QFactory
+class ClfDataModel(object):
+    """Data model to save a Support Vector classifier to hdf5."""
+
+    NAME = "name"
+    LIB = "library"
+    VERSION = "version"
+    FEATURE_SELECTION = "feature_selection"
+    DESCRIPTION = "description"
+
+    def __init__(self, name):
+        self.name = name
+        self.path = "/classifiers/%s" %name
+        self.parameters = "%s/parameters" %self.path
+        self.training_set = "%s/training_set" %self.path
+        self.classdef = "%s/class_definition" %self.path
+        self.normalization = "%s/normalization" %self.path
+
+
+class ClfWriter(object):
+
+    def __init__(self, file_):
+        super(ClfWriter, self).__init__()
+        if isinstance(file_, HdfFile):
+            self.h5f = file_
+        elif isinstance(file_, basestring):
+            self.h5f = h5py.File(file_, HdfFile.READWRITECREATE)
+
+    def saveTrainingSet(self, features, feature_names):
+        dtype = [(str(fn), np.float32) for fn in feature_names]
+        f2 = features.copy().astype(np.float32).view(dtype)
+        dset = self.h5f.create_dataset(self.dmodel.training_set, data=f2)
+
+    def saveClassDef(self, classes, classifier_params=None):
+
+        dt = [("name", "S64"), ("label", int), ("color", "S7")]
+        classdef = np.empty(len(classes, ), dtype=dt)
+
+        for i, class_ in enumerate(classes.itervalues()):
+            classdef[i] = (class_.name, class_.label, class_.color.name())
+
+        dset = self.h5f.create_dataset(self.dmodel.classdef, data=classdef)
+
+        if classifier_params is not None:
+            # save classifier parameters
+            for k, v in classifier_params.iteritems():
+                if v is None:
+                    dset.attrs[k] = str(v)
+                else:
+                    dset.attrs[k] = v
+
+    def saveNormalization(self, preproc):
+
+        dt = [("offset", np.float32), ("scale", np.float32), ("colmask", bool)]
+        offset = preproc.mean.astype(np.float32)
+        scale = preproc.std.astype(np.float32)
+        norm = np.empty( (offset.size, ), dtype=dt)
+
+        for i, line in enumerate(zip(offset, scale, preproc.mask)):
+            norm[i] = line
+
+        dset = self.h5f.create_dataset(self.dmodel.normalization, data=norm)
+
+
+
+# TODO need design pattern QFactory (which segfautlts right now!)
 class Classifier(object):
     """Parent factory for all classifier classes."""
 

@@ -11,53 +11,29 @@ __licence__ = 'GPL'
 __all__ = ("OneClassSvm", )
 
 
-import h5py
 import sklearn
 import sklearn.svm
 import numpy as np
 from PyQt4 import QtGui
 
 from annot.config import AtConfig
-from annot.hdfio.readercore import HdfFile
 from annot.hdfio.readercore import HdfError
 from annot.gui.sidebar.models import AtOneClassSvmItemModel
 from annot.preprocessor import PreProcessor
 from .itemclass import ItemClass
-from .classifiers import Classifier
+from .classifiers import Classifier, ClfWriter, ClfDataModel
 
 
-class OcSvmDataModel(object):
+class OcSvmDataModel(ClfDataModel):
     """Data model to save one class svm to hdf5."""
-
-    NAME = "name"
-    LIB = "library"
-    FEATURE_SELECTION = "feature_selection"
-    DESCRIPTION = "description"
+    pass
 
 
-    def __init__(self, name):
-
-        self.name = name
-        self.path = "/classifiers/%s" %name
-        self.parameters = "%s/parameters" %self.path
-        self.training_set = "%s/training_set" %self.path
-        self.classdef = "%s/class_definition" %self.path
-        self.normalization = "%s/normalization" %self.path
-
-
-class OcSvmWriter(object):
+class OcSvmWriter(ClfWriter):
 
     def __init__(self, name, file_, description=None, remove_existing=False):
-
-        assert isinstance(remove_existing, bool)
-
+        super(OcSvmWriter, self).__init__(file_)
         self.dmodel = OcSvmDataModel(name)
-
-        if isinstance(file_, HdfFile):
-            self.h5f = file_
-        elif isinstance(file_, basestring):
-
-            self.h5f = h5py.File(file_, HdfFile.READWRITECREATE)
 
         if remove_existing:
             try:
@@ -72,47 +48,11 @@ class OcSvmWriter(object):
                            %name + str(e))
 
         grp.attrs[self.dmodel.NAME] = "one class support vector machine"
-        grp.attrs[self.dmodel.LIB] = "sklearn-%s" %sklearn.__version__
+        grp.attrs[self.dmodel.LIB] = "sklearn.svm.OneClassSvm"
+        grp.attrs[self.dmodel.VERSION] = sklearn.__version__
 
         if description is not None:
             grp.attrs[self.dmodel.DESCRIPTION] = description
-
-    def saveTrainingSet(self, features, feature_names):
-
-        dtype = [(str(fn), np.float32) for fn in feature_names]
-        f2 = features.copy().astype(np.float32).view(dtype)
-
-        dset = self.h5f.create_dataset(self.dmodel.training_set, data=f2)
-
-    def saveClassDef(self, classes, classifier_params=None):
-
-        dt = [("name", "S64"), ("label", int), ("color", "S7")]
-        classdef = np.empty(len(classes, ), dtype=dt)
-
-        for i, class_ in enumerate(classes.itervalues()):
-            classdef[i] = (class_.name, class_.label, class_.color.name())
-
-        dset = self.h5f.create_dataset(self.dmodel.classdef, data=classdef)
-
-        if classifier_params is not None:
-            # save classifier parameters
-            for k, v in classifier_params.iteritems():
-                if v is None:
-                    dset.attrs[k] = str(v)
-                else:
-                    dset.attrs[k] = v
-
-    def saveNormalization(self, preproc):
-
-        dt = [("offset", np.float32), ("scale", np.float32), ("colmask", bool)]
-        offset = preproc.mean.astype(np.float32)
-        scale = preproc.std.astype(np.float32)
-        norm = np.empty( (offset.size, ), dtype=dt)
-
-        for i, line in enumerate(zip(offset, scale, preproc.mask)):
-            norm[i] = line
-
-        dset = self.h5f.create_dataset(self.dmodel.normalization, data=norm)
 
 
 class OcSvmParameterWidget(QtGui.QFrame):
@@ -239,7 +179,7 @@ class OneClassSvm(Classifier):
             return [self.classes[pred] for pred in predictions]
 
     def saveToHdf(self, name, file_, feature_selection, description,
-                  overwrite=False):
+                  overwrite=False, labels=None):
 
         writer = OcSvmWriter(name, file_, description, overwrite)
         writer.saveTrainingSet(self._pp.data, feature_selection.values())
