@@ -248,3 +248,4 @@ class Svc(Classifier):
         writer.saveAnnotations(labels)
         writer.saveClassDef(self.classes, self._clf.get_params())
         writer.saveNormalization(self._pp)
+        writer.flush()

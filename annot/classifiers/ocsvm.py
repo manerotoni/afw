@@ -185,3 +185,4 @@ class OneClassSvm(Classifier):
         writer.saveTrainingSet(self._pp.data, feature_selection.values())
         writer.saveClassDef(self.classes, self._clf.get_params())
         writer.saveNormalization(self._pp)
+        writer.flush()

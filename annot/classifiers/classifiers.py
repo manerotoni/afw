@@ -46,6 +46,9 @@ class ClfWriter(object):
         elif isinstance(file_, basestring):
             self.h5f = h5py.File(file_, HdfFile.READWRITECREATE)
 
+    def flush(self):
+        self.h5f.flush()
+
     def saveTrainingSet(self, features, feature_names):
         dtype = [(str(fn), np.float32) for fn in feature_names]
         f2 = features.copy().astype(np.float32).view(dtype)
