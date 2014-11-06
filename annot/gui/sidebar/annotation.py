@@ -71,7 +71,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         qss = "QPushButton#predictBtn {color: %s}" %color
         self.predictBtn.setStyleSheet(qss)
 
-    def predictionInvalid(self, dummy):
+    def predictionInvalid(self, dummy=None):
         self.setButtonColor(Qt.red)
 
     def _setupClassifiers(self):
@@ -106,15 +106,14 @@ class AtAnnotationWidget(AtSideBarWidget):
             features = self.filterFeatures(self.model.features)
             clf = self.currentClassifier()
             clf.estimateParameters(features)
+            self.predictionInvalid()
         except NoSampleError:
             pass
 
     def validateClassifier(self):
         vd = self.currentClassifier().validationDialog(self)
-        if vd.isHidden():
-            vd.show()
-        else:
-            vd.hide()
+        vd.show()
+        vd.raise_()
 
     def currentClassifier(self):
         return getattr(self, self.classifiers.currentText())
@@ -130,10 +129,8 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.featureDlg.addFeatureList(features)
 
     def onFeatureBtn(self):
-        if self.featureDlg.isHidden():
-            self.featureDlg.show()
-        else:
-            self.featureDlg.hide()
+        self.featureDlg.show()
+        self.featureDlg.raise_()
 
     def onSave(self):
         clf = self.currentClassifier()

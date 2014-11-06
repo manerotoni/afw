@@ -52,6 +52,7 @@ class CrossValidationDialog(QtGui.QWidget):
         self.gridSearchBtn.clicked.connect(self.onGridSearch)
         self.gridSearchFinished.connect(self.crossValidation)
         self.gridSearchFinished.connect(self.onApplyBtn)
+        self.gridSearchFinished.connect(parent.predictionInvalid)
         self.requestDataUpdate.connect(self.updateData)
 
         self.features = None
