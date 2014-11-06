@@ -33,6 +33,9 @@ class AtAnnotationWidget(AtSideBarWidget):
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
 
+        # sometimes even qt sucks
+        self.gbox.addWidget(self.classifiers, 0, 0, 2, 0)
+
         self.featureDlg = AtFeatureSelectionDlg(self)
         self.featureDlg.hide()
         self.saveBtn.clicked.connect(self.onSave)
@@ -79,7 +82,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         for name in Classifier.classifiers():
             clf = Classifier(name)
             clf.createActions(self.tileview, self)
-            self.classifiers.addItem(name)
+            self.classifiers.addItem(clf.name, userData=name)
             self.stack.addWidget(clf.parameterWidget(self))
             setattr(self, name, clf)
 
@@ -116,7 +119,9 @@ class AtAnnotationWidget(AtSideBarWidget):
         vd.raise_()
 
     def currentClassifier(self):
-        return getattr(self, self.classifiers.currentText())
+        index = self.classifiers.currentIndex()
+        name = self.classifiers.itemData(index).toPyObject()
+        return getattr(self, name)
 
     def itemView(self):
         return self.stack.currentWidget().treeview

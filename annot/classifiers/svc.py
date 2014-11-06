@@ -16,6 +16,7 @@ from PyQt4.QtCore import Qt
 from PyQt4 import QtGui
 from PyQt4.QtGui import QMessageBox
 
+from annot.hdfio.readercore import HdfError
 from annot.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
 from annot.gui.crossvalidationdlg import CrossValidationDialog
 from .classifiers import Classifier, ClfWriter, ClfDataModel
@@ -166,11 +167,13 @@ class SvcDataModel(ClfDataModel):
 
 class SvcWriter(ClfWriter):
 
-    def __init__(self, name, file_, description=None, remove_existing=False):
+    name = 'support_vector_classifier'
+
+    def __init__(self, file_, description=None, remove_existing=False):
         super(SvcWriter, self).__init__(file_)
         assert isinstance(remove_existing, bool)
 
-        self.dmodel = SvcDataModel(name)
+        self.dmodel = SvcDataModel(self.name)
 
         if remove_existing:
             try:
@@ -182,7 +185,7 @@ class SvcWriter(ClfWriter):
             grp = self.h5f.create_group(self.dmodel.path)
         except ValueError as e:
             raise HdfError("Classifer with name %s exists already"
-                           %name + str(e))
+                           %self.name + str(e))
 
         grp.attrs[self.dmodel.NAME] = "support vector classifier"
         grp.attrs[self.dmodel.LIB] = "sklearn.svm.SVC"
@@ -200,7 +203,7 @@ class SvcWriter(ClfWriter):
 class Svc(Classifier):
 
     KERNEL = "rbf"
-    name = "svc"
+    name = "Support Vector Classifier"
 
     def __init__(self, *args, **kw):
         super(Svc, self).__init__(*args, **kw)

@@ -31,9 +31,11 @@ class OcSvmDataModel(ClfDataModel):
 
 class OcSvmWriter(ClfWriter):
 
-    def __init__(self, name, file_, description=None, remove_existing=False):
+    name = "ocsvm"
+
+    def __init__(self, file_, description=None, remove_existing=False):
         super(OcSvmWriter, self).__init__(file_)
-        self.dmodel = OcSvmDataModel(name)
+        self.dmodel = OcSvmDataModel(self.name)
 
         if remove_existing:
             try:
@@ -45,7 +47,7 @@ class OcSvmWriter(ClfWriter):
             grp = self.h5f.create_group(self.dmodel.path)
         except ValueError as e:
             raise HdfError("Classifer with name %s exists already"
-                           %name + str(e))
+                           %self.name + str(e))
 
         grp.attrs[self.dmodel.NAME] = "one class support vector machine"
         grp.attrs[self.dmodel.LIB] = "sklearn.svm.OneClassSvm"
@@ -104,7 +106,7 @@ class OneClassSvm(Classifier):
     """Class for training and parameter tuning of a one class svm."""
 
     KERNEL = "rbf"
-    name = "ocsvm"
+    name = "One Class SVM"
 
     # TODO method to set the item classes
     INLIER = ItemClass("inlier", QtGui.QColor("green"), 1)

@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">
-    <number>2</number>
+    <number>1</number>
    </property>
    <property name="margin">
     <number>0</number>
@@ -24,18 +24,17 @@
     <widget class="QComboBox" name="classifiers"/>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout2">
-     <item row="0" column="1">
-      <widget class="QPushButton" name="predictBtn">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;actually trains and predicts...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>predict</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
+    <layout class="QGridLayout" name="gbox">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <item row="2" column="0">
       <widget class="QPushButton" name="featureBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -45,6 +44,16 @@
        </property>
        <property name="text">
         <string>feature selection</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="predictBtn">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;actually trains and predicts...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>predict</string>
        </property>
       </widget>
      </item>
@@ -70,7 +79,7 @@
     </widget>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="gbox_2">
      <property name="horizontalSpacing">
       <number>-1</number>
      </property>
