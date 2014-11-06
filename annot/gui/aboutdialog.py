@@ -37,7 +37,7 @@ class AtAboutDialog(QtGui.QDialog):
         label1 = QtGui.QLabel(self)
         label1.setAlignment(Qt.AlignCenter)
         label1.setText('AnnotationTool\nVersion %s\n\n'
-                       'Copyright 2014 Rudolf Hoefler. All rights reserved.\n'
+                       'Copyright 2014 Rudolf Hoefler.\nAll rights reserved.\n'
                        %version.version)
 
-        label1.setGeometry(0, 100, 300, 70)
+        label1.setGeometry(0, 100, 300, 80)
