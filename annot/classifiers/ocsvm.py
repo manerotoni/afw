@@ -183,7 +183,7 @@ class OneClassSvm(Classifier):
     def saveToHdf(self, name, file_, feature_selection, description,
                   overwrite=False, labels=None):
 
-        writer = OcSvmWriter(name, file_, description, overwrite)
+        writer = OcSvmWriter(file_, description, overwrite)
         writer.saveTrainingSet(self._pp.data, feature_selection.values())
         writer.saveClassDef(self.classes, self._clf.get_params())
         writer.saveNormalization(self._pp)

@@ -246,7 +246,7 @@ class Svc(Classifier):
     def saveToHdf(self, name, file_, feature_selection, description,
                   overwrite=False, labels=None):
 
-        writer = SvcWriter(name, file_, description, overwrite)
+        writer = SvcWriter(file_, description, overwrite)
         writer.saveTrainingSet(self._pp.data, feature_selection.values())
         writer.saveAnnotations(labels)
         writer.saveClassDef(self.classes, self._clf.get_params())
