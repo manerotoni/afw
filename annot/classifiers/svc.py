@@ -167,13 +167,11 @@ class SvcDataModel(ClfDataModel):
 
 class SvcWriter(ClfWriter):
 
-    name = 'support_vector_classifier'
-
-    def __init__(self, file_, description=None, remove_existing=False):
+    def __init__(self, name, file_, description=None, remove_existing=False):
         super(SvcWriter, self).__init__(file_)
         assert isinstance(remove_existing, bool)
 
-        self.dmodel = SvcDataModel(self.name)
+        self.dmodel = SvcDataModel(name)
 
         if remove_existing:
             try:
@@ -185,7 +183,7 @@ class SvcWriter(ClfWriter):
             grp = self.h5f.create_group(self.dmodel.path)
         except ValueError as e:
             raise HdfError("Classifer with name %s exists already"
-                           %self.name + str(e))
+                           %name + str(e))
 
         grp.attrs[self.dmodel.NAME] = "support vector classifier"
         grp.attrs[self.dmodel.LIB] = "sklearn.svm.SVC"
@@ -246,7 +244,7 @@ class Svc(Classifier):
     def saveToHdf(self, name, file_, feature_selection, description,
                   overwrite=False, labels=None):
 
-        writer = SvcWriter(file_, description, overwrite)
+        writer = SvcWriter(name, file_, description, overwrite)
         writer.saveTrainingSet(self._pp.data, feature_selection.values())
         writer.saveAnnotations(labels)
         writer.saveClassDef(self.classes, self._clf.get_params())

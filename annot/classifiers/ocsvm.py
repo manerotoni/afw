@@ -31,11 +31,10 @@ class OcSvmDataModel(ClfDataModel):
 
 class OcSvmWriter(ClfWriter):
 
-    name = "ocsvm"
 
-    def __init__(self, file_, description=None, remove_existing=False):
+    def __init__(self, name, file_, description=None, remove_existing=False):
         super(OcSvmWriter, self).__init__(file_)
-        self.dmodel = OcSvmDataModel(self.name)
+        self.dmodel = OcSvmDataModel(name)
 
         if remove_existing:
             try:
@@ -47,7 +46,7 @@ class OcSvmWriter(ClfWriter):
             grp = self.h5f.create_group(self.dmodel.path)
         except ValueError as e:
             raise HdfError("Classifer with name %s exists already"
-                           %self.name + str(e))
+                           %name + str(e))
 
         grp.attrs[self.dmodel.NAME] = "one class support vector machine"
         grp.attrs[self.dmodel.LIB] = "sklearn.svm.OneClassSvm"
@@ -183,7 +182,7 @@ class OneClassSvm(Classifier):
     def saveToHdf(self, name, file_, feature_selection, description,
                   overwrite=False, labels=None):
 
-        writer = OcSvmWriter(file_, description, overwrite)
+        writer = OcSvmWriter(name, file_, description, overwrite)
         writer.saveTrainingSet(self._pp.data, feature_selection.values())
         writer.saveClassDef(self.classes, self._clf.get_params())
         writer.saveNormalization(self._pp)

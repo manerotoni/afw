@@ -144,7 +144,7 @@ class AtAnnotationWidget(AtSideBarWidget):
             return
 
         dlg = SaveClassifierDialog(self)
-        dlg.name = clf.name
+        dlg.name = clf.name.replace(" ", "_").lower()
 
         hdffile = self.parent.loader.file
         if hdffile is None or hdffile.mode != hdffile.READWRITE:
