@@ -8,13 +8,11 @@ __licence__ = 'GPL'
 __all__ = ("HdfFile", "HdfError", "HdfItem", "HdfFileInfo")
 
 
-
 import h5py
 import numpy as np
 from collections import namedtuple
+
 from qimage2ndarray import gray2qimage
-
-
 from PyQt4.QtGui import QColor
 
 from annot.pattern import Factory

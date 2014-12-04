@@ -21,10 +21,12 @@ from annot.hdfio.trainingset import AtTrainingSetIO
 from annot.segmentation import PrimaryParams, ExpansionParams, SRG_TYPE
 from annot.xmlconf import XmlConfReader, XmlConfWriter
 
+import mimetypes
+mimetypes.add_type('application/ch5', 'ch5')
+
 # windows sucks!
 try:
     import magic
-
     def settings_from(filename):
         if magic.from_file(filename, mime=True) == "application/xml":
             with open(filename, "r") as fp:
@@ -38,12 +40,16 @@ try:
         raise IOError("Unknown extenstion!")
 
 except ImportError:
+    # using python mimetype module if no libmagic is installed
+    # --> i.e. for windoze os....
+
     def settings_from(filename):
-        extenstion = os.path.splitext(filename)[1]
-        if extenstion == ".xml":
+
+        type_ = mimetypes.guess_type(filename)[0]
+        if type_ == "application/xml":
             with open(filename, "r") as fp:
                 return fp.read()
-        elif extenstion in (".hdf", ".ch5", ".h5", ".hdf5"):
+        elif type_ == 'application/x-hdf' or type_ == 'application/ch5':
             try:
                 fp = AtTrainingSetIO(filename)
                 return fp.settings
@@ -51,7 +57,6 @@ except ImportError:
                 fp.close()
 
         raise IOError("Unknown extenstion! (%s)" %extenstion)
-
 
 
 
