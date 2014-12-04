@@ -121,7 +121,7 @@ class ObjectDict(OrderedDict):
         obj = self[self.keys()[0]]
         return obj.gallery_image.dtype
 
-    def copyObjects(self, objectdict):
+    def copy_objects(self, objectdict):
         """Deepcopy image objects from one holder to self. Feature names must be
         provides separatly.
         """
