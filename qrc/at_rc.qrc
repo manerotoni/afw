@@ -1,26 +1,65 @@
 <RCC>
   <qresource prefix="/">
+    <file>svm.png</file>
     <file>annotationtool.svg</file>
-    <file>next.png</file>
-    <file>open.png</file>
-    <file>previous.png</file>
-    <file>hdf5-logo.png</file>
-    <file>eraser.png</file>
-    <file>clear.png</file>
-    <file>clear2.ico</file>
-    <file>clear3.png</file>
-    <file>annotationtool_about.png</file>
+    <file>oxygen/chart.png</file>
     <file>oxygen/clear.png</file>
     <file>oxygen/code-block.png</file>
     <file>oxygen/code-class.png</file>
     <file>oxygen/delete-class.png</file>
     <file>oxygen/document-open-folder.png</file>
+    <file>oxygen/document-save-all.png</file>
+    <file>oxygen/document-save-as.png</file>
+    <file>oxygen/document-save.png</file>
+    <file>oxygen/draw-eraser.png</file>
+    <file>oxygen/edit-clear-list.png</file>
+    <file>oxygen/edit-clear.png</file>
+    <file>oxygen/edit-delete-shred.png</file>
+    <file>oxygen/edit-delete.png</file>
     <file>oxygen/edit-table-insert-row-below.png</file>
     <file>oxygen/emblem-important.png</file>
+    <file>oxygen/flag-black.png</file>
+    <file>oxygen/flag-green.png</file>
+    <file>oxygen/flag-red.png</file>
+    <file>oxygen/flag-yellow.png</file>
+    <file>oxygen/flag.png</file>
     <file>oxygen/grid.png</file>
+    <file>oxygen/irc-close-channel.png</file>
+    <file>oxygen/irc-join-channel.png</file>
+    <file>oxygen/list-add.png</file>
+    <file>oxygen/list-remove.png</file>
     <file>oxygen/new-class.png</file>
+    <file>oxygen/project-development-close-all.png</file>
+    <file>oxygen/project-development-close.png</file>
+    <file>oxygen/project-development-new-template.png</file>
+    <file>oxygen/project-development.png</file>
+    <file>oxygen/run-build-clean.png</file>
+    <file>oxygen/run-build-configure.png</file>
+    <file>oxygen/run-build-file.png</file>
+    <file>oxygen/run-build-install-root.png</file>
+    <file>oxygen/run-build-install.png</file>
+    <file>oxygen/run-build-prune.png</file>
+    <file>oxygen/run-build.png</file>
     <file>oxygen/sort-ascending.png</file>
     <file>oxygen/sort-descending.png</file>
     <file>oxygen/system-help.png</file>
+    <file>oxygen/view-categories.png</file>
+    <file>oxygen/view-currency-list.png</file>
+    <file>oxygen/view-documents-finances.png</file>
+    <file>oxygen/view-expenses-categories.png</file>
+    <file>oxygen/view-financial-categories.png</file>
+    <file>oxygen/view-financial-list.png</file>
+    <file>oxygen/view-grid.png</file>
+    <file>oxygen/view-right-close.png</file>
+    <file>oxygen/view-right-new.png</file>
+    <file>oxygen/view-sidetree.png</file>
+    <file>oxygen/window-close.png</file>
+    <file>oxygen/window-duplicate.png</file>
+    <file>oxygen/window-new.png</file>
+    <file>oxygen/window-suppressed.png</file>
+    <file>next.png</file>
+    <file>previous.png</file>
+    <file>hdf5-logo.png</file>
+    <file>annotationtool_about.png</file>
   </qresource>
 </RCC>

@@ -33,9 +33,6 @@ class AtAnnotationWidget(AtSideBarWidget):
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
 
-        # sometimes even qt sucks
-        self.gbox.addWidget(self.classifiers, 0, 0, 2, 0)
-
         self.featureDlg = AtFeatureSelectionDlg(self)
         self.featureDlg.hide()
         self.saveBtn.clicked.connect(self.onSave)
@@ -47,7 +44,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.removeBtn.clicked.connect(self.removeSelected)
         self.removeAllBtn.clicked.connect(self.removeAll)
         self.predictBtn.clicked.connect(self.onPredict)
-        self.featureBtn.clicked.connect(self.onFeatureBtn)
+        self.predictBtn.setText('Predict')
 
     def onActivated(self, index):
         parent = self.model.item(index.parent().row(), 0)
@@ -71,6 +68,7 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def setButtonColor(self, color):
         color = QtGui.QColor(color).name()
+        print self.predictBtn.styleSheet()
         qss = "QPushButton#predictBtn {color: %s}" %color
         self.predictBtn.setStyleSheet(qss)
 
@@ -133,7 +131,7 @@ class AtAnnotationWidget(AtSideBarWidget):
     def setFeatureNames(self, features):
         self.featureDlg.addFeatureList(features)
 
-    def onFeatureBtn(self):
+    def showFeatureDlg(self,):
         self.featureDlg.show()
         self.featureDlg.raise_()
 

@@ -67,6 +67,8 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionExportViewPanel.triggered.connect(self.saveImage)
         self.actionAboutQt.triggered.connect(self.onAboutQt)
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
+        self.actionFeatureSelection.triggered.connect(
+            self.annotation.showFeatureDlg)
         self.loader.finished.connect(self.onLoadingFinished)
 
         self._restoreSettings()
