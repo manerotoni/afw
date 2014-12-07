@@ -15,6 +15,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4 import QtGui
 from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QSizePolicy
 
 from annot.hdfio.readercore import HdfError
 from annot.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
@@ -92,19 +93,30 @@ class SvcParameterWidget(QtGui.QFrame):
     def __init__(self, parent, *args, **kw):
         super(SvcParameterWidget, self).__init__(parent=parent, *args, **kw)
 
-        gbox = QtGui.QGridLayout(self)
-        gbox.setContentsMargins(2, 2, 2, 2)
-        gbox.setSpacing(2)
+        vbox = QtGui.QVBoxLayout(self)
+        vbox.setContentsMargins(2, 2, 2, 2)
+        vbox.setSpacing(2)
+
+        frame = QtGui.QToolBar("SVC", self)
 
         self.treeview = TreeView(parent, self)
         model = AtMultiClassSvmItemModel(self.treeview)
         model.classesChanged.connect(parent.updateClassifier)
         self.treeview.setModel(model)
 
-        self.addClassBtn = QtGui.QPushButton("new class")
+        self.addClassBtn = QtGui.QToolButton()
+        self.addClassBtn.setToolTip("Add new class")
+        self.addClassBtn.setIcon(QtGui.QIcon(":/oxygen/code-class.png"))
+        self.addClassBtn.setSizePolicy(
+            QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.addClassBtn.pressed.connect(self.onAddBtn)
 
-        self.removeClassBtn = QtGui.QPushButton("remove class")
+        self.removeClassBtn = QtGui.QToolButton()
+        self.removeClassBtn.setToolTip("Delete selected class")
+        self.removeClassBtn.setIcon(QtGui.QIcon(":/remove-class.png"))
+        self.removeClassBtn.setSizePolicy(
+            QSizePolicy.Preferred, QSizePolicy.Preferred)
+
         self.removeClassBtn.pressed.connect(self.onRemoveBtn)
 
         # disable the sanity check whether a sample is already reassign to
@@ -113,13 +125,18 @@ class SvcParameterWidget(QtGui.QFrame):
         self.allowReassign.stateChanged.connect(model.allowReassign)
         model.allowReassign(self.allowReassign.isChecked())
 
-        self.crossValidBtn = QtGui.QPushButton("cross validation")
+        self.crossValidBtn = QtGui.QToolButton()
+        self.crossValidBtn.setToolTip("Pop up cross-validation dialog")
+        self.crossValidBtn.setIcon(QtGui.QIcon(":/oxygen/chart.png"))
+        self.crossValidBtn.setSizePolicy(
+            QSizePolicy.Preferred, QSizePolicy.Preferred)
+
         self.crossValidBtn.clicked.connect(parent.validateClassifier)
 
-        gbox.addWidget(self.addClassBtn, 0, 0)
-        gbox.addWidget(self.removeClassBtn, 0, 1)
-        gbox.addWidget(self.crossValidBtn, 2, 0)
-        gbox.addWidget(self.allowReassign, 2, 1)
+        frame.addWidget(self.addClassBtn)
+        frame.addWidget(self.removeClassBtn)
+        frame.addWidget(self.crossValidBtn)
+        frame.addWidget(self.allowReassign)
 
         self.treeview.activated.connect(parent.onActivated)
         self.treeview.setItemDelegateForColumn(1, ColorDelegate(self.treeview))
@@ -131,7 +148,8 @@ class SvcParameterWidget(QtGui.QFrame):
                 model.index(row, model.ButtonColumn))
         model.layoutChanged.emit()
 
-        gbox.addWidget(self.treeview, 3, 0, 1, 0)
+        vbox.addWidget(frame)
+        vbox.addWidget(self.treeview)
 
     def onAddBtn(self):
         self.treeview.model().addClass()

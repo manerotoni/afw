@@ -1,6 +1,8 @@
 <RCC>
   <qresource prefix="/">
+    <file>oxygen/games-solve.png</file>
     <file>svm.png</file>
+    <file>remove-class.png</file>
     <file>annotationtool.svg</file>
     <file>oxygen/chart.png</file>
     <file>oxygen/clear.png</file>
