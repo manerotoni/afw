@@ -83,7 +83,7 @@ class OcSvmParameterWidget(QtGui.QFrame):
         self.estBtn.setIcon(QtGui.QIcon(":/oxygen/games-solve.png"))
         self.estBtn.clicked.connect(parent.estimateParameters)
 
-        self.addBtn = QtGui.QToolButton(self)
+        self.addBtn = QtGui.QToolButton()
         self.addBtn.setIcon(QtGui.QIcon(":/oxygen/list-add.png"))
         # one class svm does not need the class name
         func = lambda: parent.addAnnotation(OneClassSvm.INLIER.name)
@@ -100,7 +100,7 @@ class OcSvmParameterWidget(QtGui.QFrame):
         gbox.addWidget(self.gamma, 1, 1)
         gbox.addWidget(self.estBtn, 1, 2)
         gbox.addWidget(self.addBtn, 2, 2)
-        gbox.addWidget(QtGui.QLabel("add items"), 2, 0, 1, 0)
+        gbox.addWidget(QtGui.QLabel("add items"), 2, 0)
         gbox.addWidget(self.treeview, 3, 0, 2, 0)
 
 
