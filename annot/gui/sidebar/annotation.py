@@ -68,7 +68,6 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def setButtonColor(self, color):
         color = QtGui.QColor(color).name()
-        print self.predictBtn.styleSheet()
         qss = "QPushButton#predictBtn {color: %s}" %color
         self.predictBtn.setStyleSheet(qss)
 

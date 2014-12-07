@@ -30,7 +30,8 @@ class AnnotationButton(QtGui.QToolButton):
 
     def __init__(self, name_item, *args, **kw):
         super(AnnotationButton, self).__init__(*args, **kw)
-        self.setText('+')
+#        self.setText('+')
+        self.setIcon(QtGui.QIcon(":/oxygen/list-add.png"))
         self.setMaximumWidth(self.height())
         self._name_item = name_item
 
