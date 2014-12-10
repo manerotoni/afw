@@ -18,6 +18,7 @@ from cecog.environment import CecogEnvironment
 
 from annot.imageio import LsmImage
 from annot.segmentation import ObjectDict, ImageObject
+from annot.segmentation.watershed import watershed
 
 
 class MultiChannelProcessor(object):
@@ -177,6 +178,8 @@ class MultiChannelProcessor(object):
 
         if fill_holes:
             ccore.fill_holes(seg_image)
+
+        image_watershed = watershed(image.toArray(), seg_image.toArray())
 
         return ccore.ImageMaskContainer(image, seg_image,
                                         remove_borderobjects)
