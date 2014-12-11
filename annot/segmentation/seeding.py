@@ -34,9 +34,9 @@ def local_maxima(data, size, threshold=0.01):
 
 def find_seeds(img_edt):
 
-    img_lmax = ndimage.filters.maximum_filter(img_edt, 5)
-    img_lmax = ndimage.filters.gaussian_filter(img_lmax, 5)
-    lmax_x, lmax_y = local_maxima(img_lmax, 5, 0.01)
+    img_lmax = ndimage.filters.maximum_filter(img_edt, 10)
+    img_lmax = ndimage.filters.gaussian_filter(img_lmax, 10)
+    lmax_x, lmax_y = local_maxima(img_lmax, 10, 0.01)
 
     seeds = np.zeros(img_edt.shape, dtype=bool)
     seeds[lmax_y, lmax_x] = True

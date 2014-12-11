@@ -179,10 +179,11 @@ class MultiChannelProcessor(object):
         if fill_holes:
             ccore.fill_holes(seg_image)
 
-        image_watershed = watershed(image.toArray(), seg_image.toArray())
+        image_ws = watershed(image.toArray(), seg_image.toArray())
+        image_ws = ccore.numpy_to_image(image_ws.astype(np.int16), copy=True)
 
-        return ccore.ImageMaskContainer(image, seg_image,
-                                        remove_borderobjects)
+        return ccore.ImageMaskContainer(image, image_ws,
+                                        remove_borderobjects, True, True)
 
     def seededExpandedRegion(self, image, label_image, srg_type, label_number,
                              region_statistics_array=0,
