@@ -10,11 +10,10 @@ __all__ = ('watershed')
 import numpy as np
 import vigra
 from scipy import ndimage
-from rbo import remove_border_objects, seed_mask
-from seeding import find_seeds
+from seeding import find_seeds, seed_mask
 
 
-def watershed(image, image_thres):
+def watershed(image_thres):
 
     image_labels, _ = ndimage.measurements.label(image_thres)
     mask = image_labels.astype(bool)
@@ -32,5 +31,3 @@ def watershed(image, image_thres):
 
     # removing unseeded objects and objects at the image border
     return img_watershed*mask
-
-

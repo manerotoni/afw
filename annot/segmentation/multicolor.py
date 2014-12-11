@@ -155,6 +155,7 @@ class MultiChannelProcessor(object):
         cname = channels[imaster]
 
         image = self.image[:, :, imaster].copy()
+
         self._containers[cname] = self.threshold(image, *params[cname])
         label_image = self._containers[cname].img_labels.toArray()
         self._filter(self._containers[cname], params[cname])
@@ -171,19 +172,22 @@ class MultiChannelProcessor(object):
 
         image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
-        image_median = ccore.disc_median(image, median_radius)
+        image_smoothed = ccore.disc_median(image, median_radius)
+#        image_smoothed = ccore.gaussianFilter(image, median_radius)
 
         seg_image = ccore.window_average_threshold(
-            image_median, window_size, min_contrast)
+            image_smoothed, window_size, min_contrast)
 
         if fill_holes:
             ccore.fill_holes(seg_image)
 
-        image_ws = watershed(image.toArray(), seg_image.toArray())
-        image_ws = ccore.numpy_to_image(image_ws.astype(np.int16), copy=True)
+        image_labels = watershed(image.toArray(), seg_image.toArray())
+        image_labels = ccore.numpy_to_image(
+            image_labels.astype(np.int16), copy=True)
 
-        return ccore.ImageMaskContainer(image, image_ws,
+        return ccore.ImageMaskContainer(image, image_labels,
                                         remove_borderobjects, True, True)
+
 
     def seededExpandedRegion(self, image, label_image, srg_type, label_number,
                              region_statistics_array=0,

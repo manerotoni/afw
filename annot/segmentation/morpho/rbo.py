@@ -25,15 +25,3 @@ def remove_border_objects(label_image, margin=1):
         label_image[label_image == label] = 0
 
     return label_image
-
-
-def seed_mask(label_image, seeds):
-    # seeds image has not the same labeling, the position counts
-    seed_labels = np.unique(label_image*seeds.astype(bool))
-    labels = np.unique(label_image)
-    nlabels = np.setdiff1d(labels, seed_labels)
-
-    for nl in nlabels:
-        label_image[label_image == nl] = 0
-
-    return label_image.astype(bool)
