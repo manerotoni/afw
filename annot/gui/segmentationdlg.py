@@ -59,7 +59,6 @@ except ImportError:
         raise IOError("Unknown extenstion! (%s)" %extenstion)
 
 
-
 class ChLabel(QtGui.QLabel):
 
     def __init__(self, *args, **kw):
@@ -102,6 +101,7 @@ class SegmentationDialog(QtGui.QWidget):
 
     activateChannels = pyqtSignal(list)
     changeColor = pyqtSignal(str, str)
+    paramsChanged = pyqtSignal()
 
     def __init__(self, *args, **kw):
         super(SegmentationDialog, self).__init__(*args, **kw)
@@ -113,6 +113,10 @@ class SegmentationDialog(QtGui.QWidget):
         self.pchannel.currentIndexChanged[str].connect(self.onChannelChanged)
         self.loadBtn.clicked.connect(self.onLoadBtn)
         self.saveBtn.clicked.connect(self.onSaveBtn)
+        self.watershed.stateChanged.connect(self.emitParamsChanged)
+
+    def emitParamsChanged(self, dummy=None):
+        self.paramsChanged.emit()
 
     def closeEvent(self, event):
         print "pre"

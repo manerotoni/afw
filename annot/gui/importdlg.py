@@ -64,6 +64,7 @@ class ImportDialog(QtGui.QDialog):
         self.contoursCb.stateChanged.connect(self.onContours)
         self.showBBoxes.stateChanged.connect(self.onBBoxes)
         self.showBBoxes.stateChanged.connect(self.showObjects)
+        self.segdlg.paramsChanged.connect(self.showObjects)
         self.segdlg.refreshBtn.clicked.connect(self.showObjects)
         self.segdlg.activateChannels.connect(self.cbar.activateChannels)
         self.segdlg.changeColor.connect(self.cbar.setColor)
