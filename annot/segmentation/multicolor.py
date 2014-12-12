@@ -18,7 +18,7 @@ from cecog.environment import CecogEnvironment
 
 from annot.imageio import LsmImage
 from annot.segmentation import ObjectDict, ImageObject
-from annot.segmentation.watershed import watershed
+from annot.segmentation.morpho import watershed
 
 
 class MultiChannelProcessor(object):
@@ -156,7 +156,9 @@ class MultiChannelProcessor(object):
 
         image = self.image[:, :, imaster].copy()
 
-        self._containers[cname] = self.threshold(image, *params[cname])
+        self._containers[cname] = \
+            self.threshold(image, **params[cname]._asdict())
+
         label_image = self._containers[cname].img_labels.toArray()
         self._filter(self._containers[cname], params[cname])
 
@@ -168,25 +170,33 @@ class MultiChannelProcessor(object):
 
     def threshold(self, image, median_radius, window_size, min_contrast,
                   remove_borderobjects, fill_holes, norm_min=0, norm_max=255,
+                  use_watershed=True, seeding_size=5,
                   *args, **kw):
 
         image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
         image_smoothed = ccore.disc_median(image, median_radius)
-#        image_smoothed = ccore.gaussianFilter(image, median_radius)
+        # image_smoothed = ccore.gaussianFilter(image, median_radius)
 
-        seg_image = ccore.window_average_threshold(
+        label_image = ccore.window_average_threshold(
             image_smoothed, window_size, min_contrast)
 
         if fill_holes:
-            ccore.fill_holes(seg_image)
+            ccore.fill_holes(label_image)
 
-        image_labels = watershed(image.toArray(), seg_image.toArray())
-        image_labels = ccore.numpy_to_image(
-            image_labels.astype(np.int16), copy=True)
+        if use_watershed:
+            label_image = label_image.toArray()
+            label_image = watershed(label_image, seeding_size=seeding_size)
+            label_image = ccore.numpy_to_image(
+                label_image.astype(np.int16), copy=True)
 
-        return ccore.ImageMaskContainer(image, image_labels,
-                                        remove_borderobjects, True, True)
+            return ccore.ImageMaskContainer(image, label_image,
+                                            remove_borderobjects, True, True)
+        else:
+            # a static type system sucks!
+            return ccore.ImageMaskContainer(image, label_image,
+                                            remove_borderobjects)
+
 
 
     def seededExpandedRegion(self, image, label_image, srg_type, label_number,

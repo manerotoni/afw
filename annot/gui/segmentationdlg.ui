@@ -6,18 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>716</width>
-    <height>407</height>
+    <width>732</width>
+    <height>401</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QGridLayout" name="gridLayout">
    <property name="margin">
     <number>5</number>
    </property>
-   <item>
+   <item row="0" column="0">
     <layout class="QGridLayout" name="regionBox">
      <property name="topMargin">
       <number>12</number>
@@ -335,13 +335,16 @@
         <item>
          <widget class="QComboBox" name="pchannel">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Channel for primary segementation. Local adaptive threshold is performed on this channel.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Channel for primary segementation. A local adaptive threshold is performed on this channel.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="hbox_2">
-          <item>
+         <layout class="QFormLayout" name="formLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+          </property>
+          <item row="0" column="0">
            <widget class="QLabel" name="galSizeLabel">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fixed size of a gallery image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -351,7 +354,7 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QSpinBox" name="galSize">
             <property name="maximumSize">
              <size>
@@ -369,6 +372,65 @@
              <number>65</number>
             </property>
            </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="seedingSizeLabel">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size Parameter&lt;/p&gt;&lt;p&gt;The seeding algorithm smoothes the distances map and searches for local maxiam. This is the window size of the smoothing filter. i.e. only one seed per window. Larger window means less seeds and vice versa. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>seeding size</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QSpinBox" name="seedingSize">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size Parameter&lt;/p&gt;&lt;p&gt;The seeding algorithm smoothes the distances map and searches for local maxiam. This is the window size of the smoothing filter. i.e. only one seed per window. Larger window means less seeds and vice versa. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="maximum">
+             <number>10000</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="watershed">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable watershed segmentation to split touching cells&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="watershedLabel">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable watershed segmentation to split touching cells&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>watershed</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>10</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -390,7 +452,7 @@
      </item>
     </layout>
    </item>
-   <item>
+   <item row="1" column="0">
     <spacer name="vspacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -403,7 +465,7 @@
      </property>
     </spacer>
    </item>
-   <item>
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="hbox">
      <property name="spacing">
       <number>5</number>

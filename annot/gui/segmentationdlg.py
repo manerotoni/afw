@@ -190,7 +190,9 @@ class SegmentationDialog(QtGui.QWidget):
                              self.sizeMax.value(),
                              self.intensityMin.value(),
                              self.intensityMax.value(),
-                             self.galSize.value())
+                             self.galSize.value(),
+                             self.watershed.isChecked(),
+                             self.seedingSize.value())
 
     def segmentationParams(self):
         sparams = OrderedDict()

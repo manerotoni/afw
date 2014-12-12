@@ -42,7 +42,8 @@ PrimaryParams = namedtuple(
     'PrimaryParams', ['median_radius',  'window_size', 'min_contrast',
                       'remove_borderobjects', 'fill_holes', 'norm_min',
                       'norm_max','size_min', 'size_max', 'intensity_min',
-                      'intensity_max', 'gallery_size'])
+                      'intensity_max', 'gallery_size', 'use_watershed',
+                      'seeding_size'])
 
 ExpansionParams = namedtuple(
     'ExpansionParams', ['srg_type', 'label_number', 'region_statistics_array',

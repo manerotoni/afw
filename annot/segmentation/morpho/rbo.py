@@ -5,8 +5,10 @@ rbo.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
+__all__ = ('remove_border_objects', )
+
+
 import numpy as np
-from scipy import ndimage
 
 def remove_border_objects(label_image, margin=1):
     """Remove objects from a label image that touch the image border.
