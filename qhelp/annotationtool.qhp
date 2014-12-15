@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+  <namespace>annotationtool.textviewer</namespace>
+  <virtualFolder>doc</virtualFolder>
+  <filterSection>
+    <toc>
+      <section title="Annotation Tool" ref="index.html">
+        <section title="ErrorCorrection" ref="./errorcorrection.html"></section>
+        <section title="Tracking" ref="./tracking.html"></section>
+      </section>
+    </toc>
+    <keywords>
+      <keyword name="Hidden Markov Model" ref="./index.html"/>
+      <keyword name="Error Correction" ref="./errorcorrection.html"/>
+      <keyword name="Tracking" ref="./tracking.html"/>
+    </keywords>
+    <files>
+      <file>index.html</file>
+      <file>errorcorrection.html</file>
+      <file>tracking.html</file>
+    </files>
+  </filterSection>
+</QtHelpProject>

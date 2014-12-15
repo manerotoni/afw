@@ -1,0 +1,13 @@
+ <?xml version="1.0" encoding="utf-8" ?>
+ <QHelpCollectionProject version="1.0">
+     <assistant>
+         <title>Annotation Tool Help</title>
+         <cacheDirectory>AnnotationTool</cacheDirectory>
+     </assistant>
+     <docFiles>
+         <register>
+             <file>help1.qch</file>
+         </register>
+     </docFiles>
+
+ </QHelpCollectionProject>
