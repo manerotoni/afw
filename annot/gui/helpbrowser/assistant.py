@@ -1,5 +1,5 @@
 """
-pyassistant.py
+assistant.py
 
 The Qt-Project recommends to use the Qt-Assistant for online documentation.
 This is a lightweight reimplemntation of the assistant in python to embed
@@ -13,10 +13,12 @@ __licence__ = 'GPL'
 from os.path import join, dirname, isfile
 
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4 import QtHelp
 from PyQt4.QtCore import Qt
 from PyQt4 import uic
 
+from annot import version
 from annot.gui.lineedit import AtLineEdit
 
 class AtHelpBrowser(QtGui.QTextBrowser):
@@ -35,7 +37,7 @@ class AtHelpBrowser(QtGui.QTextBrowser):
         if url.scheme() == self.QTHELP:
             return self.helpengine.fileData(url);
         elif url.scheme() == self.HTTP:
-            QtGui.QDesktopServices.openUrl(url)
+            return QtGui.QDesktopServices.openUrl(url)
         else:
             return super(AtHelpBrowser, self).loadResource(type_, url);
 
@@ -64,6 +66,7 @@ class AtAssistant(QtGui.QMainWindow):
         self.results = self.hengine.searchEngine().resultWidget()
         self.index = self.hengine.indexWidget()
         self.contents = self.hengine.contentWidget()
+        self.contents.setIndentation(10)
         self.tabifyDockWidget(self.contentDock, self.indexDock)
         self.tabifyDockWidget(self.contentDock, self.searchDock)
         self.searchDock.hide()
@@ -92,6 +95,11 @@ class AtAssistant(QtGui.QMainWindow):
         self.contentDock.setWidget(self.contents)
         self.indexDock.setWidget(index)
 
+        self._restoreSettings()
+
+    def closeEvent(self, event):
+        self._saveSettings()
+
     def search(self):
         queries = self.queries.query()
         self.hengine.searchEngine().search(queries)
@@ -99,10 +107,30 @@ class AtAssistant(QtGui.QMainWindow):
     def filter(self, txt):
         self.hengine.indexModel().filter(txt)
 
+    def _saveSettings(self):
+        settings = QtCore.QSettings(version.organisation, version.appname)
+        settings.beginGroup('HelpBrowser')
+        settings.setValue('state', self.saveState())
+        settings.setValue('geometry', self.saveGeometry())
+        settings.endGroup()
+
+    def _restoreSettings(self):
+        settings = QtCore.QSettings(version.organisation, version.appname)
+        settings.beginGroup('HelpBrowser')
+
+        geometry = settings.value('geometry')
+        if geometry.isValid():
+            self.restoreGeometry(geometry.toByteArray())
+        state = settings.value('state')
+        if state.isValid():
+            self.restoreState(state.toByteArray())
+        settings.endGroup()
+
 
 
 if __name__ == "__main__":
     import sys
+    import annot.at_rc
     app = QtGui.QApplication(sys.argv)
     hv = AtAssistant(sys.argv[1])
     hv.show()

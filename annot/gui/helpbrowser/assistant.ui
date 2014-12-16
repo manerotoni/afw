@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Help Browser</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../../../qrc/at_rc.qrc">
+    <normaloff>:/oxygen/system-help.png</normaloff>:/oxygen/system-help.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
@@ -133,6 +137,8 @@
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../qrc/at_rc.qrc"/>
+ </resources>
  <connections/>
 </ui>
