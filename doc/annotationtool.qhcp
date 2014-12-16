@@ -3,12 +3,7 @@
   <assistant>
     <title>Annotation Tool</title>
     <startPage>qthelp://com.mycompany.1_0_0/doc/index.html</startPage>
-    <currentFilter>myfilter</currentFilter>
-    <applicationIcon>application.png</applicationIcon>
-    <enableFilterFunctionality>false</enableFilterFunctionality>
-    <enableDocumentationManager>false</enableDocumentationManager>
-    <enableAddressBar visible="true">true</enableAddressBar>
-    <cacheDirectory>./</cacheDirectory>
+    <cacheDirectory>%QDesktopServices::TempLocation%/annotationtool</cacheDirectory>
     <aboutMenuText>
       <text>Annotation Tool</text>
       <text language="de">Über meine Applikation...</text>

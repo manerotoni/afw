@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QtHelpProject version="1.0">
   <namespace>AnnotationTool</namespace>
-  <virtualFolder>doc</virtualFolder>
+  <virtualFolder>html</virtualFolder>
   <filterSection>
     <toc>
-      <section title="Annotation Tool" ref="index.html">
-        <section title="ErrorCorrection" ref="./errorcorrection.html"></section>
-        <section title="Tracking" ref="./tracking.html"></section>
+      <section title="Annotation Tool" ref="html/index.html">
+        <section title="ErrorCorrection" ref="html/errorcorrection.html"></section>
+        <section title="Tracking" ref="html/tracking.html"></section>
       </section>
     </toc>
     <keywords>
-      <keyword name="Hidden Markov Model" ref="./index.html"/>
-      <keyword name="Error Correction" ref="./errorcorrection.html"/>
-      <keyword name="Tracking" ref="./tracking.html"/>
+      <keyword name="Hidden Markov Model" ref="html/index.html"/>
+      <keyword name="Error Correction" ref="html/errorcorrection.html"/>
+      <keyword name="Tracking" ref="html/tracking.html"/>
     </keywords>
     <files>
-      <file>index.html</file>
-      <file>errorcorrection.html</file>
-      <file>tracking.html</file>
+      <file>html/index.html</file>
+      <file>html/errorcorrection.html</file>
+      <file>html/tracking.html</file>
     </files>
   </filterSection>
 </QtHelpProject>
