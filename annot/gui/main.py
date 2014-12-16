@@ -22,6 +22,8 @@ from annot.gui.sidebar import AtSortWidget
 from annot.gui.sidebar import AtAnnotationWidget
 from annot.gui.importdlg import ImportDialog
 from annot.gui.aboutdialog import AtAboutDialog
+from annot.gui.helpbrowser import AtAssistant
+from annot.gui.helpbrowser import MANUAL
 
 from annot.threading import AtThread
 from annot.threading import AtLoader
@@ -37,6 +39,7 @@ class AtMainWindow(QtGui.QMainWindow):
     def __init__(self, file_=None, *args, **kw):
         super(AtMainWindow, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        self.assistant = None
         self.setWindowTitle(version.appstr)
         self.setAcceptDrops(True)
 
@@ -69,6 +72,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
         self.actionFeatureSelection.triggered.connect(
             self.annotation.showFeatureDlg)
+        self.actionHelpManual.triggered.connect(self.onHelpManual)
         self.loader.finished.connect(self.onLoadingFinished)
 
         self._restoreSettings()
@@ -95,6 +99,14 @@ class AtMainWindow(QtGui.QMainWindow):
 
     def dragLeaveEvent(self, event):
         event.accept()
+
+    def onHelpManual(self):
+
+        if self.assistant is None:
+            self.assistant = AtAssistant(MANUAL)
+
+        self.assistant.show()
+        self.assistant.raise_()
 
     def onAboutQt(self):
         QMessageBox.aboutQt(self, "about Qt")

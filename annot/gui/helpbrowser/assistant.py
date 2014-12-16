@@ -10,6 +10,9 @@ a help browser into a application bundle (i.e using py2exe or py2app).
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
+__all__ = ("AtAssistant", )
+
+
 from os.path import join, dirname, isfile
 
 from PyQt4 import QtGui

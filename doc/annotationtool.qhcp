@@ -3,7 +3,7 @@
   <assistant>
     <title>Annotation Tool</title>
     <startPage>qthelp://com.mycompany.1_0_0/doc/index.html</startPage>
-    <cacheDirectory>%QDesktopServices::TempLocation%/annotationtool</cacheDirectory>
+    <cacheDirectory>annotationtool</cacheDirectory>
     <aboutMenuText>
       <text>Annotation Tool</text>
       <text language="de">Über meine Applikation...</text>
