@@ -28,7 +28,8 @@ mimetypes.add_type('application/ch5', 'ch5')
 try:
     import magic
     def settings_from(filename):
-        if magic.from_file(filename, mime=True) == "application/xml":
+        if magic.from_file(filename, mime=True) in \
+        ("application/xml", "text/xml"):
             with open(filename, "r") as fp:
                 return fp.read()
         elif magic.from_file(filename, mime=True) == "application/x-hdf":
@@ -46,7 +47,7 @@ except ImportError:
     def settings_from(filename):
 
         type_ = mimetypes.guess_type(filename)[0]
-        if type_ == "application/xml":
+        if type_ in ("application/xml", "text/xml"):
             with open(filename, "r") as fp:
                 return fp.read()
         elif type_ == 'application/x-hdf' or type_ == 'application/ch5':
