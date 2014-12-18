@@ -60,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -69,13 +69,13 @@
     </property>
     <addaction name="actionOpenHdf"/>
     <addaction name="actionCloseHdf"/>
-    <addaction name="actionExportViewPanel"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
      <string>Data</string>
     </property>
+    <addaction name="actionExportViewPanel"/>
     <addaction name="actionProcessTrainingSet"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -99,6 +99,10 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset resource="../../qrc/at_rc.qrc">
+     <normaloff>:/oxygen/exit-icon.png</normaloff>:/oxygen/exit-icon.png</iconset>
+   </property>
    <property name="text">
     <string>Quit</string>
    </property>
@@ -135,6 +139,10 @@
    </property>
   </action>
   <action name="actionOpenHdf">
+   <property name="icon">
+    <iconset resource="../../qrc/at_rc.qrc">
+     <normaloff>:/oxygen/document-open-folder.png</normaloff>:/oxygen/document-open-folder.png</iconset>
+   </property>
    <property name="text">
     <string>Open File</string>
    </property>
@@ -143,6 +151,10 @@
    </property>
   </action>
   <action name="actionCloseHdf">
+   <property name="icon">
+    <iconset resource="../../qrc/at_rc.qrc">
+     <normaloff>:/oxygen/document-close-icon.png</normaloff>:/oxygen/document-close-icon.png</iconset>
+   </property>
    <property name="text">
     <string>Close File</string>
    </property>
@@ -156,8 +168,12 @@
    </property>
   </action>
   <action name="actionExportViewPanel">
+   <property name="icon">
+    <iconset resource="../../qrc/at_rc.qrc">
+     <normaloff>:/oxygen/document-save-all.png</normaloff>:/oxygen/document-save-all.png</iconset>
+   </property>
    <property name="text">
-    <string>Export view panel</string>
+    <string>Save view panel as image</string>
    </property>
   </action>
   <action name="actionAboutAnnotationTool">
