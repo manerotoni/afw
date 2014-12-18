@@ -21,7 +21,7 @@ pyrcc_opts = {'infile': join('qrc', 'at_rc.qrc'),
               'pyrccbin': 'pyrcc4'}
 
 setup(name='AnnotationTool',
-      version='0.1',
+      version='0.2aplha',
       description='Gallery image based tool for easy class anntotation.',
       author='Rudolf Hoefler',
       author_email='rudolf.hoefler@gmail.com',
