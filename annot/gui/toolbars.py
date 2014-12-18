@@ -117,6 +117,7 @@ class ViewToolBar(AtToolBar):
         self.addWidget(self.galSize)
         self.addWidget(QtGui.QLabel("number items:", self))
         self.addWidget(self.nItems)
+        self.addSeparator()
         self.addWidget(self.zoom)
         self.addWidget(self.classification)
 
@@ -146,15 +147,17 @@ class SortToolBar(AtToolBar):
         super(SortToolBar, self).__init__(*args, **kw)
 
         self.sortAscendingBtn = QtGui.QToolButton(self)
-        self.sortAscendingBtn.setToolTip("sort ascending")
+        self.sortAscendingBtn.setToolTip("Sort ascending")
         self.sortAscendingBtn.setIcon(
             QtGui.QIcon(":/oxygen/sort-ascending.png"))
         self.sortDescendingBtn = QtGui.QToolButton(self)
-        self.sortDescendingBtn.setToolTip("sort descending")
+        self.sortDescendingBtn.setToolTip("Sort descending")
         self.sortDescendingBtn.setIcon(
             QtGui.QIcon(":/oxygen/sort-descending.png"))
 
         self.sortAlgorithm = QtGui.QComboBox(self)
+        self.sortAlgorithm.setToolTip(
+            ("Similarity measure used for sorting"))
         self.sortAlgorithm.addItems(Sorter.sorters())
 
         self.addWidget(self.sortAscendingBtn)
