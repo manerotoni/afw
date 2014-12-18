@@ -7,9 +7,9 @@ __licence__ = 'GPL'
 
 
 MAJOR = 0
-MINOR = 1
+MINOR = 2
 
 organisation = "IMBA"
 appname = "AnnotationTool"
-version = "%s.%s" %(MAJOR, MINOR)
+version = "%s.%s%s" %(MAJOR, MINOR, "aplha")
 appstr = '%s-%s' %(appname, version)
