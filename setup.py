@@ -23,7 +23,8 @@ pyrcc_opts = {'infile': join('qrc', 'at_rc.qrc'),
 
 setup(name='AnnotationTool',
       version=version.version,
-      description='Gallery image based tool for easy class anntotation.',
+      description=('Interactive Tool for fast and intuitive'
+                   ' classifier training'),
       author='Rudolf Hoefler',
       author_email='rudolf.hoefler@gmail.com',
       packages = build_helpers.find_submodules("./annot", "annot"),
