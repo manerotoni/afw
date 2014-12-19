@@ -14,6 +14,7 @@ import glob
 from os.path import join
 from distutils.core import setup
 
+from annot import version
 import build_helpers
 
 pyrcc_opts = {'infile': join('qrc', 'at_rc.qrc'),
@@ -21,7 +22,7 @@ pyrcc_opts = {'infile': join('qrc', 'at_rc.qrc'),
               'pyrccbin': 'pyrcc4'}
 
 setup(name='AnnotationTool',
-      version='0.2aplha',
+      version=version.version,
       description='Gallery image based tool for easy class anntotation.',
       author='Rudolf Hoefler',
       author_email='rudolf.hoefler@gmail.com',
