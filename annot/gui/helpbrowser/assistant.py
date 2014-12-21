@@ -24,6 +24,7 @@ from PyQt4 import uic
 from annot import version
 from annot.gui.lineedit import AtLineEdit
 
+
 class AtHelpBrowser(QtGui.QTextBrowser):
 
     QTHELP = 'qthelp'
@@ -99,6 +100,8 @@ class AtAssistant(QtGui.QMainWindow):
         self.indexDock.setWidget(index)
 
         self._restoreSettings()
+        self.indexDock.show()
+        self.contentDock.show()
 
     def closeEvent(self, event):
         self._saveSettings()
