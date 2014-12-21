@@ -2,17 +2,17 @@
 <QHelpCollectionProject version="1.0">
   <assistant>
     <title>Annotation Tool</title>
-    <startPage>qthelp://com.mycompany.1_0_0/doc/index.html</startPage>
+    <startPage>qthelp:doc/html/index.html</startPage>
     <cacheDirectory>annotationtool</cacheDirectory>
     <aboutMenuText>
       <text>Annotation Tool</text>
       <text language="de">Über meine Applikation...</text>
     </aboutMenuText>
-    <aboutDialog>
-      <file>about.txt</file>
-      <file language="de">ueber.txt</file>
-      <icon>about.png</icon>
-    </aboutDialog>
+    <!-- <aboutDialog> -->
+    <!--   <file>about.txt</file> -->
+    <!--   <file language="de">ueber.txt</file> -->
+    <!--   <icon>about.png</icon> -->
+    <!-- </aboutDialog> -->
   </assistant>
   <docFiles>
     <generate>
