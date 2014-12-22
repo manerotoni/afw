@@ -34,14 +34,20 @@ class AtHelpBrowser(QtGui.QTextBrowser):
         super(AtHelpBrowser, self).__init__(*args, **kw)
         self.helpengine = None
 
+    def setSource(self, url):
+
+        if url.scheme() == self.HTTP:
+            QtGui.QDesktopServices.openUrl(url)
+        else:
+            super(AtHelpBrowser, self).setSource(url)
+
     def setHelpEngine(self, helpengine):
         self.helpengine = helpengine
 
     def loadResource(self, type_, url):
+
         if url.scheme() == self.QTHELP:
             return self.helpengine.fileData(url);
-        elif url.scheme() == self.HTTP:
-            return QtGui.QDesktopServices.openUrl(url)
         else:
             return super(AtHelpBrowser, self).loadResource(type_, url);
 
@@ -58,6 +64,10 @@ class AtAssistant(QtGui.QMainWindow):
 
         self.hengine = QtHelp.QHelpEngine(collections_file)
         self.hengine.setupData()
+        qchfile = join(dirname(__file__), 'annotationtool.qch')
+        self.hengine.registerDocumentation(qchfile)
+
+
         self.hengine.searchEngine().reindexDocumentation()
 
         self.hbrowser = AtHelpBrowser()
@@ -70,7 +80,6 @@ class AtAssistant(QtGui.QMainWindow):
         self.results = self.hengine.searchEngine().resultWidget()
         self.index = self.hengine.indexWidget()
         self.contents = self.hengine.contentWidget()
-        self.contents.setIndentation(10)
         self.tabifyDockWidget(self.contentDock, self.indexDock)
         self.tabifyDockWidget(self.contentDock, self.searchDock)
         self.searchDock.hide()
@@ -131,7 +140,6 @@ class AtAssistant(QtGui.QMainWindow):
         if state.isValid():
             self.restoreState(state.toByteArray())
         settings.endGroup()
-
 
 
 if __name__ == "__main__":
