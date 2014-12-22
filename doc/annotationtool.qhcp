@@ -2,27 +2,19 @@
 <QHelpCollectionProject version="1.0">
   <assistant>
     <title>Annotation Tool</title>
-    <startPage>qthelp:doc/html/index.html</startPage>
+    <startPage>qthelp:html/index.html</startPage>
     <cacheDirectory>annotationtool</cacheDirectory>
     <aboutMenuText>
       <text>Annotation Tool</text>
       <text language="de">Über meine Applikation...</text>
     </aboutMenuText>
-    <!-- <aboutDialog> -->
-    <!--   <file>about.txt</file> -->
-    <!--   <file language="de">ueber.txt</file> -->
-    <!--   <icon>about.png</icon> -->
-    <!-- </aboutDialog> -->
   </assistant>
   <docFiles>
     <generate>
       <file>
         <input>annotationtool.qhp</input>
-        <output>annotationtool.qch</output>
+        <output>../annot/gui/helpbrowser/annotationtool.qch</output>
       </file>
     </generate>
-    <register>
-      <file>annotationtool.qch</file>
-    </register>
   </docFiles>
 </QHelpCollectionProject>
