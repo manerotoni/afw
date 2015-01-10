@@ -88,7 +88,6 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         pen = QtGui.QPen()
         pen.setColor(Colors.neutral)
 
-        # pen.setWidthF(0.0)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
 
         rect = self._classRect()
