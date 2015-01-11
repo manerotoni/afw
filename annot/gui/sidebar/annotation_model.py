@@ -60,6 +60,10 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         brush.setStyle(Qt.SolidPattern)
         return brush
 
+    def hashkey(self, index):
+        item = self.item(index.parent().row(), 0)
+        return item.child(index.row(), 0).data().toPyObject()
+
     def allowReassign(self, state):
         self._reassign = (state == Qt.Checked)
 

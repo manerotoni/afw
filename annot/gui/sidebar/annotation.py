@@ -47,9 +47,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.predictBtn.setText('Predict')
 
     def onActivated(self, index):
-        parent = self.model.item(index.parent().row(), 0)
-        hashkey = parent.child(index.row(), 0).data().toPyObject()
-        self.tileview.selectByKey(hashkey)
+        self.tileview.selectByKey(self.model.hashkey(index))
 
     def classifierChanged(self, index):
         self.stack.setCurrentIndex(index)
