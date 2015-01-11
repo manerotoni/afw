@@ -35,6 +35,9 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
     def prepareRowItems(self, *args, **kw):
         raise NotImplementedError
 
+    def hashkey(self):
+        raise NotImplementedError
+
     def clear(self):
         for i in range(self.rowCount()):
             self.removeRow(0)
@@ -119,3 +122,7 @@ class AtOneClassSvmItemModel(AtStandardItemModel):
         self._items[key].clear()
         del self._items[key]
         super(AtOneClassSvmItemModel, self).removeRow(row)
+
+    def hashkey(self, index):
+        item = self.item(index.row(), 0)
+        return item.data().toPyObject()

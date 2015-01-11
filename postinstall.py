@@ -31,7 +31,9 @@ def install():
     mkshortcut(pythonw, 'AnnotationTool', link, command, workdir, icon)
 
 def remove():
-    pass
+    start_menu = get_special_folder_path('CSIDL_COMMON_PROGRAMS')
+    link = os.path.join(start_menu, 'AnnotationTool.lnk')
+    os.remove(link)
 
 if sys.argv[1] == '-install':
     try:

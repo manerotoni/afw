@@ -61,7 +61,7 @@ class HdfItem(object):
         """Iterator over qimages (indexed_8) with colortable set."""
 
         iinfo = np.iinfo(self.image.dtype)
-        ncolors = abs(iinfo.max - iinfo.min)
+        ncolors = abs(iinfo.max - iinfo.min) + 1
         for i, color in enumerate(self.colors):
             lut = AtPainter.lut_from_color(QColor(color), ncolors)
             if self.image.ndim == 2:

@@ -12,7 +12,8 @@ __licence__ = 'GPL'
 
 import glob
 from os.path import join
-from distutils.core import setup
+from setuptools import setup
+# from distutils.core import setup
 
 from annot import version
 import build_helpers
@@ -28,7 +29,8 @@ help_opts = {'infile': join('doc', 'annotationtool.qhcp'),
 
 setup(name='AnnotationTool',
       version=version.version,
-      description='Gallery image based tool for easy class anntotation.',
+      description=('Interactive Tool for fast and intuitive'
+                   ' classifier training'),
       author='Rudolf Hoefler',
       author_email='rudolf.hoefler@gmail.com',
       packages = build_helpers.find_submodules("./annot", "annot"),

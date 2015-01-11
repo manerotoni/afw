@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/">
+    <file>oxygen/document-close-icon.png</file>
+    <file>oxygen/exit-icon.png</file>
     <file>oxygen/games-solve.png</file>
     <file>svm.png</file>
     <file>remove-class.png</file>
