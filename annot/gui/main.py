@@ -103,10 +103,14 @@ class AtMainWindow(QtGui.QMainWindow):
     def onHelpManual(self):
 
         if self.assistant is None:
-            self.assistant = AtAssistant(MANUAL)
-
-        self.assistant.show()
-        self.assistant.raise_()
+            try:
+                self.assistant = AtAssistant(MANUAL)
+            except IOError:
+                QMessageBox.information(self, "Information",
+                                        "Sorry help files are not installed")
+            else:
+                self.assistant.show()
+                self.assistant.raise_()
 
     def onAboutQt(self):
         QMessageBox.aboutQt(self, "about Qt")
