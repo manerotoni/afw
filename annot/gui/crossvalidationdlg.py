@@ -148,8 +148,8 @@ class CrossValidationDialog(QtGui.QWidget):
 
         self.showMessage('Grid search using %d-fold cross_validation'
                          %self.kfold)
-        C = np.logspace(-3, 3, self.grid_C.value())
-        gamma = np.logspace(-5, 2, self.grid_gamma.value())
+        C = np.logspace(-6, 6, self.grid_C.value())
+        gamma = np.logspace(-6, 6, self.grid_gamma.value())
         param_grid = dict(gamma=gamma, C=C)
 
         cv = StratifiedKFold(y=self.labels, n_folds=self.kfold)
