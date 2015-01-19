@@ -12,7 +12,7 @@ The tool reads cellh5/hdf5 files but can import also *.lsm files directly using 
 
 ###Installation###
 
-The Cell Annotation tool is an PyQt4 application depends on the:
+Install the following depenencies:
 * [cellcognition framework](https://github.com/CellCognition/cecog.git)
 * [vigranumpy](http://ukoethe.github.io/vigra/doc-release/vigranumpy/index.html)
 * [sklearn](http://scikit-learn.org/)
