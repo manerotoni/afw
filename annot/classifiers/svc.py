@@ -31,7 +31,6 @@ class AnnotationButton(QtGui.QToolButton):
 
     def __init__(self, name_item, *args, **kw):
         super(AnnotationButton, self).__init__(*args, **kw)
-#        self.setText('+')
         self.setIcon(QtGui.QIcon(":/oxygen/list-add.png"))
         self.setMaximumWidth(self.height())
         self._name_item = name_item
@@ -182,6 +181,7 @@ class SvcDataModel(ClfDataModel):
     def __init__(self, *args, **kw):
         super(SvcDataModel, self).__init__(*args, **kw)
         self.annotations = "%s/annotations" %self.path
+        self.confmatrix = "%s/confusion_matrix" %self.path
 
 
 class SvcWriter(ClfWriter):
@@ -215,6 +215,9 @@ class SvcWriter(ClfWriter):
         # not more than 256 classess
         labels = labels.astype(np.uint8)
         dset = self.h5f.create_dataset(self.dmodel.annotations, data=labels)
+
+    def saveConfusionMatrix(self, confmat):
+        dset = self.h5f.create_dataset(self.dmodel.confmatrix, data=confmat)
 
 
 class Svc(Classifier):
@@ -263,9 +266,14 @@ class Svc(Classifier):
     def saveToHdf(self, name, file_, feature_selection, description,
                   overwrite=False, labels=None):
 
+        if self._cvwidget is None:
+            raise HdfError(("You need to validate the classifier first\n"
+                            "Open the Cross validation dialog"))
+
         writer = SvcWriter(name, file_, description, overwrite)
         writer.saveTrainingSet(self._pp.data, feature_selection.values())
         writer.saveAnnotations(labels)
         writer.saveClassDef(self.classes, self._clf.get_params())
         writer.saveNormalization(self._pp)
+        writer.saveConfusionMatrix(self._cvwidget.confusion_matrix)
         writer.flush()

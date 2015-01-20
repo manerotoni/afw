@@ -167,7 +167,7 @@ class AtAnnotationWidget(AtSideBarWidget):
             QMessageBox.critical(self, "error", str(e))
         else:
             QMessageBox.information(self, "information",
-                                    "data successfully saved")
+                                    "Data saved successfully")
 
     def filterFeatures(self, features):
         """Filter the feature matrix by column wise. Indices of the cols are
