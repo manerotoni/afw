@@ -29,7 +29,10 @@ class AtTrainingSetIO(HdfFile):
 
     @property
     def settings(self):
-       return self[self.dmodel.settings].value
+        try:
+            return self[self.dmodel.settings].value
+        except KeyError:
+            return self[self.dmodel.Legacy.settings].value
 
     @property
     def fileinfo(self):

@@ -23,6 +23,10 @@ class HdfDataModel(object):
     COLORS = "colors"
     CHANNELS = "channels"
 
+    # XXX remove this in later versions
+    class Legacy(object):
+        settings = "settings"
+
     def __init__(self, data=None):
 
         if data is None:
@@ -35,7 +39,7 @@ class HdfDataModel(object):
         self.gallery = "%s/gallery" %self.data
         self.bbox = "%s/bbox" %self.data
         self.features = "%s/features" %self.data
-        self.settings = "/settings"
+        self.settings = "/settings/segmentation"
 
 
 class HdfCache(object):

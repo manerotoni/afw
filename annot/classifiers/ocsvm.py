@@ -2,7 +2,6 @@
 ocsvm.py
 
 Implementation of a one class support vector machine
-
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
