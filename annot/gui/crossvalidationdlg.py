@@ -14,21 +14,40 @@ import numpy as np
 from multiprocessing import cpu_count
 from matplotlib.figure import Figure
 from matplotlib import cm
+from matplotlib.ticker import FixedLocator
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4 import uic
-from PyQt4.QtGui import QApplication, QCursor
+from PyQt4.QtGui import QApplication, QCursor, QMessageBox
 
 from sklearn import svm
 from sklearn.svm import SVC
 from sklearn import cross_validation
+from sklearn.metrics import confusion_matrix
 from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import StratifiedKFold
 
+
 from annot.qmpl import QFigureWidget
 from annot.gui.sidebar.sidebar import NoSampleError
+
+def _font_color(value):
+    """Helper function for matrix plot"""
+    if value < 0.4:
+        return "black"
+    else:
+        return "white"
+
+def _font_size(value):
+    """Helper function for matrix plot"""
+    if value <= 3:
+        return 30
+    elif 3 < value < 9:
+        return 15
+    else:
+        return 10
 
 
 class CrossValidationDialog(QtGui.QWidget):
@@ -57,6 +76,11 @@ class CrossValidationDialog(QtGui.QWidget):
 
         self.features = None
         self.labels =  None
+        self.confusion_matrix = None
+
+    def raise_(self):
+        self.onGridSearch()
+        super(CrossValidationDialog, self).raise_()
 
     def onApplyBtn(self):
         self.classifier.setParameters(self.parameters)
@@ -94,15 +118,19 @@ class CrossValidationDialog(QtGui.QWidget):
 
     def addFigure(self, title, figure):
 
+        qfw = QFigureWidget(figure, self)
+        qfw.hideToolbar()
+
         # no dublicate tabs
         if self._tabs.has_key(title):
             idx = self._tabs[title]
             self.tabWidget.widget(idx).close()
             self.tabWidget.removeTab(idx)
+            self.tabWidget.insertTab(idx, qfw, title)
+        else:
+            idx = self.tabWidget.addTab(qfw, title)
+            self._tabs[title] = idx
 
-        qfw = QFigureWidget(figure, self)
-        idx = self.tabWidget.addTab(qfw, title)
-        self._tabs[title] = idx
         self.tabWidget.setCurrentWidget(qfw)
         qfw.show()
 
@@ -141,6 +169,8 @@ class CrossValidationDialog(QtGui.QWidget):
         try:
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.gridSearch()
+        except Exception as e:
+            QMessageBox.warning(self, "Warning", str(e))
         finally:
             QApplication.restoreOverrideCursor()
 
@@ -170,11 +200,17 @@ class CrossValidationDialog(QtGui.QWidget):
         self.gamma.setValue(est.gamma)
         self.regConst.setValue(est.C)
         self.plotGridSearch(X, Y, S, est.gamma, est.C)
+
+        predictions = est.predict(self.features)
+        confmat = confusion_matrix(self.labels, predictions)
+        self.plotConfusionMatrix(confmat)
+        self.confusion_matrix = confmat
+
         self.gridSearchFinished.emit()
 
     def plotGridSearch(self, X, Y, S, gamma, C):
 
-        fig = Figure()
+        fig = Figure(facecolor="white", tight_layout=True)
         ax = fig.add_subplot(111)
 
         ax.contour(X, Y, S)
@@ -188,3 +224,34 @@ class CrossValidationDialog(QtGui.QWidget):
         ax.set_title('gamma=%g, C=%g' %(gamma, C))
         ax.loglog()
         self.addFigure('Grid Search', fig)
+
+
+    def plotConfusionMatrix(self, confmat):
+
+        confmat_norm = confmat.astype(float)/confmat.sum(axis=0)
+
+        fig = Figure(facecolor="white", tight_layout=True)
+        ax = fig.add_subplot(111)
+        ax.matshow(confmat_norm, cmap=cm.Blues)
+
+        classes = self.parent().model.currentClasses()
+        names = [v.name for v in classes.values()]
+
+        ax.xaxis.set_major_locator(FixedLocator(range(len(names))))
+        ax.set_xticklabels(names, rotation=45, size=10)
+
+        ax.yaxis.set_major_locator(FixedLocator(range(len(names))))
+        ax.set_yticklabels(names, rotation=45, size=10)
+
+        ax.set_xlabel("Predictions", fontsize=14)
+        ax.set_ylabel("Annotations", fontsize=14)
+        fig.subplots_adjust(top=0.85)
+
+        size = _font_size(confmat.shape[0])
+        for i, items in enumerate(confmat):
+            for j, item in enumerate(items):
+                color = _font_color(confmat_norm[i, j])
+                ax.text(i, j, str(item), size=size, color=color,
+                        va="center", ha="center")
+
+        self.addFigure('Confusion Matrix', fig)

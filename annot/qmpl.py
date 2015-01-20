@@ -68,6 +68,12 @@ class QFigureWidget(QtGui.QWidget):
         vbox.setContentsMargins(0, 0, 0, 0)
         vbox.setSpacing(0)
 
+    def hideToolbar(self):
+        self.toolbar.hide()
+
+    def showToolbar(self):
+        self.toolbar.show()
+
     def close(self):
         super(QFigureWidget, self).close()
 

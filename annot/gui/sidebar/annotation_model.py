@@ -90,7 +90,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_name, match, self.ClassColumn)
 
         if not items:
-            raise RuntimeError("No Item with content '%s' found" %class_name)
+            pass
+            #raise RuntimeError("No Item with content '%s' found" %class_name)
         else:
             return items[0]
 
