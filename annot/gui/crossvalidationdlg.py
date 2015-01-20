@@ -108,6 +108,9 @@ class CrossValidationDialog(QtGui.QWidget):
         self.features =  features
         self.labels =  self.parent().model.labels
 
+    def classifierIsValidated(self):
+        return self.confusion_matrix is not None
+
     @property
     def parameters(self):
         return {"gamma": self.gamma.value(),
