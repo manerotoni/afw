@@ -47,6 +47,27 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         # only top level items are editable
         self.dataChanged.connect(self.onDataChanged)
 
+    def dropMimeData(self, mimedata, action, row, column, parentIndex):
+
+        if action == Qt.IgnoreAction:
+            return True
+
+        # prevent Attribute error due to signal dataChanged
+        oldstate = self.blockSignals(True)
+
+        ret = super(AtMultiClassSvmItemModel, self).dropMimeData(
+            mimedata, action, row, 0, parentIndex)
+
+        # to open persitent edtior correctly
+        if row == -1:
+            row = self.rowCount() - 1
+
+        self.parent().openPersistentEditor(
+            self.index(row, self.ButtonColumn))
+        self.blockSignals(oldstate)
+
+        return ret
+
     def _setHeader(self):
         # default columns
         self.setHeaderData(0, Qt.Horizontal, "class")
@@ -119,6 +140,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         name or color of a class has changed."""
 
         classes = self.currentClasses()
+
         self.classesChanged.emit(classes)
 
     def addClass(self, name='unnamed', color=None):
@@ -137,8 +159,17 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         color_item.setBackground(self._brushFromColor(color))
         button_item = QtGui.QStandardItem()
 
+        # XXX refactor this to a item factory
+        name_item.setDragEnabled(True)
+        color_item.setDragEnabled(True)
+        button_item.setDragEnabled(True)
+        name_item.setDropEnabled(False)
+        color_item.setDropEnabled(False)
+        button_item.setDropEnabled(False)
+
         name_item.setEditable(True)
         color_item.setEditable(True)
+
         self.appendRow([name_item, color_item, button_item])
 
         self.parent().openPersistentEditor(
