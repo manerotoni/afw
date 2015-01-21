@@ -79,6 +79,8 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
 
         for item in items:
             item.setEditable(False)
+            item.setDragEnabled(False)
+            item.setDropEnabled(False)
         return items
 
     def removeItems(self, indices):

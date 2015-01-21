@@ -208,7 +208,6 @@ class CrossValidationDialog(QtGui.QWidget):
         confmat = confusion_matrix(self.labels, predictions)
         self.plotConfusionMatrix(confmat)
         self.confusion_matrix = confmat
-
         self.gridSearchFinished.emit()
 
     def plotGridSearch(self, X, Y, S, gamma, C):
@@ -253,7 +252,7 @@ class CrossValidationDialog(QtGui.QWidget):
         size = _font_size(confmat.shape[0])
         for i, items in enumerate(confmat):
             for j, item in enumerate(items):
-                color = _font_color(confmat_norm[i, j])
+                color = _font_color(confmat_norm[j, i])
                 ax.text(i, j, str(item), size=size, color=color,
                         va="center", ha="center")
 

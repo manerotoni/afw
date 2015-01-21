@@ -83,6 +83,8 @@ class TreeView(QtGui.QTreeView):
         super(TreeView, self).__init__(*args, **kw)
         self._awidget = annotation_widget
 
+        self.setDragDropMode(self.InternalMove)
+
     def onAnnotationButtonClicked(self, class_name):
         self._awidget.addAnnotation(class_name)
 
