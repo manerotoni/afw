@@ -24,7 +24,7 @@ def guessHdfType(filename):
 
     _, ext = splitext(filename)
     if ext in Ch5Reader.EXTENSIONS:
-        return Ch5Reader(filename, "r", cached=True)
+        return Ch5Reader(filename, "a", cached=True)
     elif ext in AtTrainingSetIO.EXTENSIONS:
         return AtTrainingSetIO(filename, "a")
     else:
