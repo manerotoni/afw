@@ -56,6 +56,8 @@ class CrossValidationDialog(QtGui.QWidget):
     gridSearchFinished = QtCore.pyqtSignal()
     crossValidationFinished = QtCore.pyqtSignal()
 
+    ScoringMethods = ("accuracy", "f1", "precision", "recall")
+
     def __init__(self, parent, classifier, *args, **kw):
         super(CrossValidationDialog, self).__init__(parent=parent, *args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
@@ -152,13 +154,13 @@ class CrossValidationDialog(QtGui.QWidget):
             QApplication.restoreOverrideCursor()
 
     def crossValidation(self):
-        scoring_methods = ("accuracy", "f1", "precision", "recall")
+
         clf = svm.SVC(kernel="rbf", C=self.regConst.value(),
                       gamma=self.gamma.value())
 
 
         self.showMessage("metric\tmean std".upper())
-        for sm in scoring_methods:
+        for sm in self.ScoringMethods:
             scores = cross_validation.cross_val_score(
                 clf, self.features, self.labels, cv=self.kfold, scoring=sm)
             txt = "%s:\t %0.2f +/-%0.2f" %(sm.title(), scores.mean(), scores.std())

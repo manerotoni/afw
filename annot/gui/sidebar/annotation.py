@@ -13,7 +13,7 @@ from os.path import join, dirname
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QApplication, QCursor, QMessageBox
 
 from annot.hdfio.readercore import HdfError
 from annot.classifiers.classifiers import Classifier
@@ -181,13 +181,17 @@ class AtAnnotationWidget(AtSideBarWidget):
         return features[:, ftrs_indices]
 
     def onPredict(self):
+
         try:
+            QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.train()
         except NoSampleError:
             pass
         else:
             self.classify(self.tileview.items)
             self.setButtonColor(Qt.darkGreen)
+        finally:
+            QApplication.restoreOverrideCursor()
 
     def train(self):
         features = self.filterFeatures(self.model.features)
