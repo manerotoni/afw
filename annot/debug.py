@@ -1,5 +1,8 @@
 """
 debug.py
+
+Collection of helper functions for debugging
+
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
