@@ -31,16 +31,17 @@ class HdfError(Exception):
 class HdfItem(object):
 
     __slots__ = ['image', 'contour', 'features', 'index', 'frame',
-                 'objid', 'colors', 'hash']
+                 'objid', 'colors', 'hash', 'path']
 
     def __init__(self, image, contour, features, index, objid=None, frame=None,
-                 colors=None):
+                 colors=None, path=None):
         self.image = image
         self.contour = contour
         self.features = features
         self.index = index
         self.frame = frame
         self.objid = objid
+        self.path = path
 
         if image.ndim == 2: # gray image
             self.colors = ["#ffffff"]

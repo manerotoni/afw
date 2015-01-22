@@ -262,6 +262,31 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         return all_labels
 
     @property
+    def sample_info(self):
+        """Return a ndarray of hdf group names ind indices to trace back
+        single samples to the feature table in the original data set (hdf file).
+        """
+
+        nsamples = len(self.items)
+        classes = self.currentClasses()
+        dt = [("index", np.uint32), ("name", "S256")]
+        sample_info = None
+
+        for label, class_ in classes.iteritems():
+            parent = self.item(label, 0)
+            nitems = parent.rowCount()
+            sinfo = np.empty((nitems, ), dtype=dt)
+
+            for i, item in enumerate(self.iterItems(parent)):
+                sinfo[i] = np.array((item.index, item.path), dtype=dt)
+            try:
+                sample_info = np.vstack((sample_info, sinfo))
+            except ValueError:
+                sample_info = sinfo
+
+        return sample_info
+
+    @property
     def features(self):
         """Yields a feature matrix from the items in the Sidebar. One feature
         vector per row."""

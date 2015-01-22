@@ -171,7 +171,7 @@ class Ch5Reader(HdfFile):
             fidx, objid = self[tpath][index]
             frame = self[tpath2]["frame"][fidx]
 
-            yield HdfItem(gal, cnt, ftr, index, objid, frame)
+            yield HdfItem(gal, cnt, ftr, index, objid, frame, path=path)
             # loading looks more uniteruppted
             if delayed:
                 time.sleep(0.0035)

@@ -35,6 +35,7 @@ class ClfDataModel(object):
         self.training_set = "%s/training_set" %self.path
         self.classdef = "%s/class_definition" %self.path
         self.normalization = "%s/normalization" %self.path
+        self.sample_info = "%s/sample_info" %self.path
 
 
 class ClfWriter(object):
@@ -84,6 +85,9 @@ class ClfWriter(object):
 
         dset = self.h5f.create_dataset(self.dmodel.normalization, data=norm)
 
+    def saveSampleInfo(self, sample_info):
+        dset = self.h5f.create_dataset(
+            self.dmodel.sample_info, data=sample_info)
 
 
 # TODO need design pattern QFactory (which segfautlts right now!)

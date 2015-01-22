@@ -109,4 +109,5 @@ class AtTrainingSetIO(HdfFile):
 
         for i in xrange(gal.shape[3]):
             yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], index=i,
-                          objid=datatbl["label"][i], frame=i, colors=cols)
+                          objid=datatbl["label"][i], frame=i, colors=cols,
+                          path=self.dmodel.features)
