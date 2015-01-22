@@ -216,10 +216,16 @@ class SvcWriter(ClfWriter):
     def saveAnnotations(self, labels):
         # not more than 256 classess
         labels = labels.astype(np.uint8)
-        dset = self.h5f.create_dataset(self.dmodel.annotations, data=labels)
+        dset = self.h5f.create_dataset(self.dmodel.annotations,
+                                       data=labels,
+                                       compression=self._compression,
+                                       compression_opts=self._copts)
 
     def saveConfusionMatrix(self, confmat):
-        dset = self.h5f.create_dataset(self.dmodel.confmatrix, data=confmat)
+        dset = self.h5f.create_dataset(self.dmodel.confmatrix,
+                                       data=confmat,
+                                       compression=self._compression,
+                                       compression_opts=self._copts)
 
 
 class Svc(Classifier):
