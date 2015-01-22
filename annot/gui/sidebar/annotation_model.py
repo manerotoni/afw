@@ -58,12 +58,11 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         ret = super(AtMultiClassSvmItemModel, self).dropMimeData(
             mimedata, action, row, 0, parentIndex)
 
-        # to open persitent edtior correctly
-        if row == -1:
-            row = self.rowCount() - 1
+        # this is not right, I want update only drag and droped items!
+        for i in xrange(self.rowCount()):
+            self.parent().openPersistentEditor(
+                self.index(i, self.ButtonColumn))
 
-        self.parent().openPersistentEditor(
-            self.index(row, self.ButtonColumn))
         self.blockSignals(oldstate)
 
         return ret
