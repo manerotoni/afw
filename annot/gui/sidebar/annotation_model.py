@@ -65,6 +65,11 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
         self.blockSignals(oldstate)
 
+        # Drag & Drop would not update classes until call of dropEvent of the
+        # corresponding view is finished. I is totally unclear why the model
+        # contains 'extra' items (those which are dropped, on the previous and
+        # new position)
+        QtCore.QTimer.singleShot(100, self.emitClassesChanged)
         return ret
 
     def _setHeader(self):
@@ -139,7 +144,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         name or color of a class has changed."""
 
         classes = self.currentClasses()
-
         self.classesChanged.emit(classes)
 
     def addClass(self, name='unnamed', color=None):
