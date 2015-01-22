@@ -156,13 +156,15 @@ class AtAnnotationWidget(AtSideBarWidget):
             hdffile = dlg.path
 
         labels = self.itemView().model().labels
+        sinfo = self.itemView().model().sample_info
         try:
             clf.saveToHdf(dlg.name,
                           hdffile,
                           self.featureDlg.checkedItems(),
                           dlg.description,
                           dlg.overwrite,
-                          labels)
+                          labels,
+                          sinfo)
         except HdfError as e:
             QMessageBox.critical(self, "error", str(e))
         else:
