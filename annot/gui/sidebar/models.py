@@ -70,6 +70,22 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
             features[i, :] = item.features
         return features
 
+    @property
+    def sample_info(self):
+        """Return a ndarray of hdf group names ind indices to trace back
+        single samples to the feature table in the original data set (hdf file).
+        """
+        nitems = self.rowCount()
+        dt = [("index", np.uint32), ("name", "S256")]
+
+        sample_info = np.empty((nitems, ), dtype=dt)
+
+        for i, item in enumerate(self.iterItems()):
+            sample_info[i] = np.array((item.index, item.path), dtype=dt)
+
+        return sample_info
+
+
     def prepareRowItems(self, item):
         items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
                  QtGui.QStandardItem(str(item.frame)),

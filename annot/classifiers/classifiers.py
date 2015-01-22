@@ -13,6 +13,7 @@ from collections import OrderedDict
 
 from PyQt4 import QtGui
 
+from annot.config import AtConfig
 from annot.pattern import Factory
 from annot.classifiers.itemclass import UnClassified
 from annot.preprocessor import PreProcessor
@@ -42,6 +43,10 @@ class ClfWriter(object):
 
     def __init__(self, file_):
         super(ClfWriter, self).__init__()
+
+        self._compression = AtConfig().compression
+        self._copts = AtConfig().compression_opts
+
         if isinstance(file_, HdfFile):
             self.h5f = file_
         elif isinstance(file_, basestring):
@@ -53,7 +58,10 @@ class ClfWriter(object):
     def saveTrainingSet(self, features, feature_names):
         dtype = [(str(fn), np.float32) for fn in feature_names]
         f2 = features.copy().astype(np.float32).view(dtype)
-        dset = self.h5f.create_dataset(self.dmodel.training_set, data=f2)
+        dset = self.h5f.create_dataset(self.dmodel.training_set,
+                                       data=f2,
+                                       compression=self._compression,
+                                       compression_opts=self._copts)
 
     def saveClassDef(self, classes, classifier_params=None):
 
@@ -63,7 +71,10 @@ class ClfWriter(object):
         for i, class_ in enumerate(classes.itervalues()):
             classdef[i] = (class_.name, class_.label, class_.color.name())
 
-        dset = self.h5f.create_dataset(self.dmodel.classdef, data=classdef)
+        dset = self.h5f.create_dataset(self.dmodel.classdef,
+                                       data=classdef,
+                                       compression=self._compression,
+                                       compression_opts=self._copts)
 
         if classifier_params is not None:
             # save classifier parameters
@@ -83,11 +94,14 @@ class ClfWriter(object):
         for i, line in enumerate(zip(offset, scale, preproc.mask)):
             norm[i] = line
 
-        dset = self.h5f.create_dataset(self.dmodel.normalization, data=norm)
+        dset = self.h5f.create_dataset(self.dmodel.normalization, data=norm,
+                                       compression=self._compression,
+                                       compression_opts=self._copts)
 
     def saveSampleInfo(self, sample_info):
         dset = self.h5f.create_dataset(
-            self.dmodel.sample_info, data=sample_info)
+            self.dmodel.sample_info, data=sample_info,
+            compression=self._compression, compression_opts=self._copts)
 
 
 # TODO need design pattern QFactory (which segfautlts right now!)
