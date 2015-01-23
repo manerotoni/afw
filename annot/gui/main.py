@@ -52,6 +52,8 @@ class AtMainWindow(QtGui.QMainWindow):
         self.toolBar.valueChanged.connect(self.tileview.zoom)
         self.toolBar.classification.stateChanged.connect(
             self.tileview.toggleClassIndicators, Qt.QueuedConnection)
+        self.toolBar.masking.stateChanged.connect(
+            self.tileview.toggleMasks, Qt.QueuedConnection)
 
         self.setCentralWidget(self.tileview)
         self.setupDock()

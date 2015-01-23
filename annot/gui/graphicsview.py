@@ -135,6 +135,10 @@ class AtGraphicsView(MouseWheelView):
         for item in self.items:
             item.toggleClassIndicator(state)
 
+    def toggleMasks(self, state):
+        for item in self.items:
+            item.toggleMask(state)
+
     def selectedItems(self):
         return self.scene().selectedItems()
 

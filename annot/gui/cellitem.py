@@ -20,6 +20,7 @@ class Colors(object):
     # selected = QtGui.QColor("#87CEFA")
     selected = QtGui.QColor("blue")
     neutral = QtGui.QColor("white")
+    mask = QtGui.QColor("black")
 
 
 class PainterPathItem(QtGui.QGraphicsPathItem):
@@ -45,6 +46,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.setAcceptHoverEvents(True)
 
         self._pixmap = None
+        self._mask = None
         self.class_ = UnClassified
         self.setPixmap(item.pixmap())
         self.features = item.features
@@ -197,4 +199,34 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         item.setPos(self.pos())
         item.setPen(pen)
         item.setOpacity(0.5)
+        self.addMask(polygon)
         self.addToGroup(item)
+
+    def toggleMask(self, state):
+        if state:
+            self._mask.show()
+        else:
+            # item group does not keep the selection state
+            isSelected = self.isSelected()
+            self._mask.hide()
+            self.setSelected(isSelected)
+
+    def addMask(self, polygon):
+        rect = self.boundingRect()
+
+        brush = QtGui.QBrush()
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        pen = QtGui.QPen()
+        pen.setColor(Colors.mask)
+
+        path = QtGui.QPainterPath()
+        path.addRect(rect)
+        path.addPolygon(polygon)
+        path.setFillRule(QtCore.Qt.OddEvenFill)
+
+        self._mask = PainterPathItem(path)
+        self._mask.setBrush(brush)
+        self._mask.setPen(pen)
+        self._mask.setZValue(95)
+        self._mask.hide()
+        self.addToGroup(self._mask)
