@@ -198,6 +198,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         item.setPolygon(polygon)
         item.setPos(self.pos())
         item.setPen(pen)
+        item.setZValue(100)
         item.setOpacity(0.5)
         self.addMask(polygon)
         self.addToGroup(item)
@@ -210,6 +211,15 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
             isSelected = self.isSelected()
             self._mask.hide()
             self.setSelected(isSelected)
+        self.toggleContours(not state)
+
+    def toggleContours(self, state):
+        for item in self.childItems():
+            if isinstance(item, QtGui.QGraphicsPolygonItem):
+                if state:
+                    item.show()
+                else:
+                    item.hide()
 
     def addMask(self, polygon):
         rect = self.boundingRect()
