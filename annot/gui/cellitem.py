@@ -135,10 +135,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def clear(self):
         try:
             self.setClass(UnClassified)
-            self.setTrainingSample(False)
+            self.clearTrainingSample()
         except RuntimeError as e:
             warnings.warn(str(e))
-
 
     def setClass(self, class_):
         self.class_ = class_
@@ -152,19 +151,35 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
         if state:
             self._classrect.show()
+            if self._is_training_sample:
+                self._tsi.show()
         else:
             # item group does not keep the selection state
             isSelected = self.isSelected()
             self._classrect.hide()
+            self._tsi.hide()
             self.setSelected(isSelected)
 
     @property
     def pixmap(self):
         return self._pixmap
 
-    def setTrainingSample(self, state):
-        assert isinstance(state, bool)
-        self._is_training_sample = state
+    def setTrainingSample(self, class_):
+        self._is_training_sample = True
+
+        brush = QtGui.QBrush()
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush.setColor(class_.color)
+        pen = QtGui.QPen()
+        pen.setColor(class_.color)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+
+        self._tsi.setBrush(brush)
+        self._tsi.setPen(pen)
+
+    def clearTrainingSample(self):
+        self._is_training_sample = False
+        self._tsi.hide()
 
     def isTrainingSample(self):
         return self._is_training_sample
@@ -177,6 +192,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.addToGroup(item)
         self._addSelectorRect()
         self._addClassRect()
+        self._addTsIndicator()
 
     def paint(self, painter, option, widget):
         if self.isSelected():
@@ -191,9 +207,6 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         rect.setY(rect0.y())
         rect.setSize(rect0.size())
         return rect
-
-    def setPos(self, x, y):
-        super(CellGraphicsItem, self).setPos(x, y)
 
     def setContour(self, contour, color=Colors.neutral):
 
@@ -213,9 +226,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         is_selected = self.isSelected()
 
         if state:
-            self._mask.hide()
-        else:
             self._mask.show()
+        else:
+            self._mask.hide()
 
         if toggle_contours:
                 self.toggleContours(not state)
@@ -249,3 +262,30 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._mask.setZValue(StackOrder.mask)
         self._mask.hide()
         self.addToGroup(self._mask)
+
+    def _tsRect(self):
+        rect0 = self.childrenBoundingRect()
+        rect = QtCore.QRectF()
+        size = self.BOUNDARY*5
+        rect.setX(rect0.x())
+        rect.setY(rect0.y() + rect0.height() - 1.5*size)
+        rect.setSize(QtCore.QSizeF(size, size))
+        return rect
+
+    def _addTsIndicator(self):
+        brush = QtGui.QBrush()
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush.setColor(Colors.neutral)
+        pen = QtGui.QPen()
+        pen.setColor(Colors.neutral)
+        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+
+        rect = self._tsRect()
+        self._tsi = QtGui.QGraphicsEllipseItem(rect)
+        self._tsi.setStartAngle(0)
+        self._tsi.setSpanAngle(180*16)
+        self._tsi.setBrush(brush)
+        self._tsi.setPen(pen)
+        self._tsi.setZValue(StackOrder.class_indicator)
+        self._tsi.hide()
+        self.addToGroup(self._tsi)

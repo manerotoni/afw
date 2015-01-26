@@ -95,8 +95,10 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def addItems(self, items, class_name):
         self.setButtonColor(Qt.red)
+        clf = self.currentClassifier()
+        class_ = clf.classByName(class_name)
         for item in items:
-            item.setTrainingSample(True)
+            item.setTrainingSample(class_)
             self.model.addAnnotation(item, class_name)
 
     def estimateParameters(self):
