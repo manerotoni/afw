@@ -102,12 +102,20 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         super(AtMultiClassSvmItemModel, self).clear()
 
     def setData(self, index, value, role):
+        ret = super(AtMultiClassSvmItemModel, self).setData(index, value, role)
 
         if index.column() == self.ColorColumn:
             self.item(index.row(), index.column()).setBackground(
                 self._brushFromColor(value))
 
-        return super(AtMultiClassSvmItemModel, self).setData(index, value, role)
+            # update the annotated class labels
+            parent = self.item(index.row(), self.ClassColumn)
+            classes = self.currentClasses()
+            for row in xrange(parent.rowCount()):
+                key = parent.child(row).data().toPyObject()
+                self._items[key].setTrainingSample(classes[index.row()])
+        return ret
+
 
     def findClassItems(self, class_name, match=Qt.MatchExactly):
 

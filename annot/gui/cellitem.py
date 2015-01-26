@@ -17,7 +17,7 @@ from annot.classifiers.itemclass import UnClassified
 
 class StackOrder(object):
     pixmap = 0
-    mask = 100
+    mask = 350
     contour = 400
     class_indicator = 500
     selector = 1000
@@ -96,7 +96,6 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
         pen.setColor(Colors.neutral)
-
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
 
         rect = self._classRect()
@@ -166,16 +165,17 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     def setTrainingSample(self, class_):
         self._is_training_sample = True
-
-        brush = QtGui.QBrush()
-        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush = self._tsi.brush()
         brush.setColor(class_.color)
-        pen = QtGui.QPen()
-        pen.setColor(class_.color)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
-
         self._tsi.setBrush(brush)
+        pen = self._tsi.pen()
+        pen.setColor(class_.color)
         self._tsi.setPen(pen)
+
+        if self._classrect.isVisible():
+            brush = self.class_.brush_trainingsample
+            self._classrect.setBrush(brush)
+            self._tsi.show()
 
     def clearTrainingSample(self):
         self._is_training_sample = False
@@ -230,8 +230,8 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         else:
             self._mask.hide()
 
-        if toggle_contours:
-                self.toggleContours(not state)
+        # if toggle_contours:
+        #         self.toggleContours(not state)
 
         self.setSelected(is_selected)
 
