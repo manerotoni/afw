@@ -15,6 +15,12 @@ from PyQt4 import QtCore
 
 from annot.classifiers.itemclass import UnClassified
 
+class StackOrder(object):
+    pixmap = 0
+    mask = 100
+    contour = 400
+    class_indicator = 500
+    selector = 1000
 
 class Colors(object):
     # selected = QtGui.QColor("#87CEFA")
@@ -97,7 +103,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._classrect = QtGui.QGraphicsRectItem(rect)
         self._classrect.setBrush(brush)
         self._classrect.setPen(pen)
-        self._classrect.setZValue(90)
+        self._classrect.setZValue(StackOrder.class_indicator)
         self._classrect.show()
         self.addToGroup(self._classrect)
 
@@ -122,7 +128,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._selrect = QtGui.QGraphicsRectItem(rect)
         self._selrect.setBrush(brush)
         self._selrect.setPen(pen)
-        self._selrect.setZValue(100)
+        self._selrect.setZValue(StackOrder.selector)
         self._selrect.hide()
         self.addToGroup(self._selrect)
 
@@ -198,20 +204,23 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         item.setPolygon(polygon)
         item.setPos(self.pos())
         item.setPen(pen)
-        item.setZValue(100)
+        item.setZValue(StackOrder.contour)
         item.setOpacity(0.5)
         self.addMask(polygon)
         self.addToGroup(item)
 
-    def toggleMask(self, state):
+    def toggleMask(self, state, toggle_contours=True):
+        is_selected = self.isSelected()
+
         if state:
-            self._mask.show()
-        else:
-            # item group does not keep the selection state
-            isSelected = self.isSelected()
             self._mask.hide()
-            self.setSelected(isSelected)
-        self.toggleContours(not state)
+        else:
+            self._mask.show()
+
+        if toggle_contours:
+                self.toggleContours(not state)
+
+        self.setSelected(is_selected)
 
     def toggleContours(self, state):
         for item in self.childItems():
@@ -237,6 +246,6 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._mask = PainterPathItem(path)
         self._mask.setBrush(brush)
         self._mask.setPen(pen)
-        self._mask.setZValue(95)
+        self._mask.setZValue(StackOrder.mask)
         self._mask.hide()
         self.addToGroup(self._mask)
