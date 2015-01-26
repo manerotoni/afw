@@ -7,6 +7,7 @@ assistant.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ ='GPL'
 
+import os
 import sys
 import argparse
 
@@ -22,9 +23,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(\
         description='Test script for tiled graphicview widget')
     parser.add_argument('--file', '-f', help='hdf file to load', default=None)
-
-
     args = parser.parse_args()
+
+    if args.file is not None and not os.path.isfile(args.file):
+        raise SystemExit("File does not exist!")
+
     app = QtGui.QApplication(sys.argv)
     mw = AtMainWindow(args.file)
     mw.show()
