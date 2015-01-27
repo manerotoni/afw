@@ -5,7 +5,7 @@ main.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-
+import sys
 from os.path import splitext, basename, expanduser
 
 from PyQt4 import uic
@@ -28,6 +28,12 @@ from annot.threading import AtLoader
 
 from annot import at_rc
 
+def fix_path(path):
+    "Windows sucks!"
+    if sys.platform.startswith("win"):
+        return path.strip("/")
+    else:
+        return path
 
 class AtMainWindow(QtGui.QMainWindow):
 
@@ -92,7 +98,7 @@ class AtMainWindow(QtGui.QMainWindow):
                 self.abort.emit()
                 self.loaderThread.wait()
                 self.loader.close()
-                self.onDropEvent(mimeData.urls()[0].path())
+                self.onDropEvent(fix_path(mimeData.urls()[0].path()))
         event.acceptProposedAction()
 
     def dragLeaveEvent(self, event):
