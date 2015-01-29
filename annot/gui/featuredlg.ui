@@ -91,7 +91,7 @@
   <customwidget>
    <class>AtContextTreeView</class>
    <extends>QTreeView</extends>
-   <header location="global">annot/gui/sidebar/featuredlg</header>
+   <header location="global">annot/gui/featuredlg</header>
   </customwidget>
   <customwidget>
    <class>AtLineEdit</class>

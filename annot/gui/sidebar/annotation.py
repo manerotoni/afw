@@ -18,10 +18,10 @@ from PyQt4.QtGui import QApplication, QCursor, QMessageBox
 from annot.hdfio.readercore import HdfError
 from annot.classifiers.classifiers import Classifier
 from annot.gui.savehdfdlg import SaveClassifierDialog
+from annot.gui.featuredlg import AtFeatureSelectionDlg
 
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
-from .featuredlg import AtFeatureSelectionDlg
 from .annotation_model import DoubleAnnotationError
 
 
