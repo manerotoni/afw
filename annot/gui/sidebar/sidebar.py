@@ -17,9 +17,10 @@ class NoSampleError(Exception):
 
 class AtSideBarWidget(QtGui.QWidget):
 
-    def __init__(self, parent, tileview, *args, **kw):
+    def __init__(self, parent, tileview, featuredlg=None, *args, **kw):
         super(AtSideBarWidget, self).__init__(parent, *args, **kw)
         self.tileview = tileview
+        self.featuredlg = featuredlg
         self.parent = parent
 
     def removeSelected(self):

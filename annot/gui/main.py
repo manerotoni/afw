@@ -23,6 +23,7 @@ from annot.gui.sidebar import AtAnnotationWidget
 from annot.gui.sidebar import AtFeatureGroupsWidget
 from annot.gui.importdlg import ImportDialog
 from annot.gui.aboutdialog import AtAboutDialog
+from annot.gui.featuredlg import AtFeatureSelectionDlg
 
 from annot.threading import AtThread
 from annot.threading import AtLoader
@@ -47,6 +48,9 @@ class AtMainWindow(QtGui.QMainWindow):
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle(version.appstr)
         self.setAcceptDrops(True)
+
+        self.featuredlg = AtFeatureSelectionDlg(self)
+        self.featuredlg.hide()
 
         self.loaderThread = AtThread(self)
         self.loader = AtLoader()
@@ -78,7 +82,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionAboutQt.triggered.connect(self.onAboutQt)
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
         self.actionFeatureSelection.triggered.connect(
-            self.annotation.showFeatureDlg)
+            self.showFeatureDlg)
         self.loader.finished.connect(self.onLoadingFinished)
 
         self._restoreSettings()
@@ -105,6 +109,10 @@ class AtMainWindow(QtGui.QMainWindow):
 
     def dragLeaveEvent(self, event):
         event.accept()
+
+    def showFeatureDlg(self):
+        self.featuredlg.show()
+        self.featuredlg.raise_()
 
     def onAboutQt(self):
         QMessageBox.aboutQt(self, "about Qt")
@@ -149,11 +157,12 @@ class AtMainWindow(QtGui.QMainWindow):
             pass
 
     def setupDock(self):
-        self.sorting = AtSortWidget(self, self.tileview)
-        self.annotation = AtAnnotationWidget(self, self.tileview)
-        self.featuregroups = AtFeatureGroupsWidget(self.annotation.featureDlg)
+        self.sorting = AtSortWidget(self, self.tileview, self.featuredlg)
+        self.annotation = AtAnnotationWidget(
+            self, self.tileview, self.featuredlg)
+        self.featuregroups = AtFeatureGroupsWidget(self.featuredlg)
         self.featuregroups.selectionChanged.connect(
-            self.annotation.featureDlg.setSelectionByName)
+            self.featuredlg.setSelectionByName)
 
         self.featuredock = QtGui.QDockWidget("Feature Groups", self)
         self.featuredock.setWidget(self.featuregroups)
