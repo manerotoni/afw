@@ -20,6 +20,7 @@ from annot.gui.graphicsview import AtGraphicsView
 from annot.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from annot.gui.sidebar import AtSortWidget
 from annot.gui.sidebar import AtAnnotationWidget
+from annot.gui.sidebar import AtFeatureGroupsWidget
 from annot.gui.importdlg import ImportDialog
 from annot.gui.aboutdialog import AtAboutDialog
 
@@ -34,6 +35,7 @@ def fix_path(path):
         return path.strip("/")
     else:
         return path
+
 
 class AtMainWindow(QtGui.QMainWindow):
 
@@ -149,6 +151,14 @@ class AtMainWindow(QtGui.QMainWindow):
     def setupDock(self):
         self.sorting = AtSortWidget(self, self.tileview)
         self.annotation = AtAnnotationWidget(self, self.tileview)
+        self.featuregroups = AtFeatureGroupsWidget(self.annotation.featureDlg)
+
+        self.featuredock = QtGui.QDockWidget("Feature Groups", self)
+        # self.featuredock.setTitleBarWidget(QtGui.QLabel("Feature Groups"))
+        # self.featuredock.setFeatures(self.featuredock.DockWidgetClosable)
+        self.featuredock.setWidget(self.featuregroups)
+        self.featuredock.setObjectName("feature_groups")
+        self.addDockWidget(Qt.RightDockWidgetArea, self.featuredock)
 
         self.sortdock = QtGui.QDockWidget("Sorting", self)
         self.sortdock.setWidget(self.sorting)
@@ -164,6 +174,7 @@ class AtMainWindow(QtGui.QMainWindow):
 
         self.menuView.addAction(self.sortdock.toggleViewAction())
         self.menuView.addAction(self.annodock.toggleViewAction())
+        self.menuView.addAction(self.featuredock.toggleViewAction())
 
         # crosslink sorter dock and sorter toolbar
         self.sortToolBar.sortAlgorithm.currentIndexChanged.connect(
@@ -213,6 +224,7 @@ class AtMainWindow(QtGui.QMainWindow):
     def updateToolbars(self, props):
         self.navToolBar.updateToolbar(props.coordspace)
         self.toolBar.updateToolbar(props)
+        self.featuregroups.setChannelNames(props.channel_names)
 
     def setupToolbar(self):
         self.toolBar = ViewToolBar(self)

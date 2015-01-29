@@ -44,7 +44,14 @@ class AtTrainingSetIO(HdfFile):
                   'region': cspace.values()[0].values()[0].values()[0]}
 
         return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
-                           self.numberItems(), self.gsize, cspace)
+                           self.numberItems(), self.gsize, cspace,
+                           self.channelNames)
+
+    @property
+    def channelNames(self):
+        channels = self[self.dmodel.contours].attrs[self.dmodel.CHANNELS]
+        channels = [str(c) for c in channels]
+        return tuple(channels)
 
     @property
     def gsize(self):

@@ -21,7 +21,7 @@ from annot.gui.painting import AtPainter
 
 HdfFileInfo = namedtuple("HdfFileInfo",
                          ["gal_settings_mutable", "n_items", "gallery_size",
-                          "coordspace"])
+                          "coordspace", "channel_names"])
 
 
 class HdfError(Exception):
@@ -104,6 +104,9 @@ class HdfFile(h5py.File):
         contain to many items to load them at once) and wether the size of
         the gallery images is fixed. This method must be implemented
         by child classes."""
+        raise NotImplementedError()
+
+    def channelNames(self):
         raise NotImplementedError()
 
     def plateNames(self):
