@@ -5,7 +5,7 @@ sortwidget.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('AtSideBarWidget', )
+__all__ = ('AtSideBarWidget', 'NoSampleError')
 
 
 from PyQt4 import QtGui
@@ -46,3 +46,14 @@ class AtSideBarWidget(QtGui.QWidget):
 
     def itemView(self):
         raise NotImplementedError
+
+    def filterFeatures(self, features):
+        """Filter the feature matrix by column wise. Indices of the cols are
+        determined by the FeatureSelection Dialog."""
+
+        ftrs_indices = self.featuredlg.indicesOfCheckedItems()
+
+        if not ftrs_indices or features is None:
+            raise NoSampleError("no features selected for classifier training")
+
+        return features[:, ftrs_indices]

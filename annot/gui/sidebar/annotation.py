@@ -166,17 +166,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             QMessageBox.information(self, "information",
                                     "Data saved successfully")
 
-    def filterFeatures(self, features):
-        """Filter the feature matrix by column wise. Indices of the cols are
-        determined by the FeatureSelection Dialog."""
-
-        ftrs_indices = self.featuredlg.indicesOfCheckedItems()
-
-        if not ftrs_indices or features is None:
-            raise NoSampleError("no features selected for classifier training")
-
-        return features[:, ftrs_indices]
-
     def onPredict(self):
 
         try:

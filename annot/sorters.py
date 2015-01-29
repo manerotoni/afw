@@ -31,18 +31,6 @@ class Sorter(object):
     def sorters(cls):
         return sorted(cls._classes.keys())
 
-    def _data_from_items(self, items):
-
-        nitems = len(items)
-        nfeatures = items[0].features.size
-        data = np.empty((nitems, nfeatures))
-
-        for i, item in enumerate(items):
-            data[i, :] = item.features
-
-        return data
-
-
 # class PcaBackProjectedDistance(Sorter):
 #     """Sorting data by performing a PCA, taking only 99% of the variance,
 #     back projecting the the reduced feature set and sort after the difference
@@ -77,9 +65,9 @@ class CosineSimilarity(Sorter):
     similarity measurement."""
 
 
-    def __init__(self, items, *args, **kw):
+    def __init__(self, data, *args, **kw):
         super(CosineSimilarity, self).__init__(*args, **kw)
-        self.data = self._data_from_items(items)
+        self.data = data
         self.treedata = None
 
     def __call__(self):
@@ -87,6 +75,9 @@ class CosineSimilarity(Sorter):
 
         if self.treedata is None:
             raise SortingError("No examples for similarity measure available!")
+        if self.treedata.shape[1] < 2:
+            raise SortingError(("CosineSimilarity needs at least 2 "
+                                "features for sorting"))
 
         zs = ZScore(self.data)
         data_zs = zs.normalize(self.data)
@@ -123,9 +114,9 @@ class EucledianDistance(Sorter):
     """Sorting data by using the cosine similarity metric of the z-scored data.
     """
 
-    def __init__(self, items, *args, **kw):
+    def __init__(self, data, *args, **kw):
         super(EucledianDistance, self).__init__(*args, **kw)
-        self.data = self._data_from_items(items)
+        self.data = data
         self.treedata = None
 
     def __call__(self):
