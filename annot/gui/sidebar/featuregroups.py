@@ -12,6 +12,9 @@ from os.path import splitext
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import uic
+from PyQt4.QtGui import QSizePolicy
+from PyQt4.QtCore import Qt
+
 
 from .feature_tables import FeatureTables
 from annot.segmentation.channelname import ChannelName as cn
@@ -23,7 +26,9 @@ class AtFeatureGroupsWidget(QtGui.QWidget):
 
     def __init__(self, *args, **kw):
         super(AtFeatureGroupsWidget, self).__init__(*args, **kw)
-        self.vbox = QtGui.QVBoxLayout(self)
+        uifile = splitext(__file__)[0] + ".ui"
+        uic.loadUi(uifile, self)
+
         self.vbox.addStretch()
         self.vbox.setContentsMargins(2, 2, 2, 2)
         self._channels = None
@@ -60,8 +65,12 @@ class AtChannelFeatureGroupsWidget(QtGui.QWidget):
 
     def __init__(self, title, *args, **kw):
         super(AtChannelFeatureGroupsWidget, self).__init__(*args, **kw)
-        uifile = splitext(__file__)[0] + ".ui"
-        uic.loadUi(uifile, self)
+        self.setLayout(QtGui.QVBoxLayout())
+        self.gbox = QtGui.QGroupBox(self)
+
+        self.gbox.setLayout(QtGui.QVBoxLayout())
+        self.layout().addWidget(self.gbox)
+        self.layout().setContentsMargins(0, 0, 0, 0)
 
         self.gbox.setTitle(cn.display(title))
 
