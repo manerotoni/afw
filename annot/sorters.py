@@ -27,6 +27,14 @@ class Sorter(object):
 
     __metaclass__ = Factory
 
+    def __init__(self, data=None, class_labels=None, annotations=None,
+                 *args, **kw):
+        super(Sorter, self).__init__(*args, **kw)
+        self.data = data
+        self.class_labels = class_labels
+        self.annotations = annotations
+        self.treedata = None
+
     @classmethod
     def sorters(cls):
         return sorted(cls._classes.keys())
@@ -65,10 +73,8 @@ class CosineSimilarity(Sorter):
     similarity measurement."""
 
 
-    def __init__(self, data, *args, **kw):
+    def __init__(self, *args, **kw):
         super(CosineSimilarity, self).__init__(*args, **kw)
-        self.data = data
-        self.treedata = None
 
     def __call__(self):
         # z-scoring
@@ -95,11 +101,8 @@ class CosineSimilarity(Sorter):
 class ClassLabel(Sorter):
     """Sorts items by class label."""
 
-    def __init__(self, items, *args, **kw):
+    def __init__(self, *args, **kw):
         super(ClassLabel, self).__init__(*args, **kw)
-        self.class_labels = [i.class_.label for i in items]
-        self.annotations = [i.isTrainingSample() for i in items]
-
 
     def __call__(self):
         try:
@@ -114,10 +117,8 @@ class EucledianDistance(Sorter):
     """Sorting data by using the cosine similarity metric of the z-scored data.
     """
 
-    def __init__(self, data, *args, **kw):
+    def __init__(self, *args, **kw):
         super(EucledianDistance, self).__init__(*args, **kw)
-        self.data = data
-        self.treedata = None
 
     def __call__(self):
         # z-scoring

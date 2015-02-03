@@ -75,7 +75,12 @@ class AtSortWidget(AtSideBarWidget):
             # feature table from all items in graphicsview widget
             features = self._data_from_items(all_items)
             features = self.filterFeatures(features)
-            sorter = Sorter(self.sortAlgorithm.currentText(), features)
+
+            class_labels = [i.class_.label for i in all_items]
+            annotations = [i.isTrainingSample() for i in all_items]
+
+            sorter = Sorter(self.sortAlgorithm.currentText(),
+                            features, class_labels, annotations)
             sorter.treedata = self.filterFeatures(self.model.features)
             # sorter.treedata = self.model.features
         except NoSampleError:
