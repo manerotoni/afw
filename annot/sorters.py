@@ -11,6 +11,14 @@ from annot.pattern import Factory
 from annot.mining import filter_nans
 from annot.mining import ZScore, PCA
 
+def _data_from_items(items):
+    nitems = len(items)
+    nfeatures = items[0].features.size
+    data = np.empty((nitems, nfeatures))
+    for i, item in enumerate(items):
+        data[i, :] = item.features
+    return data
+
 
 class SortingError(Exception):
     pass
@@ -27,12 +35,9 @@ class Sorter(object):
 
     __metaclass__ = Factory
 
-    def __init__(self, data=None, class_labels=None, annotations=None,
-                 *args, **kw):
+    def __init__(self, items, filter_indices, *args, **kw):
         super(Sorter, self).__init__(*args, **kw)
-        self.data = data
-        self.class_labels = class_labels
-        self.annotations = annotations
+        self.data = _data_from_items(items)[:, filter_indices]
         self.treedata = None
 
     @classmethod
@@ -73,9 +78,6 @@ class CosineSimilarity(Sorter):
     similarity measurement."""
 
 
-    def __init__(self, *args, **kw):
-        super(CosineSimilarity, self).__init__(*args, **kw)
-
     def __call__(self):
         # z-scoring
 
@@ -101,8 +103,10 @@ class CosineSimilarity(Sorter):
 class ClassLabel(Sorter):
     """Sorts items by class label."""
 
-    def __init__(self, *args, **kw):
-        super(ClassLabel, self).__init__(*args, **kw)
+    def __init__(self, items, *args, **kw):
+        super(ClassLabel, self).__init__(items, *args, **kw)
+        self.class_labels = [i.class_.label for i in items]
+        self.annotations =  [i.isTrainingSample() for i in items]
 
     def __call__(self):
         try:
@@ -116,9 +120,6 @@ class ClassLabel(Sorter):
 class EucledianDistance(Sorter):
     """Sorting data by using the cosine similarity metric of the z-scored data.
     """
-
-    def __init__(self, *args, **kw):
-        super(EucledianDistance, self).__init__(*args, **kw)
 
     def __call__(self):
         # z-scoring

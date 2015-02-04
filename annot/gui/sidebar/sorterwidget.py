@@ -72,17 +72,9 @@ class AtSortWidget(AtSideBarWidget):
     def sort(self, reversed_=False):
         all_items = self.tileview.items
         try:
-            # feature table from all items in graphicsview widget
-            features = self._data_from_items(all_items)
-            features = self.filterFeatures(features)
-
-            class_labels = [i.class_.label for i in all_items]
-            annotations = [i.isTrainingSample() for i in all_items]
-
-            sorter = Sorter(self.sortAlgorithm.currentText(),
-                            features, class_labels, annotations)
+            sorter = Sorter(self.sortAlgorithm.currentText(), all_items,
+                            self.filter_indices)
             sorter.treedata = self.filterFeatures(self.model.features)
-            # sorter.treedata = self.model.features
         except NoSampleError:
             return
 
