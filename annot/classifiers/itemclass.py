@@ -16,10 +16,13 @@ from PyQt4.QtCore import Qt
 class ItemClass(QtCore.QObject):
     """Definiton of one single class, in terms of machine learing."""
 
-    def __init__(self, name, color, label):
+    def __init__(self, name, color, label, score=None):
         self.color = color
         self.name = name
         self.label = label
+
+        # can be prediction probability or distance measure
+        self._score = score
 
     def __eq__(self, other):
         return self.label == other.label
@@ -30,7 +33,11 @@ class ItemClass(QtCore.QObject):
     @staticmethod
     def fromItemClass(itemclass):
         """Returns a new ItemClass instance cloned from an existing one."""
-        return ItemClass(itemclass.name, itemclass.color, itemclass.label)
+        return ItemClass(itemclass.name, itemclass.color, itemclass.label,
+                         itemclass.score)
+
+    def clone(self):
+        return ItemClass.fromItemClass(self)
 
     @property
     def pen(self):
@@ -57,6 +64,23 @@ class ItemClass(QtCore.QObject):
         else:
             brush.setStyle(Qt.Dense5Pattern)
         return brush
+
+    @property
+    def score(self):
+        if isinstance(self._score, dict):
+
+            return self._score[self.label]
+        else:
+            return self._score
+
+    @score.setter
+    def score(self, value):
+        self._score = value
+
+    @score.deleter
+    def score(self, value):
+        del self._score
+
 
 
 UnClassified = ItemClass("unclassified", QtGui.QColor("white"), None)
