@@ -157,9 +157,11 @@ class AtFeatureSelectionDlg(QtGui.QWidget):
 
         for i in xrange(self.model.rowCount()):
             idx_item = self.model.item(i, self.model.INDEX)
+            ch_item = self.model.item(i, self.model.CHANNEL)
             name_item = self.model.item(i, self.model.NAME)
             if name_item.checkState() == Qt.Checked:
-                odict[int(idx_item.text())] = name_item.text()
+                odict[int(idx_item.text())] = \
+                    "%s-%s" %(ch_item.text(), name_item.text())
 
         return odict
 
