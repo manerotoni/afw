@@ -271,7 +271,11 @@ class Svc(Classifier):
         else:
             features = self._pp(features)
             proba = self._clf.predict_proba(features)
-            predictions = np.argmax(proba, axis=1)
+
+            # turn indices into class labels, asumeing ascending order
+            predictions = [self._classes.keys()[i]
+                           for i in  np.argmax(proba, axis=1)]
+
             classes = [self.classes[pred].clone() for pred in predictions]
 
             for c, p in zip(classes, proba):
