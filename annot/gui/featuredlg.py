@@ -13,6 +13,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4 import uic
 
+from .sidebar import AtSideBarWidget
 
 class AtFeatureModel(QtGui.QStandardItemModel):
 
@@ -91,6 +92,7 @@ class AtContextTreeView(QtGui.QTreeView):
             if state:
                 item.setCheckState(Qt.Checked)
             else:
+
                 item.setCheckState(Qt.Unchecked)
 
 
@@ -120,6 +122,7 @@ class AtFeatureSelectionDlg(QtGui.QWidget):
     def toggleAll(self, state):
         for row in xrange(self.model.rowCount()):
             self.model.item(row, 0).setCheckState(state)
+        self.filterChanged()
 
     def filterChanged(self):
         regExp = QtCore.QRegExp(self.regex.text())
@@ -136,14 +139,29 @@ class AtFeatureSelectionDlg(QtGui.QWidget):
 
         return tuple(indices)
 
+    def setSelectionByName(self, names):
+
+        for i in xrange(self.model.rowCount()):
+            name_item = self.model.item(i, self.model.NAME)
+            channel_item = self.model.item(i, self.model.CHANNEL)
+
+            ftrname = "%s-%s" %(channel_item.text(), name_item.text())
+            if ftrname in names:
+                name_item.setCheckState(Qt.Checked)
+            else:
+                name_item.setCheckState(Qt.Unchecked)
+        self.filterChanged()
+
     def checkedItems(self):
         odict = OrderedDict()
 
         for i in xrange(self.model.rowCount()):
             idx_item = self.model.item(i, self.model.INDEX)
+            ch_item = self.model.item(i, self.model.CHANNEL)
             name_item = self.model.item(i, self.model.NAME)
             if name_item.checkState() == Qt.Checked:
-                odict[int(idx_item.text())] = name_item.text()
+                odict[int(idx_item.text())] = \
+                    "%s-%s" %(ch_item.text(), name_item.text())
 
         return odict
 

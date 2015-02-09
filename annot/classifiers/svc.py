@@ -1,3 +1,4 @@
+
 """
 multiclasssvm.py
 """
@@ -238,7 +239,8 @@ class Svc(Classifier):
         self._pp = None
         self._cvwidget = None
         self._pwidget = None
-        self._clf = sklearn.svm.SVC(C=1.0, kernel=self.KERNEL, gamma=0.0)
+        self._clf = sklearn.svm.SVC(C=1.0, kernel=self.KERNEL, gamma=0.0,
+                                    probability=True)
 
     def setParameters(self, params):
         assert isinstance(params, dict)
@@ -267,9 +269,16 @@ class Svc(Classifier):
         if self._clf is None:
             return super(Svc, self).predict(features)
         else:
-            predictions = self._clf.predict(self._pp(features))
-            return [self.classes[pred] for pred in predictions]
+            features = self._pp(features)
+            proba = self._clf.predict_proba(features)
+            predictions = np.argmax(proba, axis=1)
+            classes = [self.classes[pred].clone() for pred in predictions]
 
+            for c, p in zip(classes, proba):
+                c.score = dict(
+                    ((k, v) for k, v in zip(self.classes.keys(), p)))
+
+        return classes
 
     def saveToHdf(self, name, file_, feature_selection, description,
                   overwrite=False, labels=None, sample_info=None):

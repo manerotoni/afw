@@ -91,8 +91,12 @@ class Ch5Reader(HdfFile):
                   'site': cspace.values()[0].values()[0].keys(),
                   'region': cspace.values()[0].values()[0].values()[0]}
 
-        return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE, 500, 65, cspace)
+        return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE, 500, 65, cspace,
+                           self.channelNames)
 
+    @property
+    def channelNames(self):
+        return ("Channel_1", )
 
     def plateNames(self):
         key = self._plate_key %{"plate": ""}

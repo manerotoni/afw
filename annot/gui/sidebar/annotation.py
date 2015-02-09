@@ -21,7 +21,6 @@ from annot.gui.savehdfdlg import SaveClassifierDialog
 
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
-from .featuredlg import AtFeatureSelectionDlg
 from .annotation_model import DoubleAnnotationError
 
 
@@ -33,8 +32,6 @@ class AtAnnotationWidget(AtSideBarWidget):
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         uic.loadUi(uifile, self)
 
-        self.featureDlg = AtFeatureSelectionDlg(self)
-        self.featureDlg.hide()
         self.saveBtn.clicked.connect(self.onSave)
 
         self._setupClassifiers()
@@ -95,8 +92,10 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def addItems(self, items, class_name):
         self.setButtonColor(Qt.red)
+        clf = self.currentClassifier()
+        class_ = clf.classByName(class_name)
         for item in items:
-            item.setTrainingSample(True)
+            item.setTrainingSample(class_)
             self.model.addAnnotation(item, class_name)
 
     def estimateParameters(self):
@@ -126,11 +125,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         return self.itemView().model()
 
     def setFeatureNames(self, features):
-        self.featureDlg.addFeatureList(features)
-
-    def showFeatureDlg(self,):
-        self.featureDlg.show()
-        self.featureDlg.raise_()
+        self.featuredlg.addFeatureList(features)
 
     def onSave(self):
         clf = self.currentClassifier()
@@ -160,7 +155,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         try:
             clf.saveToHdf(dlg.name,
                           hdffile,
-                          self.featureDlg.checkedItems(),
+                          self.featuredlg.checkedItems(),
                           dlg.description,
                           dlg.overwrite,
                           labels,
@@ -170,17 +165,6 @@ class AtAnnotationWidget(AtSideBarWidget):
         else:
             QMessageBox.information(self, "information",
                                     "Data saved successfully")
-
-    def filterFeatures(self, features):
-        """Filter the feature matrix by column wise. Indices of the cols are
-        determined by the FeatureSelection Dialog."""
-
-        ftrs_indices = self.featureDlg.indicesOfCheckedItems()
-
-        if not ftrs_indices or features is None:
-            raise NoSampleError("no features selected for classifier training")
-
-        return features[:, ftrs_indices]
 
     def onPredict(self):
 

@@ -5,7 +5,7 @@ main.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-
+import sys
 from os.path import splitext, basename, expanduser
 
 from PyQt4 import uic
@@ -20,7 +20,9 @@ from annot.gui.graphicsview import AtGraphicsView
 from annot.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from annot.gui.sidebar import AtSortWidget
 from annot.gui.sidebar import AtAnnotationWidget
+from annot.gui.sidebar import AtFeatureGroupsWidget
 from annot.gui.importdlg import ImportDialog
+from annot.gui.featuredlg import AtFeatureSelectionDlg
 from annot.gui.aboutdialog import AtAboutDialog
 from annot.gui.helpbrowser import AtAssistant
 from annot.gui.helpbrowser import MANUAL
@@ -29,6 +31,13 @@ from annot.threading import AtThread
 from annot.threading import AtLoader
 
 from annot import at_rc
+
+def fix_path(path):
+    "Windows sucks!"
+    if sys.platform.startswith("win"):
+        return path.strip("/")
+    else:
+        return path
 
 
 class AtMainWindow(QtGui.QMainWindow):
@@ -43,6 +52,9 @@ class AtMainWindow(QtGui.QMainWindow):
         self.setWindowTitle(version.appstr)
         self.setAcceptDrops(True)
 
+        self.featuredlg = AtFeatureSelectionDlg(self)
+        self.featuredlg.hide()
+
         self.loaderThread = AtThread(self)
         self.loader = AtLoader()
         self._lastdir = expanduser("~")
@@ -55,6 +67,8 @@ class AtMainWindow(QtGui.QMainWindow):
         self.toolBar.valueChanged.connect(self.tileview.zoom)
         self.toolBar.classification.stateChanged.connect(
             self.tileview.toggleClassIndicators, Qt.QueuedConnection)
+        self.toolBar.masking.stateChanged.connect(
+            self.tileview.toggleMasks, Qt.QueuedConnection)
 
         self.setCentralWidget(self.tileview)
         self.setupDock()
@@ -71,7 +85,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionAboutQt.triggered.connect(self.onAboutQt)
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
         self.actionFeatureSelection.triggered.connect(
-            self.annotation.showFeatureDlg)
+            self.showFeatureDlg)
         self.actionHelpManual.triggered.connect(self.onHelpManual)
         self.loader.finished.connect(self.onLoadingFinished)
 
@@ -94,7 +108,7 @@ class AtMainWindow(QtGui.QMainWindow):
                 self.abort.emit()
                 self.loaderThread.wait()
                 self.loader.close()
-                self.onDropEvent(mimeData.urls()[0].path())
+                self.onDropEvent(fix_path(mimeData.urls()[0].path()))
         event.acceptProposedAction()
 
     def dragLeaveEvent(self, event):
@@ -111,6 +125,10 @@ class AtMainWindow(QtGui.QMainWindow):
             else:
                 self.assistant.show()
                 self.assistant.raise_()
+
+    def showFeatureDlg(self):
+        self.featuredlg.show()
+        self.featuredlg.raise_()
 
     def onAboutQt(self):
         QMessageBox.aboutQt(self, "about Qt")
@@ -155,8 +173,17 @@ class AtMainWindow(QtGui.QMainWindow):
             pass
 
     def setupDock(self):
-        self.sorting = AtSortWidget(self, self.tileview)
-        self.annotation = AtAnnotationWidget(self, self.tileview)
+        self.sorting = AtSortWidget(self, self.tileview, self.featuredlg)
+        self.annotation = AtAnnotationWidget(
+            self, self.tileview, self.featuredlg)
+        self.featuregroups = AtFeatureGroupsWidget(self.featuredlg)
+        self.featuregroups.selectionChanged.connect(
+            self.featuredlg.setSelectionByName)
+
+        self.featuredock = QtGui.QDockWidget("Feature Groups", self)
+        self.featuredock.setWidget(self.featuregroups)
+        self.featuredock.setObjectName("feature_groups")
+        self.addDockWidget(Qt.RightDockWidgetArea, self.featuredock)
 
         self.sortdock = QtGui.QDockWidget("Sorting", self)
         self.sortdock.setWidget(self.sorting)
@@ -172,6 +199,7 @@ class AtMainWindow(QtGui.QMainWindow):
 
         self.menuView.addAction(self.sortdock.toggleViewAction())
         self.menuView.addAction(self.annodock.toggleViewAction())
+        self.menuView.addAction(self.featuredock.toggleViewAction())
 
         # crosslink sorter dock and sorter toolbar
         self.sortToolBar.sortAlgorithm.currentIndexChanged.connect(
@@ -221,6 +249,7 @@ class AtMainWindow(QtGui.QMainWindow):
     def updateToolbars(self, props):
         self.navToolBar.updateToolbar(props.coordspace)
         self.toolBar.updateToolbar(props)
+        self.featuregroups.setChannelNames(props.channel_names)
 
     def setupToolbar(self):
         self.toolBar = ViewToolBar(self)

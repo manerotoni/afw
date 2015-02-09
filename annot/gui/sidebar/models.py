@@ -8,7 +8,7 @@ Implementation of ItemModels for the sidebar
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ =("AtOneClassSvmItemModel", )
+__all__ =("AtOneClassSvmItemModel", "AtSorterItemModel" )
 
 
 from collections import OrderedDict
@@ -17,6 +17,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
+from .sidebar import NoSampleError
 
 class AtStandardItemModel(QtGui.QStandardItemModel):
 
@@ -61,8 +62,10 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
         """Yields a feature matrix from the items in the Sidebar. One feature
         vector per row."""
         nitems = self.rowCount()
+
         if not nitems:
-            return
+            raise NoSampleError
+
         nfeatures = self.items[0].features.size
         features = np.empty((nitems, nfeatures))
 

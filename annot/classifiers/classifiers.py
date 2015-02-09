@@ -135,6 +135,13 @@ class Classifier(object):
     def classes(self):
         return self._classes
 
+    def classByName(self, name):
+        for class_ in self.classes.itervalues():
+            if class_.name == name:
+                return class_
+
+        raise RuntimeError("No classes named %s" %name)
+
     def setClasses(self, classes, parent, panel):
         """Update the dictionary of the class definition and the list of
         the context menu actions."""

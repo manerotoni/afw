@@ -11,6 +11,14 @@ from annot.pattern import Factory
 from annot.mining import filter_nans
 from annot.mining import ZScore, PCA
 
+def _data_from_items(items):
+    nitems = len(items)
+    nfeatures = items[0].features.size
+    data = np.empty((nitems, nfeatures))
+    for i, item in enumerate(items):
+        data[i, :] = item.features
+    return data
+
 
 class SortingError(Exception):
     pass
@@ -27,21 +35,14 @@ class Sorter(object):
 
     __metaclass__ = Factory
 
+    def __init__(self, items, filter_indices, *args, **kw):
+        super(Sorter, self).__init__(*args, **kw)
+        self.data = _data_from_items(items)[:, filter_indices]
+        self.treedata = None
+
     @classmethod
     def sorters(cls):
         return sorted(cls._classes.keys())
-
-    def _data_from_items(self, items):
-
-        nitems = len(items)
-        nfeatures = items[0].features.size
-        data = np.empty((nitems, nfeatures))
-
-        for i, item in enumerate(items):
-            data[i, :] = item.features
-
-        return data
-
 
 # class PcaBackProjectedDistance(Sorter):
 #     """Sorting data by performing a PCA, taking only 99% of the variance,
@@ -77,16 +78,14 @@ class CosineSimilarity(Sorter):
     similarity measurement."""
 
 
-    def __init__(self, items, *args, **kw):
-        super(CosineSimilarity, self).__init__(*args, **kw)
-        self.data = self._data_from_items(items)
-        self.treedata = None
-
     def __call__(self):
         # z-scoring
 
         if self.treedata is None:
             raise SortingError("No examples for similarity measure available!")
+        if self.treedata.shape[1] < 2:
+            raise SortingError(("CosineSimilarity needs at least 2 "
+                                "features for sorting"))
 
         zs = ZScore(self.data)
         data_zs = zs.normalize(self.data)
@@ -105,15 +104,16 @@ class ClassLabel(Sorter):
     """Sorts items by class label."""
 
     def __init__(self, items, *args, **kw):
-        super(ClassLabel, self).__init__(*args, **kw)
+        super(ClassLabel, self).__init__(items, *args, **kw)
         self.class_labels = [i.class_.label for i in items]
-        self.annotations = [i.isTrainingSample() for i in items]
-
+        self.annotations =  [i.isTrainingSample() for i in items]
+        self.scores = [i.class_.score for i in items]
 
     def __call__(self):
         try:
-            return (np.array(self.class_labels)*10 + \
-                    np.array(self.annotations, dtype=bool))
+            return (np.array(self.class_labels)*10**3 + \
+                    np.array(self.annotations, dtype=bool)*10**2 + \
+                    np.array(self.scores))
 
         except TypeError:
             raise SortingError("No class labels available yet!")
@@ -122,11 +122,6 @@ class ClassLabel(Sorter):
 class EucledianDistance(Sorter):
     """Sorting data by using the cosine similarity metric of the z-scored data.
     """
-
-    def __init__(self, items, *args, **kw):
-        super(EucledianDistance, self).__init__(*args, **kw)
-        self.data = self._data_from_items(items)
-        self.treedata = None
 
     def __call__(self):
         # z-scoring

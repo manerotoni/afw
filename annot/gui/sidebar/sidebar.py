@@ -5,7 +5,7 @@ sortwidget.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('AtSideBarWidget', )
+__all__ = ('AtSideBarWidget', 'NoSampleError')
 
 
 from PyQt4 import QtGui
@@ -17,9 +17,10 @@ class NoSampleError(Exception):
 
 class AtSideBarWidget(QtGui.QWidget):
 
-    def __init__(self, parent, tileview, *args, **kw):
+    def __init__(self, parent, tileview, featuredlg=None, *args, **kw):
         super(AtSideBarWidget, self).__init__(parent, *args, **kw)
         self.tileview = tileview
+        self.featuredlg = featuredlg
         self.parent = parent
 
     def removeSelected(self):
@@ -45,3 +46,18 @@ class AtSideBarWidget(QtGui.QWidget):
 
     def itemView(self):
         raise NotImplementedError
+
+    def filterFeatures(self, features):
+        """Filter the feature matrix by column wise. Indices of the cols are
+        determined by the FeatureSelection Dialog."""
+
+        ftrs_indices = self.filter_indices
+
+        if not ftrs_indices or features is None:
+            raise NoSampleError("no features selected for classifier training")
+
+        return features[:, ftrs_indices]
+
+    @property
+    def filter_indices(self):
+        return self.featuredlg.indicesOfCheckedItems()

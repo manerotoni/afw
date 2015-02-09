@@ -178,8 +178,16 @@ class OneClassSvm(Classifier):
         if self._clf is None:
             return super(OneClassSvm, self).predict(features)
         else:
-            predictions = self._clf.predict(self._pp(features))
-            return [self.classes[pred] for pred in predictions]
+            features = self._pp(features)
+            predictions = self._clf.predict(features)
+            distances = self._clf.decision_function(features)
+
+            classes = [self.classes[pred].clone() for pred in predictions]
+
+            for c, d in zip(classes, distances):
+                c.score = d[0]
+
+        return classes
 
     def saveToHdf(self, name, file_, feature_selection, description,
                   overwrite=False, labels=None, sample_info=None):

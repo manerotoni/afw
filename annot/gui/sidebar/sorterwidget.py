@@ -9,6 +9,7 @@ __all__ = ('AtSortWidget', )
 
 
 from os.path import dirname, join
+import numpy as np
 
 from PyQt4 import uic
 from PyQt4 import QtCore
@@ -16,6 +17,7 @@ from PyQt4.QtGui import QMessageBox
 
 from annot.sorters import Sorter
 from annot.config import AtConfig
+from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
 from .models import  AtSorterItemModel
 
@@ -59,16 +61,22 @@ class AtSortWidget(AtSideBarWidget):
     def sortDescending(self):
         self.sort(reversed_=True)
 
+    def _data_from_items(self, items):
+        nitems = len(items)
+        nfeatures = items[0].features.size
+        data = np.empty((nitems, nfeatures))
+        for i, item in enumerate(items):
+            data[i, :] = item.features
+        return data
+
     def sort(self, reversed_=False):
-
         all_items = self.tileview.items
-
-        # nothing to sort
-        if not all_items:
+        try:
+            sorter = Sorter(self.sortAlgorithm.currentText(), all_items,
+                            self.filter_indices)
+            sorter.treedata = self.filterFeatures(self.model.features)
+        except NoSampleError:
             return
-
-        sorter = Sorter(self.sortAlgorithm.currentText(), all_items)
-        sorter.treedata = self.model.features
 
         try:
             dist = sorter()

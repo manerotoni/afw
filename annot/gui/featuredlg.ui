@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>423</width>
-    <height>594</height>
+    <width>320</width>
+    <height>619</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,7 +91,7 @@
   <customwidget>
    <class>AtContextTreeView</class>
    <extends>QTreeView</extends>
-   <header location="global">annot/gui/sidebar/featuredlg</header>
+   <header location="global">annot/gui/featuredlg</header>
   </customwidget>
   <customwidget>
    <class>AtLineEdit</class>
