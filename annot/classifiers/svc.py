@@ -178,22 +178,13 @@ class SvcParameterWidget(QtGui.QFrame):
                     self.treeview.model().removeClass(mi)
 
 
-class SvcDataModel(ClfDataModel):
-    """Data model to save a Support Vector classifier to hdf5."""
-
-    def __init__(self, *args, **kw):
-        super(SvcDataModel, self).__init__(*args, **kw)
-        self.annotations = "%s/annotations" %self.path
-        self.confmatrix = "%s/confusion_matrix" %self.path
-
-
 class SvcWriter(ClfWriter):
 
     def __init__(self, name, file_, description=None, remove_existing=False):
         super(SvcWriter, self).__init__(file_)
         assert isinstance(remove_existing, bool)
 
-        self.dmodel = SvcDataModel(name)
+        self.dmodel = ClfDataModel(name)
 
         if remove_existing:
             try:
@@ -208,7 +199,7 @@ class SvcWriter(ClfWriter):
                            %name + str(e))
 
         grp.attrs[self.dmodel.NAME] = "support vector classifier"
-        grp.attrs[self.dmodel.LIB] = "sklearn.svm.SVC"
+        grp.attrs[self.dmodel.LIB] = self.dmodel.SupportVectorClassifier
         grp.attrs[self.dmodel.VERSION] = sklearn.__version__
 
         if description is not None:
