@@ -23,17 +23,12 @@ from .itemclass import ItemClass
 from .classifiers import Classifier, ClfWriter, ClfDataModel
 
 
-class OcSvmDataModel(ClfDataModel):
-    """Data model to save one class svm to hdf5."""
-    pass
-
-
 class OcSvmWriter(ClfWriter):
 
 
     def __init__(self, name, file_, description=None, remove_existing=False):
         super(OcSvmWriter, self).__init__(file_)
-        self.dmodel = OcSvmDataModel(name)
+        self.dmodel = ClfDataModel(name)
 
         if remove_existing:
             try:
@@ -48,7 +43,7 @@ class OcSvmWriter(ClfWriter):
                            %name + str(e))
 
         grp.attrs[self.dmodel.NAME] = "one class support vector machine"
-        grp.attrs[self.dmodel.LIB] = "sklearn.svm.OneClassSvm"
+        grp.attrs[self.dmodel.LIB] = self.dmodel.OneClassSvm
         grp.attrs[self.dmodel.VERSION] = sklearn.__version__
 
         if description is not None:

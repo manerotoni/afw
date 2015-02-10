@@ -21,8 +21,17 @@ from annot.hdfio.readercore import HdfFile
 
 
 class ClfDataModel(object):
-    """Data model to save a Support Vector classifier to hdf5."""
+    """Data model to save a Support Vector classifier to hdf5.
 
+    It defines attribute names, group names (paths) and constants.
+    """
+
+    # constants, strings strings should be the import path of
+    # corresponding module
+    OneClassSvm = "sklearn.svm.OneClassSvm"
+    SupportVectorClassifier = "sklearn.svm.SVC"
+
+    # attribute keys
     NAME = "name"
     LIB = "library"
     VERSION = "version"
@@ -37,6 +46,9 @@ class ClfDataModel(object):
         self.classdef = "%s/class_definition" %self.path
         self.normalization = "%s/normalization" %self.path
         self.sample_info = "%s/sample_info" %self.path
+
+        self.annotations = "%s/annotations" %self.path
+        self.confmatrix = "%s/confusion_matrix" %self.path
 
 
 class ClfWriter(object):
