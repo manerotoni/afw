@@ -85,3 +85,7 @@ class AtGraphicsScene(QtGui.QGraphicsScene):
     def selectAll(self):
         for item in self.items():
             item.setSelected(True)
+
+    def invertSelection(self):
+        for item in self.items():
+            item.setSelected(not item.isSelected())
