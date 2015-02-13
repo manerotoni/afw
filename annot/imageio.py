@@ -102,8 +102,8 @@ class LsmImage(Lsmimage):
 
     @property
     def size(self):
-        return (self.header[self.CZ_LSM_INFO][self.WIDTH],
-                self.header[self.CZ_LSM_INFO][self.HEIGHT])
+        return (self.header[self.CZ_LSM_INFO][self.HEIGHT],
+                self.header[self.CZ_LSM_INFO][self.WIDTH])
 
     @property
     def channels(self):
@@ -118,3 +118,12 @@ class LsmImage(Lsmimage):
         for i, ci in enumerate(channels):
             image[:, :, i] = self.get_image(stack=stack, channel=ci)
         return image
+
+    def get_image(self, *args, **kw):
+        image = Lsmimage.get_image(self, *args, **kw)
+
+        # pylsm does not get the strides correctly
+        if image.shape[0] != image.shape[1]:
+            image.strides =  (1, image.shape[0])
+
+        return image.swapaxes(0, 1)
