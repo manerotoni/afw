@@ -13,6 +13,7 @@ import numpy as np
 from collections import OrderedDict
 
 from qimage2ndarray import gray2qimage
+
 from cecog import ccore
 from cecog.environment import CecogEnvironment
 
@@ -60,8 +61,8 @@ class MultiChannelProcessor(object):
             channels = self.channels.keys()
 
         for ci in channels:
-            yield gray2qimage(self._reader.get_image(stack=0, channel=ci),
-                              normalize=False)
+            image = self._reader.get_image(stack=0, channel=ci)
+            yield gray2qimage(image, normalize=False)
 
     def _gallery_image(self, center, gallery_size=50):
         height, width, nchannels = self.image.shape

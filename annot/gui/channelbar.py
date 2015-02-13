@@ -183,8 +183,8 @@ class ChannelBar(QtGui.QWidget):
         hsize = int(math.floor(gsize/2.0))
         # left, top, width, height
         centers = np.array([(x-hsize, y-hsize) for x, y in centers])
-        centers [:, 0] = np.clip(centers[:, 0], 0, isize[0]-gsize)
-        centers [:, 1] = np.clip(centers[:, 1], 0, isize[1]-gsize)
+        centers [:, 0] = np.clip(centers[:, 0], 0, isize[1]-gsize)
+        centers [:, 1] = np.clip(centers[:, 1], 0, isize[0]-gsize)
 
         rects = tuple([(x, y, gsize, gsize) for x, y in centers])
         self.viewer.drawRects(rects)
