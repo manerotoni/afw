@@ -66,18 +66,38 @@ class ImageViewer(QtGui.QGraphicsView):
         self.context_menu.addAction(self.actionOrigSize)
         self.context_menu.addAction(self.actionExpand)
         self.context_menu.addAction(self.actionMaximize)
+        self.context_menu.addAction(self.actionZoomIn)
+        self.context_menu.addAction(self.actionZoomOut)
 
     def createActions(self):
         self.actionOrigSize = QtGui.QAction(
             "&original size", self, triggered=self.origsize)
-        self.actionExpand = QtGui.QAction("&expand to window", self,
+        self.actionExpand = QtGui.QAction("&expand image", self,
                 checkable=True, triggered=self.expand)
-        self.actionMaximize = QtGui.QAction("&fit in window", self,
+        self.actionMaximize = QtGui.QAction("&maximize image", self,
                 checkable=True, triggered=self.maximize)
+
+        self.actionZoomIn = QtGui.QAction("zoom in (+)", self,
+                checkable=False, triggered=self.zoomIn)
+
+        self.actionZoomOut = QtGui.QAction("zoom out (-)", self,
+                checkable=False, triggered=self.zoomOut)
 
         actiongrp = QtGui.QActionGroup(self)
         self.actionExpand.setActionGroup(actiongrp)
         self.actionMaximize.setActionGroup(actiongrp)
+
+    def zoomOut(self):
+        self.actionMaximize.setChecked(False)
+        self.actionExpand.setChecked(False)
+        self.actionOrigSize.setChecked(False)
+        self.scale(0.9, 0.9)
+
+    def zoomIn(self):
+        self.actionMaximize.setChecked(False)
+        self.actionExpand.setChecked(False)
+        self.actionOrigSize.setChecked(False)
+        self.scale(1.1, 1.1)
 
     @property
     def scalefactor(self):
@@ -104,12 +124,16 @@ class ImageViewer(QtGui.QGraphicsView):
         if event.key() == Qt.Key_Control:
             QtGui.QApplication.setOverrideCursor(
                 QtGui.QCursor(Qt.OpenHandCursor))
-        elif event.key() == Qt.Key_R:
+        elif event.key() == Qt.Key_O:
             self.origsize()
         elif event.key() == Qt.Key_M:
             self.maximize()
         elif event.key() == Qt.Key_F:
             self.expand()
+        elif event.key() == Qt.Key_Plus:
+            self.zoomIn()
+        elif event.key() == Qt.Key_Minus:
+            self.zoomOut()
 
         super(ImageViewer, self).keyPressEvent(event)
 
