@@ -121,9 +121,7 @@ class LsmImage(Lsmimage):
 
     def get_image(self, *args, **kw):
         image = Lsmimage.get_image(self, *args, **kw)
-
-        # pylsm does not get the strides correctly
-        if image.shape[0] != image.shape[1]:
-            image.strides =  (1, image.shape[0])
-
+        # pylsm does not get the strides right
+        byteoffset = self.bitdepth/8
+        image.strides =  (byteoffset, image.shape[0]*byteoffset)
         return image.swapaxes(0, 1)
