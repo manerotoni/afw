@@ -178,6 +178,9 @@ class ImportDialog(QtGui.QDialog):
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
         finally:
+            if not mp.objects:
+                return
+
             if self.contoursCb.isChecked():
                 self.cbar.setContours(mp.objects.contours)
 
