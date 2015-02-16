@@ -91,12 +91,12 @@
   <customwidget>
    <class>AtContextTreeView</class>
    <extends>QTreeView</extends>
-   <header location="global">annot/gui/featuredlg</header>
+   <header location="global">cat/gui/featuredlg</header>
   </customwidget>
   <customwidget>
    <class>AtLineEdit</class>
    <extends>QLineEdit</extends>
-   <header location="global">annot/gui/lineedit</header>
+   <header location="global">cat/gui/lineedit</header>
   </customwidget>
  </customwidgets>
  <resources/>

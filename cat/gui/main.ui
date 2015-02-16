@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../qrc/at_rc.qrc">
+   <iconset resource="../../qrc/cat_rc.qrc">
     <normaloff>:/annotationtool.svg</normaloff>:/annotationtool.svg</iconset>
   </property>
   <property name="iconSize">
@@ -60,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -100,7 +100,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="../../qrc/at_rc.qrc">
+    <iconset resource="../../qrc/cat_rc.qrc">
      <normaloff>:/oxygen/exit-icon.png</normaloff>:/oxygen/exit-icon.png</iconset>
    </property>
    <property name="text">
@@ -140,7 +140,7 @@
   </action>
   <action name="actionOpenHdf">
    <property name="icon">
-    <iconset resource="../../qrc/at_rc.qrc">
+    <iconset resource="../../qrc/cat_rc.qrc">
      <normaloff>:/oxygen/document-open-folder.png</normaloff>:/oxygen/document-open-folder.png</iconset>
    </property>
    <property name="text">
@@ -152,7 +152,7 @@
   </action>
   <action name="actionCloseHdf">
    <property name="icon">
-    <iconset resource="../../qrc/at_rc.qrc">
+    <iconset resource="../../qrc/cat_rc.qrc">
      <normaloff>:/oxygen/document-close-icon.png</normaloff>:/oxygen/document-close-icon.png</iconset>
    </property>
    <property name="text">
@@ -169,7 +169,7 @@
   </action>
   <action name="actionExportViewPanel">
    <property name="icon">
-    <iconset resource="../../qrc/at_rc.qrc">
+    <iconset resource="../../qrc/cat_rc.qrc">
      <normaloff>:/oxygen/document-save-all.png</normaloff>:/oxygen/document-save-all.png</iconset>
    </property>
    <property name="text">
@@ -178,7 +178,7 @@
   </action>
   <action name="actionAboutAnnotationTool">
    <property name="icon">
-    <iconset resource="../../qrc/at_rc.qrc">
+    <iconset resource="../../qrc/cat_rc.qrc">
      <normaloff>:/annotationtool.svg</normaloff>:/annotationtool.svg</iconset>
    </property>
    <property name="text">
@@ -195,7 +195,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../qrc/at_rc.qrc">
+    <iconset resource="../../qrc/cat_rc.qrc">
      <normaloff>:/oxygen/view-documents-finances.png</normaloff>:/oxygen/view-documents-finances.png</iconset>
    </property>
    <property name="text">
@@ -204,7 +204,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../../qrc/at_rc.qrc"/>
+  <include location="../../qrc/cat_rc.qrc"/>
  </resources>
  <connections>
   <connection>

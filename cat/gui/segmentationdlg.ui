@@ -538,7 +538,7 @@
   <customwidget>
    <class>FeatureBox</class>
    <extends>QGroupBox</extends>
-   <header>annot/gui/featurebox</header>
+   <header>cat/gui/featurebox</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

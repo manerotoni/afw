@@ -101,7 +101,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../../qrc/at_rc.qrc">
+            <iconset resource="../../qrc/cat_rc.qrc">
              <normaloff>:/previous.png</normaloff>:/previous.png</iconset>
            </property>
            <property name="shortcut">
@@ -152,7 +152,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../../qrc/at_rc.qrc">
+            <iconset resource="../../qrc/cat_rc.qrc">
              <normaloff>:/next.png</normaloff>:/next.png</iconset>
            </property>
            <property name="shortcut">
@@ -348,11 +348,11 @@
   <customwidget>
    <class>ImageViewer</class>
    <extends>QGraphicsView</extends>
-   <header>annot/gui/imagewidget</header>
+   <header>cat/gui/imagewidget</header>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../qrc/at_rc.qrc"/>
+  <include location="../../qrc/cat_rc.qrc"/>
  </resources>
  <connections/>
 </ui>
