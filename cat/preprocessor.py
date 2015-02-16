@@ -7,8 +7,8 @@ __licence__ = 'GPL'
 
 
 import numpy as np
-from annot.mining import ZScore
-from annot.mining import PCA
+from cat.mining import ZScore
+from cat.mining import PCA
 
 
 class PreProcessor(object):

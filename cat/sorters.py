@@ -7,9 +7,9 @@ __licence__ = 'GPL'
 
 import numpy as np
 
-from annot.pattern import Factory
-from annot.mining import filter_nans
-from annot.mining import ZScore, PCA
+from cat.pattern import Factory
+from cat.mining import filter_nans
+from cat.mining import ZScore, PCA
 
 def _data_from_items(items):
     nitems = len(items)

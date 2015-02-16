@@ -10,9 +10,9 @@ __licence__ = 'GPL'
 
 
 from lxml import etree
-from annot.segmentation.options import PrimaryParams
-from annot.segmentation.options import ExpansionParams
-from annot.segmentation.options import SRG_TYPE
+from cat.segmentation.options import PrimaryParams
+from cat.segmentation.options import ExpansionParams
+from cat.segmentation.options import SRG_TYPE
 
 
 def validate_tagname(name, reverse=False):

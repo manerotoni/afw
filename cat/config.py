@@ -7,8 +7,8 @@ __licence__ = 'GPL'
 
 __all__ = ("AtConfig", )
 
-from annot.pattern import Singleton
-from annot.sorters import Sorter
+from cat.pattern import Singleton
+from cat.sorters import Sorter
 
 class AtConfig(object):
     """Global settings (currently) not visible to the user."""
