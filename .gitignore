@@ -3,7 +3,7 @@
 .DS_Store
 .#*
 #.*
-at_rc.py
+cat_rc.py
 *.tif
 *.tiff
 *.hdf

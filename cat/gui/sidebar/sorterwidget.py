@@ -15,8 +15,8 @@ from PyQt4 import uic
 from PyQt4 import QtCore
 from PyQt4.QtGui import QMessageBox
 
-from annot.sorters import Sorter
-from annot.config import AtConfig
+from cat.sorters import Sorter
+from cat.config import AtConfig
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
 from .models import  AtSorterItemModel

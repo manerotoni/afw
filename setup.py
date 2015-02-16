@@ -18,8 +18,8 @@ from setuptools import setup
 from cat import version
 import build_helpers
 
-pyrcc_opts = {'infile': join('qrc', 'at_rc.qrc'),
-              'outfile': join('cat', 'at_rc.py'),
+pyrcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
+              'outfile': join('cat', 'cat_rc.py'),
               'pyrccbin': 'pyrcc4'}
 
 setup(name='AnnotationTool',

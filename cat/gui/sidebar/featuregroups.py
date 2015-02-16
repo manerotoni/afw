@@ -17,7 +17,7 @@ from PyQt4.QtCore import Qt
 
 
 from .feature_tables import FeatureTables
-from annot.segmentation.channelname import ChannelName as cn
+from cat.segmentation.channelname import ChannelName as cn
 
 
 class AtFeatureGroupsWidget(QtGui.QWidget):

@@ -15,9 +15,9 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QApplication, QCursor, QMessageBox
 
-from annot.hdfio.readercore import HdfError
-from annot.classifiers.classifiers import Classifier
-from annot.gui.savehdfdlg import SaveClassifierDialog
+from cat.hdfio.readercore import HdfError
+from cat.classifiers.classifiers import Classifier
+from cat.gui.savehdfdlg import SaveClassifierDialog
 
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
