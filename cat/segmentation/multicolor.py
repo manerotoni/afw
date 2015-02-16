@@ -17,9 +17,9 @@ from qimage2ndarray import gray2qimage
 from cecog import ccore
 from cecog.environment import CecogEnvironment
 
-from annot.imageio import LsmImage
-from annot.segmentation import ObjectDict, ImageObject
-from annot.segmentation.morpho import watershed
+from cat.imageio import LsmImage
+from cat.segmentation import ObjectDict, ImageObject
+from cat.segmentation.morpho import watershed
 
 
 class MultiChannelProcessor(object):

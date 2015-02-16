@@ -13,9 +13,9 @@ import traceback
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
-from annot.hdfio.hdfwriter import HdfWriter
-from annot.hdfio.readercore import HdfError
-from annot.segmentation.multicolor import LsmProcessor
+from cat.hdfio.hdfwriter import HdfWriter
+from cat.hdfio.readercore import HdfError
+from cat.segmentation.multicolor import LsmProcessor
 
 
 class AbortQWorker(Exception):

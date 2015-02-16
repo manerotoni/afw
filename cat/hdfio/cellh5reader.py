@@ -15,7 +15,7 @@ import base64
 
 import time
 import numpy as np
-from annot.hdfio.readercore import HdfFile, HdfItem, HdfFileInfo
+from cat.hdfio.readercore import HdfFile, HdfItem, HdfFileInfo
 
 
 def uncompress_contour(contour):

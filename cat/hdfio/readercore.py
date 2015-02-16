@@ -15,8 +15,8 @@ from collections import namedtuple
 from qimage2ndarray import gray2qimage
 from PyQt4.QtGui import QColor
 
-from annot.pattern import Factory
-from annot.gui.painting import AtPainter
+from cat.pattern import Factory
+from cat.gui.painting import AtPainter
 
 
 HdfFileInfo = namedtuple("HdfFileInfo",

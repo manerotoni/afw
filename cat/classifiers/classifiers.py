@@ -13,11 +13,11 @@ from collections import OrderedDict
 
 from PyQt4 import QtGui
 
-from annot.config import AtConfig
-from annot.pattern import Factory
-from annot.classifiers.itemclass import UnClassified
-from annot.preprocessor import PreProcessor
-from annot.hdfio.readercore import HdfFile
+from cat.config import AtConfig
+from cat.pattern import Factory
+from cat.classifiers.itemclass import UnClassified
+from cat.preprocessor import PreProcessor
+from cat.hdfio.readercore import HdfFile
 
 
 class ClfDataModel(object):

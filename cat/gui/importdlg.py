@@ -20,11 +20,11 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QMessageBox
 
-from annot.threading import AtThread
-from annot.threading import AtImporter
-from annot.gui.channelbar import ChannelBar
-from annot.gui.segmentationdlg import SegmentationDialog
-from annot.segmentation.multicolor import LsmProcessor
+from cat.threading import AtThread
+from cat.threading import AtImporter
+from cat.gui.channelbar import ChannelBar
+from cat.gui.segmentationdlg import SegmentationDialog
+from cat.segmentation.multicolor import LsmProcessor
 
 
 class ImportDialog(QtGui.QDialog):

@@ -9,8 +9,8 @@ __all__ = ('AtLoader', )
 
 
 from PyQt4 import QtCore
-from annot.hdfio.guesser import guessHdfType
-from annot.config import AtConfig
+from cat.hdfio.guesser import guessHdfType
+from cat.config import AtConfig
 
 class AtLoader(QtCore.QObject):
 

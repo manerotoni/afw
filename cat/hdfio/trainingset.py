@@ -9,8 +9,8 @@ __all__ = ("AtTrainingSetIO", )
 
 
 import numpy as np
-from annot.hdfio.readercore import HdfFile, HdfFileInfo, HdfItem
-from annot.hdfio.hdfwriter import HdfDataModel
+from cat.hdfio.readercore import HdfFile, HdfFileInfo, HdfItem
+from cat.hdfio.hdfwriter import HdfDataModel
 
 
 class AtTrainingSetIO(HdfFile):

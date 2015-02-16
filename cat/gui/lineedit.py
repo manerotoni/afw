@@ -57,7 +57,7 @@ class AtLineEdit(QtGui.QLineEdit):
 
 if __name__ == "__main__":
     import sys
-    from annot import at_rc
+    from cat import at_rc
     app = QtGui.QApplication(sys.argv)
     main = AtLineEdit()
     main.show()

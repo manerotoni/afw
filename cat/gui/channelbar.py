@@ -16,10 +16,10 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import QPointF
 from collections import OrderedDict, defaultdict
 
-from annot.config import AtConfig
-from annot.gui.colorbutton import ColorButton
-from annot.gui.painting import AtPainter
-from annot.gui.contrast import AtEnhancerWidget
+from cat.config import AtConfig
+from cat.gui.colorbutton import ColorButton
+from cat.gui.painting import AtPainter
+from cat.gui.contrast import AtEnhancerWidget
 
 
 class ChannelBar(QtGui.QWidget):

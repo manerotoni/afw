@@ -9,7 +9,7 @@ __all__ = ('AtAboutDialog', )
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
-from annot import version
+from cat import version
 
 stylesheet = \
 """

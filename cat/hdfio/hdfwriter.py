@@ -13,8 +13,8 @@ import h5py
 import numpy as np
 from collections import defaultdict
 
-from annot.config import AtConfig
-from annot.xmlconf import XmlConfWriter
+from cat.config import AtConfig
+from cat.xmlconf import XmlConfWriter
 
 
 class HdfDataModel(object):

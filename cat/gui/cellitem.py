@@ -13,7 +13,7 @@ import warnings
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
-from annot.classifiers.itemclass import UnClassified
+from cat.classifiers.itemclass import UnClassified
 
 class StackOrder(object):
     pixmap = 0

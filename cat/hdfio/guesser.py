@@ -9,8 +9,8 @@ __all__ = ("guessHdfType", )
 
 
 from os.path import splitext
-from annot.hdfio.cellh5reader import Ch5Reader
-from annot.hdfio.trainingset import AtTrainingSetIO
+from cat.hdfio.cellh5reader import Ch5Reader
+from cat.hdfio.trainingset import AtTrainingSetIO
 
 
 def guessHdfType(filename):

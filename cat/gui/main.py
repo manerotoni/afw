@@ -15,20 +15,20 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QMessageBox
 
-from annot import version
-from annot.gui.graphicsview import AtGraphicsView
-from annot.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
-from annot.gui.sidebar import AtSortWidget
-from annot.gui.sidebar import AtAnnotationWidget
-from annot.gui.sidebar import AtFeatureGroupsWidget
-from annot.gui.importdlg import ImportDialog
-from annot.gui.aboutdialog import AtAboutDialog
-from annot.gui.featuredlg import AtFeatureSelectionDlg
+from cat import version
+from cat.gui.graphicsview import AtGraphicsView
+from cat.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
+from cat.gui.sidebar import AtSortWidget
+from cat.gui.sidebar import AtAnnotationWidget
+from cat.gui.sidebar import AtFeatureGroupsWidget
+from cat.gui.importdlg import ImportDialog
+from cat.gui.aboutdialog import AtAboutDialog
+from cat.gui.featuredlg import AtFeatureSelectionDlg
 
-from annot.threading import AtThread
-from annot.threading import AtLoader
+from cat.threading import AtThread
+from cat.threading import AtLoader
 
-from annot import at_rc
+from cat import at_rc
 
 def fix_path(path):
     "Windows sucks!"

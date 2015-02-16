@@ -16,10 +16,10 @@ from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, pyqtSignal
 
-from annot.gui.featurebox import FeatureBox
-from annot.hdfio.trainingset import AtTrainingSetIO
-from annot.segmentation import PrimaryParams, ExpansionParams, SRG_TYPE
-from annot.xmlconf import XmlConfReader, XmlConfWriter
+from cat.gui.featurebox import FeatureBox
+from cat.hdfio.trainingset import AtTrainingSetIO
+from cat.segmentation import PrimaryParams, ExpansionParams, SRG_TYPE
+from cat.xmlconf import XmlConfReader, XmlConfWriter
 
 import mimetypes
 mimetypes.add_type('application/ch5', 'ch5')

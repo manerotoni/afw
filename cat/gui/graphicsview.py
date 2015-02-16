@@ -10,9 +10,9 @@ import math
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
 
-from annot.itemgrid import ItemGrid
-from annot.gui.cellitem import CellGraphicsItem
-from annot.gui.graphicsscene import AtGraphicsScene
+from cat.itemgrid import ItemGrid
+from cat.gui.cellitem import CellGraphicsItem
+from cat.gui.graphicsscene import AtGraphicsScene
 
 
 class MouseWheelView(QtGui.QGraphicsView):

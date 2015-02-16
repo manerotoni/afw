@@ -30,8 +30,8 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import StratifiedKFold
 
 
-from annot.qmpl import QFigureWidget
-from annot.gui.sidebar.sidebar import NoSampleError
+from cat.qmpl import QFigureWidget
+from cat.gui.sidebar.sidebar import NoSampleError
 
 def _font_color(value):
     """Helper function for matrix plot"""

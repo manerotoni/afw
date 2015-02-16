@@ -15,10 +15,10 @@ import sklearn.svm
 import numpy as np
 from PyQt4 import QtGui
 
-from annot.config import AtConfig
-from annot.hdfio.readercore import HdfError
-from annot.gui.sidebar.models import AtOneClassSvmItemModel
-from annot.preprocessor import PreProcessor
+from cat.config import AtConfig
+from cat.hdfio.readercore import HdfError
+from cat.gui.sidebar.models import AtOneClassSvmItemModel
+from cat.preprocessor import PreProcessor
 from .itemclass import ItemClass
 from .classifiers import Classifier, ClfWriter, ClfDataModel
 

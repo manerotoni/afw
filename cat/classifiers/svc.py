@@ -18,9 +18,9 @@ from PyQt4 import QtGui
 from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QSizePolicy
 
-from annot.hdfio.readercore import HdfError
-from annot.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
-from annot.gui.crossvalidationdlg import CrossValidationDialog
+from cat.hdfio.readercore import HdfError
+from cat.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
+from cat.gui.crossvalidationdlg import CrossValidationDialog
 from .classifiers import Classifier, ClfWriter, ClfDataModel
 
 

@@ -10,8 +10,8 @@ __all__ = ("AtGraphicsScene", )
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from annot.gui.cellitem import Colors
-from annot.gui.cellitem import PainterPathItem
+from cat.gui.cellitem import Colors
+from cat.gui.cellitem import PainterPathItem
 
 
 class AtGraphicsScene(QtGui.QGraphicsScene):

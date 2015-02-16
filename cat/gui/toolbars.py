@@ -11,8 +11,8 @@ __all__ = ("NavToolBar", "ViewToolBar", "SortToolBar")
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
-from annot.sorters import Sorter
-from annot.hdfio.cellh5reader import Ch5Coord
+from cat.sorters import Sorter
+from cat.hdfio.cellh5reader import Ch5Coord
 
 
 class AtToolBar(QtGui.QToolBar):
