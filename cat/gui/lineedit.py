@@ -10,8 +10,8 @@ __licence__ = 'GPL'
 
 __all__ = ("AtLineEdit", )
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 
 
 class AtLineEdit(QtGui.QLineEdit):

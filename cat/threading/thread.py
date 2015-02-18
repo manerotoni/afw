@@ -11,8 +11,8 @@ __all__ = ('AtThread', )
 import warnings
 import traceback
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 
 
 class AtThread(QtCore.QThread):

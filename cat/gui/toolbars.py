@@ -8,8 +8,8 @@ __licence__ = 'GPL'
 __all__ = ("NavToolBar", "ViewToolBar", "SortToolBar")
 
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 
 from cat.sorters import Sorter
 from cat.hdfio.cellh5reader import Ch5Coord

@@ -13,9 +13,9 @@ import argparse
 
 import sip
 sip.setapi('QString', 2)
-sip.setapi('QVariant', 1)
+sip.setapi('QVariant', 2)
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 from cat.gui.main import AtMainWindow
 
 

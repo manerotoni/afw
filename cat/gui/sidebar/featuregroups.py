@@ -9,11 +9,11 @@ __all__ = ("AtFeatureGroupsWidget", )
 
 from os.path import splitext
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4 import uic
-from PyQt4.QtGui import QSizePolicy
-from PyQt4.QtCore import Qt
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from PyQt5 import uic
+from PyQt5.QtGui import QSizePolicy
+from PyQt5.QtCore import Qt
 
 
 from .feature_tables import FeatureTables

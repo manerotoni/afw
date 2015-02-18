@@ -8,8 +8,8 @@ __licence__ = 'GPL'
 __all__ = ("AtGraphicsScene", )
 
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 from cat.gui.cellitem import Colors
 from cat.gui.cellitem import PainterPathItem
 

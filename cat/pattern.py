@@ -10,7 +10,7 @@ __licence__ = 'GPL'
 __all__ = ["Singleton", "QSingleton", "Factory"]
 
 
-from PyQt4.QtCore import pyqtWrapperType
+from PyQt5.QtCore import pyqtWrapperType
 
 
 class Singleton(type):

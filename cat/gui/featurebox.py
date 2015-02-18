@@ -14,9 +14,9 @@ __all__ = ('FeatureBox', )
 
 from os.path import splitext
 
-from PyQt4 import uic
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt5 import uic
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 
 
 class FeatureBox(QtGui.QGroupBox):

@@ -8,7 +8,7 @@ __licence__ = 'GPL'
 __all__ = ('AtLoader', )
 
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 from cat.hdfio.guesser import guessHdfType
 from cat.config import AtConfig
 

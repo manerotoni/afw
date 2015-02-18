@@ -12,9 +12,9 @@ import sys
 from collections import OrderedDict
 from os.path import splitext, join, dirname
 
-from PyQt4 import uic
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt, pyqtSignal
+from PyQt5 import uic
+from PyQt5 import QtGui
+from PyQt5.QtCore import Qt, pyqtSignal
 
 from cat.gui.featurebox import FeatureBox
 from cat.hdfio.trainingset import AtTrainingSetIO

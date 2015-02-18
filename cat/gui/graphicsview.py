@@ -7,8 +7,8 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __all__ = ("AtGraphicsView", )
 
 import math
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import Qt
 
 from cat.itemgrid import ItemGrid
 from cat.gui.cellitem import CellGraphicsItem

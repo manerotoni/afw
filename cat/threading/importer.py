@@ -10,8 +10,8 @@ __all__ = ('AtImporter', 'AbortQWorker')
 from os.path import isdir, dirname
 import traceback
 
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
+from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 
 from cat.hdfio.hdfwriter import HdfWriter
 from cat.hdfio.readercore import HdfError

@@ -13,7 +13,7 @@ __all__ = ("OneClassSvm", )
 import sklearn
 import sklearn.svm
 import numpy as np
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from cat.config import AtConfig
 from cat.hdfio.readercore import HdfError

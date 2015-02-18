@@ -9,8 +9,8 @@ __all__ = ("AtPainter", )
 
 
 import numpy as np
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
+from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
 
 
 class AtPainter(object):
