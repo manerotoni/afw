@@ -12,10 +12,10 @@ __all__ = ("AtAnnotationWidget", )
 import warnings
 
 from os.path import join, dirname
-from PyQt4 import uic
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QApplication, QCursor, QMessageBox
+from PyQt5 import uic
+from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QApplication, QCursor, QMessageBox
 
 from cat.hdfio.readercore import HdfError
 from cat.classifiers.classifiers import Classifier

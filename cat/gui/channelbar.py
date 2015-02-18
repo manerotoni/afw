@@ -11,9 +11,9 @@ import math
 import warnings
 import numpy as np
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import QPointF
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from PyQt5.QtCore import QPointF
 from collections import OrderedDict, defaultdict
 
 from cat.config import AtConfig

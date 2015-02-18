@@ -11,11 +11,10 @@ __all__ = ('AtSortWidget', )
 from os.path import dirname, join
 import numpy as np
 
-from PyQt4 import uic
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtGui import QMessageBox
-from PyQt4.QtGui import QSizePolicy
+from PyQt5 import uic
+from PyQt5 import QtCore
+from PyQt5.QtGui import QMessageBox
+from PyQt5.QtWidgets import QSizePolicy
 
 from cat.sorters import Sorter
 from cat.config import AtConfig

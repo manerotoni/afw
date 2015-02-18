@@ -8,12 +8,12 @@ __licence__ = 'GPL'
 import sys
 from os.path import splitext, basename, expanduser
 
-from PyQt4 import uic
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QFileDialog
-from PyQt4.QtGui import QMessageBox
+from PyQt5 import uic
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QMessageBox
 
 from cat import version
 from cat.gui.graphicsview import AtGraphicsView

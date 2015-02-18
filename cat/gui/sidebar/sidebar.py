@@ -8,7 +8,7 @@ __licence__ = 'GPL'
 __all__ = ('AtSideBarWidget', 'NoSampleError')
 
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 
 class NoSampleError(Exception):

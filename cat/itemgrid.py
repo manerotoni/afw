@@ -8,7 +8,7 @@ __licence__ = 'GPL'
 __all__ = 'ItemGrid'
 
 import math
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 class ItemGrid(QtCore.QObject):
 

@@ -13,7 +13,7 @@ import numpy as np
 from collections import namedtuple
 
 from qimage2ndarray import gray2qimage
-from PyQt4.QtGui import QColor
+from PyQt5.QtGui import QColor
 
 from cat.pattern import Factory
 from cat.gui.painting import AtPainter

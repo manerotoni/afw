@@ -11,7 +11,7 @@ import h5py
 import numpy as np
 from collections import OrderedDict
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 from cat.config import AtConfig
 from cat.pattern import Factory

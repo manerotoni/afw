@@ -11,9 +11,9 @@ __all__ = ('AtEnhancerWidget', 'AtContrasSliderWidget')
 from os.path import splitext
 import numpy as np
 
-from PyQt4 import uic
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt5 import uic
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 
 
 class BaCCalculator(QtCore.QObject):

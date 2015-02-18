@@ -17,8 +17,8 @@ from matplotlib.backend_bases import key_press_handler
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 
 
 class QNavigationToolbar(NavigationToolbar2QT):

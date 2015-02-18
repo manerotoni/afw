@@ -10,8 +10,8 @@ __all__ = ("CellGraphicsItem", "PainterPathItem", "Colors")
 
 import warnings
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 
 from cat.classifiers.itemclass import UnClassified
 
