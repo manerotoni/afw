@@ -55,7 +55,6 @@ class TiffImage(object):
         target_idx =  [axistags.index(t) for t in self._Order]
 
         for i, j in enumerate(target_idx):
-            print i, j
             if i != j and i < j:
                 image = image.swapaxes(i, j)
 
