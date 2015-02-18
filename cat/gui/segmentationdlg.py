@@ -22,42 +22,21 @@ from cat.segmentation import PrimaryParams, ExpansionParams, SRG_TYPE
 from cat.xmlconf import XmlConfReader, XmlConfWriter
 
 import mimetypes
-mimetypes.add_type('application/ch5', 'ch5')
+mimetypes.add_type('application/ch5', '.ch5')
 
-# windows sucks!
-try:
-    import magic
-    def settings_from(filename):
-        if magic.from_file(filename, mime=True) in \
-        ("application/xml", "text/xml"):
-            with open(filename, "r") as fp:
-                return fp.read()
-        elif magic.from_file(filename, mime=True) == "application/x-hdf":
-            try:
-                fp = AtTrainingSetIO(filename)
-                return fp.settings
-            finally:
-                fp.close()
-        raise IOError("Unknown extenstion!")
 
-except ImportError:
-    # using python mimetype module if no libmagic is installed
-    # --> i.e. for windoze os....
-
-    def settings_from(filename):
-
-        type_ = mimetypes.guess_type(filename)[0]
-        if type_ in ("application/xml", "text/xml"):
-            with open(filename, "r") as fp:
-                return fp.read()
-        elif type_ == 'application/x-hdf' or type_ == 'application/ch5':
-            try:
-                fp = AtTrainingSetIO(filename)
-                return fp.settings
-            finally:
-                fp.close()
-
-        raise IOError("Unknown extenstion! (%s)" %extenstion)
+def settings_from(filename):
+    type_ = mimetypes.guess_type(filename)[0]
+    if type_ in ("application/xml", "text/xml"):
+        with open(filename, "r") as fp:
+            return fp.read()
+    elif type_ == 'application/x-hdf' or type_ == 'application/ch5':
+        try:
+            fp = AtTrainingSetIO(filename)
+            return fp.settings
+        finally:
+            fp.close()
+    raise IOError("Unknown extenstion! (%s)" %extenstion)
 
 
 class ChLabel(QtGui.QLabel):

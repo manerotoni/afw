@@ -133,8 +133,10 @@ class ImportDialog(QtGui.QDialog):
             return
 
         self.inputDir.setText(idir)
-        pattern = self.inputDir.text() + "/*.lsm"
-        self._files = glob.glob(pattern)
+        pattern1 = self.inputDir.text() + "/*.lsm"
+        pattern2 = self.inputDir.text() + "/*.tif"
+
+        self._files = glob.glob(pattern1) + glob.glob(pattern2)
 
         if not self._files:
             QMessageBox.warning(self, "Error", "No files found")

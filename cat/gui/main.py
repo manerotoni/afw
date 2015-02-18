@@ -28,6 +28,7 @@ from cat.gui.featuredlg import AtFeatureSelectionDlg
 from cat.threading import AtThread
 from cat.threading import AtLoader
 
+
 from cat import cat_rc
 
 def fix_path(path):

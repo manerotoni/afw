@@ -17,9 +17,13 @@ from qimage2ndarray import gray2qimage
 from cecog import ccore
 from cecog.environment import CecogEnvironment
 
-from cat.imageio import LsmImage
+from cat.imageio import LsmImage, TiffImage
 from cat.segmentation import ObjectDict, ImageObject
 from cat.segmentation.morpho import watershed
+
+
+import mimetypes
+mimetypes.add_type('image/lsm', '.lsm')
 
 
 class MultiChannelProcessor(object):
@@ -272,4 +276,12 @@ class LsmProcessor(MultiChannelProcessor):
 
     def __init__(self, filename, gallery_size=50):
         super(LsmProcessor, self).__init__(filename, gallery_size)
-        self._reader = LsmImage(filename)
+
+        mtype = mimetypes.guess_type(filename)[0]
+
+        if mtype == 'image/tiff':
+            self._reader = TiffImage(filename)
+        elif mtype == 'image/lsm':
+            self._reader = LsmImage(filename)
+        else:
+            RuntimeError("Image format not supported %s" %str(mtype))
