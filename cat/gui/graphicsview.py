@@ -41,7 +41,7 @@ class MouseWheelView(QtWidgets.QGraphicsView):
     def wheelEvent(self, event):
 
         if event.modifiers() == QtCore.Qt.ShiftModifier:
-            if event.delta() > 0:
+            if event.angleDelta().x() > 0:
                 factor = 1.1
             else:
                 factor = 0.9

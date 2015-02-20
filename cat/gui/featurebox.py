@@ -15,7 +15,6 @@ __all__ = ('FeatureBox', )
 from os.path import splitext
 
 from PyQt5 import uic
-from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
