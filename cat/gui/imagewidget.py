@@ -123,8 +123,7 @@ class ImageViewer(QtWidgets.QGraphicsView):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
-            QtWidgets.QApplication.setOverrideCursor(
-                QtGui.QCursor(Qt.OpenHandCursor))
+            self.setCursor(QtGui.QCursor(Qt.OpenHandCursor))
         elif event.key() == Qt.Key_O:
             self.origsize()
         elif event.key() == Qt.Key_M:
@@ -140,7 +139,7 @@ class ImageViewer(QtWidgets.QGraphicsView):
 
     def keyReleaseEvent(self, event):
         if event.key() == Qt.Key_Control:
-            QtWidgets.QApplication.restoreOverrideCursor()
+            self.unsetCursor()
         super(ImageViewer, self).keyReleaseEvent(event)
 
     def mousePressEvent(self, event):
@@ -148,7 +147,7 @@ class ImageViewer(QtWidgets.QGraphicsView):
         if (event.button() == Qt.LeftButton and \
                 event.modifiers() == Qt.ControlModifier):
             self.setDragMode(self.ScrollHandDrag)
-            QtWidgets.QApplication.setOverrideCursor(
+            self.setCursor(
                 QtGui.QCursor(Qt.ClosedHandCursor))
 
         super(ImageViewer, self).mousePressEvent(event)
@@ -168,7 +167,10 @@ class ImageViewer(QtWidgets.QGraphicsView):
 
         if event.button() == Qt.LeftButton:
             self.setDragMode(self.NoDrag)
-            QtWidgets.QApplication.restoreOverrideCursor()
+            if event.modifiers() == Qt.ControlModifier:
+                self.setCursor(QtGui.QCursor(Qt.OpenHandCursor))
+            else:
+                self.unsetCursor()
         super(ImageViewer, self).mousePressEvent(event)
 
     def wheelEvent(self, event):

@@ -222,7 +222,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
         if filename:
             scene = self.tileview.scene()
             size = scene.sceneRect().size().toSize()
-            image = QtWidgets.QImage(size, QtWidgets.QImage.Format_RGB32)
+            image = QtGui.QImage(size, QtGui.QImage.Format_RGB32)
             painter = QtGui.QPainter(image)
 
             image.fill(QtCore.Qt.white)
