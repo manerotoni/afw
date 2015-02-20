@@ -14,6 +14,7 @@ import numpy as np
 from PyQt5 import uic
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 
 
 class BaCCalculator(QtCore.QObject):
@@ -143,7 +144,7 @@ class BaCCalculator(QtCore.QObject):
         self.brightness = normalized * self.slider_range
 
 
-class AtContrastSliderWidget(QtGui.QWidget):
+class AtContrastSliderWidget(QtWidgets.QWidget):
     """Slider widget contains the 4 sliders for contrast enhancement of
     one slinge grey level image."""
 
@@ -206,7 +207,7 @@ class AtContrastSliderWidget(QtGui.QWidget):
                %(self.settings.minimum, self.settings.maximum,
                  self.settings.contrast, self.settings.brightness))
 
-        QtGui.QToolTip.showText(QtGui.QCursor.pos(), msg, self)
+        QtWidgets.QToolTip.showText(QtGui.QCursor.pos(), msg, self)
 
     def onMinMax(self):
         self.settings.setImageToMinMax()
@@ -229,7 +230,7 @@ class AtContrastSliderWidget(QtGui.QWidget):
         return image2
 
 
-class AtEnhancerWidget(QtGui.QWidget):
+class AtEnhancerWidget(QtWidgets.QWidget):
     """Contrast enhancer widget manages multiple slider widgets for
     multiple channels."""
 
@@ -238,9 +239,9 @@ class AtEnhancerWidget(QtGui.QWidget):
     def __init__(self, *args, **kw):
         super(AtEnhancerWidget, self).__init__(*args, **kw)
 
-        vbox = QtGui.QVBoxLayout(self)
-        self.channelBox = QtGui.QComboBox(self)
-        self.stack = QtGui.QStackedWidget(self)
+        vbox = QtWidgets.QVBoxLayout(self)
+        self.channelBox = QtWidgets.QComboBox(self)
+        self.stack = QtWidgets.QStackedWidget(self)
 
         vbox.addWidget(self.channelBox)
         vbox.addWidget(self.stack)

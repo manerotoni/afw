@@ -13,7 +13,7 @@ import numpy as np
 
 from PyQt5 import uic
 from PyQt5 import QtCore
-from PyQt5.QtGui import QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 
 from cat.sorters import Sorter
 from cat.config import AtConfig

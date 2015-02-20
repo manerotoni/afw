@@ -8,14 +8,14 @@ __licence__ = 'GPL'
 __all__ = ('AtSideBarWidget', 'NoSampleError')
 
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 
 
 class NoSampleError(Exception):
     pass
 
 
-class AtSideBarWidget(QtGui.QWidget):
+class AtSideBarWidget(QtWidgets.QWidget):
 
     def __init__(self, parent, tileview, featuredlg=None, *args, **kw):
         super(AtSideBarWidget, self).__init__(parent, *args, **kw)
@@ -41,7 +41,7 @@ class AtSideBarWidget(QtGui.QWidget):
 
     def onActivated(self, index):
         item = self.model.item(index.row())
-        hashkey = item.data().toPyObject()
+        hashkey = item.data()
         self.tileview.selectByKey(hashkey)
 
     def itemView(self):

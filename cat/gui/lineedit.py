@@ -12,20 +12,21 @@ __all__ = ("AtLineEdit", )
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 
 
-class AtLineEdit(QtGui.QLineEdit):
+class AtLineEdit(QtWidgets.QLineEdit):
     """QLineEdit with clear button, which appears when user enters text."""
 
     def __init__(self, *args, **kw):
         super(AtLineEdit, self).__init__(*args, **kw)
 
-        self._button = QtGui.QToolButton(self)
+        self._button = QtWidgets.QToolButton(self)
         self._button.setIcon(QtGui.QIcon(":/oxygen/clear.png"))
         self._button.setStyleSheet('border: 0px; padding: 0px;')
         self._button.setCursor(QtCore.Qt.ArrowCursor)
 
-        width = self.style().pixelMetric(QtGui.QStyle.PM_DefaultFrameWidth)
+        width = self.style().pixelMetric(QtWidgets.QStyle.PM_DefaultFrameWidth)
         size = self._button.sizeHint()
 
         self.setStyleSheet('QLineEdit {padding-right: %dpx; }'
@@ -41,7 +42,7 @@ class AtLineEdit(QtGui.QLineEdit):
 
     def resizeEvent(self, event):
         size = self._button.sizeHint()
-        width = self.style().pixelMetric(QtGui.QStyle.PM_DefaultFrameWidth)
+        width = self.style().pixelMetric(QtWidgets.QStyle.PM_DefaultFrameWidth)
         self._button.move(self.rect().right() - width - size.width(),
                          (self.rect().bottom() - size.height() + 1)/2)
         super(AtLineEdit, self).resizeEvent(event)
@@ -57,8 +58,8 @@ class AtLineEdit(QtGui.QLineEdit):
 
 if __name__ == "__main__":
     import sys
-    from cat import at_rc
-    app = QtGui.QApplication(sys.argv)
+    from cat import cat_rc
+    app = QtWidgets.QApplication(sys.argv)
     main = AtLineEdit()
     main.show()
     sys.exit(app.exec_())

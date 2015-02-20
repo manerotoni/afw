@@ -87,7 +87,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def hashkey(self, index):
         item = self.item(index.parent().row(), 0)
-        return item.child(index.row(), 0).data().toPyObject()
+        if item is not None:
+            return item.child(index.row(), 0).data()
 
     def allowReassign(self, state):
         self._reassign = (state == Qt.Checked)
@@ -112,7 +113,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             parent = self.item(index.row(), self.ClassColumn)
             classes = self.currentClasses()
             for row in xrange(parent.rowCount()):
-                key = parent.child(row).data().toPyObject()
+                key = parent.child(row).data()
                 self._items[key].setTrainingSample(classes[index.row()])
         return ret
 
@@ -194,7 +195,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         # remove items from the bookkeeping dictionaries
         parent = self.item(modelindex.row(), 0)
         for row in range(parent.rowCount()-1, -1, -1):
-            key = parent.child(row).data().toPyObject()
+            key = parent.child(row).data()
             self._items[key].clear()
             del self._items[key]
             del self._item_classnames[key]
@@ -205,7 +206,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
     def findChildIndex(self, hashvalue, class_item):
         for row in range(class_item.rowCount()):
             child = class_item.child(row)
-            if child.data().toPyObject() == hashvalue:
+            if child.data() == hashvalue:
                 return child.index()
 
     def addAnnotation(self, item, class_name):
@@ -242,7 +243,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         for index in indices:
             parent = self.item(index.parent().row(), 0)
             if parent is not None:
-                key = parent.child(index.row()).data().toPyObject()
+                key = parent.child(index.row()).data()
                 self._items[key].clear()
                 del self._items[key]
                 del self._item_classnames[key]
@@ -250,7 +251,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def iterItems(self, parent):
         for i in range(parent.rowCount()):
-            key = parent.child(i).data().toPyObject()
+            key = parent.child(i).data()
             yield self._items[key]
 
     @property
@@ -323,5 +324,4 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
                 all_features = np.vstack((all_features, features))
             except ValueError:
                 all_features = features
-
         return all_features

@@ -11,24 +11,25 @@ __licence__ = 'GPL'
 __all__ = ("ImageWidget", "ImageViewer")
 
 from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
 
-class ImageWidget(QtGui.QWidget):
+class ImageWidget(QtWidgets.QWidget):
 
     def __init__(self, *args, **kw):
         super(ImageWidget, self).__init__(*args, **kw)
         self.resize(512, 512)
-        self.setSizePolicy(QtGui.QSizePolicy.Expanding,
-                           QtGui.QSizePolicy.Expanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
+                           QtWidgets.QSizePolicy.Expanding)
 
         self.iview = ImageViewer(self)
-        box = QtGui.QHBoxLayout(self)
+        box = QtWidgets.QHBoxLayout(self)
         box.setContentsMargins(0, 0, 0, 0)
         box.addWidget(self.iview)
 
     def showImage(self, image):
-        assert isinstance(image, QtGui.QImage)
+        assert isinstance(image, QtWidgets.QImage)
         self.iview.showPixmap(QtGui.QPixmap.fromImage(image))
 
     def showPixmap(self, pixmap):
@@ -36,11 +37,11 @@ class ImageWidget(QtGui.QWidget):
         self.iview.showPixmap(pixmap)
 
 
-class ImageViewer(QtGui.QGraphicsView):
+class ImageViewer(QtWidgets.QGraphicsView):
 
     def __init__(self, *args, **kw):
         super(ImageViewer, self).__init__(*args, **kw)
-        self.setScene(QtGui.QGraphicsScene())
+        self.setScene(QtWidgets.QGraphicsScene())
         self.setBackgroundBrush(Qt.darkGray)
 
         self.setDragMode(self.NoDrag)
@@ -50,8 +51,8 @@ class ImageViewer(QtGui.QGraphicsView):
                             QtGui.QPainter.SmoothPixmapTransform)
         self.setViewportUpdateMode(self.SmartViewportUpdate)
 
-        self._pixmap = QtGui.QGraphicsPixmapItem()
-        self._pixmap.setShapeMode(QtGui.QGraphicsPixmapItem.BoundingRectShape)
+        self._pixmap = QtWidgets.QGraphicsPixmapItem()
+        self._pixmap.setShapeMode(QtWidgets.QGraphicsPixmapItem.BoundingRectShape)
         # self._pixmap.setTransformationMode(Qt.SmoothTransformation)
         self._polygonitems = list()
         self.scene().addItem(self._pixmap)
@@ -62,7 +63,7 @@ class ImageViewer(QtGui.QGraphicsView):
         self.actionMaximize.setChecked(True)
 
     def createContextMenu(self):
-        self.context_menu = QtGui.QMenu(self)
+        self.context_menu = QtWidgets.QMenu(self)
         self.context_menu.addAction(self.actionOrigSize)
         self.context_menu.addAction(self.actionExpand)
         self.context_menu.addAction(self.actionMaximize)
@@ -70,20 +71,20 @@ class ImageViewer(QtGui.QGraphicsView):
         self.context_menu.addAction(self.actionZoomOut)
 
     def createActions(self):
-        self.actionOrigSize = QtGui.QAction(
+        self.actionOrigSize = QtWidgets.QAction(
             "&original size", self, triggered=self.origsize)
-        self.actionExpand = QtGui.QAction("&expand image", self,
+        self.actionExpand = QtWidgets.QAction("&expand image", self,
                 checkable=True, triggered=self.expand)
-        self.actionMaximize = QtGui.QAction("&maximize image", self,
+        self.actionMaximize = QtWidgets.QAction("&maximize image", self,
                 checkable=True, triggered=self.maximize)
 
-        self.actionZoomIn = QtGui.QAction("zoom in (+)", self,
+        self.actionZoomIn = QtWidgets.QAction("zoom in (+)", self,
                 checkable=False, triggered=self.zoomIn)
 
-        self.actionZoomOut = QtGui.QAction("zoom out (-)", self,
+        self.actionZoomOut = QtWidgets.QAction("zoom out (-)", self,
                 checkable=False, triggered=self.zoomOut)
 
-        actiongrp = QtGui.QActionGroup(self)
+        actiongrp = QtWidgets.QActionGroup(self)
         self.actionExpand.setActionGroup(actiongrp)
         self.actionMaximize.setActionGroup(actiongrp)
 
@@ -122,7 +123,7 @@ class ImageViewer(QtGui.QGraphicsView):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
-            QtGui.QApplication.setOverrideCursor(
+            QtWidgets.QApplication.setOverrideCursor(
                 QtGui.QCursor(Qt.OpenHandCursor))
         elif event.key() == Qt.Key_O:
             self.origsize()
@@ -139,7 +140,7 @@ class ImageViewer(QtGui.QGraphicsView):
 
     def keyReleaseEvent(self, event):
         if event.key() == Qt.Key_Control:
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
         super(ImageViewer, self).keyReleaseEvent(event)
 
     def mousePressEvent(self, event):
@@ -147,7 +148,7 @@ class ImageViewer(QtGui.QGraphicsView):
         if (event.button() == Qt.LeftButton and \
                 event.modifiers() == Qt.ControlModifier):
             self.setDragMode(self.ScrollHandDrag)
-            QtGui.QApplication.setOverrideCursor(
+            QtWidgets.QApplication.setOverrideCursor(
                 QtGui.QCursor(Qt.ClosedHandCursor))
 
         super(ImageViewer, self).mousePressEvent(event)
@@ -167,7 +168,7 @@ class ImageViewer(QtGui.QGraphicsView):
 
         if event.button() == Qt.LeftButton:
             self.setDragMode(self.NoDrag)
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
         super(ImageViewer, self).mousePressEvent(event)
 
     def wheelEvent(self, event):
@@ -176,7 +177,7 @@ class ImageViewer(QtGui.QGraphicsView):
             self.actionExpand.setChecked(False)
             self.actionMaximize.setChecked(False)
 
-            if event.delta() > 0:
+            if event.angleDelta().y() > 0:
                 factor = 1.1
             else:
                 factor = 0.9
@@ -193,13 +194,13 @@ class ImageViewer(QtGui.QGraphicsView):
     def clearPolygons(self):
         items = self.scene().items()
         for item in items:
-            if isinstance(item, QtGui.QGraphicsPolygonItem):
+            if isinstance(item, QtWidgets.QGraphicsPolygonItem):
                 self.scene().removeItem(item)
 
     def clearRects(self):
         items = self.scene().items()
         for item in items:
-            if isinstance(item, QtGui.QGraphicsRectItem):
+            if isinstance(item, QtWidgets.QGraphicsRectItem):
                 self.scene().removeItem(item)
 
     def contourImage(self, pixmap, contours_dict=None):
@@ -229,8 +230,8 @@ class ImageViewer(QtGui.QGraphicsView):
 if __name__ == '__main__':
 
     import sys
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     imagedlg = ImageWidget()
-    imagedlg.showImage(QtGui.QImage(sys.argv[1]))
+    imagedlg.showImage(QtWidgets.QImage(sys.argv[1]))
     imagedlg.show()
     sys.exit(app.exec_())

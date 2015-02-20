@@ -14,6 +14,8 @@ import sklearn
 import sklearn.svm
 import numpy as np
 from PyQt5 import QtGui
+from PyQt5 import QtWidgets
+
 
 from cat.config import AtConfig
 from cat.hdfio.readercore import HdfError
@@ -50,51 +52,51 @@ class OcSvmWriter(ClfWriter):
             grp.attrs[self.dmodel.DESCRIPTION] = description
 
 
-class OcSvmParameterWidget(QtGui.QFrame):
+class OcSvmParameterWidget(QtWidgets.QFrame):
 
     def __init__(self, parent, *args, **kw):
         super(OcSvmParameterWidget, self).__init__(parent, *args, **kw)
 
-        gbox = QtGui.QGridLayout(self)
+        gbox = QtWidgets.QGridLayout(self)
         gbox.setContentsMargins(5, 2, 2, 2)
         gbox.setSpacing(1)
 
-        self.nu = QtGui.QDoubleSpinBox(self)
+        self.nu = QtWidgets.QDoubleSpinBox(self)
         self.nu.setRange(0.0, 1.0)
         self.nu.setSingleStep(0.05)
         self.nu.setValue(0.01)
         self.nu.setDecimals(5)
         self.nu.valueChanged.connect(parent.predictionInvalid)
 
-        self.gamma = QtGui.QDoubleSpinBox(self)
+        self.gamma = QtWidgets.QDoubleSpinBox(self)
         self.gamma.setRange(0.0, 100.0)
         self.gamma.setSingleStep(0.01)
         self.gamma.setValue(0.5)
         self.gamma.setDecimals(5)
         self.gamma.valueChanged.connect(parent.predictionInvalid)
 
-        self.estBtn = QtGui.QToolButton()
+        self.estBtn = QtWidgets.QToolButton()
         self.estBtn.setIcon(QtGui.QIcon(":/oxygen/games-solve.png"))
         self.estBtn.clicked.connect(parent.estimateParameters)
 
-        self.addBtn = QtGui.QToolButton()
+        self.addBtn = QtWidgets.QToolButton()
         self.addBtn.setIcon(QtGui.QIcon(":/oxygen/list-add.png"))
         # one class svm does not need the class name
         func = lambda: parent.addAnnotation(OneClassSvm.INLIER.name)
         self.addBtn.clicked.connect(func)
 
-        self.treeview = QtGui.QTreeView(self)
+        self.treeview = QtWidgets.QTreeView(self)
         self.treeview.activated.connect(parent.onActivated)
         self.treeview.setModel(AtOneClassSvmItemModel())
         self.treeview.setSelectionMode(self.treeview.ContiguousSelection)
 
-        gbox.addWidget(QtGui.QLabel("Nu", self.nu), 0, 0)
+        gbox.addWidget(QtWidgets.QLabel("Nu", self.nu), 0, 0)
         gbox.addWidget(self.nu, 0, 1)
-        gbox.addWidget(QtGui.QLabel("Gamma", self.gamma), 1, 0)
+        gbox.addWidget(QtWidgets.QLabel("Gamma", self.gamma), 1, 0)
         gbox.addWidget(self.gamma, 1, 1)
         gbox.addWidget(self.estBtn, 1, 2)
         gbox.addWidget(self.addBtn, 2, 2)
-        gbox.addWidget(QtGui.QLabel("add items"), 2, 0)
+        gbox.addWidget(QtWidgets.QLabel("add items"), 2, 0)
         gbox.addWidget(self.treeview, 3, 0, 2, 0)
 
 
@@ -125,7 +127,7 @@ class OneClassSvm(Classifier):
     def createActions(self, parent, panel):
 
         self._actions.append(
-            QtGui.QAction( "add to %s" %self.INLIER.name, parent,
+            QtWidgets.QAction( "add to %s" %self.INLIER.name, parent,
                 triggered=lambda: panel.addAnnotation(self.INLIER.name)))
 
     def parameterWidget(self, parent):

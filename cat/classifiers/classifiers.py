@@ -11,7 +11,7 @@ import h5py
 import numpy as np
 from collections import OrderedDict
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 
 from cat.config import AtConfig
 from cat.pattern import Factory
@@ -168,7 +168,7 @@ class Classifier(object):
         self._actions = list()
         for name in self._classes.keys():
             self.actions.append(
-                QtGui.QAction( "add to %s" %name, parent,
+                QtWidgets.QAction( "add to %s" %name, parent,
                     triggered=lambda: panel.addAnnotation(name)))
 
     @classmethod
@@ -176,7 +176,7 @@ class Classifier(object):
         return cls._classes.keys()
 
     def parameterWidget(self, parent):
-        return QtGui.QWidget(self)
+        return QtWidgets.QWidget(self)
 
     def train(self, features):
         raise NotImplementedError

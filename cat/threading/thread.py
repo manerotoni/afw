@@ -11,9 +11,8 @@ __all__ = ('AtThread', )
 import warnings
 import traceback
 
-from PyQt5 import QtGui
 from PyQt5 import QtCore
-
+from PyQt5 import QtWidgets
 
 class AtThread(QtCore.QThread):
 
@@ -37,5 +36,5 @@ class AtThread(QtCore.QThread):
             warnings.warn(str(e))
             self.error.emit(e)
         finally:
-            self.worker.moveToThread(QtGui.QApplication.instance().thread())
+            self.worker.moveToThread(QtWidgets.QApplication.instance().thread())
             self.worker = None

@@ -7,7 +7,7 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __all__ = ("AtGraphicsView", )
 
 import math
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
 from cat.itemgrid import ItemGrid
@@ -15,7 +15,7 @@ from cat.gui.cellitem import CellGraphicsItem
 from cat.gui.graphicsscene import AtGraphicsScene
 
 
-class MouseWheelView(QtGui.QGraphicsView):
+class MouseWheelView(QtWidgets.QGraphicsView):
     """Graphicsview with zoom and pan feature.
 
     Mousewheel events scale, Left click and mouse-move drag the the view.
@@ -31,8 +31,8 @@ class MouseWheelView(QtGui.QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
-        self.setSizePolicy(QtGui.QSizePolicy.Expanding,
-                           QtGui.QSizePolicy.Expanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
+                           QtWidgets.QSizePolicy.Expanding)
 
         self.setRenderHints(QtGui.QPainter.Antialiasing |
                             QtGui.QPainter.SmoothPixmapTransform)
@@ -53,7 +53,7 @@ class MouseWheelView(QtGui.QGraphicsView):
 
         if event.modifiers() != QtCore.Qt.ControlModifier:
             self.setDragMode(self.NoDrag)
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
         super(MouseWheelView, self).mouseReleaseEvent(event)
 
     def mousePressEvent(self, event):
@@ -61,7 +61,7 @@ class MouseWheelView(QtGui.QGraphicsView):
         if event.modifiers() != QtCore.Qt.ControlModifier and \
                 event.buttons() == QtCore.Qt.LeftButton:
             self.setDragMode(self.ScrollHandDrag)
-            QtGui.QApplication.setOverrideCursor(
+            QtWidgets.QApplication.setOverrideCursor(
                 QtGui.QCursor(Qt.ClosedHandCursor))
 
         super(MouseWheelView, self).mousePressEvent(event)
@@ -97,7 +97,7 @@ class AtGraphicsView(MouseWheelView):
         self.context_menu.exec_(event.globalPos())
 
     def createContextMenu(self):
-        self.context_menu = QtGui.QMenu(self)
+        self.context_menu = QtWidgets.QMenu(self)
         self.context_menu.setTearOffEnabled(True)
         self.context_menu.addAction(self.actionReorder)
         self.context_menu.addAction(self.actionSelectAll)
@@ -106,19 +106,19 @@ class AtGraphicsView(MouseWheelView):
         self.context_menu.addAction(self.actionThrowAnchor)
 
     def createActions(self):
-        self.actionReorder = QtGui.QAction(
+        self.actionReorder = QtWidgets.QAction(
             "&refresh", self, triggered=lambda: self.reorder(True))
-        self.actionSelectAll = QtGui.QAction("select &all", self,
+        self.actionSelectAll = QtWidgets.QAction("select &all", self,
                                              triggered=self.scene().selectAll)
 
-        self.actionInvertSelection = QtGui.QAction(
+        self.actionInvertSelection = QtWidgets.QAction(
             "&invert selection", self, triggered=self.scene().invertSelection)
 
-        self.actionThrowAnchor = QtGui.QAction(
+        self.actionThrowAnchor = QtWidgets.QAction(
             "&throw sort anchor", self,
             triggered=self.parent().onThrowAnchor)
 
-        self.actionAddSorter = QtGui.QAction(
+        self.actionAddSorter = QtWidgets.QAction(
             "add to &sorter panel", self,
             triggered=self.parent().addToSortPanel)
 

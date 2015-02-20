@@ -10,12 +10,13 @@ __all__ = ("NavToolBar", "ViewToolBar", "SortToolBar")
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 
 from cat.sorters import Sorter
 from cat.hdfio.cellh5reader import Ch5Coord
 
 
-class AtToolBar(QtGui.QToolBar):
+class AtToolBar(QtWidgets.QToolBar):
 
     def __init__(self, *args, **kw):
         super(AtToolBar, self).__init__(*args, **kw)
@@ -31,12 +32,12 @@ class NavToolBar(AtToolBar):
     def __init__(self, *args, **kw):
         super(NavToolBar, self).__init__(*args, **kw)
 
-        self.plate = QtGui.QComboBox(self)
-        self.well = QtGui.QComboBox(self)
-        self.site = QtGui.QComboBox(self)
-        self.region = QtGui.QComboBox(self)
+        self.plate = QtWidgets.QComboBox(self)
+        self.well = QtWidgets.QComboBox(self)
+        self.site = QtWidgets.QComboBox(self)
+        self.region = QtWidgets.QComboBox(self)
 
-        policy = QtGui.QComboBox.AdjustToContents
+        policy = QtWidgets.QComboBox.AdjustToContents
         self.plate.setSizeAdjustPolicy(policy)
         self.well.setSizeAdjustPolicy(policy)
         self.site.setSizeAdjustPolicy(policy)
@@ -84,19 +85,19 @@ class ViewToolBar(AtToolBar):
         super(ViewToolBar, self).__init__(*args, **kw)
         self.setObjectName("ViewToolbar")
 
-        self.galSize = QtGui.QSpinBox(self)
+        self.galSize = QtWidgets.QSpinBox(self)
         self.galSize.setRange(0, 256)
         self.galSize.setValue(65)
 
-        self.nItems = QtGui.QSpinBox(self)
+        self.nItems = QtWidgets.QSpinBox(self)
         self.nItems.setRange(0, 1e9)
         self.nItems.setSingleStep(50)
         self.nItems.setValue(250)
 
-        self.classification = QtGui.QCheckBox("Classifcation", self)
-        self.masking = QtGui.QCheckBox("Mask", self)
+        self.classification = QtWidgets.QCheckBox("Classifcation", self)
+        self.masking = QtWidgets.QCheckBox("Mask", self)
 
-        self.zoom =  QtGui.QComboBox(self)
+        self.zoom =  QtWidgets.QComboBox(self)
         self.zoom.addItem("100%", QtCore.QVariant(1.0))
         self.zoom.addItem("75%", QtCore.QVariant(0.75))
         self.zoom.addItem("50%", QtCore.QVariant(0.50))
@@ -106,17 +107,17 @@ class ViewToolBar(AtToolBar):
         self.zoom.addItem("200%", QtCore.QVariant(2.0))
         self.zoom.addItem("400%", QtCore.QVariant(4.0))
         self.zoom.currentIndexChanged.connect(self.onIndexChanged)
-        self.reloadBtn = QtGui.QPushButton("load", self)
+        self.reloadBtn = QtWidgets.QPushButton("load", self)
 
         icon = QtGui.QIcon(":/oxygen/document-open-folder.png")
-        self.actionOpen = QtGui.QAction(
+        self.actionOpen = QtWidgets.QAction(
             icon, "open", self)
         self.addAction(self.actionOpen)
         self.addWidget(self.reloadBtn)
         self.addSeparator()
-        self.addWidget(QtGui.QLabel("gallery size:", self))
+        self.addWidget(QtWidgets.QLabel("gallery size:", self))
         self.addWidget(self.galSize)
-        self.addWidget(QtGui.QLabel("number items:", self))
+        self.addWidget(QtWidgets.QLabel("number items:", self))
         self.addWidget(self.nItems)
         self.addSeparator()
         self.addWidget(self.zoom)
@@ -148,16 +149,16 @@ class SortToolBar(AtToolBar):
     def __init__(self, *args, **kw):
         super(SortToolBar, self).__init__(*args, **kw)
 
-        self.sortAscendingBtn = QtGui.QToolButton(self)
+        self.sortAscendingBtn = QtWidgets.QToolButton(self)
         self.sortAscendingBtn.setToolTip("Sort ascending")
         self.sortAscendingBtn.setIcon(
             QtGui.QIcon(":/oxygen/sort-ascending.png"))
-        self.sortDescendingBtn = QtGui.QToolButton(self)
+        self.sortDescendingBtn = QtWidgets.QToolButton(self)
         self.sortDescendingBtn.setToolTip("Sort descending")
         self.sortDescendingBtn.setIcon(
             QtGui.QIcon(":/oxygen/sort-descending.png"))
 
-        self.sortAlgorithm = QtGui.QComboBox(self)
+        self.sortAlgorithm = QtWidgets.QComboBox(self)
         self.sortAlgorithm.setToolTip(
             ("Similarity measure used for sorting"))
         self.sortAlgorithm.addItems(Sorter.sorters())

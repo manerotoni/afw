@@ -16,9 +16,10 @@ from os.path import splitext, expanduser
 
 from PyQt5 import uic
 from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFileDialog
-from PyQt5.QtGui import QMessageBox
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QMessageBox
 
 from cat.threading import AtThread
 from cat.threading import AtImporter
@@ -27,7 +28,7 @@ from cat.gui.segmentationdlg import SegmentationDialog
 from cat.segmentation.multicolor import LsmProcessor
 
 
-class ImportDialog(QtGui.QDialog):
+class ImportDialog(QtWidgets.QDialog):
 
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
@@ -42,8 +43,8 @@ class ImportDialog(QtGui.QDialog):
         self.segdlg.hide()
 
         self.thread = AtThread(self)
-        self.viewer.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
-                                  QtGui.QSizePolicy.MinimumExpanding)
+        self.viewer.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                  QtWidgets.QSizePolicy.MinimumExpanding)
 
         self.cbar = ChannelBar(self, self.viewer)
         self.cbox.addWidget(self.cbar)
@@ -99,6 +100,7 @@ class ImportDialog(QtGui.QDialog):
 
     def onSegmentationBtn(self):
         self.segdlg.show()
+        self.segdlg.raise_()
 
     def onOpenOutFile(self):
 

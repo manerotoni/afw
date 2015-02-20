@@ -15,7 +15,10 @@ import sip
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
 
-from PyQt5 import QtGui
+from matplotlib import use
+use("Qt5Agg")
+
+from PyQt5 import QtWidgets
 from cat.gui.main import AtMainWindow
 
 
@@ -28,7 +31,7 @@ if __name__ == '__main__':
     if args.file is not None and not os.path.isfile(args.file):
         raise SystemExit("File does not exist!")
 
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     mw = AtMainWindow(args.file)
     mw.show()
     sys.exit(app.exec_())

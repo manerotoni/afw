@@ -9,10 +9,10 @@ __all__ = ("AtFeatureGroupsWidget", )
 
 from os.path import splitext
 
-from PyQt5 import QtGui
-from PyQt5 import QtCore
 from PyQt5 import uic
-from PyQt5.QtGui import QSizePolicy
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtCore import Qt
 
 
@@ -20,7 +20,7 @@ from .feature_tables import FeatureTables
 from cat.segmentation.channelname import ChannelName as cn
 
 
-class AtFeatureGroupsWidget(QtGui.QWidget):
+class AtFeatureGroupsWidget(QtWidgets.QWidget):
 
     selectionChanged = QtCore.pyqtSignal(tuple)
 
@@ -59,16 +59,16 @@ class AtFeatureGroupsWidget(QtGui.QWidget):
         self.selectionChanged.emit(tuple(feature_names))
 
 
-class AtChannelFeatureGroupsWidget(QtGui.QWidget):
+class AtChannelFeatureGroupsWidget(QtWidgets.QWidget):
 
     selectionChanged = QtCore.pyqtSignal()
 
     def __init__(self, title, *args, **kw):
         super(AtChannelFeatureGroupsWidget, self).__init__(*args, **kw)
-        self.setLayout(QtGui.QVBoxLayout())
-        self.gbox = QtGui.QGroupBox(self)
+        self.setLayout(QtWidgets.QVBoxLayout())
+        self.gbox = QtWidgets.QGroupBox(self)
 
-        self.gbox.setLayout(QtGui.QVBoxLayout())
+        self.gbox.setLayout(QtWidgets.QVBoxLayout())
         self.layout().addWidget(self.gbox)
         self.layout().setContentsMargins(0, 0, 0, 0)
 
@@ -79,7 +79,7 @@ class AtChannelFeatureGroupsWidget(QtGui.QWidget):
             self.addFeatureGroup(group, names)
 
     def addFeatureGroup(self, group, feature_names):
-        checkbox = QtGui.QCheckBox(group)
+        checkbox = QtWidgets.QCheckBox(group)
         checkbox.setCheckState(QtCore.Qt.Checked)
         checkbox.stateChanged.connect(self.onStateChanged)
         self.gbox.layout().addWidget(checkbox)

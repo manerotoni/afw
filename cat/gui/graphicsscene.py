@@ -10,11 +10,12 @@ __all__ = ("AtGraphicsScene", )
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from cat.gui.cellitem import Colors
 from cat.gui.cellitem import PainterPathItem
 
 
-class AtGraphicsScene(QtGui.QGraphicsScene):
+class AtGraphicsScene(QtWidgets.QGraphicsScene):
     """GraphicsScene with customized selection functionality
 
     -) double-click -> selects a single item, unselects all other items
@@ -60,10 +61,13 @@ class AtGraphicsScene(QtGui.QGraphicsScene):
             pen.setWidth(3)
             pen.setJoinStyle(QtCore.Qt.RoundJoin)
             path = QtGui.QPainterPath(event.scenePos())
+
             # currently the selector is only to guide the eye
             # selection occurs on hovering the items
-            self._selector = PainterPathItem(path, scene=self)
+            # self._selector = self.addPath(path, pen)
+            self._selector = PainterPathItem(path)
             self._selector.setPen(pen)
+            self.addItem(self._selector)
             super(AtGraphicsScene, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):

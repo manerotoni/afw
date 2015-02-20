@@ -11,6 +11,7 @@ from os.path import splitext, basename, expanduser
 from PyQt5 import uic
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMessageBox
@@ -39,7 +40,7 @@ def fix_path(path):
         return path
 
 
-class AtMainWindow(QtGui.QMainWindow):
+class AtMainWindow(QtWidgets.QMainWindow):
 
     coordUpdated = QtCore.pyqtSignal("PyQt_PyObject")
     abort = QtCore.pyqtSignal()
@@ -136,15 +137,15 @@ class AtMainWindow(QtGui.QMainWindow):
         settings.beginGroup('Gui')
 
         geometry = settings.value('geometry')
-        if geometry.isValid():
-            self.restoreGeometry(geometry.toByteArray())
+        if geometry:
+            self.restoreGeometry(geometry)
         state = settings.value('state')
-        if state.isValid():
-            self.restoreState(state.toByteArray())
+        if state:
+            self.restoreState(state)
 
         clfname = settings.value("classifier")
-        if clfname.isValid():
-            self.annotation.setCurrentClassifier(clfname.toString())
+        if clfname:
+            self.annotation.setCurrentClassifier(clfname)
 
         settings.endGroup()
 
@@ -165,17 +166,17 @@ class AtMainWindow(QtGui.QMainWindow):
         self.featuregroups.selectionChanged.connect(
             self.featuredlg.setSelectionByName)
 
-        self.featuredock = QtGui.QDockWidget("Feature Groups", self)
+        self.featuredock = QtWidgets.QDockWidget("Feature Groups", self)
         self.featuredock.setWidget(self.featuregroups)
         self.featuredock.setObjectName("feature_groups")
         self.addDockWidget(Qt.RightDockWidgetArea, self.featuredock)
 
-        self.sortdock = QtGui.QDockWidget("Sorting", self)
+        self.sortdock = QtWidgets.QDockWidget("Sorting", self)
         self.sortdock.setWidget(self.sorting)
         self.sortdock.setObjectName("sorting")
         self.addDockWidget(Qt.RightDockWidgetArea, self.sortdock)
 
-        self.annodock = QtGui.QDockWidget("Annotation", self)
+        self.annodock = QtWidgets.QDockWidget("Annotation", self)
         self.annodock.setWidget(self.annotation)
         self.annodock.setObjectName("annotation")
         self.addDockWidget(Qt.RightDockWidgetArea, self.annodock)
@@ -198,13 +199,13 @@ class AtMainWindow(QtGui.QMainWindow):
             self.sorting.sortDescending)
 
     def setupProgressBar(self):
-        frame = QtGui.QFrame(self)
-        self.progressbar = QtGui.QProgressBar(frame)
+        frame = QtWidgets.QFrame(self)
+        self.progressbar = QtWidgets.QProgressBar(frame)
         self.progressbar.setMaximumHeight(15)
-        self.abortBtn = QtGui.QPushButton('abort', self)
+        self.abortBtn = QtWidgets.QPushButton('abort', self)
         self.abortBtn.clicked.connect(self.abort.emit)
         self.abortBtn.setMaximumHeight(20)
-        hbox = QtGui.QHBoxLayout(frame)
+        hbox = QtWidgets.QHBoxLayout(frame)
         hbox.addWidget(self.progressbar)
         hbox.addWidget(self.abortBtn)
         hbox.setContentsMargins(0, 0, 0, 0)
@@ -222,7 +223,7 @@ class AtMainWindow(QtGui.QMainWindow):
         if filename:
             scene = self.tileview.scene()
             size = scene.sceneRect().size().toSize()
-            image = QtGui.QImage(size, QtGui.QImage.Format_RGB32)
+            image = QtWidgets.QImage(size, QtWidgets.QImage.Format_RGB32)
             painter = QtGui.QPainter(image)
 
             image.fill(QtCore.Qt.white)
@@ -270,7 +271,7 @@ class AtMainWindow(QtGui.QMainWindow):
 
         file_ = QFileDialog.getOpenFileName(
             self, "Open hdf5 file", self._lastdir,
-            "Hdf files (*.hdf5 *.ch5 *.hdf *.h5)")
+            "Hdf files (*.hdf5 *.ch5 *.hdf *.h5)")[0]
 
         if bool(file_):
             self._fileOpen(file_)
