@@ -20,7 +20,7 @@ import build_helpers
 
 pyrcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
               'outfile': join('cat', 'cat_rc.py'),
-              'pyrccbin': 'pyrcc4'}
+              'pyrccbin': 'pyrcc5'}
 
 setup(name='AnnotationTool',
       version=version.version,

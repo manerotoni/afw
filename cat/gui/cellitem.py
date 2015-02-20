@@ -12,6 +12,7 @@ import warnings
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 
 from cat.classifiers.itemclass import UnClassified
 
@@ -29,7 +30,7 @@ class Colors(object):
     mask = QtGui.QColor("black")
 
 
-class PainterPathItem(QtGui.QGraphicsPathItem):
+class PainterPathItem(QtWidgets.QGraphicsPathItem):
     # custom PainterPathItem fixes path() method. Did not return the same
     # instance, that was used when the item was created
 
@@ -41,7 +42,7 @@ class PainterPathItem(QtGui.QGraphicsPathItem):
         return self._path
 
 
-class CellGraphicsItem(QtGui.QGraphicsItemGroup):
+class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
     """Item group to show a pixmap, the segmentation and annotation as one item.
     """
 
@@ -79,7 +80,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def hoverEnterEvent(self, event):
         txt = ("item: %d\n"
                "class: %s") %(self.index, self.class_.name)
-        QtGui.QToolTip.showText(QtGui.QCursor.pos(), txt)
+        QtWidgets.QToolTip.showText(QtGui.QCursor.pos(), txt)
 
     def _classRect(self):
         rect0 = self.childrenBoundingRect()
@@ -99,7 +100,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
 
         rect = self._classRect()
-        self._classrect = QtGui.QGraphicsRectItem(rect)
+        self._classrect = QtWidgets.QGraphicsRectItem(rect)
         self._classrect.setBrush(brush)
         self._classrect.setPen(pen)
         self._classrect.setZValue(StackOrder.class_indicator)
@@ -124,7 +125,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
 
         rect = self._selectorRect()
-        self._selrect = QtGui.QGraphicsRectItem(rect)
+        self._selrect = QtWidgets.QGraphicsRectItem(rect)
         self._selrect.setBrush(brush)
         self._selrect.setPen(pen)
         self._selrect.setZValue(StackOrder.selector)
@@ -186,7 +187,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     def setPixmap(self, pixmap):
         self._pixmap = pixmap
-        item = QtGui.QGraphicsPixmapItem(self)
+        item = QtWidgets.QGraphicsPixmapItem(self)
         item.setPixmap(self.pixmap)
         item.setPos(self.pos())
         self.addToGroup(item)
@@ -213,7 +214,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         pen = QtGui.QPen()
         pen.setColor(color)
         polygon = QtGui.QPolygonF([QtCore.QPointF(*p) for p in contour])
-        item = QtGui.QGraphicsPolygonItem(self)
+        item = QtWidgets.QGraphicsPolygonItem(self)
         item.setPolygon(polygon)
         item.setPos(self.pos())
         item.setPen(pen)
@@ -237,7 +238,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     def toggleContours(self, state):
         for item in self.childItems():
-            if isinstance(item, QtGui.QGraphicsPolygonItem):
+            if isinstance(item, QtWidgets.QGraphicsPolygonItem):
                 if state:
                     item.show()
                 else:
@@ -281,7 +282,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
 
         rect = self._tsRect()
-        self._tsi = QtGui.QGraphicsEllipseItem(rect)
+        self._tsi = QtWidgets.QGraphicsEllipseItem(rect)
         self._tsi.setStartAngle(0)
         self._tsi.setSpanAngle(180*16)
         self._tsi.setBrush(brush)

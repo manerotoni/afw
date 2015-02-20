@@ -10,6 +10,7 @@ from collections import OrderedDict
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
 
@@ -36,7 +37,7 @@ class AtFeatureModel(QtGui.QStandardItemModel):
         self._setupHeader()
 
 
-class AtSortFilterProxyModel(QtGui.QSortFilterProxyModel):
+class AtSortFilterProxyModel(QtCore.QSortFilterProxyModel):
 
     def __init__(self, *args, **kw):
         super(AtSortFilterProxyModel, self).__init__(*args, **kw)
@@ -57,7 +58,7 @@ class AtSortFilterProxyModel(QtGui.QSortFilterProxyModel):
             return super(AtSortFilterProxyModel, self).filterAcceptsRow(sourceRow, sourceParent)
 
 
-class AtContextTreeView(QtGui.QTreeView):
+class AtContextTreeView(QtWidgets.QTreeView):
 
     def __init__(self, *args, **kw):
         super(AtContextTreeView, self).__init__(*args, **kw)
@@ -65,10 +66,10 @@ class AtContextTreeView(QtGui.QTreeView):
         self.createContextMenu()
 
     def createActions(self):
-        self.actionCheckSelected= QtGui.QAction(
+        self.actionCheckSelected= QtWidgets.QAction(
             "&check selection", self,
             triggered=lambda: self.toggleItems(True))
-        self.actionUnCheckSelected = QtGui.QAction(
+        self.actionUnCheckSelected = QtWidgets.QAction(
             "&uncheck selection", self,
             triggered=lambda: self.toggleItems(False))
 
@@ -76,7 +77,7 @@ class AtContextTreeView(QtGui.QTreeView):
         self.context_menu.exec_(event.globalPos())
 
     def createContextMenu(self):
-        self.context_menu = QtGui.QMenu(self)
+        self.context_menu = QtWidgets.QMenu(self)
         self.context_menu.addAction(self.actionCheckSelected)
         self.context_menu.addAction(self.actionUnCheckSelected)
 
@@ -96,7 +97,7 @@ class AtContextTreeView(QtGui.QTreeView):
                 item.setCheckState(Qt.Unchecked)
 
 
-class AtFeatureSelectionDlg(QtGui.QWidget):
+class AtFeatureSelectionDlg(QtWidgets.QWidget):
 
     def __init__(self, *args, **kw):
         super(AtFeatureSelectionDlg, self).__init__(*args, **kw)

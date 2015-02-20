@@ -14,10 +14,10 @@ __all__ = ('QNavigationToolbar', 'QFigureWidget', 'QFigureTabWidget')
 from matplotlib import rcParams
 from matplotlib.colors import rgb2hex
 from matplotlib.backend_bases import key_press_handler
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 
 
@@ -41,7 +41,7 @@ class QNavigationToolbar(NavigationToolbar2QT):
             self.locLabel.setText(s)
 
 
-class QFigureWidget(QtGui.QWidget):
+class QFigureWidget(QtWidgets.QWidget):
     """Widget to layout the actual figure and toolbar. Further it forwards.
     the key press events from the widget to the figure."""
 
@@ -62,7 +62,7 @@ class QFigureWidget(QtGui.QWidget):
         self.toolbar.setIconSize(QtCore.QSize(16, 16))
         self.canvas.mpl_connect('key_press_event', self.on_key_press)
 
-        vbox = QtGui.QVBoxLayout(self)
+        vbox = QtWidgets.QVBoxLayout(self)
         vbox.addWidget(self.canvas)
         vbox.addWidget(self.toolbar)
         vbox.setContentsMargins(0, 0, 0, 0)

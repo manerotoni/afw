@@ -10,10 +10,11 @@ __all__ = ( 'ColorButton', )
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
 
-class ColorButton(QtGui.QPushButton):
+class ColorButton(QtWidgets.QPushButton):
 
     colorChanged = QtCore.pyqtSignal(QtGui.QColor)
     white = Qt.white
@@ -41,7 +42,7 @@ class ColorButton(QtGui.QPushButton):
         return self._current_color
 
     def onClicked(self):
-        dlg = QtGui.QColorDialog(self)
+        dlg = QtWidgets.QColorDialog(self)
 
         if self._current_color is not None:
             dlg.setCurrentColor(self._current_color)

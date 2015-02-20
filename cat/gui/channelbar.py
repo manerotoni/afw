@@ -13,6 +13,7 @@ import numpy as np
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import QPointF
 from collections import OrderedDict, defaultdict
 
@@ -22,7 +23,7 @@ from cat.gui.painting import AtPainter
 from cat.gui.contrast import AtEnhancerWidget
 
 
-class ChannelBar(QtGui.QWidget):
+class ChannelBar(QtWidgets.QWidget):
     """ChannelBar is a layer between the import dialog and the viewer widget.
     It modifies the image drawn in the viewer i.e. it turns on/off the channels,
     enhances the contrast and sets the color table of the image."""
@@ -37,9 +38,9 @@ class ChannelBar(QtGui.QWidget):
         self._channel_count = 0
 
         self.viewer = viewer
-        vbox = QtGui.QVBoxLayout(self)
-        self.gbox = QtGui.QGridLayout()
-        cbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QVBoxLayout(self)
+        self.gbox = QtWidgets.QGridLayout()
+        cbox = QtWidgets.QVBoxLayout()
         self.enhancer = AtEnhancerWidget(self)
         self.enhancer.valuesUpdated.connect(self.updateImage)
 
@@ -61,7 +62,7 @@ class ChannelBar(QtGui.QWidget):
             colors = lambda i: ColorButton.white
 
         for i in xrange(n):
-            cb = QtGui.QCheckBox("Channel %d" %(i+1))
+            cb = QtWidgets.QCheckBox("Channel %d" %(i+1))
             cb.setCheckState(QtCore.Qt.Checked)
             cb.stateChanged.connect(self.updateImage)
             cbtn  = ColorButton(colors(i))

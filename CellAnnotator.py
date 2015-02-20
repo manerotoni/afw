@@ -15,12 +15,15 @@ import sip
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
 
+from matplotlib import use
+use("Qt5Agg")
 
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from cat.gui.main import AtMainWindow
 from cat import version
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(\
@@ -31,7 +34,7 @@ if __name__ == '__main__':
     if args.file is not None and not os.path.isfile(args.file):
         raise SystemExit("File does not exist!")
 
-    app = QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     mw = AtMainWindow(args.file)
 
 

@@ -15,7 +15,8 @@ from os.path import join, dirname
 from PyQt5 import uic
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QApplication, QCursor, QMessageBox
+from PyQt5.QtGui import QCursor
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from cat.hdfio.readercore import HdfError
 from cat.classifiers.classifiers import Classifier
@@ -46,7 +47,8 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.predictBtn.setText('Predict')
 
     def onActivated(self, index):
-        self.tileview.selectByKey(self.model.hashkey(index))
+        hkey = self.model.hashkey(index)
+        self.tileview.selectByKey(hkey)
 
     def classifierChanged(self, index):
         self.stack.setCurrentIndex(index)
@@ -116,7 +118,7 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def currentClassifier(self):
         index = self.classifiers.currentIndex()
-        name = self.classifiers.itemData(index).toPyObject()
+        name = self.classifiers.itemData(index)
         return getattr(self, name)
 
     def itemView(self):

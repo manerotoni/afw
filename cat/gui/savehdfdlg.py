@@ -11,10 +11,11 @@ __all__ = ("SaveClassifierDialog", )
 from os.path import splitext, expanduser
 from PyQt5 import uic
 from PyQt5 import QtGui
-from PyQt5.QtGui import QFileDialog
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QFileDialog
 
 
-class SaveClassifierDialog(QtGui.QDialog):
+class SaveClassifierDialog(QtWidgets.QDialog):
 
     def __init__(self, *args, **kw):
         super(SaveClassifierDialog, self).__init__(*args, **kw)

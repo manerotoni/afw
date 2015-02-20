@@ -18,9 +18,11 @@ from matplotlib.ticker import FixedLocator
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
-from PyQt5.QtGui import QApplication, QCursor, QMessageBox
+from PyQt5.QtGui import QCursor
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from sklearn import svm
 from sklearn.svm import SVC
@@ -50,7 +52,7 @@ def _font_size(value):
         return 10
 
 
-class CrossValidationDialog(QtGui.QWidget):
+class CrossValidationDialog(QtWidgets.QWidget):
 
     requestDataUpdate = QtCore.pyqtSignal()
     gridSearchFinished = QtCore.pyqtSignal()

@@ -15,8 +15,9 @@ import sklearn.svm
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
-from PyQt5.QtGui import QMessageBox
-from PyQt5.QtGui import QSizePolicy
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QSizePolicy
 
 from cat.hdfio.readercore import HdfError
 from cat.gui.sidebar.annotation_model import AtMultiClassSvmItemModel
@@ -24,7 +25,7 @@ from cat.gui.crossvalidationdlg import CrossValidationDialog
 from .classifiers import Classifier, ClfWriter, ClfDataModel
 
 
-class AnnotationButton(QtGui.QToolButton):
+class AnnotationButton(QtWidgets.QToolButton):
     """Custom QToolButton that emits the 'buttonClicked(class_name)' signal.
     The class name is the current text of the name_item."""
 
@@ -42,7 +43,7 @@ class AnnotationButton(QtGui.QToolButton):
         self.buttonClicked.emit(self._name_item.text())
 
 
-class ButtonDelegate(QtGui.QItemDelegate):
+class ButtonDelegate(QtWidgets.QItemDelegate):
     """Adds a ToolButton to a ItemView. One needs to open a persitent editor
     if this ItemDelegate is used."""
 
@@ -62,11 +63,11 @@ class ButtonDelegate(QtGui.QItemDelegate):
         return
 
 
-class ColorDelegate(QtGui.QItemDelegate):
+class ColorDelegate(QtWidgets.QItemDelegate):
     """Pop up a ColorChooser dialog if the item is going to be edited"""
 
     def createEditor(self, parent, option, index):
-        dlg =  QtGui.QColorDialog(parent)
+        dlg =  QtWidgets.QColorDialog(parent)
         return dlg
 
     def setEditorData(self, editor, index):
@@ -78,7 +79,7 @@ class ColorDelegate(QtGui.QItemDelegate):
         model.setData(index, editor.currentColor(), Qt.EditRole)
 
 
-class TreeView(QtGui.QTreeView):
+class TreeView(QtWidgets.QTreeView):
 
     def __init__(self, annotation_widget, *args, **kw):
         super(TreeView, self).__init__(*args, **kw)
@@ -90,31 +91,30 @@ class TreeView(QtGui.QTreeView):
         self._awidget.addAnnotation(class_name)
 
 
-class SvcParameterWidget(QtGui.QFrame):
+class SvcParameterWidget(QtWidgets.QFrame):
 
     def __init__(self, parent, *args, **kw):
         super(SvcParameterWidget, self).__init__(parent=parent, *args, **kw)
 
-        vbox = QtGui.QVBoxLayout(self)
+        vbox = QtWidgets.QVBoxLayout(self)
         vbox.setContentsMargins(2, 2, 2, 2)
         vbox.setSpacing(2)
 
-        frame = QtGui.QToolBar("SVC", self)
-        frame.setIconSize(QtCore.QSize(16, 16))
+        frame = QtWidgets.QToolBar("SVC", self)
 
         self.treeview = TreeView(parent, self)
         model = AtMultiClassSvmItemModel(self.treeview)
         model.classesChanged.connect(parent.updateClassifier)
         self.treeview.setModel(model)
 
-        self.addClassBtn = QtGui.QToolButton()
+        self.addClassBtn = QtWidgets.QToolButton()
         self.addClassBtn.setToolTip("Add new class")
         self.addClassBtn.setIcon(QtGui.QIcon(":/oxygen/code-class.png"))
         self.addClassBtn.setSizePolicy(
             QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.addClassBtn.pressed.connect(self.onAddBtn)
 
-        self.removeClassBtn = QtGui.QToolButton()
+        self.removeClassBtn = QtWidgets.QToolButton()
         self.removeClassBtn.setToolTip("Delete selected class")
         self.removeClassBtn.setIcon(QtGui.QIcon(":/remove-class.png"))
         self.removeClassBtn.setSizePolicy(
@@ -124,11 +124,11 @@ class SvcParameterWidget(QtGui.QFrame):
 
         # disable the sanity check whether a sample is already reassign to
         # an other class
-        self.allowReassign = QtGui.QCheckBox("allow reassign")
+        self.allowReassign = QtWidgets.QCheckBox("allow reassign")
         self.allowReassign.stateChanged.connect(model.allowReassign)
         model.allowReassign(self.allowReassign.isChecked())
 
-        self.crossValidBtn = QtGui.QToolButton()
+        self.crossValidBtn = QtWidgets.QToolButton()
         self.crossValidBtn.setToolTip("Pop up cross-validation dialog")
         self.crossValidBtn.setIcon(QtGui.QIcon(":/oxygen/chart.png"))
         self.crossValidBtn.setSizePolicy(

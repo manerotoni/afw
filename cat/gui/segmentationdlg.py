@@ -13,7 +13,7 @@ from collections import OrderedDict
 from os.path import splitext, join, dirname
 
 from PyQt5 import uic
-from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, pyqtSignal
 
 from cat.gui.featurebox import FeatureBox
@@ -39,14 +39,14 @@ def settings_from(filename):
     raise IOError("Unknown extenstion! (%s)" %extenstion)
 
 
-class ChLabel(QtGui.QLabel):
+class ChLabel(QtWidgets.QLabel):
 
     def __init__(self, *args, **kw):
         super(ChLabel, self).__init__(*args, **kw)
         self.setAlignment(Qt.AlignHCenter|Qt.AlignRight)
 
 
-class ExpansionWidget(QtGui.QGroupBox):
+class ExpansionWidget(QtWidgets.QGroupBox):
 
     def __init__(self, *args, **kw):
         super(ExpansionWidget, self).__init__(*args, **kw)
@@ -70,7 +70,7 @@ class ExpansionWidget(QtGui.QGroupBox):
         self.setValue(params.expansion_size)
 
 
-class SegmentationDialog(QtGui.QWidget):
+class SegmentationDialog(QtWidgets.QWidget):
 
     _ncols = 3
 
@@ -86,7 +86,8 @@ class SegmentationDialog(QtGui.QWidget):
     def __init__(self, *args, **kw):
         super(SegmentationDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
-        self.setWindowFlags(Qt.Window)
+        self.setWindowFlags(Qt.Tool)
+#        self.setWindowModality(Qt.NonModal)
         # row count (rowCount from gridlayout is not reliable!)
         self._rcount = 1
 
@@ -97,6 +98,10 @@ class SegmentationDialog(QtGui.QWidget):
 
     def emitParamsChanged(self, dummy=None):
         self.paramsChanged.emit()
+
+    def mousePressEvent(self, event):
+        self.raise_()
+        super(SegmentationDialog, self).mousePressEvent(event)
 
     def closeEvent(self, event):
         print "pre"
@@ -203,7 +208,7 @@ class SegmentationDialog(QtGui.QWidget):
     def onSaveBtn(self):
 
         dir_ = os.path.expanduser("~")
-        fname = QtGui.QFileDialog.getSaveFileName(
+        fname = QtWidgets.QFileDialog.getSaveFileName(
             self, "save File", dir_, "xml files (*.xml)")
 
         active_channels = self.parent().cbar.checkedChannels()
@@ -218,11 +223,11 @@ class SegmentationDialog(QtGui.QWidget):
 
     def onLoadBtn(self):
         dir_ = os.path.expanduser("~")
-        fname = QtGui.QFileDialog.getOpenFileName(
+        fname = QtWidgets.QFileDialog.getOpenFileName(
             self, "load config file", dir_,
-            ("xml files (*.xml);;"
-             "hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5;;"
-             "All files (*.*)"))
+            ("hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5;;)"
+             "xml files (*.xml)"
+             "All files (*.*)"))[0]
 
         if fname:
             xmldata = settings_from(fname)
@@ -279,7 +284,7 @@ class SegmentationDialog(QtGui.QWidget):
 
 
 if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     sd = SegmentationDialog()
     sd.setRegions(["Channel 1", "Channel 2"])
     sd.show()

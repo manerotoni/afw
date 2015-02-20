@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 __all__ = ('AtAboutDialog', )
 
 from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from cat import version
 
@@ -20,7 +21,7 @@ QDialog {
 """
 
 
-class AtAboutDialog(QtGui.QDialog):
+class AtAboutDialog(QtWidgets.QDialog):
 
     def __init__(self, *args, **kw):
         super(AtAboutDialog, self).__init__(*args, **kw)
@@ -29,8 +30,7 @@ class AtAboutDialog(QtGui.QDialog):
         self.setWindowTitle('About %s' %version.appname)
         self.setFixedSize(424, 254)
 
-        label1 = QtGui.QLabel(self)
-        label1.setStyleSheet(stylesheet)
+        label1 = QtWidgets.QLabel(self)
         label1.setAlignment(Qt.AlignCenter)
         label1.setText(version.information)
 

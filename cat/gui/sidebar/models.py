@@ -61,6 +61,7 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
     def features(self):
         """Yields a feature matrix from the items in the Sidebar. One feature
         vector per row."""
+
         nitems = self.rowCount()
 
         if not nitems:
@@ -113,7 +114,7 @@ class AtSorterItemModel(AtStandardItemModel):
         super(AtSorterItemModel, self).__init__(*args, **kw)
 
     def removeRow(self, row):
-        key = self.item(row, 0).data().toPyObject()
+        key = self.item(row, 0).data()
         self._items[key].clear()
         del self._items[key]
         super(AtSorterItemModel, self).removeRow(row)
@@ -139,11 +140,11 @@ class AtOneClassSvmItemModel(AtStandardItemModel):
             root.appendRow(self.prepareRowItems(item))
 
     def removeRow(self, row):
-        key = self.item(row, 0).data().toPyObject()
+        key = self.item(row, 0).data()
         self._items[key].clear()
         del self._items[key]
         super(AtOneClassSvmItemModel, self).removeRow(row)
 
     def hashkey(self, index):
         item = self.item(index.row(), 0)
-        return item.data().toPyObject()
+        return item.data()
