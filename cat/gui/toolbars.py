@@ -132,7 +132,7 @@ class ViewToolBar(AtToolBar):
         self.galSize.setValue(props.gallery_size)
 
     def onIndexChanged(self, index):
-        zfactor = self.zoom.itemData(index).toDouble()[0]
+        zfactor = self.zoom.itemData(index)
         self.valueChanged.emit(zfactor)
 
     @property
