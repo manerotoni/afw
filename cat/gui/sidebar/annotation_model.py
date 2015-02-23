@@ -138,12 +138,14 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
         classes = dict()
         for i in range(self.rowCount()):
-            class_item = self.item(i, self.ClassColumn)
-            color_item = self.item(i, self.ColorColumn)
+            name = self.data(self.index(i, self.ClassColumn))
+            color = self.data(self.index(i, self.ColorColumn))
 
-            name = class_item.text()
-            color = color_item.text()
-            classes[i] = ItemClass(name, QtGui.QColor(color), i)
+            # XXX use setData method rather than StandardItems!!!
+            if isinstance(color, basestring):
+                color = QtGui.QColor(color)
+
+            classes[i] = ItemClass(name, color, i)
 
         return classes
 
