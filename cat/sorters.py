@@ -112,7 +112,7 @@ class ClassLabel(Sorter):
     def __call__(self):
         try:
             return (np.array(self.class_labels)*10**3 + \
-                    np.array(self.annotations, dtype=bool)*10**2 + \
+                    np.array(self.annotations, dtype=bool)*10**2 - \
                     np.array(self.scores))
 
         except TypeError:
