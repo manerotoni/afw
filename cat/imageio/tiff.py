@@ -85,7 +85,7 @@ class TiffImage(object):
 
     @property
     def size(self):
-        return self._shape[self.Idx_x], self._shape[self.Idx_y]
+        return self._shape[self.Idx_y], self._shape[self.Idx_x]
 
     @property
     def channels(self):
