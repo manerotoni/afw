@@ -33,16 +33,22 @@ class AtFeatureGroupsWidget(QtGui.QWidget):
         self.vbox.setContentsMargins(2, 2, 2, 2)
         self._channels = None
 
+        self.ftable.addItems(FeatureTables.keys())
+        self.ftable.currentIndexChanged[str].connect(self.onTableChanged)
+
+    def onTableChanged(self, table):
+        self.setChannelNames(self._channels, table)
+
     def _iterGroups(self):
         for i in xrange(self.vbox.count()-1):
             yield self.vbox.itemAt(i).widget()
 
-    def setChannelNames(self, channel_names):
+    def setChannelNames(self, channel_names, table=None):
         self.clear()
 
         self._channels = channel_names
         for chn in channel_names:
-            fgw = AtChannelFeatureGroupsWidget(chn, self)
+            fgw = AtChannelFeatureGroupsWidget(chn, table, self)
             self.vbox.insertWidget(self.vbox.count()-1, fgw)
             fgw.selectionChanged.connect(self.onSelectionChanged)
             setattr(self, chn.lower(), fgw)
@@ -63,7 +69,7 @@ class AtChannelFeatureGroupsWidget(QtGui.QWidget):
 
     selectionChanged = QtCore.pyqtSignal()
 
-    def __init__(self, title, *args, **kw):
+    def __init__(self, title, table,  *args, **kw):
         super(AtChannelFeatureGroupsWidget, self).__init__(*args, **kw)
         self.setLayout(QtGui.QVBoxLayout())
         self.gbox = QtGui.QGroupBox(self)
@@ -74,7 +80,11 @@ class AtChannelFeatureGroupsWidget(QtGui.QWidget):
 
         self.gbox.setTitle(cn.display(title))
 
-        self._table = FeatureTables.Cecog
+        if table is None:
+            self._table = FeatureTables.values()[0]
+        else:
+            self._table = FeatureTables[table]
+
         for group, names in self._table.iteritems():
             self.addFeatureGroup(group, names)
 

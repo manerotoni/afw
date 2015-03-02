@@ -24,6 +24,9 @@
     <number>3</number>
    </property>
    <item>
+    <widget class="QComboBox" name="ftable"/>
+   </item>
+   <item>
     <widget class="QScrollArea" name="scrollArea">
      <property name="enabled">
       <bool>true</bool>
@@ -58,7 +61,7 @@
         <x>0</x>
         <y>0</y>
         <width>200</width>
-        <height>529</height>
+        <height>499</height>
        </rect>
       </property>
       <property name="sizePolicy">
