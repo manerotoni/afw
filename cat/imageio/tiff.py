@@ -14,10 +14,10 @@ __all__ = ('TiffImage', )
 
 import vigra
 import numpy as np
-from .imageio import ImageProps, MetaData
+from .imagecore import ImageCore
 
 
-class TiffImage(object):
+class TiffImage(ImageCore):
 
     _Order = ('x', 'y', 'z', 'c')
     Idx_x = 0
@@ -60,14 +60,6 @@ class TiffImage(object):
 
         return image
 
-    def iterprops(self):
-        for ci in xrange(self.channels):
-            yield ImageProps(self.get_image(stack=0, channel=ci))
-
-    @property
-    def metadata(self, nfiles=None):
-        return MetaData(self.size, self.channels, self.dtype)
-
     @property
     def bitdepth(self):
         types = {np.uint8: 8,
@@ -90,15 +82,6 @@ class TiffImage(object):
     @property
     def channels(self):
         return self._shape[self.Idx_c]
-
-    def toArray(self, channels=None, stack=0):
-        if channels is None:
-            channels = range(self.channels)
-
-            image = np.zeros(self.size + (len(channels), ), dtype=self.dtype)
-        for i, ci in enumerate(channels):
-            image[:, :, i] = self.get_image(stack=stack, channel=ci)
-        return image
 
     def get_image(self, stack=0, channel=0):
         return self._image[:, :, stack, channel].transposeToNumpyOrder()

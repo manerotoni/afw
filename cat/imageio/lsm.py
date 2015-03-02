@@ -12,10 +12,9 @@ __all__ = ('LsmImage', )
 
 import numpy as np
 from pylsm.lsmreader import Lsmimage
-from .imageio import ImageProps, MetaData
+from .imagereader import ImageCore
 
-
-class LsmImage(Lsmimage):
+class LsmImage(ImageCore, Lsmimage):
     """LSM image class to fit the needs of the classfinder plugin.
     i.e. it has methods to return the number of channels, z-slices etc...
     """
@@ -31,14 +30,6 @@ class LsmImage(Lsmimage):
     def __init__(self, *args, **kw):
         Lsmimage.__init__(self, *args, **kw)
         self.open()
-
-    def iterprops(self):
-        for ci in xrange(self.channels):
-            yield ImageProps(self.get_image(stack=0, channel=ci))
-
-    @property
-    def metadata(self, nfiles=None):
-        return MetaData(self.size, self.channels, self.dtype)
 
     @property
     def bitdepth(self):
@@ -63,16 +54,6 @@ class LsmImage(Lsmimage):
     @property
     def channels(self):
         return self.header[self.IMAGE][0][self.CHANNEL]
-
-    def toArray(self, channels=None, stack=0):
-
-        if channels is None:
-            channels = range(self.channels)
-
-        image = np.zeros(self.size + (len(channels), ), dtype=self.dtype)
-        for i, ci in enumerate(channels):
-            image[:, :, i] = self.get_image(stack=stack, channel=ci)
-        return image
 
     def get_image(self, *args, **kw):
         image = Lsmimage.get_image(self, *args, **kw)
