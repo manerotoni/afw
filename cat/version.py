@@ -7,7 +7,7 @@ __licence__ = 'GPL'
 
 
 MAJOR = 0
-MINOR = 3
+MINOR = 4
 
 organisation = "IMBA"
 appname = "AnnotationTool"
