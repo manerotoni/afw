@@ -13,7 +13,7 @@
     <generate>
       <file>
         <input>annotationtool.qhp</input>
-        <output>../annot/gui/helpbrowser/annotationtool.qch</output>
+        <output>../cat/gui/helpbrowser/annotationtool.qch</output>
       </file>
     </generate>
   </docFiles>

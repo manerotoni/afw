@@ -15,16 +15,16 @@ from os.path import join
 from setuptools import setup
 # from distutils.core import setup
 
-from annot import version
+from cat import version
 import build_helpers
 
-pyrcc_opts = {'infile': join('qrc', 'at_rc.qrc'),
-              'outfile': join('annot', 'at_rc.py'),
+pyrcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
+              'outfile': join('cat', 'cat_rc.py'),
               'pyrccbin': 'pyrcc4'}
 
 help_opts = {'infile': join('doc', 'annotationtool.qhcp'),
              'outfile':
-             join('annot', 'gui', 'helpbrowser', 'annotationtool.qhc'),
+             join('cat', 'gui', 'helpbrowser', 'annotationtool.qhc'),
              'qcollectiongeneator': 'qcollectiongenerator'}
 
 setup(name='AnnotationTool',
@@ -33,9 +33,9 @@ setup(name='AnnotationTool',
                    ' classifier training'),
       author='Rudolf Hoefler',
       author_email='rudolf.hoefler@gmail.com',
-      packages = build_helpers.find_submodules("./annot", "annot"),
+      packages = build_helpers.find_submodules("./cat", "cat"),
       data_files=[(join('share','AnnotationTool'), glob.glob('./qrc/*.ico'))],
-      package_data = {'annot': ['gui/*.ui', 'gui/sidebar/*.ui',
+      package_data = {'cat': ['gui/*.ui', 'gui/sidebar/*.ui',
                                 'gui/helpbrowser/*.ui',
                                 'gui/helpbrowser/annotationtool.*']},
       scripts = ['AnnotationTool.py', 'postinstall.py'],
