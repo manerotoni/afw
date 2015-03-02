@@ -12,8 +12,7 @@ __licence__ = 'GPL'
 
 import glob
 from os.path import join
-from setuptools import setup
-# from distutils.core import setup
+from distutils.core import setup
 
 from cat import version
 import build_helpers
@@ -24,7 +23,7 @@ pyrcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
 
 help_opts = {'infile': join('doc', 'annotationtool.qhcp'),
              'outfile':
-             join('cat', 'gui', 'helpbrowser', 'annotationtool.qhc'),
+             join('catq', 'gui', 'helpbrowser', 'annotationtool.qhc'),
              'qcollectiongeneator': 'qcollectiongenerator'}
 
 setup(name='AnnotationTool',
