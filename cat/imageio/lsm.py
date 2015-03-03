@@ -12,7 +12,7 @@ __all__ = ('LsmImage', )
 
 import numpy as np
 from pylsm.lsmreader import Lsmimage
-from .imagereader import ImageCore
+from .imagecore import ImageCore
 
 class LsmImage(ImageCore, Lsmimage):
     """LSM image class to fit the needs of the classfinder plugin.
