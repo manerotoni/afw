@@ -39,7 +39,8 @@ if __name__ == '__main__':
     splash.setMask(splash_pix.mask())
     splash.show()
     splash.showMessage(version.information,
-                       alignment=Qt.AnchorHorizontalCenter|Qt.AnchorVerticalCenter)
+                       alignment=Qt.AnchorHorizontalCenter|
+                       Qt.AnchorVerticalCenter)
     app.processEvents()
     mw.show()
     app.thread().msleep(1500)
