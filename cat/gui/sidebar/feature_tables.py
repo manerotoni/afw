@@ -13,16 +13,16 @@ from collections import OrderedDict
 
 _Cecog = OrderedDict()
 
-_Cecog["Intensity"] =('n2_avg',
-                      'n2_stddev',
-                      'n2_wavg',
-                      'n2_wdist',
-                      'n2_wiavg',
-                      'n_avg',
-                      'n_stddev',
-                      'n_wavg',
-                      'n_wdist',
-                      'n_wiavg')
+_Cecog["Intensity"] = ('n2_avg',
+                       'n2_stddev',
+                       'n2_wavg',
+                       'n2_wdist',
+                       'n2_wiavg',
+                       'n_avg',
+                       'n_stddev',
+                       'n_wavg',
+                       'n_wdist',
+                       'n_wiavg')
 _Cecog["Shape"] = ('circularity',
                    'irregularity',
                    'irregularity2',
@@ -267,13 +267,14 @@ _Simple2["Intensity"] = ('n2_avg',
                          'n2_wiavg',
                          'n_avg',
                          'n_wavg',
-                         'n_wiavg'),
-_Simple2["Eccentricity"] = ("eccentricity", ),
+                         'n_wiavg')
+
+_Simple2["Eccentricity"] = ("eccentricity", )
 # formerly Shape
 _Simple2["Contour roughness"] = ('circularity',
                                  'irregularity',
                                  'irregularity2',
-                                 'perimeter'),
+                                 'perimeter')
 # formerly Haralick
 _Simple1["Texture"] = ('h1_2ASM',
                        'h1_2CON',

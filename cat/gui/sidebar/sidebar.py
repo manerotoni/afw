@@ -51,13 +51,12 @@ class AtSideBarWidget(QtGui.QWidget):
         """Filter the feature matrix by column wise. Indices of the cols are
         determined by the FeatureSelection Dialog."""
 
-        ftrs_indices = self.filter_indices
+        ftrs_indices = self.filter_indices()
 
         if not ftrs_indices or features is None:
             raise NoSampleError("no features selected for classifier training")
 
         return features[:, ftrs_indices]
 
-    @property
     def filter_indices(self):
         return self.featuredlg.indicesOfCheckedItems()
