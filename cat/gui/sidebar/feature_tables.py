@@ -253,25 +253,25 @@ _Cecog["Stat. geom"] =  ('ls0_CAREA_avg_value',
                          'ls1_TAREA_sample_mean',
                          'ls1_TAREA_sample_sd')
 
-_Simple1 = OrderedDict()
-_Simple1["Brightness"] = ("n2_avg", )
-_Simple1["Homogenity"] = ("n2_stddev", )
-_Simple1["Shape"] = ("eccentricity", )
-_Simple1["Texture"] = ("h4_ASM", "h8_2COR"),
-_Simple1["Granularity"] = ('granu_close_volume_7', 'granu_open_volume_5')
-
 _Simple2 = OrderedDict()
-_Simple2["Size"] = ("roisize",)
-_Simple2["Intensity"] = ('n2_avg',
+_Simple2["Brightness"] = ("n2_avg", )
+_Simple2["Homogenity"] = ("n2_stddev", )
+_Simple2["Shape"] = ("eccentricity", )
+_Simple2["Texture"] = ("h4_ASM", "h8_2COR"),
+_Simple2["Granularity"] = ('granu_close_volume_7', 'granu_open_volume_5')
+
+_Simple1 = OrderedDict()
+_Simple1["Size"] = ("roisize",)
+_Simple1["Intensity"] = ('n2_avg',
                          'n2_wavg',
                          'n2_wiavg',
                          'n_avg',
                          'n_wavg',
                          'n_wiavg')
 
-_Simple2["Eccentricity"] = ("eccentricity", )
+_Simple1["Eccentricity"] = ("eccentricity", )
 # formerly Shape
-_Simple2["Contour roughness"] = ('circularity',
+_Simple1["Contour roughness"] = ('circularity',
                                  'irregularity',
                                  'irregularity2',
                                  'perimeter')
@@ -397,7 +397,7 @@ _Simple1["Texture"] = ('h1_2ASM',
                        'h8_average',
                        'h8_variance')
 
-_Simple2["Other"] = ('n2_stddev',
+_Simple1["Other"] = ('n2_stddev',
                      'n2_wdist',
                      'n_stddev',
                      'n_wdist',

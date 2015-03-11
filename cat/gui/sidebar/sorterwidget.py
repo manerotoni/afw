@@ -120,10 +120,13 @@ class AtSortWidget(AtSideBarWidget):
             item.widget().close()
 
     def onSelectionChanged(self):
+        self.selectionChanged.emit(self.currentFeatureNames())
+
+    def currentFeatureNames(self):
         feature_names = list()
         for widget in self._iterGroups():
             feature_names.extend(widget.currentFeatureNames())
-        self.selectionChanged.emit(tuple(feature_names))
+        return tuple(feature_names)
 
     def itemView(self):
         return self.treeview
@@ -153,8 +156,8 @@ class AtSortWidget(AtSideBarWidget):
         all_items = self.tileview.items
         try:
             sorter = Sorter(self.sortAlgorithm.currentText(), all_items,
-                            self.filter_indices)
-            sorter.treedata = self.filterFeatures(self.model.features)
+                            self.sort_filter_indices)
+            sorter.treedata = self.sortFilterFeatures(self.model.features)
         except NoSampleError:
             return
 
@@ -171,3 +174,27 @@ class AtSortWidget(AtSideBarWidget):
             for d, item in zip(dist, all_items):
                 item.sortkey = d
             self.startSorting.emit()
+
+    def sortFilterFeatures(self, features):
+        ftrs_indices = self.sort_filter_indices
+
+        if not ftrs_indices or features is None:
+            raise NoSampleError("no features selected for classifier training")
+
+        return features[:, ftrs_indices]
+
+    @property
+    def sort_filter_indices(self):
+
+        old_names = self.featuredlg.checkedItems().values()
+        sorter_features = self.currentFeatureNames()
+
+        # intersection of both lists, don't want use already excluded features
+        # for sorting
+        sorter_features = tuple(set(sorter_features).intersection(old_names))
+
+        self.featuredlg.setSelectionByName(sorter_features)
+        fidx = self.featuredlg.indicesOfCheckedItems()
+        self.featuredlg.setSelectionByName(old_names)
+
+        return fidx

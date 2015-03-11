@@ -186,8 +186,6 @@ class AtMainWindow(QtGui.QMainWindow):
             self.sorting.sortAscending)
         self.sortToolBar.sortDescendingBtn.clicked.connect(
             self.sorting.sortDescending)
-        self.sorting.selectionChanged.connect(
-            self.featuredlg.setSelectionByName)
 
     def setupProgressBar(self):
         frame = QtGui.QFrame(self)
