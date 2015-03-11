@@ -15,6 +15,7 @@ from PyQt4 import uic
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QSizePolicy
 
 from cat.sorters import Sorter
 from cat.config import AtConfig
@@ -86,17 +87,64 @@ class AtSortWidget(AtSideBarWidget):
 
         self.model = AtSorterItemModel(self)
         self.treeview.setModel(self.model)
+        self.setupToolBar()
 
-        self.removeBtn.clicked.connect(self.removeSelected)
-        self.removeAllBtn.clicked.connect(self.removeAll)
-        self.addBtn.clicked.connect(self.onAdd)
-        self.sortBtn.clicked.connect(self.sort)
         self.startSorting.connect(
             lambda: self.tileview.reorder(force_update=True))
 
         self._channels = tuple()
         self.ftable.addItems(FeatureTables.keys())
         self.ftable.currentIndexChanged[str].connect(self.onTableChanged)
+
+    def setupToolBar(self):
+
+        toolbar =  QtGui.QToolBar(self)
+        toolbar.setIconSize(QtCore.QSize(16, 16))
+        self.vbox.addWidget(toolbar)
+
+        self.addBtn = QtGui.QToolButton()
+        self.addBtn.setToolTip("Add items")
+        self.addBtn.setIcon(QtGui.QIcon(":/oxygen/list-add.png"))
+        self.addBtn.setSizePolicy(
+            QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.addBtn.pressed.connect(self.onAdd)
+
+        self.removeBtn = QtGui.QToolButton()
+        self.removeBtn.setToolTip("Remove selected items")
+        self.removeBtn.setIcon(QtGui.QIcon(":/oxygen/list-remove.png"))
+        self.removeBtn.setSizePolicy(
+            QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.removeBtn.pressed.connect(self.removeSelected)
+
+
+        self.removeAllBtn = QtGui.QToolButton()
+        self.removeAllBtn.setToolTip("Add items")
+        self.removeAllBtn.setIcon(QtGui.QIcon(":/oxygen/edit-clear.png"))
+        self.removeAllBtn.setSizePolicy(
+            QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.removeAllBtn.pressed.connect(self.removeAll)
+
+        self.sortAscendingBtn = QtGui.QToolButton()
+        self.sortAscendingBtn.setToolTip("Add items")
+        self.sortAscendingBtn.setIcon(
+            QtGui.QIcon(":/oxygen/sort-ascending.png"))
+        self.sortAscendingBtn.setSizePolicy(
+            QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.sortAscendingBtn.pressed.connect(self.sortAscending)
+
+        self.sortDescendingBtn = QtGui.QToolButton()
+        self.sortDescendingBtn.setToolTip("Add items")
+        self.sortDescendingBtn.setIcon(
+            QtGui.QIcon(":/oxygen/sort-descending.png"))
+        self.sortDescendingBtn.setSizePolicy(
+            QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.sortDescendingBtn.pressed.connect(self.sortDescending)
+
+        toolbar.addWidget(self.addBtn)
+        toolbar.addWidget(self.removeBtn)
+        toolbar.addWidget(self.removeAllBtn)
+        toolbar.addWidget(self.sortAscendingBtn)
+        toolbar.addWidget(self.sortDescendingBtn)
 
     def onTableChanged(self, table):
         self.setChannelNames(self._channels, table)
