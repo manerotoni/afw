@@ -34,7 +34,7 @@ if __name__ == '__main__':
     if args.file is not None and not os.path.isfile(args.file):
         raise SystemExit("File does not exist!")
 
-    app = QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     mw = AtMainWindow(args.file)
 
 

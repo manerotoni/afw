@@ -162,15 +162,6 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.annotation = AtAnnotationWidget(
             self, self.tileview, self.featuredlg)
 
-        self.featuregroups = AtFeatureGroupsWidget(self.featuredlg)
-        self.featuregroups.selectionChanged.connect(
-            self.featuredlg.setSelectionByName)
-
-        self.featuredock = QtWidgets.QDockWidget("Feature Groups", self)
-        self.featuredock.setWidget(self.featuregroups)
-        self.featuredock.setObjectName("feature_groups")
-        self.addDockWidget(Qt.RightDockWidgetArea, self.featuredock)
-
         self.sortdock = QtWidgets.QDockWidget("Sorting", self)
         self.sortdock.setWidget(self.sorting)
         self.sortdock.setObjectName("sorting")

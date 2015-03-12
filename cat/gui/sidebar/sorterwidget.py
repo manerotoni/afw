@@ -13,7 +13,8 @@ import numpy as np
 
 from PyQt5 import uic
 from PyQt5 import QtCore
-from PyQt5.QtGui import QMessageBox
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QMessageBox
 
@@ -27,18 +28,21 @@ from .feature_tables import FeatureTables
 from cat.segmentation.channelname import ChannelName as cn
 
 
-class AtChannelFeatureGroupsWidget(QtGui.QWidget):
+class AtChannelFeatureGroupsWidget(QtWidgets.QWidget):
 
     selectionChanged = QtCore.pyqtSignal()
 
     def __init__(self, title, table,  *args, **kw):
         super(AtChannelFeatureGroupsWidget, self).__init__(*args, **kw)
-        self.setLayout(QtGui.QVBoxLayout())
-        self.gbox = QtGui.QGroupBox(self)
+        self.setLayout(QtWidgets.QVBoxLayout())
+        self.gbox = QtWidgets.QGroupBox(self)
 
-        self.gbox.setLayout(QtGui.QVBoxLayout())
+        self.gbox.setLayout(QtWidgets.QVBoxLayout())
         self.layout().addWidget(self.gbox)
         self.layout().setContentsMargins(0, 0, 0, 0)
+        self.gbox.layout().setContentsMargins(1, 1, 1, 1)
+        self.gbox.layout().setSpacing(1)
+
 
         self.gbox.setTitle(cn.display(title))
 
@@ -51,7 +55,7 @@ class AtChannelFeatureGroupsWidget(QtGui.QWidget):
             self.addFeatureGroup(group, names)
 
     def addFeatureGroup(self, group, feature_names):
-        checkbox = QtGui.QCheckBox(group)
+        checkbox = QtWidgets.QCheckBox(group)
         checkbox.setCheckState(QtCore.Qt.Checked)
         checkbox.stateChanged.connect(self.onStateChanged)
         self.gbox.layout().addWidget(checkbox)
@@ -98,18 +102,18 @@ class AtSortWidget(AtSideBarWidget):
 
     def setupToolBar(self):
 
-        toolbar =  QtGui.QToolBar(self)
+        toolbar =  QtWidgets.QToolBar(self)
         toolbar.setIconSize(QtCore.QSize(16, 16))
         self.vbox.addWidget(toolbar)
 
-        self.addBtn = QtGui.QToolButton()
+        self.addBtn = QtWidgets.QToolButton()
         self.addBtn.setToolTip("Add items")
         self.addBtn.setIcon(QtGui.QIcon(":/oxygen/list-add.png"))
         self.addBtn.setSizePolicy(
             QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.addBtn.pressed.connect(self.onAdd)
 
-        self.removeBtn = QtGui.QToolButton()
+        self.removeBtn = QtWidgets.QToolButton()
         self.removeBtn.setToolTip("Remove selected items")
         self.removeBtn.setIcon(QtGui.QIcon(":/oxygen/list-remove.png"))
         self.removeBtn.setSizePolicy(
@@ -117,14 +121,14 @@ class AtSortWidget(AtSideBarWidget):
         self.removeBtn.pressed.connect(self.removeSelected)
 
 
-        self.removeAllBtn = QtGui.QToolButton()
+        self.removeAllBtn = QtWidgets.QToolButton()
         self.removeAllBtn.setToolTip("Add items")
         self.removeAllBtn.setIcon(QtGui.QIcon(":/oxygen/edit-clear.png"))
         self.removeAllBtn.setSizePolicy(
             QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.removeAllBtn.pressed.connect(self.removeAll)
 
-        self.sortAscendingBtn = QtGui.QToolButton()
+        self.sortAscendingBtn = QtWidgets.QToolButton()
         self.sortAscendingBtn.setToolTip("Add items")
         self.sortAscendingBtn.setIcon(
             QtGui.QIcon(":/oxygen/sort-ascending.png"))
@@ -132,7 +136,7 @@ class AtSortWidget(AtSideBarWidget):
             QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.sortAscendingBtn.pressed.connect(self.sortAscending)
 
-        self.sortDescendingBtn = QtGui.QToolButton()
+        self.sortDescendingBtn = QtWidgets.QToolButton()
         self.sortDescendingBtn.setToolTip("Add items")
         self.sortDescendingBtn.setIcon(
             QtGui.QIcon(":/oxygen/sort-descending.png"))
