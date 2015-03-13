@@ -100,6 +100,7 @@ class CrossValidationDialog(QtGui.QWidget):
                 self.parent().model.features)
         except NoSampleError:
             return
+
         preprocessor = self.classifier.setupPreProcessor(features)
         features = self.classifier.normalize(features)
 
@@ -120,6 +121,7 @@ class CrossValidationDialog(QtGui.QWidget):
 
     def showMessage(self, message=''):
         self.output.append(message)
+        QApplication.processEvents()
 
     def addFigure(self, title, figure):
 
@@ -175,12 +177,12 @@ class CrossValidationDialog(QtGui.QWidget):
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.gridSearch()
         except Exception as e:
-            QMessageBox.warning(self, "Warning", str(e))
+            QMessageBox.warning(self, "Waarning", str(e))
         finally:
             QApplication.restoreOverrideCursor()
 
     def gridSearch(self):
-
+        self.tabWidget.setCurrentWidget(self.paramTab)
         self.showMessage('Grid search using %d-fold cross_validation'
                          %self.kfold)
         C = np.logspace(-6, 6, self.grid_C.value())
