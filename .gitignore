@@ -13,3 +13,4 @@ cat_rc.py
 build
 dist
 _oxygen_
+*.orig
