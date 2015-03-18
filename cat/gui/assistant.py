@@ -21,8 +21,8 @@ from PyQt4 import QtHelp
 from PyQt4.QtCore import Qt
 from PyQt4 import uic
 
-from annot import version
-from annot.gui.lineedit import AtLineEdit
+from cat import version
+from cat.gui.lineedit import AtLineEdit
 
 
 class AtHelpBrowser(QtGui.QTextBrowser):

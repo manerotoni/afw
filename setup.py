@@ -23,7 +23,7 @@ pyrcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
 
 help_opts = {'infile': join('doc', 'annotationtool.qhcp'),
              'outfile':
-             join('catq', 'gui', 'helpbrowser', 'annotationtool.qhc'),
+             join('cat', 'gui', 'helpbrowser', 'annotationtool.qhc'),
              'qcollectiongeneator': 'qcollectiongenerator'}
 
 setup(name='CellAnnotator',
