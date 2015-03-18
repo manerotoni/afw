@@ -1,4 +1,5 @@
 
+
 """
 multiclasssvm.py
 """
@@ -100,6 +101,7 @@ class SvcParameterWidget(QtGui.QFrame):
         vbox.setSpacing(2)
 
         frame = QtGui.QToolBar("SVC", self)
+        frame.setIconSize(QtCore.QSize(16, 16))
 
         self.treeview = TreeView(parent, self)
         model = AtMultiClassSvmItemModel(self.treeview)

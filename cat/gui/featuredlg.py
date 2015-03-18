@@ -130,13 +130,11 @@ class AtFeatureSelectionDlg(QtGui.QWidget):
 
     def indicesOfCheckedItems(self):
         indices = list()
-
         for i in xrange(self.model.rowCount()):
             idx_item = self.model.item(i, self.model.INDEX)
             name_item = self.model.item(i, self.model.NAME)
             if name_item.checkState() == Qt.Checked:
                 indices.append(int(idx_item.text()))
-
         return tuple(indices)
 
     def setSelectionByName(self, names):

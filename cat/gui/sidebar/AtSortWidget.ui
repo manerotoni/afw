@@ -27,88 +27,118 @@
      </property>
      <item>
       <layout class="QVBoxLayout" name="vbox">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
        <item>
         <widget class="QComboBox" name="sortAlgorithm"/>
        </item>
       </layout>
      </item>
      <item>
-      <widget class="QTreeView" name="treeview">
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::ContiguousSelection</enum>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>16</width>
-         <height>16</height>
-        </size>
-       </property>
-       <property name="indentation">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
         <number>0</number>
        </property>
-       <property name="rootIsDecorated">
-        <bool>true</bool>
-       </property>
-       <property name="uniformRowHeights">
-        <bool>false</bool>
-       </property>
-       <property name="itemsExpandable">
-        <bool>false</bool>
-       </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-       <property name="animated">
-        <bool>true</bool>
-       </property>
-       <property name="allColumnsShowFocus">
-        <bool>false</bool>
-       </property>
-       <property name="headerHidden">
-        <bool>false</bool>
-       </property>
-       <property name="expandsOnDoubleClick">
-        <bool>false</bool>
-       </property>
+       <widget class="QWidget" name="sorttab">
+        <attribute name="title">
+         <string>Items</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QTreeView" name="treeview">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::ContiguousSelection</enum>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>16</width>
+             <height>16</height>
+            </size>
+           </property>
+           <property name="indentation">
+            <number>0</number>
+           </property>
+           <property name="rootIsDecorated">
+            <bool>true</bool>
+           </property>
+           <property name="uniformRowHeights">
+            <bool>false</bool>
+           </property>
+           <property name="itemsExpandable">
+            <bool>false</bool>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="animated">
+            <bool>true</bool>
+           </property>
+           <property name="allColumnsShowFocus">
+            <bool>false</bool>
+           </property>
+           <property name="headerHidden">
+            <bool>false</bool>
+           </property>
+           <property name="expandsOnDoubleClick">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="featuretab">
+        <attribute name="title">
+         <string>Measures</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="spacing">
+          <number>-1</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QComboBox" name="ftable">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="fbox"/>
+         </item>
+         <item>
+          <spacer name="vspacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
       </widget>
-     </item>
-     <item>
-      <layout class="QGridLayout" name="gbox">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="removeBtn">
-         <property name="text">
-          <string>remove items</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="addBtn">
-         <property name="text">
-          <string>add items</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="removeAllBtn">
-         <property name="text">
-          <string>remove all</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="sortBtn">
-         <property name="text">
-          <string>sort</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
     </layout>
    </item>

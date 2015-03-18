@@ -20,7 +20,6 @@ from cat.gui.graphicsview import AtGraphicsView
 from cat.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from cat.gui.sidebar import AtSortWidget
 from cat.gui.sidebar import AtAnnotationWidget
-from cat.gui.sidebar import AtFeatureGroupsWidget
 from cat.gui.importdlg import ImportDialog
 from cat.gui.aboutdialog import AtAboutDialog
 from cat.gui.featuredlg import AtFeatureSelectionDlg
@@ -177,14 +176,6 @@ class AtMainWindow(QtGui.QMainWindow):
         self.sorting = AtSortWidget(self, self.tileview, self.featuredlg)
         self.annotation = AtAnnotationWidget(
             self, self.tileview, self.featuredlg)
-        self.featuregroups = AtFeatureGroupsWidget(self.featuredlg)
-        self.featuregroups.selectionChanged.connect(
-            self.featuredlg.setSelectionByName)
-
-        self.featuredock = QtGui.QDockWidget("Feature Groups", self)
-        self.featuredock.setWidget(self.featuregroups)
-        self.featuredock.setObjectName("feature_groups")
-        self.addDockWidget(Qt.RightDockWidgetArea, self.featuredock)
 
         self.sortdock = QtGui.QDockWidget("Sorting", self)
         self.sortdock.setWidget(self.sorting)
@@ -200,7 +191,6 @@ class AtMainWindow(QtGui.QMainWindow):
 
         self.menuView.addAction(self.sortdock.toggleViewAction())
         self.menuView.addAction(self.annodock.toggleViewAction())
-        self.menuView.addAction(self.featuredock.toggleViewAction())
 
         # crosslink sorter dock and sorter toolbar
         self.sortToolBar.sortAlgorithm.currentIndexChanged.connect(
@@ -250,7 +240,7 @@ class AtMainWindow(QtGui.QMainWindow):
     def updateToolbars(self, props):
         self.navToolBar.updateToolbar(props.coordspace)
         self.toolBar.updateToolbar(props)
-        self.featuregroups.setChannelNames(props.channel_names)
+        self.sorting.setChannelNames(props.channel_names)
 
     def setupToolbar(self):
         self.toolBar = ViewToolBar(self)

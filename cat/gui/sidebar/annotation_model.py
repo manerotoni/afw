@@ -87,7 +87,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def hashkey(self, index):
         item = self.item(index.parent().row(), 0)
-        return item.child(index.row(), 0).data().toPyObject()
+        if item is not None:
+            return item.child(index.row(), 0).data().toPyObject()
 
     def allowReassign(self, state):
         self._reassign = (state == Qt.Checked)

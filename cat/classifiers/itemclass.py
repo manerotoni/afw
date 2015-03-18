@@ -7,6 +7,7 @@ __licence__ = 'GPL'
 
 __all__ = ("ItemClass", "UnClassified")
 
+import sys
 
 from PyQt4 import QtCore
 from PyQt4 import QtGui
@@ -16,7 +17,7 @@ from PyQt4.QtCore import Qt
 class ItemClass(QtCore.QObject):
     """Definiton of one single class, in terms of machine learing."""
 
-    def __init__(self, name, color, label, score=None):
+    def __init__(self, name, color, label, score=0.0):
         self.color = color
         self.name = name
         self.label = label
@@ -83,4 +84,4 @@ class ItemClass(QtCore.QObject):
 
 
 
-UnClassified = ItemClass("unclassified", QtGui.QColor("white"), None)
+UnClassified = ItemClass("unclassified", QtGui.QColor("white"), 10**9)

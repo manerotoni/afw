@@ -17,11 +17,6 @@ QDialog {
   background: #ffffff;
   background-image: url(:annotationtool_about.png);
 }
-
-QLabel {
-  font: bold 11px;
-  color: white;
-}
 """
 
 
@@ -31,13 +26,12 @@ class AtAboutDialog(QtGui.QDialog):
         super(AtAboutDialog, self).__init__(*args, **kw)
         self.setBackgroundRole(QtGui.QPalette.Dark)
         self.setStyleSheet(stylesheet)
-        self.setWindowTitle('About AnnotationTool')
-        self.setFixedSize(300, 200)
+        self.setWindowTitle('About %s' %version.appname)
+        self.setFixedSize(424, 254)
 
         label1 = QtGui.QLabel(self)
+        label1.setStyleSheet(stylesheet)
         label1.setAlignment(Qt.AlignCenter)
-        label1.setText('AnnotationTool\nVersion %s\n\n'
-                       'Copyright 2014 Rudolf Hoefler.\nAll rights reserved.\n'
-                       %version.version)
+        label1.setText(version.information)
 
-        label1.setGeometry(0, 100, 300, 80)
+        label1.setGeometry(0, 0, 424, 254)

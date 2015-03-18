@@ -14,7 +14,7 @@
    <string>Cross Validation &amp; Grid Search</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../qrc/at_rc.qrc">
+   <iconset resource="../../qrc/cat_rc.qrc">
     <normaloff>:/annotationtool.svg</normaloff>:/annotationtool.svg</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -38,7 +38,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="paramTab">
       <attribute name="title">
        <string>Cross Validation &amp;&amp; Grid Serach</string>
       </attribute>
@@ -77,7 +77,7 @@
              <enum>QFormLayout::FieldsStayAtSizeHint</enum>
             </property>
             <property name="horizontalSpacing">
-             <number>-1</number>
+             <number>6</number>
             </property>
             <property name="verticalSpacing">
              <number>5</number>
@@ -242,7 +242,7 @@ p, li { white-space: pre-wrap; }
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="hbox5">
      <property name="spacing">
-      <number>-1</number>
+      <number>6</number>
      </property>
      <property name="bottomMargin">
       <number>0</number>
@@ -307,7 +307,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources>
-  <include location="../../qrc/at_rc.qrc"/>
+  <include location="../../qrc/cat_rc.qrc"/>
  </resources>
  <connections/>
 </ui>

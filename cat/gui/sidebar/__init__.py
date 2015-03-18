@@ -8,4 +8,3 @@ __licence__ = 'GPL'
 from .sidebar import *
 from .sorterwidget import *
 from .annotation import *
-from .featuregroups import *

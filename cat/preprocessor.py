@@ -33,8 +33,6 @@ class PreProcessor(object):
             self._mask[index] = True
 
         self._mask*=mask_nan
-
-
         data = self.filter(data)
         self._zs = ZScore(data)
 

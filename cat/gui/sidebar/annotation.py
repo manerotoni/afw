@@ -9,6 +9,8 @@ __licence__ = 'GPL'
 __all__ = ("AtAnnotationWidget", )
 
 
+import warnings
+
 from os.path import join, dirname
 from PyQt4 import uic
 from PyQt4 import QtGui
@@ -188,5 +190,8 @@ class AtAnnotationWidget(AtSideBarWidget):
         clf = self.currentClassifier()
         for item in items:
             features = self.filterFeatures(item.features.reshape((1, -1)))
-            prediction = clf.predict(features)
-            item.setClass(prediction[0])
+            try:
+                prediction = clf.predict(features)
+                item.setClass(prediction[0])
+            except ValueError:
+                warnings.warn("feature vector contains NaN's")

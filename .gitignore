@@ -16,3 +16,4 @@ _oxygen_
 *.qhc
 *.qch
 .annotationtool
+*.orig

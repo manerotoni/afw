@@ -65,5 +65,7 @@
     <file>previous.png</file>
     <file>hdf5-logo.png</file>
     <file>annotationtool_about.png</file>
+    <file>annotationtool_about.png</file>
+    <file>annotationtool_splash.png</file>
   </qresource>
 </RCC>
