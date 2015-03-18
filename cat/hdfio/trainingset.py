@@ -45,7 +45,12 @@ class AtTrainingSetIO(HdfFile):
 
         return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
                            self.numberItems(), self.gsize, cspace,
-                           self.channelNames)
+                           self.channelNames, self.colors)
+    @property
+    def colors(self):
+        colors = self[self.dmodel.images].attrs[self.dmodel.COLORS]
+        colors = [str(c) for c in colors] # no unicode
+        return tuple(colors)
 
     @property
     def channelNames(self):
@@ -103,9 +108,7 @@ class AtTrainingSetIO(HdfFile):
     def iterItems(self, *args, **kw):
         # need *magic for compatibiliy to other classes
 
-        cols = self[self.dmodel.images].attrs[self.dmodel.COLORS]
-        cols = [str(c) for c in cols] # no unicode
-
+        cols = self.colors
         gal = self[self.dmodel.gallery].value
         datatbl = self[self.dmodel.bbox].value
         cnts = self._getAllContours(datatbl)

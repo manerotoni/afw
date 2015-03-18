@@ -14,6 +14,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 from cat.classifiers.itemclass import UnClassified
+from cat.gui.painting import AtPainter
 
 class StackOrder(object):
     pixmap = 0
@@ -61,6 +62,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.index = item.index
         self.hash = item.hash
         self.path = item.path
+        self.qimages = list(item.iterQImages())
         self._is_training_sample = False
 
         if item.contour is not None:
@@ -159,9 +161,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
             self._tsi.hide()
             self.setSelected(isSelected)
 
-    @property
-    def pixmap(self):
-        return self._pixmap
+    # @property
+    # def pixmap(self):
+    #     return self._pixmap
 
     def setTrainingSample(self, class_):
         self._is_training_sample = True
@@ -186,13 +188,18 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     def setPixmap(self, pixmap):
         self._pixmap = pixmap
-        item = QtGui.QGraphicsPixmapItem(self)
-        item.setPixmap(self.pixmap)
-        item.setPos(self.pos())
-        self.addToGroup(item)
+        self._pixmapItem = QtGui.QGraphicsPixmapItem(self)
+        self._pixmapItem.setPixmap(self._pixmap)
+        self._pixmapItem.setPos(self.pos())
+        self.addToGroup(self._pixmapItem)
         self._addSelectorRect()
         self._addClassRect()
         self._addTsIndicator()
+
+    def enhancePixmap(self, index, lut):
+        self.qimages[index].setColorTable(lut)
+        self._pixmap = AtPainter.blend(self.qimages)
+        self._pixmapItem.setPixmap(self._pixmap)
 
     def paint(self, painter, option, widget):
         if self.isSelected():

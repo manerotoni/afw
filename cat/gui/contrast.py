@@ -248,14 +248,25 @@ class AtEnhancerWidget(QtGui.QWidget):
         self.channelBox.currentIndexChanged.connect(self.changeChannel)
         vbox.setContentsMargins(0, 0, 0, 0)
 
+    def currentChannelIndex(self):
+        return self.channelBox.currentIndex()
+
+    def currentChannel(self):
+        return self.channelBox.currentText()
+
     def clear(self):
-
         self.channelBox.clear()
-
         for i in range(self.stack.count()):
             widget = self.stack.widget(0)
             self.stack.removeWidget(widget)
             widget.close()
+
+    def toggleAutoButtons(self, state):
+        for i in range(self.stack.count()):
+            if state:
+                self.stack.widget(i).autoBtn.show()
+            else:
+                self.stack.widget(i).autoBtn.hide()
 
     def setImageProps(self, props):
 
@@ -266,9 +277,10 @@ class AtEnhancerWidget(QtGui.QWidget):
         for i, prop in enumerate(props):
             self.stack.widget(i).image_properties = prop
 
-
-    def addChannel(self, name):
+    def addChannel(self, name, no_auto_button=False):
         sliderwidget = AtContrastSliderWidget(self, range_=(0, 255))
+        if no_auto_button:
+            sliderwidget.autoBtn.hide()
         sliderwidget.valuesUpdated.connect(self.valuesUpdated.emit)
         idx = self.stack.addWidget(sliderwidget)
         self.channelBox.addItem(name)

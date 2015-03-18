@@ -54,6 +54,7 @@ class Ch5Reader(HdfFile):
 
     _features_def_key = "/definition/feature/"
     _image_def_key = "/definition/image"
+    _channel_def_key = _image_def_key + "/channel"
     _region_name_key = _image_def_key + "/region"
 
     _root_key = "/sample/%(zero)s" %{'zero': "0"}
@@ -92,11 +93,27 @@ class Ch5Reader(HdfFile):
                   'region': cspace.values()[0].values()[0].values()[0]}
 
         return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE, 500, 65, cspace,
-                           self.channelNames)
+                           self.channelNames, self.colors)
+
+    # @property
+    # def colors(self):
+    #     colors = self[self._channel_def_key]['color']
+    #     colors = [str(c) for c in colors]
+    #     return tuple(colors)
+
+    # @property
+    # def channelNames(self):
+    #     names = self[self._channel_def_key]['channel_name']
+    #     names = [str(n) for n in names]
+    #     return tuple(names)
+
+    @property
+    def colors(self):
+        return ('#ffffff', )
 
     @property
     def channelNames(self):
-        return ("Channel_1", )
+        return ('Channel_1', )
 
     def plateNames(self):
         key = self._plate_key %{"plate": ""}

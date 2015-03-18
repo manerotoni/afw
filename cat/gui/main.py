@@ -20,6 +20,7 @@ from cat.gui.graphicsview import AtGraphicsView
 from cat.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from cat.gui.sidebar import AtSortWidget
 from cat.gui.sidebar import AtAnnotationWidget
+from cat.gui.sidebar import AtContrastWidget
 from cat.gui.importdlg import ImportDialog
 from cat.gui.aboutdialog import AtAboutDialog
 from cat.gui.featuredlg import AtFeatureSelectionDlg
@@ -157,9 +158,15 @@ class AtMainWindow(QtGui.QMainWindow):
             pass
 
     def setupDock(self):
+        self.contrast = AtContrastWidget(self, self.tileview)
         self.sorting = AtSortWidget(self, self.tileview, self.featuredlg)
         self.annotation = AtAnnotationWidget(
             self, self.tileview, self.featuredlg)
+
+        self.contrastdock = QtGui.QDockWidget("Contrast", self)
+        self.contrastdock.setWidget(self.contrast)
+        self.contrastdock.setObjectName("contrast")
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.contrastdock)
 
         self.sortdock = QtGui.QDockWidget("Sorting", self)
         self.sortdock.setWidget(self.sorting)
@@ -225,6 +232,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.navToolBar.updateToolbar(props.coordspace)
         self.toolBar.updateToolbar(props)
         self.sorting.setChannelNames(props.channel_names)
+        self.contrast.setChannelNames(props.channel_names, props.colors)
 
     def setupToolbar(self):
         self.toolBar = ViewToolBar(self)
