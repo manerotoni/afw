@@ -33,6 +33,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
     ClassColumn = 0
     ColorColumn = 1
     ButtonColumn = 2
+    SampleCountColumn = 3
 
     classesChanged = QtCore.pyqtSignal(dict)
 
@@ -41,11 +42,13 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def __init__(self, *args, **kw):
         super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
+        self.insertColumns(2, 2)
         self._item_classnames = dict()
         self._color_cycle = cycle(self._colors)
         self._reassign = False
         # only top level items are editable
         self.dataChanged.connect(self.onDataChanged)
+        self._setHeader()
 
     def dropMimeData(self, mimedata, action, row, column, parentIndex):
 
@@ -65,7 +68,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
         self.blockSignals(oldstate)
 
-        # Drag & Drop would not update classes until call of dropEvent of the
+       # Drag & Drop would not update classes until call of dropEvent of the
         # corresponding view is finished. I is totally unclear why the model
         # contains 'extra' items (those which are dropped, on the previous and
         # new position)
@@ -73,10 +76,10 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         return ret
 
     def _setHeader(self):
-        # default columns
-        self.setHeaderData(0, Qt.Horizontal, "class")
-        self.setHeaderData(1, Qt.Horizontal, "color")
-        self.setHeaderData(2, Qt.Horizontal, "button")
+        self.setHeaderData(0, Qt.Horizontal, "Class")
+        self.setHeaderData(1, Qt.Horizontal, "Color")
+        self.setHeaderData(2, Qt.Horizontal, "  +  ")
+        self.setHeaderData(3, Qt.Horizontal, " # ")
 
     def _brushFromColor(self, color):
         color = QtGui.QColor(color)
@@ -131,6 +134,10 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def onDataChanged(self, topleft, bottomright):
         self.emitClassesChanged()
+
+    def resizeAllColumnsToContents(self):
+        for i in xrange(self.columnCount()):
+            self.parent().resizeColumnToContents(i)
 
     def currentClasses(self):
         """Construct a class defintion from the model by iteration over
@@ -187,6 +194,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         self.parent().openPersistentEditor(
             self.index(self.rowCount()-1, self.ButtonColumn))
 
+        self.resizeAllColumnsToContents()
         self.layoutChanged.emit()
         self.emitClassesChanged()
 
@@ -224,6 +232,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_item = self.findClassItems(class_name)
             childs = self.prepareRowItems(item)
             class_item.appendRow(childs)
+            self.updateCounts(class_item.row(), class_item.rowCount())
 
         elif self._reassign:
             old_class = self._item_classnames[item.hash]
@@ -234,9 +243,15 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_item = self.findClassItems(class_name)
             class_item.appendRow(childs)
             self._item_classnames[item.hash] = class_name
+            self.updateCounts(class_item.row(), class_item.rowCount())
+
         elif class_name != self._item_classnames[item.hash]:
             raise DoubleAnnotationError("Item %d already annotated as %s"
                                         %(item.index, class_name))
+
+    def updateCounts(self, row, count):
+        index = self.index(row, self.SampleCountColumn)
+        self.setData(index, QtCore.QVariant(count), Qt.DisplayRole)
 
     # removeAnnoations
     def removeItems(self, indices):
@@ -248,6 +263,9 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
                 del self._items[key]
                 del self._item_classnames[key]
                 parent.removeRow(index.row())
+                self.updateCounts(parent.row(), parent.rowCount())
+
+
 
     def iterItems(self, parent):
         for i in range(parent.rowCount()):

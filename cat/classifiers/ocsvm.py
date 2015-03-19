@@ -87,6 +87,7 @@ class OcSvmParameterWidget(QtGui.QFrame):
         self.treeview.activated.connect(parent.onActivated)
         self.treeview.setModel(AtOneClassSvmItemModel())
         self.treeview.setSelectionMode(self.treeview.ContiguousSelection)
+        self.treeview.setSortingEnabled(True)
 
         gbox.addWidget(QtGui.QLabel("Nu", self.nu), 0, 0)
         gbox.addWidget(self.nu, 0, 1)
