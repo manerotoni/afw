@@ -262,6 +262,7 @@ class AtMainWindow(QtGui.QMainWindow):
 
     def openImporter(self):
         dlg = ImportDialog(self)
+        dlg.loadData.connect(self._openAndLoad)
         dlg.exec_()
 
     def onThrowAnchor(self):
@@ -297,6 +298,11 @@ class AtMainWindow(QtGui.QMainWindow):
             QMessageBox.critical(self, "Error", msg)
         else:
             self.statusBar().showMessage(basename(file_))
+
+    def _openAndLoad(self, file_):
+        self.onFileClose()
+        self._fileOpen(file_)
+        self.loadItems()
 
     def onLoadingFinished(self):
         self.annotation.setFeatureNames(self.loader.featureNames)

@@ -16,6 +16,7 @@ from os.path import splitext, expanduser
 
 from PyQt4 import uic
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QMessageBox
@@ -28,6 +29,8 @@ from cat.segmentation.multicolor import LsmProcessor
 
 
 class ImportDialog(QtGui.QDialog):
+
+    loadData = QtCore.pyqtSignal(str)
 
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
@@ -75,6 +78,12 @@ class ImportDialog(QtGui.QDialog):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_F5:
             self.showObjects()
+
+    def close(self):
+        super(ImportDialog, self).close()
+        ofile = self.outputFile.text()
+        if self.loadOnClose.isChecked() and isfile(ofile):
+            self.loadData.emit(ofile)
 
     def onNextBtn(self):
         self.slider.setValue(self.slider.value()+1)
