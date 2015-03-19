@@ -242,7 +242,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
         self.setSelected(is_selected)
 
-    def toggleContours(self, state):
+    def toggleOutline(self, state):
         for item in self.childItems():
             if isinstance(item, QtGui.QGraphicsPolygonItem):
                 if state:
