@@ -148,6 +148,8 @@ class AtContrastSliderWidget(QtGui.QWidget):
     one slinge grey level image."""
 
     valuesUpdated = QtCore.pyqtSignal()
+    sliderReleased = QtCore.pyqtSignal()
+    buttonClicked = QtCore.pyqtSignal()
 
     def __init__(self, parent, range_=(0, 256)):
         super(AtContrastSliderWidget, self).__init__(parent)
@@ -174,6 +176,15 @@ class AtContrastSliderWidget(QtGui.QWidget):
         self.maximum.valueChanged.connect(self.valuesToolTip)
         self.contrast.valueChanged.connect(self.valuesToolTip)
         self.brightness.valueChanged.connect(self.valuesToolTip)
+
+        self.minimum.sliderReleased.connect(self.sliderReleased.emit)
+        self.maximum.sliderReleased.connect(self.sliderReleased.emit)
+        self.contrast.sliderReleased.connect(self.sliderReleased.emit)
+        self.brightness.sliderReleased.connect(self.sliderReleased.emit)
+
+        self.minMaxBtn.clicked.connect(self.buttonClicked.emit)
+        self.resetBtn.clicked.connect(self.buttonClicked.emit)
+        self.autoBtn.clicked.connect(self.buttonClicked.emit)
 
         self.updateSliders()
 
@@ -234,6 +245,7 @@ class AtEnhancerWidget(QtGui.QWidget):
     multiple channels."""
 
     valuesUpdated = QtCore.pyqtSignal()
+    sliderReleased = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kw):
         super(AtEnhancerWidget, self).__init__(*args, **kw)
@@ -282,6 +294,9 @@ class AtEnhancerWidget(QtGui.QWidget):
         if no_auto_button:
             sliderwidget.autoBtn.hide()
         sliderwidget.valuesUpdated.connect(self.valuesUpdated.emit)
+        sliderwidget.sliderReleased.connect(self.sliderReleased.emit)
+        sliderwidget.buttonClicked.connect(self.sliderReleased.emit)
+
         idx = self.stack.addWidget(sliderwidget)
         self.channelBox.addItem(name)
 

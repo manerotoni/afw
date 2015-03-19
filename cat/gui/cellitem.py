@@ -161,9 +161,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
             self._tsi.hide()
             self.setSelected(isSelected)
 
-    # @property
-    # def pixmap(self):
-    #     return self._pixmap
+    @property
+    def pixmap(self):
+        return self._pixmap
 
     def setTrainingSample(self, class_):
         self._is_training_sample = True
