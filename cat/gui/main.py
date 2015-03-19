@@ -87,6 +87,13 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
         self.actionFeatureSelection.triggered.connect(
             self.showFeatureDlg)
+
+        self.actionRefresh.triggered.connect(self.refresh)
+        self.actionSelectAll.triggered.connect(
+            self.tileview.actionSelectAll.trigger)
+        self.actionInvertSelection.triggered.connect(
+            self.tileview.actionInvertSelection.trigger)
+
         self.loader.finished.connect(self.onLoadingFinished)
 
         self._restoreSettings()
@@ -113,6 +120,10 @@ class AtMainWindow(QtGui.QMainWindow):
 
     def dragLeaveEvent(self, event):
         event.accept()
+
+    def refresh(self):
+        self.tileview.actionRefresh.trigger()
+        self.contrast.enhanceContrast()
 
     def showFeatureDlg(self):
         self.featuredlg.show()

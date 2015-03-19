@@ -60,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -92,7 +92,16 @@
     <addaction name="actionAboutAnnotationTool"/>
     <addaction name="actionAboutQt"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionRefresh"/>
+    <addaction name="actionSelectAll"/>
+    <addaction name="actionInvertSelection"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuData"/>
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
@@ -200,6 +209,30 @@
    </property>
    <property name="text">
     <string>Feature Selection Dialog</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionSelectAll">
+   <property name="text">
+    <string>Select All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionInvertSelection">
+   <property name="text">
+    <string>Invert selection</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
  </widget>

@@ -29,7 +29,7 @@ class AtContrastWidget(QtGui.QWidget):
         self.enhancer= AtEnhancerWidget(self)
         vbox.addWidget(self.enhancer)
         vbox.setContentsMargins(0, 0, 0, 0)
-        self.enhancer.sliderReleased.connect(self.updateGallery)
+        self.enhancer.sliderReleased.connect(self.enhanceContrast)
 
     def setChannelNames(self, channels, colors):
         self.colors = colors
@@ -37,7 +37,7 @@ class AtContrastWidget(QtGui.QWidget):
         for channel in channels:
             self.enhancer.addChannel(cn.display(channel), no_auto_button=True)
 
-    def updateGallery(self):
+    def enhanceContrast(self):
         try:
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             i = self.enhancer.currentChannelIndex()
