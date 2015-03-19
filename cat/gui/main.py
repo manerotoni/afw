@@ -14,6 +14,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QKeySequence
 
 from cat import version
 from cat.gui.graphicsview import AtGraphicsView
@@ -180,8 +181,18 @@ class AtMainWindow(QtGui.QMainWindow):
 
         self.tabifyDockWidget(self.sortdock, self.annodock)
 
-        self.menuView.addAction(self.sortdock.toggleViewAction())
-        self.menuView.addAction(self.annodock.toggleViewAction())
+        # add action to the view menu
+        sort_action = self.sortdock.toggleViewAction()
+        sort_action.setShortcuts(QKeySequence(Qt.ALT +  Qt.SHIFT + Qt.Key_S))
+        self.menuView.addAction(sort_action)
+
+        anno_action = self.annodock.toggleViewAction()
+        anno_action.setShortcuts(QKeySequence(Qt.ALT +  Qt.SHIFT + Qt.Key_A))
+        self.menuView.addAction(anno_action)
+
+        contrast_action = self.contrastdock.toggleViewAction()
+        contrast_action.setShortcuts(QKeySequence(Qt.ALT +  Qt.SHIFT + Qt.Key_C))
+        self.menuView.addAction(contrast_action)
 
         # crosslink sorter dock and sorter toolbar
         self.sortToolBar.sortAlgorithm.currentIndexChanged.connect(

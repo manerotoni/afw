@@ -38,7 +38,6 @@ class AtContrastWidget(QtGui.QWidget):
             self.enhancer.addChannel(cn.display(channel), no_auto_button=True)
 
     def updateGallery(self):
-
         try:
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             i = self.enhancer.currentChannelIndex()
