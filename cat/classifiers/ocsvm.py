@@ -89,15 +89,26 @@ class OcSvmParameterWidget(QtGui.QFrame):
         self.treeview.setSelectionMode(self.treeview.ContiguousSelection)
         self.treeview.setSortingEnabled(True)
 
+        self.counter = QtGui.QLabel("---", self)
+
         gbox.addWidget(QtGui.QLabel("Nu", self.nu), 0, 0)
         gbox.addWidget(self.nu, 0, 1)
         gbox.addWidget(QtGui.QLabel("Gamma", self.gamma), 1, 0)
+        gbox.addWidget(self.counter, 2, 1)
         gbox.addWidget(self.gamma, 1, 1)
         gbox.addWidget(self.estBtn, 1, 2)
         gbox.addWidget(self.addBtn, 2, 2)
-        gbox.addWidget(QtGui.QLabel("add items"), 2, 0)
+        gbox.addWidget(QtGui.QLabel("Item count:"), 2, 0)
         gbox.addWidget(self.treeview, 3, 0, 2, 0)
 
+        parent.itemCountChanged.connect(self.updateCounter)
+
+    def updateCounter(self):
+        counts = len(self.treeview.model().items)
+        if counts == 0:
+            self.counter.setText("---")
+        else:
+            self.counter.setText("%d" %counts)
 
 class OneClassSvm(Classifier):
     """Class for training and parameter tuning of a one class svm."""

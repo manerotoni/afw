@@ -9,6 +9,7 @@ __all__ = ('AtSideBarWidget', 'NoSampleError')
 
 
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 
 
 class NoSampleError(Exception):
@@ -16,6 +17,8 @@ class NoSampleError(Exception):
 
 
 class AtSideBarWidget(QtGui.QWidget):
+
+    itemCountChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent, tileview, featuredlg=None, *args, **kw):
         super(AtSideBarWidget, self).__init__(parent, *args, **kw)
@@ -27,13 +30,16 @@ class AtSideBarWidget(QtGui.QWidget):
         model_indices =  self.itemView().selectionModel().selectedRows()
         model_indices.reverse()
         self.model.removeItems(model_indices)
+        self.itemCountChanged.emit()
 
     def removeAll(self):
         self.model.clear()
+        self.itemCountChanged.emit()
 
     def addItems(self, items):
         for item in items:
             self.model.addItem(item)
+        self.itemCountChanged.emit()
 
     def onAdd(self):
         items = self.tileview.selectedItems()

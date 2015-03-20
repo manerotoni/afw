@@ -99,6 +99,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         for item in items:
             item.setTrainingSample(class_)
             self.model.addAnnotation(item, class_name)
+        self.itemCountChanged.emit()
 
     def estimateParameters(self):
         try:

@@ -159,6 +159,12 @@ class SvcParameterWidget(QtGui.QFrame):
         vbox.addWidget(frame)
         vbox.addWidget(self.treeview)
 
+        parent.itemCountChanged.connect(self.updateCounts)
+
+    def updateCounts(self):
+        for i in xrange(self.treeview.model().rowCount()):
+            self.treeview.model().updateCounts(i)
+
     def onAddBtn(self):
         self.treeview.model().addClass()
 

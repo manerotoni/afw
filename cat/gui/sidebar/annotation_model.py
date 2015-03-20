@@ -177,6 +177,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         color_item = QtGui.QStandardItem(color)
         color_item.setBackground(self._brushFromColor(color))
         button_item = QtGui.QStandardItem()
+        count_item = QtGui.QStandardItem()
+        count_item.setData(QtCore.QVariant(0), Qt.DisplayRole)
 
         # XXX refactor this to a item factory
         name_item.setDragEnabled(True)
@@ -189,7 +191,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         name_item.setEditable(True)
         color_item.setEditable(True)
 
-        self.appendRow([name_item, color_item, button_item])
+        self.appendRow([name_item, color_item, button_item, count_item])
 
         self.parent().openPersistentEditor(
             self.index(self.rowCount()-1, self.ButtonColumn))
@@ -232,7 +234,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_item = self.findClassItems(class_name)
             childs = self.prepareRowItems(item)
             class_item.appendRow(childs)
-            self.updateCounts(class_item.row(), class_item.rowCount())
+
 
         elif self._reassign:
             old_class = self._item_classnames[item.hash]
@@ -243,14 +245,14 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_item = self.findClassItems(class_name)
             class_item.appendRow(childs)
             self._item_classnames[item.hash] = class_name
-            self.updateCounts(class_item.row(), class_item.rowCount())
 
         elif class_name != self._item_classnames[item.hash]:
             raise DoubleAnnotationError("Item %d already annotated as %s"
                                         %(item.index, class_name))
 
-    def updateCounts(self, row, count):
+    def updateCounts(self, row):
         index = self.index(row, self.SampleCountColumn)
+        count = self.item(row, 0).rowCount()
         self.setData(index, QtCore.QVariant(count), Qt.DisplayRole)
 
     # removeAnnoations
@@ -263,9 +265,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
                 del self._items[key]
                 del self._item_classnames[key]
                 parent.removeRow(index.row())
-                self.updateCounts(parent.row(), parent.rowCount())
-
-
 
     def iterItems(self, parent):
         for i in range(parent.rowCount()):
