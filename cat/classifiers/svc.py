@@ -108,6 +108,10 @@ class SvcParameterWidget(QtGui.QFrame):
         model.classesChanged.connect(parent.updateClassifier)
         self.treeview.setModel(model)
 
+        self.treeview.setColumnWidth(0, 75)
+        self.treeview.setColumnWidth(1, 75)
+        self.treeview.setColumnWidth(2, 30)
+
         self.addClassBtn = QtGui.QToolButton()
         self.addClassBtn.setToolTip("Add new class")
         self.addClassBtn.setIcon(QtGui.QIcon(":/oxygen/code-class.png"))
