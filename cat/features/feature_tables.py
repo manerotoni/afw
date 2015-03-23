@@ -2,12 +2,15 @@
 feature_tables.py
 
 Mappings from feature groups to lists of feature names
+
+This is just an intermediate module until the final feature groups are defined
+and approved.
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("FeatureTables", )
+__all__ = ("FeatureGroups", )
 
 from collections import OrderedDict
 
@@ -506,10 +509,10 @@ _Simple1["Other"] = ('n2_stddev',
                      'ls1_TAREA_sample_sd')
 
 
-FeatureTables = OrderedDict()
-FeatureTables["Simple1"] = _Simple1
-FeatureTables["Simple2"] = _Simple2
-FeatureTables["Cecog"] = _Cecog
+FeatureGroups = OrderedDict()
+FeatureGroups["Simple1"] = _Simple1
+FeatureGroups["Simple2"] = _Simple2
+FeatureGroups["Cecog"] = _Cecog
 
 if __name__ == "__main__":
 

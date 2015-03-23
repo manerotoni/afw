@@ -12,8 +12,6 @@ from PyQt4 import uic
 from PyQt4 import QtGui
 
 from cat.config import AtConfig
-from cat.gui.sidebar.feature_tables import FeatureTables
-
 
 class AtPreferencesDialog(QtGui.QDialog):
 
@@ -39,10 +37,10 @@ class AtPreferencesDialog(QtGui.QDialog):
         self.sort_algorithm.setCurrentIndex(
             self.sort_algorithm.findText(atc.default_sorter))
 
-        # self.feature_grouping.clear()
-        # self.feature_grouping.addItems(FeatureTables.keys())
-        # self.feature_grouping.setCurrentIndex(
-        #     self.feature_grouping.findText(atc.default_feature_group))
+        self.feature_grouping.clear()
+        self.feature_grouping.addItems(atc.FeatureGroups.keys())
+        self.feature_grouping.setCurrentIndex(
+            self.feature_grouping.findText(atc.default_feature_group))
 
         self.max_frac_outliers.setValue(atc.max_sv_fraction)
 
@@ -79,6 +77,7 @@ class AtPreferencesDialog(QtGui.QDialog):
 
         atc.contours_complementary_color = self.complementary_colors.isChecked()
         atc.default_sorter = self.sort_algorithm.currentText()
+        atc.default_feature_group = self.feature_grouping.currentText()
 
         atc.max_sv_fraction = self.max_frac_outliers.value()
         atc.interactive_item_limit = self.interactive_item_limit.value()

@@ -9,7 +9,7 @@ __all__ = ("AtConfig", )
 
 from cat.pattern import Singleton
 from cat.sorters import Sorter
-# from cat.gui.sidebar.feature_tabels import FeatureTables
+from cat.features import FeatureGroups
 
 class AtConfig(object):
     """Global settings (currently) not visible to the user."""
@@ -20,7 +20,7 @@ class AtConfig(object):
                    "lzf": None,
                    "None": None}
 
-    FeatureGroups = [None]#FeatureTables
+    FeatureGroups = FeatureGroups
     Sorters = Sorter.sorters()
 
     def __init__(self):
@@ -49,7 +49,7 @@ class AtConfig(object):
         self.interactive_item_limit = 5000
 
         self.default_sorter = Sorter.CosineSimilarity
-#        self.feature_group = self.FeatureTables.values[0]
+        self.default_feature_group = self.FeatureGroups.keys()[0]
 
     def saveSettings(self):
         pass

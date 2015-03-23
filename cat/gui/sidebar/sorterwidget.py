@@ -23,7 +23,7 @@ from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
 from .models import  AtSorterItemModel
 
-from .feature_tables import FeatureTables
+
 from cat.segmentation.channelname import ChannelName as cn
 
 
@@ -31,7 +31,7 @@ class AtChannelFeatureGroupsWidget(QtGui.QWidget):
 
     selectionChanged = QtCore.pyqtSignal()
 
-    def __init__(self, title, table,  *args, **kw):
+    def __init__(self, title, *args, **kw):
         super(AtChannelFeatureGroupsWidget, self).__init__(*args, **kw)
         self.setLayout(QtGui.QVBoxLayout())
         self.gbox = QtGui.QGroupBox(self)
@@ -41,11 +41,7 @@ class AtChannelFeatureGroupsWidget(QtGui.QWidget):
         self.layout().setContentsMargins(0, 0, 0, 0)
 
         self.gbox.setTitle(cn.display(title))
-
-        if table is None:
-            self._table = FeatureTables.values()[0]
-        else:
-            self._table = FeatureTables[table]
+        self._table = AtConfig.FeatureGroups[AtConfig().default_feature_group]
 
         for group, names in self._table.iteritems():
             self.addFeatureGroup(group, names)
@@ -93,8 +89,6 @@ class AtSortWidget(AtSideBarWidget):
             lambda: self.tileview.reorder(force_update=True))
 
         self._channels = tuple()
-        self.ftable.addItems(FeatureTables.keys())
-        self.ftable.currentIndexChanged[str].connect(self.onTableChanged)
 
     def setupToolBar(self):
 
@@ -146,18 +140,15 @@ class AtSortWidget(AtSideBarWidget):
         toolbar.addWidget(self.sortAscendingBtn)
         toolbar.addWidget(self.sortDescendingBtn)
 
-    def onTableChanged(self, table):
-        self.setChannelNames(self._channels, table)
-
     def _iterGroups(self):
         for i in xrange(self.fbox.count()):
             yield self.fbox.itemAt(i).widget()
 
-    def setChannelNames(self, channel_names, table=None):
+    def setChannelNames(self, channel_names):
         self.clearChannels()
         self._channels = channel_names
         for chn in channel_names:
-            fgw = AtChannelFeatureGroupsWidget(chn, table, self)
+            fgw = AtChannelFeatureGroupsWidget(chn, self)
             self.fbox.insertWidget(self.fbox.count(), fgw)
             fgw.selectionChanged.connect(self.onSelectionChanged)
             setattr(self, chn.lower(), fgw)
