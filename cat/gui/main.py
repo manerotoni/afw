@@ -17,6 +17,7 @@ from PyQt4.QtGui import QMessageBox
 from PyQt4.QtGui import QKeySequence
 
 from cat import version
+from cat.config import AtConfig
 from cat.gui.graphicsview import AtGraphicsView
 from cat.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from cat.gui.sidebar import AtSortWidget
@@ -151,6 +152,9 @@ class AtMainWindow(QtGui.QMainWindow):
                           self.annotation.classifiers.currentText())
         settings.endGroup()
 
+        AtConfig().saveSettings()
+
+
     def _restoreSettings(self):
         settings = QtCore.QSettings(version.organisation, version.appname)
         settings.beginGroup('Gui')
@@ -166,6 +170,7 @@ class AtMainWindow(QtGui.QMainWindow):
         if clfname.isValid():
             self.annotation.setCurrentClassifier(clfname.toString())
 
+        AtConfig().restoreSettings()
         settings.endGroup()
 
     def closeEvent(self, event):
