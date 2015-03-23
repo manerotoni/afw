@@ -9,11 +9,19 @@ __all__ = ("AtConfig", )
 
 from cat.pattern import Singleton
 from cat.sorters import Sorter
+# from cat.gui.sidebar.feature_tabels import FeatureTables
 
 class AtConfig(object):
     """Global settings (currently) not visible to the user."""
 
     __metaclass__ = Singleton
+
+    Compression = {"gzip": range(10),
+                   "lzf": None,
+                   "None": None}
+
+    FeatureGroups = [None]#FeatureTables
+    Sorters = Sorter.sorters()
 
     def __init__(self):
         # renders contuours in pixmap rather than QGraphicsView
@@ -41,3 +49,10 @@ class AtConfig(object):
         self.interactive_item_limit = 5000
 
         self.default_sorter = Sorter.CosineSimilarity
+#        self.feature_group = self.FeatureTables.values[0]
+
+    def saveSettings(self):
+        pass
+
+    def restoreSettings(self):
+        pass

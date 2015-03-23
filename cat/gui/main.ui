@@ -69,6 +69,7 @@
     </property>
     <addaction name="actionOpenHdf"/>
     <addaction name="actionCloseHdf"/>
+    <addaction name="actionPreferences"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuData">
@@ -233,6 +234,15 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="icon">
+    <iconset resource="../../qrc/cat_rc.qrc">
+     <normaloff>:/oxygen/run-build.png</normaloff>:/oxygen/run-build.png</iconset>
+   </property>
+   <property name="text">
+    <string>Preferences</string>
    </property>
   </action>
  </widget>

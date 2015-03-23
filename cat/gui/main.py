@@ -25,6 +25,7 @@ from cat.gui.sidebar import AtContrastWidget
 from cat.gui.importdlg import ImportDialog
 from cat.gui.aboutdialog import AtAboutDialog
 from cat.gui.featuredlg import AtFeatureSelectionDlg
+from cat.gui.prefdialog import AtPreferencesDialog
 
 from cat.threading import AtThread
 from cat.threading import AtLoader
@@ -81,6 +82,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.abort.connect(self.loader.abort)
         self.actionOpenHdf.triggered.connect(self.onFileOpen)
         self.actionCloseHdf.triggered.connect(self.onFileClose)
+        self.actionPreferences.triggered.connect(self.onPreferences)
         self.actionProcessTrainingSet.triggered.connect(self.openImporter)
         self.actionExportViewPanel.triggered.connect(self.saveImage)
         self.actionAboutQt.triggered.connect(self.onAboutQt)
@@ -129,12 +131,16 @@ class AtMainWindow(QtGui.QMainWindow):
         self.featuredlg.show()
         self.featuredlg.raise_()
 
+    def onPreferences(self):
+        dlg = AtPreferencesDialog(self)
+        dlg.exec_()
+
     def onAboutQt(self):
         QMessageBox.aboutQt(self, "about Qt")
 
     def onAbout(self):
         dlg = AtAboutDialog(self)
-        dlg.show()
+        dlg.exec_()
 
     def _saveSettings(self):
         settings = QtCore.QSettings(version.organisation, version.appname)

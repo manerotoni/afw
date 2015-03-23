@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
+    <file>segmentation_128x128.png</file>
     <file>oxygen/document-close-icon.png</file>
     <file>oxygen/exit-icon.png</file>
     <file>oxygen/games-solve.png</file>
