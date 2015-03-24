@@ -30,20 +30,20 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>120</width>
+       <width>100</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>120</width>
+       <width>100</width>
        <height>16777215</height>
       </size>
      </property>
      <property name="iconSize">
       <size>
-       <width>48</width>
-       <height>48</height>
+       <width>32</width>
+       <height>32</height>
       </size>
      </property>
      <property name="movement">
@@ -54,8 +54,8 @@
      </property>
      <property name="gridSize">
       <size>
-       <width>115</width>
-       <height>75</height>
+       <width>100</width>
+       <height>64</height>
       </size>
      </property>
      <property name="viewMode">
@@ -81,7 +81,7 @@
      </item>
      <item>
       <property name="text">
-       <string>Data import/export</string>
+       <string>Data IO</string>
       </property>
       <property name="icon">
        <iconset resource="../../qrc/cat_rc.qrc">
@@ -95,7 +95,7 @@
      <item>
       <widget class="QStackedWidget" name="stack">
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="general">
         <layout class="QVBoxLayout" name="verticalLayout">

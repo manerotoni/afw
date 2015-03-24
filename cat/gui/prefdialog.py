@@ -13,18 +13,23 @@ from PyQt4 import QtGui
 
 from cat.config import AtConfig
 
+
 class AtPreferencesDialog(QtGui.QDialog):
 
     def __init__(self, *args, **kw):
         super(AtPreferencesDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("Preferences")
+        self._compopts_old = dict()
+
         self.loadSettings()
 
         self.accepted.connect(self.saveSettings)
 
         self.hdf_compression.currentIndexChanged[str].connect(
             self.updateCompressionOptions)
+        self.hdf_compopts.currentIndexChanged[str].connect(
+            self.compoptsUpdated)
 
     def loadSettings(self):
         # singleton
@@ -56,8 +61,11 @@ class AtPreferencesDialog(QtGui.QDialog):
         self.hdf_compopts.setCurrentIndex(
             self.hdf_compopts.findText(str(atc.compression_opts)))
 
+    def compoptsUpdated(self, option):
+        self._compopts_old[self.hdf_compression.currentText()] = option
 
     def updateCompressionOptions(self, compression):
+        old_state = self.hdf_compopts.blockSignals(True)
         self.hdf_compopts.clear()
         opts = AtConfig.Compression[compression]
         if opts is None:
@@ -67,6 +75,15 @@ class AtPreferencesDialog(QtGui.QDialog):
             self.hdf_compopts.setEnabled(True)
             for o in opts:
                 self.hdf_compopts.addItem(str(o), o)
+
+        self.hdf_compopts.blockSignals(old_state)
+        try:
+            idx = self.hdf_compopts.findText(self._compopts_old[compression])
+        except KeyError:
+            pass
+        else:
+            if idx > 0:
+                self.hdf_compopts.setCurrentIndex(idx)
 
     def currentCompOpts(self):
         return self.hdf_compopts.itemData(self.hdf_compopts.currentIndex())
