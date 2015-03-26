@@ -137,7 +137,7 @@ class Ch5Reader(HdfFile):
 
     def featureNames(self, region):
         path = "%s/%s/object_features" %(self._features_def_key, region)
-        return self[path]["name"]
+        return ["ch1-%s" %s for s in self[path]["name"]]
 
     def numberItems(self, coordinate):
         path = self._features_key %coordinate

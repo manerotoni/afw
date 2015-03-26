@@ -169,12 +169,7 @@ class AtFeatureSelectionDlg(QtGui.QWidget):
         self.model.clear()
 
         for i, feature_name in enumerate(feature_names):
-            try:
-                channel, name = feature_name.split("-")
-            except ValueError:
-                channel = "--"
-                name = feature_name
-
+            channel, name = feature_name.split("-")
             name_item = QtGui.QStandardItem(name)
             name_item.setCheckable(True)
             name_item.setCheckState(Qt.Checked)
