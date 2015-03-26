@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>245</width>
-    <height>661</height>
+    <width>207</width>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -115,7 +115,7 @@
       <property name="verticalSpacing">
        <number>1</number>
       </property>
-      <item row="0" column="2">
+      <item row="1" column="1">
        <widget class="QPushButton" name="saveBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -135,8 +135,31 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="loadBtn">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load&lt;/p&gt;&lt;p&gt;Load a classifier from file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>load</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../qrc/cat_rc.qrc">
+          <normaloff>:/load_classifier.png</normaloff>:/load_classifier.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
-       <widget class="QToolButton" name="removeAllBtn">
+       <widget class="QPushButton" name="removeAllBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -156,7 +179,7 @@
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QToolButton" name="removeBtn">
+       <widget class="QPushButton" name="removeBtn">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>

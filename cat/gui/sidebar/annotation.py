@@ -20,6 +20,7 @@ from PyQt4.QtGui import QApplication, QCursor, QMessageBox
 from cat.hdfio.readercore import HdfError
 from cat.classifiers.classifiers import Classifier
 from cat.gui.savehdfdlg import SaveClassifierDialog
+from cat.gui.loadclassifierdlg import LoadClassifierDialog
 
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
@@ -35,6 +36,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         uic.loadUi(uifile, self)
 
         self.saveBtn.clicked.connect(self.onSave)
+        self.loadBtn.clicked.connect(self.onLoad)
 
         self._setupClassifiers()
         self.classifiers.currentIndexChanged.connect(
@@ -130,6 +132,34 @@ class AtAnnotationWidget(AtSideBarWidget):
     def setFeatureNames(self, features):
         self.featuredlg.addFeatureList(features)
 
+    def onPredict(self):
+
+        try:
+            QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+            self.train()
+        except NoSampleError:
+            pass
+        else:
+            self.classify(self.tileview.items)
+            self.setButtonColor(Qt.darkGreen)
+        finally:
+            QApplication.restoreOverrideCursor()
+
+    def train(self):
+        features = self.filterFeatures(self.model.features)
+        clf = self.currentClassifier()
+        clf.train(features, self.model.labels)
+
+    def classify(self, items):
+        clf = self.currentClassifier()
+        for item in items:
+            features = self.filterFeatures(item.features.reshape((1, -1)))
+            try:
+                prediction = clf.predict(features)
+                item.setClass(prediction[0])
+            except ValueError:
+                warnings.warn("feature vector contains NaN's")
+
     def onSave(self):
         clf = self.currentClassifier()
         if not self.itemView().model().rowCount():
@@ -169,30 +199,7 @@ class AtAnnotationWidget(AtSideBarWidget):
             QMessageBox.information(self, "information",
                                     "Data saved successfully")
 
-    def onPredict(self):
-
-        try:
-            QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-            self.train()
-        except NoSampleError:
-            pass
-        else:
-            self.classify(self.tileview.items)
-            self.setButtonColor(Qt.darkGreen)
-        finally:
-            QApplication.restoreOverrideCursor()
-
-    def train(self):
-        features = self.filterFeatures(self.model.features)
+    def onLoad(self):
         clf = self.currentClassifier()
-        clf.train(features, self.model.labels)
-
-    def classify(self, items):
-        clf = self.currentClassifier()
-        for item in items:
-            features = self.filterFeatures(item.features.reshape((1, -1)))
-            try:
-                prediction = clf.predict(features)
-                item.setClass(prediction[0])
-            except ValueError:
-                warnings.warn("feature vector contains NaN's")
+        dlg = LoadClassifierDialog(self)
+        dlg.exec_()

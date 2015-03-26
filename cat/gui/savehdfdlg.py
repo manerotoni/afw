@@ -53,9 +53,20 @@ class SaveClassifierDialog(QtGui.QDialog):
 
     def onPathBtn(self):
 
-        file_ = QFileDialog.getSaveFileName(self, "Save File as...",
-                                            expanduser("~"),
-                                            "hdf files (*.hdf *.h5 *.hdf5 *.he5 *.ch5)")
+        file_ = QFileDialog.getSaveFileName(
+            self, "Save File as...",
+            expanduser("~"),
+            "hdf files (*.hdf *.h5 *.hdf5 *.he5 *.ch5)")
 
         if file_:
             self.path = file_
+
+
+class LoadClassifierDialog(QtGui.QDialog):
+
+    def __init__(self, *args, **kw):
+        super(SaveClassifierDialog, self).__init__(*args, **kw)
+        uifile = splitext(__file__)[0] + ".ui"
+        uic.loadUi(uifile, self)
+
+        self.pathBtn.clicked.connect(self.onPathBtn)
