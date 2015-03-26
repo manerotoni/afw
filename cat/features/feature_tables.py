@@ -186,6 +186,7 @@ _Cecog["Distance Map"] = ('dyn_distance_nb_max',
                           'dyn_distance_radius_1',
                           'dyn_distance_radius_2',
                           'dyn_distance_radius_3'),
+
 _Cecog["Moments"] = ('dist_max',
                      'dist_min',
                      'dist_ratio',
@@ -207,6 +208,7 @@ _Cecog["Moments"] = ('dist_max',
                      'princ_gyration_y',
                      'skewness_x',
                      'skewness_y'),
+
 _Cecog["Stat. geom"] =  ('ls0_CAREA_avg_value',
                          'ls0_CAREA_max_value',
                          'ls0_CAREA_sample_mean',
@@ -264,13 +266,8 @@ _Simple2["Texture"] = ("h4_ASM", "h8_2COR"),
 _Simple2["Granularity"] = ('granu_close_volume_7', 'granu_open_volume_5')
 
 _Simple1 = OrderedDict()
-_Simple1["Size"] = ("roisize",)
-_Simple1["Intensity"] = ('n2_avg',
-                         'n2_wavg',
-                         'n2_wiavg',
-                         'n_avg',
-                         'n_wavg',
-                         'n_wiavg')
+_Simple1["Area size"] = ("roisize",)
+_Simple1["Mean intesity"] = ('n2_avg',)
 
 _Simple1["Eccentricity"] = ("eccentricity", )
 # formerly Shape
@@ -404,6 +401,11 @@ _Simple1["Other"] = ('n2_stddev',
                      'n2_wdist',
                      'n_stddev',
                      'n_wdist',
+                     'n2_wavg',
+                     'n2_wiavg',
+                     'n_avg',
+                     'n_wavg',
+                     'n_wiavg'
                      'granu_close_area_1',
                      'granu_close_area_2',
                      'granu_close_area_3',

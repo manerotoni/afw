@@ -237,7 +237,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>/Users/hoefler/assistant/test.hdf</string>
+            <string/>
            </property>
           </widget>
          </item>

@@ -72,15 +72,6 @@
      </item>
      <item>
       <property name="text">
-       <string>Segmentation</string>
-      </property>
-      <property name="icon">
-       <iconset resource="../../qrc/cat_rc.qrc">
-        <normaloff>:/segmentation_128x128.png</normaloff>:/segmentation_128x128.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text">
        <string>Data IO</string>
       </property>
       <property name="icon">
@@ -95,7 +86,7 @@
      <item>
       <widget class="QStackedWidget" name="stack">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="general">
         <layout class="QVBoxLayout" name="verticalLayout">
@@ -185,17 +176,6 @@
             </size>
            </property>
           </spacer>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="segmentation">
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <widget class="QLabel" name="label1">
-           <property name="text">
-            <string>No parameters to setup yet!</string>
-           </property>
-          </widget>
          </item>
         </layout>
        </widget>
