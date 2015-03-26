@@ -100,4 +100,4 @@ class AtPreferencesDialog(QtGui.QDialog):
         atc.interactive_item_limit = self.interactive_item_limit.value()
         atc.compression = self.hdf_compression.currentText()
         atc.compression_opts = self.hdf_compopts.itemData(
-            self.hdf_compopts.currentIndex())
+            self.hdf_compopts.currentIndex()).toPyObject()
