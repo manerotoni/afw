@@ -67,7 +67,7 @@
       </property>
       <property name="icon">
        <iconset resource="../../qrc/cat_rc.qrc">
-        <normaloff>:/annotationtool.svg</normaloff>:/annotationtool.svg</iconset>
+        <normaloff>:/annotationtool.png</normaloff>:/annotationtool.png</iconset>
       </property>
      </item>
      <item>
