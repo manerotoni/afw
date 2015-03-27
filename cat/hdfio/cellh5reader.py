@@ -167,7 +167,7 @@ class Ch5Reader(HdfFile):
                     coorddict[plate][well][site] = regions
         return coorddict
 
-    def iterItems(self, nitems, coord, size=50, delayed=False):
+    def iterItems(self, nitems, coord, size=50, delayed=False, indices=None):
 
         nf = self.numberItems(coord)
         indices = range(0, nf)

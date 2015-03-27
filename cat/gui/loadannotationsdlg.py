@@ -1,11 +1,11 @@
 """
-loadclassiferdlg.py
+loadannotationsdlg.py
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("LoadClassifierDialog", )
+__all__ = ("LoadAnnotationsDialog", )
 
 import h5py
 
@@ -14,11 +14,14 @@ from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtGui import QFileDialog
 
+from cat.classifiers.classifiers import ClfDataModel
+from cat.hdfio.trainingset import AtTrainingSetIO
+from cat.gui.cellitem import CellGraphicsItem
 
-class LoadClassifierDialog(QtGui.QDialog):
+class LoadAnnotationsDialog(QtGui.QDialog):
 
     def __init__(self, *args, **kw):
-        super(LoadClassifierDialog, self).__init__(*args, **kw)
+        super(LoadAnnotationsDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
         uic.loadUi(uifile, self)
 
@@ -27,6 +30,8 @@ class LoadClassifierDialog(QtGui.QDialog):
         self.pathBtn.clicked.connect(self.onPathBtn)
         self.classifier_name.currentIndexChanged[str].connect(
             self.onClassifierChanged)
+
+        self.accepted.connect(self.onAccepted)
 
     def onClassifierChanged(self, name):
 
@@ -50,8 +55,8 @@ class LoadClassifierDialog(QtGui.QDialog):
             self.path = file_
 
             try:
-                fp = h5py.File(file_, "r")
-                clf_names = fp['classifiers'].keys()
+                hdf = h5py.File(file_, "r")
+                clf_names = hdf['classifiers'].keys()
             except KeyError as e:
                 QtGui.QMessageBox.critical(self, "Error", "No classifiers found")
                 raise KeyError("No classfiers found")
@@ -62,10 +67,31 @@ class LoadClassifierDialog(QtGui.QDialog):
                 self.descriptions.clear()
                 for name in clf_names:
                     try:
-                        desc = fp['classifiers/%s' %name].attrs["description"]
+                        desc = hdf['classifiers/%s' %name].attrs["description"]
                         self.descriptions[name] = desc
                     except KeyError:
                         pass
                 self.onClassifierChanged(self.classifier_name.currentText())
             finally:
-                fp.close()
+                hdf.close()
+
+    def onAccepted(self):
+
+        hdf = AtTrainingSetIO(self._path.text(), "r")
+
+        dmodel = ClfDataModel(self.classifier_name.currentText())
+        clf = self.parent().currentClassifier()
+        model = self.parent().model
+
+        norm = hdf[dmodel.normalization].value
+        training_data = hdf[dmodel.training_set].value
+        classdef = hdf[dmodel.classdef].value
+        labels = hdf[dmodel.annotations].value
+        sample_info = hdf[dmodel.sample_info].value
+
+        self.parent().removeAll()
+        for (name, label, color) in classdef:
+            model.addClass(name, str(color))
+
+        for hdfitem in hdf.iterItemsByIndexList(sorted(sample_info["index"])):
+            print CellGraphicsItem(hdfitem)

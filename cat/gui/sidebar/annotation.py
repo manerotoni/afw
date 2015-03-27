@@ -20,7 +20,7 @@ from PyQt4.QtGui import QApplication, QCursor, QMessageBox
 from cat.hdfio.readercore import HdfError
 from cat.classifiers.classifiers import Classifier
 from cat.gui.savehdfdlg import SaveClassifierDialog
-from cat.gui.loadclassifierdlg import LoadClassifierDialog
+from cat.gui.loadannotationsdlg import LoadAnnotationsDialog
 
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
@@ -36,7 +36,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         uic.loadUi(uifile, self)
 
         self.saveBtn.clicked.connect(self.onSave)
-        self.loadBtn.clicked.connect(self.onLoad)
+        self.loadBtn.clicked.connect(self.onLoadAnnotations)
 
         self._setupClassifiers()
         self.classifiers.currentIndexChanged.connect(
@@ -199,7 +199,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             QMessageBox.information(self, "information",
                                     "Data saved successfully")
 
-    def onLoad(self):
-        clf = self.currentClassifier()
-        dlg = LoadClassifierDialog(self)
+    def onLoadAnnotations(self):
+        dlg = LoadAnnotationsDialog(self)
         dlg.exec_()
