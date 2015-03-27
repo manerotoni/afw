@@ -66,5 +66,6 @@ class LoadClassifierDialog(QtGui.QDialog):
                         self.descriptions[name] = desc
                     except KeyError:
                         pass
+                self.onClassifierChanged(self.classifier_name.currentText())
             finally:
                 fp.close()

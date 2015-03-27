@@ -39,6 +39,7 @@ class AtChannelFeatureGroupsWidget(QtGui.QWidget):
         self.gbox.setLayout(QtGui.QVBoxLayout())
         self.layout().addWidget(self.gbox)
         self.layout().setContentsMargins(0, 0, 0, 0)
+        self.layout().setSpacing(1)
 
         self.gbox.setTitle(cn.display(title))
         self._table = AtConfig.FeatureGroups[AtConfig().default_feature_group]
