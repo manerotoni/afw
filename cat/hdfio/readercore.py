@@ -74,6 +74,7 @@ class HdfItem(object):
             image.setColorTable(luts[i])
             yield image
 
+    @property
     def pixmap(self):
         # XXX be aware of thread safety
         images = list(self.iterQImages())
@@ -82,6 +83,10 @@ class HdfItem(object):
     def iterContours(self):
         for i, color in enumerate(self.colors):
             yield self.contour[i], QColor(color)
+
+    def clear(self):
+        """Only a dummy method to be compatible with other methods."""
+        pass
 
 
 class HdfFile(h5py.File):

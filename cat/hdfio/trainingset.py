@@ -138,6 +138,7 @@ class AtTrainingSetIO(HdfFile):
         ftrs = ftrs.view(dtype=np.float32).reshape(ftrs.shape[0], -1)
 
         for i in xrange(gal.shape[3]):
-            yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], index=i,
-                          objid=datatbl["label"][i], frame=i, colors=cols,
+            yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], index=indices[i],
+                          objid=datatbl["label"][i], frame=indices[i],
+                          colors=cols,
                           path=self.dmodel.features)

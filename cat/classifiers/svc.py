@@ -218,7 +218,7 @@ class SvcWriter(ClfWriter):
             grp.attrs[self.dmodel.DESCRIPTION] = description
 
     def saveAnnotations(self, labels):
-        # not more than 256 classess
+        # max 256 classes!
         labels = labels.astype(np.uint8)
         dset = self.h5f.create_dataset(self.dmodel.annotations,
                                        data=labels,

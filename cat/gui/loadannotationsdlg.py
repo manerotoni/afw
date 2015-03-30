@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 __all__ = ("LoadAnnotationsDialog", )
 
 import h5py
+import numpy as np
 
 from os.path import splitext, expanduser
 from PyQt4 import uic
@@ -92,10 +93,20 @@ class LoadAnnotationsDialog(QtGui.QDialog):
         self.parent().removeAll()
         classnames = dict()
         for (name, class_label, color) in classdef:
-            classnames[class_label] = name
+            classnames[int(class_label)] = name
             model.addClass(name, str(color))
 
-        for lbl, item in zip(labels, \
-                hdf.iterItemsByIndexList(sorted(sample_info["index"]))):
-            print classnames[lbl], item
-            model.addAnnoation(item, classnames[lbl])
+        # keep things sorted for faster loading
+        index_array = np.argsort(sample_info["index"])
+        classnames = [str(classnames[l]) for l in labels[index_array]]
+
+        idx = sample_info['index'][index_array].tolist()
+        items = list(hdf.iterItemsByIndexList(idx))
+
+        for name, item in zip(classnames, items):
+            model.addAnnotation(item, name)
+
+        hdf.close()
+
+        for i in xrange(model.rowCount()):
+            model.updateCounts(i)

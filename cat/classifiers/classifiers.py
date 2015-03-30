@@ -111,6 +111,7 @@ class ClfWriter(object):
                                        compression_opts=self._copts)
 
     def saveSampleInfo(self, sample_info):
+
         dset = self.h5f.create_dataset(
             self.dmodel.sample_info, data=sample_info,
             compression=self._compression, compression_opts=self._copts)

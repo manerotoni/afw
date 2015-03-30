@@ -55,7 +55,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._pixmap = None
         self._mask = None
         self.class_ = UnClassified
-        self.setPixmap(item.pixmap())
+        self.setPixmap(item.pixmap)
         self.features = item.features
         self.frame = item.frame
         self.objid = item.objid

@@ -274,7 +274,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
     @property
     def labels(self):
 
-        all_labels = np.array([])
+        all_labels = np.array([], dtype=int)
         nfeatures = self.items[0].features.size
         classes = self.currentClasses()
 
@@ -299,16 +299,19 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         sample_info = None
 
         for label, class_ in classes.iteritems():
+
             parent = self.item(label, 0)
             nitems = parent.rowCount()
             sinfo = np.empty((nitems, ), dtype=dt)
 
+            print sinfo.shape, nitems
+
             for i, item in enumerate(self.iterItems(parent)):
                 sinfo[i] = np.array((item.index, item.path), dtype=dt)
-            try:
-                sample_info = np.vstack((sample_info, sinfo))
-            except ValueError:
+            if sample_info is None:
                 sample_info = sinfo
+            else:
+                sample_info = np.hstack((sample_info, sinfo))
 
         return sample_info
 

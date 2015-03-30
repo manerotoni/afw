@@ -53,12 +53,21 @@ class AtSideBarWidget(QtGui.QWidget):
     def itemView(self):
         raise NotImplementedError
 
-    def filterFeatures(self, features):
+    def filterFeatures(self, features, no_empty_table=True):
         """Filter the feature matrix by column wise. Indices of the cols are
-        determined by the FeatureSelection Dialog."""
+        determined by the FeatureSelection Dialog.
+
+        If no_empty_table is True the methode return the full feature table if
+        the number of selected features is zero.
+        """
 
         ftrs_indices = self.filter_indices
 
+        # returns the full feature table if not features are selected
+        if no_empty_table and not ftrs_indices:
+            ftrs_indices = range(features.shape[1])
+
+        print features.shape, ftrs_indices
         if not ftrs_indices or features is None:
             raise NoSampleError("no features selected for classifier training")
 
