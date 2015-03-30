@@ -67,7 +67,6 @@ class AtSideBarWidget(QtGui.QWidget):
         if no_empty_table and not ftrs_indices:
             ftrs_indices = range(features.shape[1])
 
-        print features.shape, ftrs_indices
         if not ftrs_indices or features is None:
             raise NoSampleError("no features selected for classifier training")
 

@@ -304,8 +304,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             nitems = parent.rowCount()
             sinfo = np.empty((nitems, ), dtype=dt)
 
-            print sinfo.shape, nitems
-
             for i, item in enumerate(self.iterItems(parent)):
                 sinfo[i] = np.array((item.index, item.path), dtype=dt)
             if sample_info is None:

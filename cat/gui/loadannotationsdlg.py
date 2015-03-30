@@ -17,7 +17,7 @@ from PyQt4.QtGui import QFileDialog
 
 from cat.classifiers.classifiers import ClfDataModel
 from cat.hdfio.trainingset import AtTrainingSetIO
-
+from cat.hdfio.guesser import guessHdfType
 
 class LoadAnnotationsDialog(QtGui.QDialog):
 
@@ -78,7 +78,7 @@ class LoadAnnotationsDialog(QtGui.QDialog):
 
     def onAccepted(self):
 
-        hdf = AtTrainingSetIO(self._path.text(), "r")
+        hdf = guessHdfType(self._path.text())
 
         dmodel = ClfDataModel(self.classifier_name.currentText())
         clf = self.parent().currentClassifier()
