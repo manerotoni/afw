@@ -16,7 +16,7 @@ from PyQt4.QtGui import QFileDialog
 
 from cat.classifiers.classifiers import ClfDataModel
 from cat.hdfio.trainingset import AtTrainingSetIO
-from cat.gui.cellitem import CellGraphicsItem
+
 
 class LoadAnnotationsDialog(QtGui.QDialog):
 
@@ -90,8 +90,12 @@ class LoadAnnotationsDialog(QtGui.QDialog):
         sample_info = hdf[dmodel.sample_info].value
 
         self.parent().removeAll()
-        for (name, label, color) in classdef:
+        classnames = dict()
+        for (name, class_label, color) in classdef:
+            classnames[class_label] = name
             model.addClass(name, str(color))
 
-        for hdfitem in hdf.iterItemsByIndexList(sorted(sample_info["index"])):
-            print CellGraphicsItem(hdfitem)
+        for lbl, item in zip(labels, \
+                hdf.iterItemsByIndexList(sorted(sample_info["index"]))):
+            print classnames[lbl], item
+            model.addAnnoation(item, classnames[lbl])
