@@ -99,9 +99,7 @@ class SegmentationDialog(QtGui.QWidget):
         self.paramsChanged.emit()
 
     def closeEvent(self, event):
-        print "pre"
         super(SegmentationDialog, self).closeEvent(event)
-        print "post"
 
     def onChannelChanged(self, channel):
 

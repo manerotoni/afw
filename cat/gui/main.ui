@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../qrc/cat_rc.qrc">
+   <iconset>
     <normaloff>:/annotationtool.svg</normaloff>:/annotationtool.svg</iconset>
   </property>
   <property name="iconSize">
@@ -60,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -144,6 +144,10 @@
    </property>
   </action>
   <action name="actionProcessTrainingSet">
+   <property name="icon">
+    <iconset resource="../../qrc/cat_rc.qrc">
+     <normaloff>:/segmentation_128x128.png</normaloff>:/segmentation_128x128.png</iconset>
+   </property>
    <property name="text">
     <string>Process training data</string>
    </property>
@@ -188,7 +192,7 @@
   </action>
   <action name="actionAboutAnnotationTool">
    <property name="icon">
-    <iconset resource="../../qrc/cat_rc.qrc">
+    <iconset>
      <normaloff>:/annotationtool.svg</normaloff>:/annotationtool.svg</iconset>
    </property>
    <property name="text">
