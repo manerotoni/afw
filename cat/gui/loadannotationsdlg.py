@@ -49,8 +49,7 @@ class LoadAnnotationsDialog(QtGui.QDialog):
 
         file_ = QFileDialog.getOpenFileName( \
             self, "Select a config file", expanduser('~'),
-            ("hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5;;"
-             "cellh5 files (*.ch5);;"
+            ("hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5 *.ch5;;"
             ";;All files (*.*)"))
 
         if file_:
@@ -95,7 +94,6 @@ class LoadAnnotationsDialog(QtGui.QDialog):
         return items
 
     def accept(self):
-
         if not self._path.text():
             return
 
