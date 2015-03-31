@@ -12,16 +12,41 @@ from os.path import splitext, expanduser
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtGui import QFileDialog
+from PyQt4.QtGui import QMessageBox
 
+from cat.hdfio.readercore import HdfError
 
 class SaveClassifierDialog(QtGui.QDialog):
 
-    def __init__(self, *args, **kw):
+    def __init__(self, classifier, labels, sample_info, *args, **kw):
         super(SaveClassifierDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
         uic.loadUi(uifile, self)
 
+        self.classifier = classifier
+        self.labels = labels
+        self.sinfo = sample_info
+        self.name = classifier.name.replace(" ", "_").lower()
+
         self.pathBtn.clicked.connect(self.onPathBtn)
+
+    def accept(self):
+        try:
+            self.classifier.saveToHdf(self.name,
+                                      self.path,
+                                      self.parent().featuredlg.checkedItems(),
+                                      self.description,
+                                      self.overwrite,
+                                      self.labels,
+                                      self.sinfo)
+        except HdfError as e:
+            QMessageBox.critical(self, "error", str(e))
+        else:
+            QMessageBox.information(self, "information",
+                                    "Data saved successfully")
+
+        super(SaveClassifierDialog, self).accept()
+
 
     @property
     def overwrite(self):

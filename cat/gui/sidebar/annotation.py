@@ -15,11 +15,10 @@ from os.path import join, dirname
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QApplication, QCursor, QMessageBox
+from PyQt4.QtGui import QApplication, QCursor
 
-from cat.hdfio.readercore import HdfError
 from cat.classifiers.classifiers import Classifier
-from cat.gui.savehdfdlg import SaveClassifierDialog
+from cat.gui.saveclassifierdlg import SaveClassifierDialog
 from cat.gui.loadannotationsdlg import LoadAnnotationsDialog
 
 from .sidebar import NoSampleError
@@ -166,38 +165,13 @@ class AtAnnotationWidget(AtSideBarWidget):
             QMessageBox.information(self, "information", "Nothing to save!")
             return
 
-        dlg = SaveClassifierDialog(self)
-        dlg.name = clf.name.replace(" ", "_").lower()
-
-        hdffile = self.parent.loader.file
-        if hdffile is None or hdffile.mode != hdffile.READWRITE:
-            dlg.path = ""
-        else:
-            dlg.path = hdffile.filename
-
-        dlg.exec_()
-
-        if dlg.result() == dlg.Rejected:
-            return
-
-        if hdffile.filename != dlg.path:
-            hdffile = dlg.path
 
         labels = self.itemView().model().labels
         sinfo = self.itemView().model().sample_info
-        try:
-            clf.saveToHdf(dlg.name,
-                          hdffile,
-                          self.featuredlg.checkedItems(),
-                          dlg.description,
-                          dlg.overwrite,
-                          labels,
-                          sinfo)
-        except HdfError as e:
-            QMessageBox.critical(self, "error", str(e))
-        else:
-            QMessageBox.information(self, "information",
-                                    "Data saved successfully")
+
+        dlg = SaveClassifierDialog(clf, labels, sinfo, parent=self)
+        dlg.path = self.parent.loader.file.filename
+        dlg.exec_()
 
     def onLoadAnnotations(self):
         dlg = LoadAnnotationsDialog(self)
