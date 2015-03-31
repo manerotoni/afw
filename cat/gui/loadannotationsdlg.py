@@ -61,7 +61,7 @@ class LoadAnnotationsDialog(QtGui.QDialog):
                 clf_names = hdf['classifiers'].keys()
             except KeyError as e:
                 QtGui.QMessageBox.critical(self, "Error", "No classifiers found")
-                raise KeyError("No classfiers found")
+                return
 
             else:
                 self.classifier_name.clear()
