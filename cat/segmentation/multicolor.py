@@ -189,7 +189,8 @@ class MultiChannelProcessor(object):
         if fill_holes:
             ccore.fill_holes(label_image)
 
-        label_image = vigra.filters.discClosing(label_image.toArray(), 1)
+        label_image = vigra.filters.discClosing(label_image.toArray(), 2)
+        label_image = vigra.filters.discOpening(label_image, 2)
         label_image = ccore.numpy_to_image(label_image, copy=True)
 
         if use_watershed:
