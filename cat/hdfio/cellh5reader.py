@@ -10,12 +10,21 @@ __licence__ = 'GPL'
 
 __all__ = ('Ch5Reader', 'Ch5Coord', 'HdfItem')
 
+import re
 import zlib
 import base64
 
 import time
 import numpy as np
 from cat.hdfio.readercore import HdfFile, HdfItem, HdfFileInfo
+
+# regular expressin that matches
+#/sample/0/plate/H2b_aTub_MD20x_exp911/experiment/0/
+# position/0037/feature/primary__primary/object_features
+
+REGEX =("/sample/(?P<sample>\w)/plate/(?P<plate>\w*)"
+        "/experiment/(?P<well>\w*)/position/(?P<site>\w*)"
+        "/feature/(?P<region>\w*).*")
 
 
 def uncompress_contour(contour):
@@ -25,15 +34,24 @@ def uncompress_contour(contour):
     return contour
 
 
+def path2coord(path):
+    """convert a cellh5 path (down to the feature table) into a Ch5Coord dict."""
+    return re.match(REGEX, path).groupdict()
+
+
 class Ch5Coord(dict):
     """Custom mapping allowing only the following keys:
     plate, well, site and region.
     """
 
-    _keys = ('plate', 'well', 'site', 'region')
+    # sample is formerly part of the coordinates but is about
+    # to be removed from cellh5
+    SAMPLE = "0"
 
-    def __init__(self, plate, well, site, region):
-        super(Ch5Coord, self).__init__(plate=plate, well=well,
+    _keys = ('sample', 'plate', 'well', 'site', 'region')
+
+    def __init__(self, sample, plate, well, site, region):
+        super(Ch5Coord, self).__init__(sample=sample, plate=plate, well=well,
                                        site=site, region=region)
 
     def __getitem__(self, key):
@@ -57,7 +75,7 @@ class Ch5Reader(HdfFile):
     _channel_def_key = _image_def_key + "/channel"
     _region_name_key = _image_def_key + "/region"
 
-    _root_key = "/sample/%(zero)s" %{'zero': "0"}
+    _root_key = "/sample/%(sample)s"
     _plate_key = _root_key + "/plate/%(plate)s"
     _well_key =  _plate_key + "/experiment/%(well)s"
     _site_key = _well_key + "/position/%(site)s"
@@ -87,7 +105,8 @@ class Ch5Reader(HdfFile):
         """
 
         cspace = self.cspace()
-        cspace = {'plate': cspace.keys(),
+        cspace = {'sample': [Ch5Coord.SAMPLE],
+                  'plate': cspace.keys(),
                   'well': cspace.values()[0].keys(),
                   'site': cspace.values()[0].values()[0].keys(),
                   'region': cspace.values()[0].values()[0].values()[0]}
@@ -116,7 +135,7 @@ class Ch5Reader(HdfFile):
         return ('Channel_1', )
 
     def plateNames(self):
-        key = self._plate_key %{"plate": ""}
+        key = self._plate_key %{"sample": Ch5Coord.SAMPLE, "plate": ""}
         return self[key].keys()
 
     def wellNames(self, coords):
@@ -155,6 +174,9 @@ class Ch5Reader(HdfFile):
         # read regions from definition
         regions = self.regionNames()
 
+        # dummy for the "sample" variable
+        coord['sample'] = Ch5Coord.SAMPLE
+
         for plate in plates:
             coord['plate'] = plate
             wells = self.wellNames(coord)
@@ -166,36 +188,6 @@ class Ch5Reader(HdfFile):
                 for site in sites:
                     coorddict[plate][well][site] = regions
         return coorddict
-
-    def iterItems(self, nitems, coord, size=50, delayed=False, indices=None):
-
-        nf = self.numberItems(coord)
-        indices = range(0, nf)
-        np.random.shuffle(indices)
-
-        rname = self[self._region_name_key][self._rname].tolist()
-        ci = self[self._region_name_key][self._channel_index]
-        ci = ci[rname.index("region___%s" %coord['region'])]
-        path = self._features_key %coord
-        isize = self[self._image_key %coord].shape[3:5]
-        tpath = self._time_key %coord
-        tpath2 = self._timelapse_key %coord
-
-        for index in indices[:nitems]:
-
-            centers = self[self._center_key %coord][index]
-            ti = self[self._time_key %coord][self._tidx][index]
-            gal = self._gallery_image(coord, size, isize, centers, ci, ti)
-            cnt = self._contour(index, coord, size, isize, centers)
-            ftr = self[path][index]
-
-            fidx, objid = self[tpath][index]
-            frame = self[tpath2]["frame"][fidx]
-
-            yield HdfItem(gal, cnt, ftr, index, objid, frame, path=path)
-            # loading looks more uniteruppted
-            if delayed:
-                time.sleep(0.0035)
 
     def _gallery_image(self, coord, size, (height, width), (cx, cy), ci, ti):
         """Read position correceted gallery image"""
@@ -249,3 +241,59 @@ class Ch5Reader(HdfFile):
         # no ndarrays to calculate the hash values
         contour =  [(x, y) for x, y in contour]
         return [contour]
+
+    def iterItems(self, nitems, coord, size=50, delayed=True):
+
+        nf = self.numberItems(coord)
+        indices = range(0, nf)
+        np.random.shuffle(indices)
+
+        rname = self[self._region_name_key][self._rname].tolist()
+        ci = self[self._region_name_key][self._channel_index]
+        ci = ci[rname.index("region___%s" %coord['region'])]
+        path = self._features_key %coord
+        isize = self[self._image_key %coord].shape[3:5]
+        tpath = self._time_key %coord
+        tpath2 = self._timelapse_key %coord
+
+        for index in indices[:nitems]:
+
+            centers = self[self._center_key %coord][index]
+            ti = self[self._time_key %coord][self._tidx][index]
+            gal = self._gallery_image(coord, size, isize, centers, ci, ti)
+            cnt = self._contour(index, coord, size, isize, centers)
+            ftr = self[path][index]
+
+            fidx, objid = self[tpath][index]
+            frame = self[tpath2]["frame"][fidx]
+
+            yield HdfItem(gal, cnt, ftr, index, objid, frame, path=path)
+            if delayed:
+                time.sleep(0.0035)
+
+    def itemsFromClassifier(self, indices, paths, size=50):
+        """List of HdfItems using a list of indices."""
+
+        rname = self[self._region_name_key][self._rname].tolist()
+
+        for index, path in zip(indices, paths):
+            coord = path2coord(path)
+
+            ci = self[self._region_name_key][self._channel_index]
+            ci = ci[rname.index("region___%s" %coord['region'])]
+            path = self._features_key %coord
+            isize = self[self._image_key %coord].shape[3:5]
+            tpath = self._time_key %coord
+            tpath2 = self._timelapse_key %coord
+
+            centers = self[self._center_key %coord][index]
+            ti = self[self._time_key %coord][self._tidx][index]
+            gal = self._gallery_image(coord, size, isize, centers, ci, ti)
+            cnt = self._contour(index, coord, size, isize, centers)
+            ftr = self[path][index]
+
+            fidx, objid = self[tpath][index]
+            frame = self[tpath2]["frame"][fidx]
+
+            # cellh5 is so slow!
+            yield HdfItem(gal, cnt, ftr, index, objid, frame, path=path)

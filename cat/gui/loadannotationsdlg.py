@@ -14,10 +14,12 @@ from os.path import splitext, expanduser
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtGui import QFileDialog
+from PyQt4.QtGui import QApplication
 
 from cat.classifiers.classifiers import ClfDataModel
 from cat.hdfio.trainingset import AtTrainingSetIO
 from cat.hdfio.guesser import guessHdfType
+
 
 class LoadAnnotationsDialog(QtGui.QDialog):
 
@@ -27,12 +29,11 @@ class LoadAnnotationsDialog(QtGui.QDialog):
         uic.loadUi(uifile, self)
 
         self.descriptions = dict()
+        self.progressBar.hide()
 
         self.pathBtn.clicked.connect(self.onPathBtn)
         self.classifier_name.currentIndexChanged[str].connect(
             self.onClassifierChanged)
-
-        self.accepted.connect(self.onAccepted)
 
     def onClassifierChanged(self, name):
 
@@ -48,7 +49,8 @@ class LoadAnnotationsDialog(QtGui.QDialog):
 
         file_ = QFileDialog.getOpenFileName( \
             self, "Select a config file", expanduser('~'),
-            ("hdf5 files (*.ch5 *.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5;;"
+            ("hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5;;"
+             "cellh5 files (*.ch5);;"
             ";;All files (*.*)"))
 
         if file_:
@@ -76,7 +78,26 @@ class LoadAnnotationsDialog(QtGui.QDialog):
             finally:
                 hdf.close()
 
-    def onAccepted(self):
+    def loadItems(self, hdf, indices, paths):
+        self.progressBar.setMaximum(len(indices))
+        self.progressBar.setValue(0)
+
+        self.progressBar.show()
+
+        items = list()
+        for i, item in enumerate(hdf.itemsFromClassifier(indices, paths)):
+            items.append(item)
+            self.progressBar.setValue(i+1)
+            QApplication.processEvents()
+
+        self.progressBar.hide()
+        self.progressBar.reset()
+        return items
+
+    def accept(self):
+
+        if not self._path.text():
+            return
 
         hdf = guessHdfType(self._path.text())
 
@@ -101,7 +122,8 @@ class LoadAnnotationsDialog(QtGui.QDialog):
         classnames = [str(classnames[l]) for l in labels[index_array]]
 
         idx = sample_info['index'][index_array].tolist()
-        items = list(hdf.iterItemsByIndexList(idx))
+        paths = sample_info['name'][index_array].tolist()
+        items = self.loadItems(hdf, idx, paths)
 
         for name, item in zip(classnames, items):
             model.addAnnotation(item, name)
@@ -110,3 +132,5 @@ class LoadAnnotationsDialog(QtGui.QDialog):
 
         for i in xrange(model.rowCount()):
             model.updateCounts(i)
+
+        super(LoadAnnotationsDialog, self).accept()

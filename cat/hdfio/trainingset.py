@@ -125,8 +125,8 @@ class AtTrainingSetIO(HdfFile):
                           objid=datatbl["label"][i], frame=i, colors=cols,
                           path=self.dmodel.features)
 
-    def iterItemsByIndexList(self, indices, *args, **kw):
-        """Iterate over HdfItems using a list of indices."""
+    def itemsFromClassifier(self, indices, *args, **kw):
+        """List of HdfItems using a list of indices."""
 
         cols = self.colors
         gal = self[self.dmodel.gallery][:,:,:, indices]

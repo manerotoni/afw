@@ -54,7 +54,8 @@ class NavToolBar(AtToolBar):
 
     @property
     def coordinate(self):
-        return Ch5Coord(self.plate.currentText(),
+        return Ch5Coord(Ch5Coord.SAMPLE,
+                        self.plate.currentText(),
                         self.well.currentText(),
                         self.site.currentText(),
                         self.region.currentText())
