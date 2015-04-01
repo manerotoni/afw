@@ -11,7 +11,8 @@ PrimaryParams, ExpansionParams - tuples to set up the segmenation
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ["feature_groups", "PrimaryParams", "ExpansionParams", "SRG_TYPE"]
+__all__ = ["feature_groups", "PrimaryParams", "ExpansionParams", "SRG_TYPE",
+           "ZProject"]
 
 from collections import namedtuple
 from cecog import ccore
@@ -21,6 +22,19 @@ from cecog import ccore
 SRG_TYPE = {"CompleteGrow": ccore.SrgType.CompleteGrow,
             "KeepContours": ccore.SrgType.KeepContours,
             "KeepContoursPlus": ccore.SrgType.KeepContoursPlus}
+
+
+class ZProject(object):
+
+    Select = 0
+    Maximum = 1
+    Mean = 2
+    Minimum = 3
+
+    @classmethod
+    def names(cls):
+        return ("select", "maximum", "mean", "minimum")
+
 
 feature_groups = {'granulometry': None,
                   'normbase': None,
@@ -43,7 +57,8 @@ PrimaryParams = namedtuple(
                       'remove_borderobjects', 'fill_holes', 'norm_min',
                       'norm_max','size_min', 'size_max', 'intensity_min',
                       'intensity_max', 'gallery_size', 'use_watershed',
-                      'seeding_size'])
+                      'seeding_size', 'zprojection', 'zslice',
+                      'outline_smoothing'])
 
 ExpansionParams = namedtuple(
     'ExpansionParams', ['srg_type', 'label_number', 'region_statistics_array',
