@@ -15,6 +15,7 @@ from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QApplication
+from PyQt4.QtGui import QMessageBox
 
 from cat.classifiers.classifiers import ClfDataModel
 from cat.hdfio.trainingset import AtTrainingSetIO
@@ -98,11 +99,35 @@ class LoadAnnotationsDialog(QtGui.QDialog):
             return
 
         hdf = guessHdfType(self._path.text())
-
         dmodel = ClfDataModel(self.classifier_name.currentText())
+        name = hdf[dmodel.path].attrs[dmodel.NAME]
+        lib = hdf[dmodel.path].attrs[dmodel.LIB]
+
+        # switch classifier before loading
+        idx = self.parent().classifiers.findText(name)
+        if idx < 0:
+            QMessageBox.critical(self,
+                                 "Error",
+                                 "Classifier %s not supported" %name)
+            return
+        self.parent().classifiers.setCurrentIndex(idx)
+
         clf = self.parent().currentClassifier()
         model = self.parent().model
 
+        self.parent().removeAll()
+        if lib in (dmodel.OneClassSvm, ):
+            self._loadSingle(model, hdf, dmodel)
+        elif lib in (dmodel.SupportVectorClassifier, ):
+            self._loadMultiClass(model, hdf, dmodel)
+        else:
+            msg = "Classifier %s not supported" %lib
+            QMessageBox.critical(self, "Error", msg)
+
+        hdf.close()
+        super(LoadAnnotationsDialog, self).accept()
+
+    def _loadMultiClass(self, model, hdf, dmodel):
         norm = hdf[dmodel.normalization].value
         training_data = hdf[dmodel.training_set].value
         classdef = hdf[dmodel.classdef].value
@@ -110,6 +135,7 @@ class LoadAnnotationsDialog(QtGui.QDialog):
         sample_info = hdf[dmodel.sample_info].value
 
         self.parent().removeAll()
+
         classnames = dict()
         for (name, class_label, color) in classdef:
             classnames[int(class_label)] = name
@@ -118,17 +144,27 @@ class LoadAnnotationsDialog(QtGui.QDialog):
         # keep things sorted for faster loading
         index_array = np.argsort(sample_info["index"])
         classnames = [str(classnames[l]) for l in labels[index_array]]
-
         idx = sample_info['index'][index_array].tolist()
         paths = sample_info['name'][index_array].tolist()
         items = self.loadItems(hdf, idx, paths)
-
         for name, item in zip(classnames, items):
             model.addAnnotation(item, name)
-
-        hdf.close()
 
         for i in xrange(model.rowCount()):
             model.updateCounts(i)
 
-        super(LoadAnnotationsDialog, self).accept()
+    def _loadSingle(self, model, hdf, dmodel):
+        norm = hdf[dmodel.normalization].value
+        training_data = hdf[dmodel.training_set].value
+        classdef = hdf[dmodel.classdef].value
+        sample_info = hdf[dmodel.sample_info].value
+
+        # keep things sorted for faster loading
+        index_array = np.argsort(sample_info["index"])
+        idx = sample_info['index'][index_array].tolist()
+        paths = sample_info['name'][index_array].tolist()
+        items = self.loadItems(hdf, idx, paths)
+        for item in items:
+            model.addAnnotation(item)
+
+        self.parent().itemCountChanged.emit()

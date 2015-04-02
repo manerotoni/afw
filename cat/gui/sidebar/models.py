@@ -125,6 +125,8 @@ class AtSorterItemModel(AtStandardItemModel):
 
 class AtOneClassSvmItemModel(AtStandardItemModel):
 
+    updateCounts = QtCore.pyqtSignal()
+
     def __init__(self, *args, **kw):
         super(AtOneClassSvmItemModel, self).__init__(*args, **kw)
 

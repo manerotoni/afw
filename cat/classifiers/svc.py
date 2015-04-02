@@ -210,7 +210,7 @@ class SvcWriter(ClfWriter):
             raise HdfError("Classifer with name %s exists already"
                            %name + str(e))
 
-        grp.attrs[self.dmodel.NAME] = "support vector classifier"
+        grp.attrs[self.dmodel.NAME] = Svc.name
         grp.attrs[self.dmodel.LIB] = self.dmodel.SupportVectorClassifier
         grp.attrs[self.dmodel.VERSION] = sklearn.__version__
 
