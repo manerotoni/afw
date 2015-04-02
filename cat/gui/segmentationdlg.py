@@ -103,6 +103,9 @@ class SegmentationDialog(QtGui.QWidget):
         self.zslice.valueChanged.connect(self.emitParamsChanged)
         self.zslice.valueChanged.connect(self.emitImageUpdate)
 
+        self.outlineSmoothing.valueChanged.connect(
+            self.emitParamsChanged)
+
     def onZSliceMethodChanged(self, index):
 
         if index == ZProject.Select:
@@ -138,6 +141,8 @@ class SegmentationDialog(QtGui.QWidget):
             widget = self.widgetAt(i, self.NAME)
             if widget.text() == channel:
                 widget.setText(missing[0])
+
+        self.paramsChanged.emit()
 
     def addExpandedRegion(self, name):
         expw = ExpansionWidget(self)
