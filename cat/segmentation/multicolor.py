@@ -125,7 +125,7 @@ class MultiChannelProcessor(object):
             gimg = self.image[ymin:ymax, xmin:xmax, stack, self._channel_idx]
         else:
             gimg = self.image[ymin:ymax, xmin:xmax, :, self._channel_idx]
-            image = zProjection(gimg, zprojection)
+            gimg = zProjection(gimg, zprojection)
         return gimg
 
     @property
