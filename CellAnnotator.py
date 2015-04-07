@@ -8,6 +8,7 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ ='GPL'
 
 import os
+from os.path import dirname, join
 import sys
 import argparse
 
@@ -31,8 +32,13 @@ if __name__ == '__main__':
         raise SystemExit("File does not exist!")
 
     app = QtGui.QApplication(sys.argv)
-    mw = AtMainWindow(args.file)
 
+    # windows always sucks!!
+    if sys.platform.startswith("win"):
+        sqldrivers = join(dirname(QtGui.__file__), "plugins")
+        app.addLibraryPath(sqldrivers)
+
+    mw = AtMainWindow(args.file)
 
     splash_pix = QPixmap(':annotationtool_about.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
