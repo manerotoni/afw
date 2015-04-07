@@ -18,7 +18,8 @@ from PyQt4.QtCore import Qt, pyqtSignal
 
 from cat.gui.featurebox import FeatureBox
 from cat.hdfio.trainingset import AtTrainingSetIO
-from cat.segmentation import PrimaryParams, ExpansionParams, SRG_TYPE
+from cat.segmentation import PrimaryParams, ExpansionParams
+from cat.segmentation import SRG_TYPE, ZProject
 from cat.xmlconf import XmlConfReader, XmlConfWriter
 
 import mimetypes
@@ -82,6 +83,7 @@ class SegmentationDialog(QtGui.QWidget):
     activateChannels = pyqtSignal(list)
     changeColor = pyqtSignal(str, str)
     paramsChanged = pyqtSignal()
+    imageUpdate = pyqtSignal(int)
 
     def __init__(self, *args, **kw):
         super(SegmentationDialog, self).__init__(*args, **kw)
@@ -94,6 +96,32 @@ class SegmentationDialog(QtGui.QWidget):
         self.loadBtn.clicked.connect(self.onLoadBtn)
         self.saveBtn.clicked.connect(self.onSaveBtn)
         self.watershed.stateChanged.connect(self.emitParamsChanged)
+
+        self.zsliceMethod.addItems(ZProject.names())
+        self.zsliceMethod.currentIndexChanged.connect(
+            self.onZSliceMethodChanged)
+        self.zslice.valueChanged.connect(self.emitParamsChanged)
+        self.zslice.valueChanged.connect(self.emitImageUpdate)
+
+        self.outlineSmoothing.valueChanged.connect(
+            self.emitParamsChanged)
+
+    def onZSliceMethodChanged(self, index):
+
+        if index == ZProject.Select:
+            self.zslice.setEnabled(True)
+        else:
+            self.zslice.setEnabled(False)
+        self.emitImageUpdate()
+        self.paramsChanged.emit()
+
+    def setMaxZSlice(self, value):
+        if self.zslice.value() >= value:
+            self.zslice.setValue(value)
+        self.zslice.setMaximum(value)
+
+    def emitImageUpdate(self, dummy=None):
+        self.imageUpdate.emit(self.parent().slider.value())
 
     def emitParamsChanged(self, dummy=None):
         self.paramsChanged.emit()
@@ -113,6 +141,8 @@ class SegmentationDialog(QtGui.QWidget):
             widget = self.widgetAt(i, self.NAME)
             if widget.text() == channel:
                 widget.setText(missing[0])
+
+        self.paramsChanged.emit()
 
     def addExpandedRegion(self, name):
         expw = ExpansionWidget(self)
@@ -174,7 +204,10 @@ class SegmentationDialog(QtGui.QWidget):
                              self.intensityMax.value(),
                              self.galSize.value(),
                              self.watershed.isChecked(),
-                             self.seedingSize.value())
+                             self.seedingSize.value(),
+                             self.zsliceMethod.currentIndex(),
+                             self.zslice.value(),
+                             self.outlineSmoothing.value())
 
     def segmentationParams(self):
         sparams = OrderedDict()
@@ -244,6 +277,9 @@ class SegmentationDialog(QtGui.QWidget):
     def _updatePrimary(self, name, settings):
         """Update the form for the primary segmentation."""
 
+        # some widgets trigger and update
+        oldstate = self.blockSignals(True)
+
         idx = self.pchannel.findText(name)
         if idx != -1:
             self.pchannel.setCurrentIndex(idx)
@@ -263,8 +299,21 @@ class SegmentationDialog(QtGui.QWidget):
         self.intensityMax.setValue(segpar.intensity_max)
         self.galSize.setValue(segpar.gallery_size)
 
+        self.watershed.setChecked(segpar.use_watershed)
+        self.seedingSize.setValue(segpar.seeding_size)
+        self.zsliceMethod.setCurrentIndex(segpar.zprojection)
+        if segpar.zslice <= self.zslice.maximum():
+            self.zslice.setValue(segpar.zslice)
+
+        self.outlineSmoothing.setValue(segpar.outline_smoothing)
+
         fwidget = self.widgetAt(0, self.FEATURES)
         fwidget.setFeatureGroups(settings[XmlConfReader.FEATUREGROUPS])
+
+        self.blockSignals(oldstate)
+        self.emitImageUpdate()
+        self.emitParamsChanged()
+
 
     def _updateExtendedRegion(self, index, settings):
         """Update the form for extended segementation region by given by name"""

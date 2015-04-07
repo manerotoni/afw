@@ -25,7 +25,6 @@ from .classifiers import Classifier, ClfWriter, ClfDataModel
 
 class OcSvmWriter(ClfWriter):
 
-
     def __init__(self, name, file_, description=None, remove_existing=False):
         super(OcSvmWriter, self).__init__(file_)
         self.dmodel = ClfDataModel(name)
@@ -42,7 +41,7 @@ class OcSvmWriter(ClfWriter):
             raise HdfError("Classifer with name %s exists already"
                            %name + str(e))
 
-        grp.attrs[self.dmodel.NAME] = "one class support vector machine"
+        grp.attrs[self.dmodel.NAME] = OneClassSvm.name
         grp.attrs[self.dmodel.LIB] = self.dmodel.OneClassSvm
         grp.attrs[self.dmodel.VERSION] = sklearn.__version__
 
@@ -109,6 +108,7 @@ class OcSvmParameterWidget(QtGui.QFrame):
             self.counter.setText("---")
         else:
             self.counter.setText("%d" %counts)
+
 
 class OneClassSvm(Classifier):
     """Class for training and parameter tuning of a one class svm."""

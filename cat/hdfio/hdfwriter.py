@@ -91,14 +91,17 @@ class HdfCache(object):
             self.bbox = np.append(self.bbox, bbox)
             self.features = np.append(self.features, features)
             self.gallery = np.concatenate((self.gallery, gallery), axis=3)
+
         self._images.append(image)
 
     @property
     def image(self):
         shape = self._images[0].shape + (len(self._images), )
         images = np.empty(shape, self._images[0].dtype)
+
         for i, image in enumerate(self._images):
-            images[:, :, :, i] = image
+            images[:, :, :, :, i] = image
+
         return images
 
 
@@ -176,7 +179,7 @@ class HdfWriter(object):
             self._write_contours()
 
             images = self._cache.image
-            chunksize = images.shape[:2] + (1, 1)
+            chunksize = images.shape[:2] + (1, 1, 1)
             dset = self._file.create_dataset(self.dmodel.images,
                                              data=images,
                                              chunks=chunksize,

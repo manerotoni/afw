@@ -69,6 +69,7 @@ class ImportDialog(QtGui.QDialog):
         self.showBBoxes.stateChanged.connect(self.showObjects)
         self.segdlg.paramsChanged.connect(self.showObjects)
         self.segdlg.refreshBtn.clicked.connect(self.showObjects)
+        self.segdlg.imageUpdate.connect(self.showImage)
         self.segdlg.activateChannels.connect(self.cbar.activateChannels)
         self.segdlg.changeColor.connect(self.cbar.setColor)
 
@@ -154,7 +155,9 @@ class ImportDialog(QtGui.QDialog):
         self._files.sort()
         self.dirinfo.setText("%d images found" %len(self._files))
 
-        proc = LsmProcessor(self._files[0])
+        proc = LsmProcessor(self._files[0],
+                            self.segdlg.segmentationParams(),
+                            self.cbar.checkedChannels())
         self.metadata = proc.metadata
         self.metadata.n_images = len(self._files)
         images = list(proc.iterQImages())
@@ -162,13 +165,16 @@ class ImportDialog(QtGui.QDialog):
         self.cbar.setImages(images, list(proc.iterprops()))
 
         self.segdlg.setRegions(self.cbar.allChannels())
+        self.segdlg.setMaxZSlice(self.metadata.n_zslices-1)
         self.slider.setRange(0, self.metadata.n_images-1)
         self.slider.setValue(0)
         self.showObjects()
 
     def showImage(self, index=0):
         try:
-            proc = LsmProcessor(self._files[index])
+            proc = LsmProcessor(self._files[index],
+                                self.segdlg.segmentationParams(),
+                                self.cbar.checkedChannels())
         except IndexError:
             return
         self.viewer.clearPolygons()
@@ -182,12 +188,13 @@ class ImportDialog(QtGui.QDialog):
 
         index = self.slider.value()
         try:
-            mp = LsmProcessor(self._files[index])
+            mp = LsmProcessor(self._files[index],
+                              self.segdlg.segmentationParams(),
+                              self.cbar.checkedChannels())
             # first channel for primary segementation
-            mp.segmentation(self.segdlg.segmentationParams(),
-                        self.cbar.checkedChannels())
+            mp.segmentation()
         except Exception as e:
-            QMessageBox.critical(self, "Error", str(e))
+            QMessageBox.critical(self, "Error", "%s:%s"  %(type(e), str(e)))
         finally:
             if not mp.objects:
                 return

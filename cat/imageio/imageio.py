@@ -49,11 +49,12 @@ class MetaData(object):
 
     __slot__ = ["size", "dtype", "nchannels", "n_images"]
 
-    def __init__(self, size, n_channels, dtype, n_images=None):
+    def __init__(self, size, n_zslices, n_channels, dtype, n_images=None):
         self.size = size
         self.n_channels = n_channels
         self.dtype = dtype
         self.n_images = n_images
+        self.n_zslices = n_zslices
 
     @property
     def image_dimension(self):
