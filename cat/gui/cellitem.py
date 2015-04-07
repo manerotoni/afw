@@ -14,6 +14,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 
 from cat.classifiers.itemclass import UnClassified
+from cat.gui.painting import AtPainter
 
 class StackOrder(object):
     pixmap = 0
@@ -54,13 +55,14 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self._pixmap = None
         self._mask = None
         self.class_ = UnClassified
-        self.setPixmap(item.pixmap())
+        self.setPixmap(item.pixmap)
         self.features = item.features
         self.frame = item.frame
         self.objid = item.objid
         self.index = item.index
         self.hash = item.hash
         self.path = item.path
+        self.qimages = list(item.iterQImages())
         self._is_training_sample = False
 
         if item.contour is not None:
@@ -186,13 +188,18 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
     def setPixmap(self, pixmap):
         self._pixmap = pixmap
-        item = QtGui.QGraphicsPixmapItem(self)
-        item.setPixmap(self.pixmap)
-        item.setPos(self.pos())
-        self.addToGroup(item)
+        self._pixmapItem = QtGui.QGraphicsPixmapItem(self)
+        self._pixmapItem.setPixmap(self._pixmap)
+        self._pixmapItem.setPos(self.pos())
+        self.addToGroup(self._pixmapItem)
         self._addSelectorRect()
         self._addClassRect()
         self._addTsIndicator()
+
+    def enhancePixmap(self, index, lut):
+        self.qimages[index].setColorTable(lut)
+        self._pixmap = AtPainter.blend(self.qimages)
+        self._pixmapItem.setPixmap(self._pixmap)
 
     def paint(self, painter, option, widget):
         if self.isSelected():
@@ -235,7 +242,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
 
         self.setSelected(is_selected)
 
-    def toggleContours(self, state):
+    def toggleOutline(self, state):
         for item in self.childItems():
             if isinstance(item, QtGui.QGraphicsPolygonItem):
                 if state:

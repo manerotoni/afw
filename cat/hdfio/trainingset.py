@@ -45,7 +45,12 @@ class AtTrainingSetIO(HdfFile):
 
         return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
                            self.numberItems(), self.gsize, cspace,
-                           self.channelNames)
+                           self.channelNames, self.colors)
+    @property
+    def colors(self):
+        colors = self[self.dmodel.images].attrs[self.dmodel.COLORS]
+        colors = [str(c) for c in colors] # no unicode
+        return tuple(colors)
 
     @property
     def channelNames(self):
@@ -76,7 +81,7 @@ class AtTrainingSetIO(HdfFile):
             cnts.append(zip(x, y))
         return cnts
 
-    def _getAllContours(self, dtable):
+    def _getAllContours(self, dtable, indices=None):
 
         hsize = np.floor(self.gsize/2.0)
         channels = self[self.dmodel.contours].attrs[self.dmodel.CHANNELS]
@@ -91,7 +96,10 @@ class AtTrainingSetIO(HdfFile):
 
         contours = list()
         for channel in channels:
-            cnt = self[self.dmodel.contours+"/%s" %channel].value
+            if indices is None:
+                cnt = self[self.dmodel.contours+"/%s" %channel].value
+            else:
+                cnt = self[self.dmodel.contours+"/%s" %channel][indices]
             cnt = cnt - center
             cnt = self._transposeAndClip(cnt)
             contours.append(cnt)
@@ -99,13 +107,11 @@ class AtTrainingSetIO(HdfFile):
         contours = np.swapaxes(contours, 0, 1)
         return contours.tolist()
 
-
     def iterItems(self, *args, **kw):
+        """Iterate over all HdfItems in a data file."""
         # need *magic for compatibiliy to other classes
 
-        cols = self[self.dmodel.images].attrs[self.dmodel.COLORS]
-        cols = [str(c) for c in cols] # no unicode
-
+        cols = self.colors
         gal = self[self.dmodel.gallery].value
         datatbl = self[self.dmodel.bbox].value
         cnts = self._getAllContours(datatbl)
@@ -117,4 +123,22 @@ class AtTrainingSetIO(HdfFile):
         for i in xrange(gal.shape[3]):
             yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], index=i,
                           objid=datatbl["label"][i], frame=i, colors=cols,
+                          path=self.dmodel.features)
+
+    def itemsFromClassifier(self, indices, *args, **kw):
+        """List of HdfItems using a list of indices."""
+
+        cols = self.colors
+        gal = self[self.dmodel.gallery][:,:,:, indices]
+        datatbl = self[self.dmodel.bbox][indices]
+        cnts = self._getAllContours(datatbl, indices)
+        ftrs = self[self.dmodel.features][indices]
+
+        # dtype read from hdf does not work for sorting, need an 2d table
+        ftrs = ftrs.view(dtype=np.float32).reshape(ftrs.shape[0], -1)
+
+        for i in xrange(gal.shape[3]):
+            yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], index=indices[i],
+                          objid=datatbl["label"][i], frame=indices[i],
+                          colors=cols,
                           path=self.dmodel.features)

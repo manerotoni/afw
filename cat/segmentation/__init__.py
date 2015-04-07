@@ -6,6 +6,7 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 
-from objects import *
-from options import *
-from multicolor import *
+from .objects import *
+from .options import *
+from .multicolor import *
+from .channelname import ChannelName

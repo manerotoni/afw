@@ -108,6 +108,10 @@ class SvcParameterWidget(QtGui.QFrame):
         model.classesChanged.connect(parent.updateClassifier)
         self.treeview.setModel(model)
 
+        self.treeview.setColumnWidth(0, 75)
+        self.treeview.setColumnWidth(1, 75)
+        self.treeview.setColumnWidth(2, 30)
+
         self.addClassBtn = QtGui.QToolButton()
         self.addClassBtn.setToolTip("Add new class")
         self.addClassBtn.setIcon(QtGui.QIcon(":/oxygen/code-class.png"))
@@ -154,6 +158,12 @@ class SvcParameterWidget(QtGui.QFrame):
 
         vbox.addWidget(frame)
         vbox.addWidget(self.treeview)
+
+        parent.itemCountChanged.connect(self.updateCounts)
+
+    def updateCounts(self):
+        for i in xrange(self.treeview.model().rowCount()):
+            self.treeview.model().updateCounts(i)
 
     def onAddBtn(self):
         self.treeview.model().addClass()
@@ -208,7 +218,7 @@ class SvcWriter(ClfWriter):
             grp.attrs[self.dmodel.DESCRIPTION] = description
 
     def saveAnnotations(self, labels):
-        # not more than 256 classess
+        # max 256 classes!
         labels = labels.astype(np.uint8)
         dset = self.h5f.create_dataset(self.dmodel.annotations,
                                        data=labels,

@@ -191,6 +191,7 @@ class CrossValidationDialog(QtGui.QWidget):
         cv = StratifiedKFold(y=self.labels, n_folds=self.kfold)
         grid = GridSearchCV(SVC(), param_grid=param_grid, cv=cv,
                             n_jobs=cpu_count()-1)
+
         grid.fit(self.features, self.labels)
         est = grid.best_estimator_
 

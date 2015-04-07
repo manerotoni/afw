@@ -13,7 +13,7 @@ import numpy as np
 from collections import OrderedDict
 
 from qimage2ndarray import gray2qimage
-
+import vigra
 from cecog import ccore
 from cecog.environment import CecogEnvironment
 
@@ -180,14 +180,17 @@ class MultiChannelProcessor(object):
 
         image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
-        image_smoothed = ccore.disc_median(image, median_radius)
-        # image_smoothed = ccore.gaussianFilter(image, median_radius)
+        # image_smoothed = ccore.disc_median(image, median_radius)
+        image_smoothed = ccore.gaussianFilter(image, median_radius)
 
         label_image = ccore.window_average_threshold(
             image_smoothed, window_size, min_contrast)
 
         if fill_holes:
             ccore.fill_holes(label_image)
+
+        label_image = vigra.filters.discClosing(label_image.toArray(), 1)
+        label_image = ccore.numpy_to_image(label_image, copy=True)
 
         if use_watershed:
             label_image = label_image.toArray()

@@ -99,14 +99,14 @@ class AtGraphicsView(MouseWheelView):
     def createContextMenu(self):
         self.context_menu = QtGui.QMenu(self)
         self.context_menu.setTearOffEnabled(True)
-        self.context_menu.addAction(self.actionReorder)
+        self.context_menu.addAction(self.actionRefresh)
         self.context_menu.addAction(self.actionSelectAll)
         self.context_menu.addAction(self.actionInvertSelection)
         self.context_menu.addSeparator()
         self.context_menu.addAction(self.actionThrowAnchor)
 
     def createActions(self):
-        self.actionReorder = QtGui.QAction(
+        self.actionRefresh = QtGui.QAction(
             "&refresh", self, triggered=lambda: self.reorder(True))
         self.actionSelectAll = QtGui.QAction("select &all", self,
                                              triggered=self.scene().selectAll)
@@ -130,6 +130,10 @@ class AtGraphicsView(MouseWheelView):
     def toggleMasks(self, state):
         for item in self.items:
             item.toggleMask(state)
+
+    def toggleOutlines(self, state):
+        for item in self.items:
+            item.toggleOutline(state)
 
     def selectedItems(self):
         return self.scene().selectedItems()
