@@ -19,6 +19,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtHelp
 from PyQt4 import uic
+from PyQt4.QtGui import QTextDocument
 
 from cat import version
 from cat.gui.lineedit import AtLineEdit
@@ -66,9 +67,7 @@ class AtAssistant(QtGui.QMainWindow):
         qchfile = join(dirname(__file__), 'annotationtool.qch')
         self.hengine.registerDocumentation(qchfile)
 
-
         self.hengine.searchEngine().reindexDocumentation()
-
         self.hbrowser = AtHelpBrowser()
         self.hbrowser.setHelpEngine(self.hengine)
         self.setCentralWidget(self.hbrowser)
@@ -83,7 +82,7 @@ class AtAssistant(QtGui.QMainWindow):
         self.tabifyDockWidget(self.contentDock, self.searchDock)
         self.searchDock.hide()
 
-        # search dock (hidden)
+          # search dock (hidden)
         search = QtGui.QFrame(self)
         vbox = QtGui.QVBoxLayout(search)
         vbox.setContentsMargins(3, 3, 3, 3)
@@ -110,6 +109,10 @@ class AtAssistant(QtGui.QMainWindow):
         self._restoreSettings()
         self.indexDock.show()
         self.contentDock.show()
+
+        #from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        #mport pdb; pdb.set_trace()
+
 
     def closeEvent(self, event):
         self._saveSettings()

@@ -4,20 +4,22 @@
   <virtualFolder>html</virtualFolder>
   <filterSection>
     <toc>
-      <section title="Annotation Tool" ref="html/index.html">
+      <section title="CellAnnotator" ref="html/index.html">
         <section title="ErrorCorrection" ref="html/errorcorrection.html"></section>
         <section title="Tracking" ref="html/tracking.html"></section>
       </section>
     </toc>
     <keywords>
-      <keyword name="Hidden Markov Model" ref="html/index.html"/>
+      <keyword name="Overview" ref="html/index.html"/>
       <keyword name="Error Correction" ref="html/errorcorrection.html"/>
       <keyword name="Tracking" ref="html/tracking.html"/>
     </keywords>
     <files>
+	  <file>html/css/help.css</file>
       <file>html/index.html</file>
       <file>html/errorcorrection.html</file>
       <file>html/tracking.html</file>
+	  <file>html/images/mainwindow.png</file>
     </files>
   </filterSection>
 </QtHelpProject>

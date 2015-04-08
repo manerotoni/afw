@@ -195,6 +195,10 @@ class AtMainWindow(QtGui.QMainWindow):
             self.abort.emit()
             self.loaderThread.wait()
             self.loader.close()
+
+            if self.assistant is not None:
+                self.assistant.close()
+
         except AttributeError:
             pass
 

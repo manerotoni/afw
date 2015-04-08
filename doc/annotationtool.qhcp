@@ -2,11 +2,11 @@
 <QHelpCollectionProject version="1.0">
   <assistant>
     <title>Annotation Tool</title>
-    <startPage>qthelp:html/index.html</startPage>
+    <startPage>qthelp://annotationtool/html/html/index.html</startPage>
     <cacheDirectory>annotationtool</cacheDirectory>
     <aboutMenuText>
-      <text>Annotation Tool</text>
-      <text language="de">Über meine Applikation...</text>
+      <text>CellAnnotator</text>
+      <text language="en">About CellAnnotator...</text>
     </aboutMenuText>
   </assistant>
   <docFiles>
