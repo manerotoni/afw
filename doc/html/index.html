@@ -21,7 +21,7 @@ The term <span style="font-style: italic;">preprocessed</span>
 mean that raw images are segmented and for each forground object i.e.
 cell the feature vector, the thumbnail, bounding box and outline
 is&nbsp;calculated. Therfore a cell is represented by its
-numberical data and the thumbnail is only the visualisation in the
+numerical data and the thumbnail is only the visualisation in the
 graphical user interface (GUI).</p>
 
 <div style="text-align: center;"><img title="main window" alt="Main Window" src="images/mainwindow.png" align="middle"><br>
@@ -32,9 +32,9 @@ graphical user interface (GUI).</p>
 <h4>Interactivity</h4>
 The strenght of &nbsp;CellAnnotator lies in its interactivitiy. The
 immediate feedback decreases the effort of training and validation to a
-few minutes. Validation is performed using cross validatiaon, but due
-to the immedate feedback evaluation of the classifiers performance is
-provided. <br>
+few minutes. Validation is performed using cross validatiaon. The
+immedate feedback i.e. the classification result enables even
+unexperienced users to evaluate the classifier visually.<br>
 <h4>Gallery Viewer</h4>
 The main widget&nbsp;is the gallery viewer which centered in the
 middle of the GUI. It is possible to adjust the view by toggling the
@@ -56,11 +56,11 @@ which is documented <a href="www.doc.cellcognition.org">here</a>.<br>
 <h4>Sorting and ranking:</h4>
 
 To train a classifier&nbsp;it is necessary to provide&nbsp;a sufficient number of training examples i.e. cells that
-reprecent a certain cell morphology. &nbsp;The search &nbsp;for
+represent a certain cell morphology. &nbsp;The search &nbsp;for
 a proper training set is usually time consuming and tedius.
 CellAnnotator addresses this problem by sorting and ranking the image
 gallery by similarity measures of the feature vectors. If one example
-of a phenotype is found, the gallery can be sorted, and similary
+of a phenotype is found, the gallery can be sorted, and similar
 objects are presented beside each other to the user.<br>
 
 <br>
@@ -80,6 +80,17 @@ search the predicted classes are indicated for each cell object and it
 is possible to correct for classification and
 annotation&nbsp;errors or add/remove&nbsp;classes to the
 definition. <br>
+<br>
+<h4>Data import:</h4>
+The data importer preprocesses the raw images. It implements a standard
+pipline i.e. segmentation for forground background separation,
+calculation of outlines (contours), bounding boxes, thumbnails and last
+but not least the feature vectors. &nbsp;The data is saved in hdf5
+format, optimized for fast reading. CellAnnotator can also read data
+from cellh5.<br>
+<br>
+<br>
+<br>
 
 <br>
 <br>
