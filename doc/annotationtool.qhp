@@ -5,21 +5,34 @@
   <filterSection>
     <toc>
       <section title="CellAnnotator" ref="html/index.html">
-        <section title="ErrorCorrection" ref="html/errorcorrection.html"></section>
-        <section title="Tracking" ref="html/tracking.html"></section>
+        <section title="Getting started" ref="html/getting_started.html"></section>
+        <section title="Shortcuts" ref="html/shortcuts.html"></section>	
       </section>
     </toc>
     <keywords>
       <keyword name="Overview" ref="html/index.html"/>
-      <keyword name="Error Correction" ref="html/errorcorrection.html"/>
-      <keyword name="Tracking" ref="html/tracking.html"/>
+      <keyword name="Getting started" ref="html/getting_started.html"/>
+	  <keyword name="Throw sort anchor" ref="html/getting_started.html#quicksort"/>
+	  <keyword name="Open file" ref="html/getting_started.html#openfile"/>
+	  <keyword name="Select items" ref="html/getting_started.html#selectitems"/>
+	  <keyword name="Shortcuts" ref="html/shortcuts.html"/>
     </keywords>
     <files>
 	  <file>html/css/help.css</file>
       <file>html/index.html</file>
-      <file>html/errorcorrection.html</file>
-      <file>html/tracking.html</file>
+      <file>html/getting_started.html</file>
+	  <file>html/shortcuts.html</file>
 	  <file>html/images/mainwindow.png</file>
+	  <file>html/images/contrast-dock.png</file>
+	  <file>html/images/sorting-dock.png</file>
+	  <file>html/images/annotation-dock.png</file>
+	  <file>html/images/contrast-dock-small.png</file>
+	  <file>html/images/annotation-dock-small.png</file>
+	  <file>html/images/sorting-dock-small.png</file>
+	  <file>html/images/document-open-folder.png</file> 
+	  <file>html/images/mainwindow-loading.png</file>
+	  <file>html/images/gallery-view-context-menu.png</file>
+	  <file>html/images/select-drag.png</file>
     </files>
   </filterSection>
 </QtHelpProject>
