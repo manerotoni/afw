@@ -2,16 +2,19 @@
 <html>
 <head>
 
-  <link rel="stylesheet" type="text/css" href="css/help.css">
 
+  
+  <link rel="stylesheet" type="text/css" href="css/help.css">
 </head>
 
 
 <body>
 
-<pre></pre>
 
-<h1>CellAnnotator</h1>
+<h1><span style="font-weight: bold;"></span>CellAnnotator</h1>
+
+
+
 
 <p> CellAnnotator is an interactive tool for supervised
 classifier training.
@@ -24,14 +27,19 @@ is&nbsp;calculated. A cell is represented by its
 numerical data, the thumbnail is only the visualisation in the
 graphical user interface (GUI).</p>
 
+
 <div style="text-align: center;">
 <center><img style="width: 800px; height: 503px;" alt="Main Window" title="Main Window" src="images/mainwindow.png"></center>
+
 </div>
 
 
-<h2>Key features</h2>
+
+<h2><a name="application_features"></a>Key features</h2>
+
 
 <h4>Interactivity</h4>
+
 
 The strenght of &nbsp;CellAnnotator is&nbsp;its interactivitiy.
 The
@@ -40,7 +48,9 @@ few minutes. Validation is performed using cross validatiaon. But
 the&nbsp;feedback e.g. instant classification result enables even
 unexperienced users to evaluate the classifier visually.<br>
 
+
 <h4>Gallery Viewer</h4>
+
 
 The main widget&nbsp;is the gallery viewer which is the central
 widget&nbsp;of the GUI. It is possible to adjust the gallery view
@@ -49,9 +59,12 @@ outlines and background masks and turning on/off &nbsp;indicators
 for classification results. Standard functionality such as zooming an
 contrast enhancemend is also provided.<br>
 
+
 <br>
 
+
 <h4>Multiple color support</h4>
+
 
 CellAnnotator is always working
 on multiple channels. If the raw images are red and green,
@@ -65,7 +78,9 @@ vector and a classifier is always working on the concatenated feature
 vector. &nbsp;The feature set is the same as in the <a href="http://www.cellcognition.org">Cellcognition project</a>
 and is&nbsp;documented <a href="http://www.doc.cellcognition.org">here</a>.<br>
 
+
 <h4>Sorting and ranking:</h4>
+
 
 To train a classifier&nbsp;it is necessary to annotate&nbsp; a
 sufficient number of training examples i.e. cells that
@@ -76,9 +91,12 @@ gallery by similarity measures of the feature vectors. If one example
 of a phenotype is found, the gallery can be sorted, and similar
 objects are presented beside each other to the user.<br>
 
+
 <br>
 
+
 <h4>Classifier training:</h4>
+
 
 Training of a&nbsp;<a href="http://en.wikipedia.org/wiki/Support_vector_machine">Support
 Vector Machine</a>&nbsp;consistst of three parts. First find
@@ -95,9 +113,12 @@ is possible to correct for classification and
 annotation&nbsp;errors or add/remove&nbsp;classes to the
 definition. <br>
 
+
 <br>
 
+
 <h4>Data import:</h4>
+
 
 The data importer preprocesses the raw images. It implements a standard
 pipline i.e. segmentation for forground background separation,
@@ -106,25 +127,36 @@ but not least the feature vectors. &nbsp;The data is saved in hdf5
 format, optimized for fast reading. CellAnnotator can also read data
 from cellh5.<br>
 
-<br>
 
 <br>
 
-<br>
 
 <br>
 
-<br>
 
 <br>
 
-<br>
 
 <br>
 
-<br>
 
 <br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
 
 </body>
 </html>

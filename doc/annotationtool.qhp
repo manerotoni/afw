@@ -7,12 +7,18 @@
       <section title="CellAnnotator" ref="html/index.html">
         <section title="Getting started" ref="html/getting_started.html"></section>
         <section title="Shortcuts" ref="html/shortcuts.html"></section>	
+		<section title="Shortcuts" ref="html/manual.html"></section>	
       </section>
     </toc>
     <keywords>
-      <keyword name="Overview" ref="html/index.html"/>
+	  <keyword name="Overview" ref="html/index.html"/>
+	  <keyword name="Application features" ref="html/index.html#application_features"/>
       <keyword name="Getting started" ref="html/getting_started.html"/>
+	  <keyword name="GUI" ref="html/getting_started.html#gui"/>
+	  <keyword name="Gallery view context menu" ref="html/getting_started.html#contextmenugallery"/>
 	  <keyword name="Throw sort anchor" ref="html/getting_started.html#quicksort"/>
+	  <keyword name="User Manual" ref="html/manual.html"/>
+	  <keyword name="Throw sort anchor" ref="html/manual.html#throwsortanchor"/>
 	  <keyword name="Open file" ref="html/getting_started.html#openfile"/>
 	  <keyword name="Select items" ref="html/getting_started.html#selectitems"/>
 	  <keyword name="Shortcuts" ref="html/shortcuts.html"/>
@@ -22,6 +28,7 @@
       <file>html/index.html</file>
       <file>html/getting_started.html</file>
 	  <file>html/shortcuts.html</file>
+	  <file>html/manual.html</file>
 	  <file>html/images/mainwindow.png</file>
 	  <file>html/images/contrast-dock.png</file>
 	  <file>html/images/sorting-dock.png</file>
@@ -33,6 +40,13 @@
 	  <file>html/images/mainwindow-loading.png</file>
 	  <file>html/images/gallery-view-context-menu.png</file>
 	  <file>html/images/select-drag.png</file>
+	  <file>html/images/sorttoolbar.png</file>
+	  <file>html/images/list-remove.png</file>
+	  <file>html/images/list-add.png</file>
+	  <file>html/images/edit-clear.png</file>
+	  <file>html/images/sort-ascending.png</file>
+	  <file>html/images/sort-descending.png</file>
+	  
     </files>
   </filterSection>
 </QtHelpProject>
