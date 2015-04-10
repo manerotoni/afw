@@ -7,7 +7,7 @@
       <section title="CellAnnotator" ref="html/index.html">
         <section title="Getting started" ref="html/getting_started.html"></section>
         <section title="Shortcuts" ref="html/shortcuts.html"></section>	
-		<section title="Shortcuts" ref="html/manual.html"></section>	
+		<section title="User Manual" ref="html/manual.html"></section>	
       </section>
     </toc>
     <keywords>
@@ -18,7 +18,7 @@
 	  <keyword name="Gallery view context menu" ref="html/getting_started.html#contextmenugallery"/>
 	  <keyword name="Throw sort anchor" ref="html/getting_started.html#quicksort"/>
 	  <keyword name="User Manual" ref="html/manual.html"/>
-	  <keyword name="Throw sort anchor" ref="html/manual.html#throwsortanchor"/>
+	  <keyword name="Throw sort anchor manual)" ref="html/manual.html#throwsortanchor"/>
 	  <keyword name="Open file" ref="html/getting_started.html#openfile"/>
 	  <keyword name="Select items" ref="html/getting_started.html#selectitems"/>
 	  <keyword name="Shortcuts" ref="html/shortcuts.html"/>
