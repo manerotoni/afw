@@ -46,7 +46,7 @@
 	  <file>html/images/edit-clear.png</file>
 	  <file>html/images/sort-ascending.png</file>
 	  <file>html/images/sort-descending.png</file>
-	  
+	  <file>html/images/sort-classlabels.png</file>
     </files>
   </filterSection>
 </QtHelpProject>

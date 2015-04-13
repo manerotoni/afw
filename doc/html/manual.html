@@ -2,39 +2,52 @@
 <html>
 <head>
 
+
+  
   <link rel="stylesheet" type="text/css" href="css/help.css">
+
+  
   <title>User Manual</title>
-
-
 </head>
 
 
 <body>
 
+
 <h1><span style="font-weight: bold;"></span>User
 Manual</h1>
 
+
 <br>
 
+
 <h2>Open a data file</h2>
+
 
 There are &nbsp;three ways to open a data file:
 <ol>
 
+
   <li style="text-align: justify;">Menu: <span style="font-style: italic;">File-&gt;Open</span></li>
+
 
   <li>Press the open-icon&nbsp;<img style="width: 12px; height: 12px;" alt="open" title="open" src="images/document-open-folder.png">
 in the toolbar</li>
+
 
   <li>Drag &amp; drop: drag the hdf-/ cellh5 file from the
 file manager &nbsp;and drop the file in the main window (anywhere,
 except in the central gallery viewer)</li>
 
+
 </ol>
+
 
 <br>
 
+
 <h3>Sorting</h3>
+
 
 Sorting occurs linearly from the upper left to the bottom right corner.
 It is necessary to define at least one reference example for sorting.
@@ -44,19 +57,26 @@ left
 corner of the view.&nbsp;CellAnnotator uses by default the&nbsp;<a href="http://en.wikipedia.org/wiki/Cosine_similarity">cosine
 similarity</a> a measure. Other sort methods are explained <a href="#sort_algorithms">here</a>.&nbsp;<br>
 
+
 <br>
+
 
 Sorting is controlled most easily by the
 <span style="font-weight: bold;">sort</span> <span style="font-weight: bold;">toolbar</span>.
 &nbsp;It has buttons to sort ascending, descending a a drop down
 menu to select the sort algorithms.&nbsp;<br>
 
+
 <br>
+
 
 <center><img style="width: 186px; height: 34px;" alt="" title="sorting toolbar" src="images/sorttoolbar.png"><br>
+
 <br>
 
+
 </center>
+
 
 The Sorting dock widget allows to define many cells as reference
 examples. In this case the <a href="http://en.wikipedia.org/wiki/Arithmetic_mean">arithmetic
@@ -66,163 +86,222 @@ algorithm.&nbsp;From top to bottom: Drop down menu for sort
 algorithm,
 toolbar with buttons, list view with refercence examples.<br>
 
+
 &nbsp;<span style="font-weight: bold;">Note: double
 clicking &nbsp;item in the list view selects the item in the
 gallery view to.</span><br>
 
-<br>
 
 <br>
+
+
+<br>
+
 
 <center><img style="width: 252px; height: 464px;" alt="" title="sorting dock" src="images/sorting-dock.png"></center>
 
+
 <br>
+
 
 To add/remove items to the Sorting dock , simply select/mark one or
 &nbsp;several items in the graphics view simply press the
 corresponding button (<img style="width: 16px; height: 16px;" alt="" title="add items" src="images/list-add.png">/<img style="width: 16px; height: 16px;" alt="" title="remove items" src="images/list-remove.png">)in
 the dock. widget. <br>
 
+
 <br>
+
 
 Function in the toolbar:<br>
 
+
 <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+
 
   <tbody>
 
+
     <tr>
+
 
       <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="Add items" src="images/list-add.png"></td>
 
+
       <td style="width: 923px;">add items</td>
+
 
     </tr>
 
+
     <tr>
+
 
       <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="Remove items" src="images/list-remove.png"></td>
 
+
       <td style="width: 923px;">remove items</td>
+
 
     </tr>
 
+
     <tr>
+
 
       <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="clear items" src="images/edit-clear.png"></td>
 
+
       <td style="width: 923px;">clear items</td>
+
 
     </tr>
 
+
     <tr>
+
 
       <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="sort ascending" src="images/sort-ascending.png"></td>
 
+
       <td style="width: 923px;">sort ascending</td>
 
+
     </tr>
+
 
     <tr>
 
+
       <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" src="images/sort-descending.png"></td>
+
 
       <td style="width: 923px;">sort descending</td>
 
+
     </tr>
 
+
+  
   </tbody>
 </table>
 
+
 <br>
+
 
 <h3><a name="throwsortanchor"></a>Throw sort
 anchor</h3>
+
 
 Throw sort anchor means that one can select a single cells in the
 gallery view and uses the <a href="./getting_started.html#contextmenugallery">context menu</a>
 to shorten the sorting procedure.<br>
 
+
 Apply the following steps:
 <ol>
+
 
   <li><span style="font-weight: bold;">select</span>
 at least one <span style="font-weight: bold;">item</span>
 in the gallery view</li>
 
+
   <li><span style="font-weight: bold;">right click</span>
 in the gallery view to open the context menu </li>
+
 
   <li>click on the menu "<span style="font-weight: bold;">throw
 sort anchor</span>"<br>
 
+
   </li>
+
 
 </ol>
 
+
 <br>
+
 
 &nbsp;&nbsp;&nbsp;<a name="sort_algorithms"></a> Sort algorithms and similarity measures<br>
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Currently three methods to rank the items are available:<br>
+
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+
   <tbody>
+
     <tr>
+
       <td>Eukledian distance</td>
-      <td>rank items simply by its eucledian distance to the reference example</td>
+
+      <td>Rank items simply by its eucledian distance to the reference example, works well in low dimensional space</td>
+
     </tr>
+
     <tr>
+
       <td>Cosine Similarity</td>
-      <td></td>
+
+      <td>Measures orientation in the feature space not distance,
+default sorting method, robust against outliers in one dimension, works
+well in high dimensional space</td>
+
     </tr>
+
     <tr>
+
       <td>Classlabels</td>
-      <td></td>
+
+      <td>Sorts items first by class labes, second wether it is a training example, and third by prediction probability. <br>
+      <div style="text-align: left;"><img style="width: 327px; height: 273px;" alt="" title="sort by class labels" src="images/sort-classlabels.png"></div>
+      </td>
+
     </tr>
+
+  
   </tbody>
 </table>
-<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Euklidean
-distance<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Consine
-similary<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-Classlabels<br>
-
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; first classlabel, is training example,
-prediction probability<br>
 
 <br>
 
-&nbsp; Gallery/thumbnail viewer<br>
+
+&nbsp;&nbsp; Gallery/thumbnail viewer<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Multiple
 color mode<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; View
 Toolbar<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; zoom<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; shift +
 &nbsp;mouse wheel event<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; toggle classification results<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; empty white rectange mean "unclassified"<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;solid rectangle with color
 according to class definition<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -230,160 +309,213 @@ according to class definition<br>
 top -&gt; color of class but is training sample, half circle show
 color of annotated class<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; toggle outlines<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; toggle background mask<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Contrast
 enhancement for graphics view<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; Drop down menu for channels<br>
 
+
 <br>
+
 
 Classifier training<br>
 
+
 &nbsp;&nbsp;&nbsp; how to select a classifer<br>
 
+
 &nbsp;&nbsp;&nbsp; Support vector classifier<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;define
 classes (class definition)<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp; &nbsp;add/ delete/ clear classes<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;annotate
 samples to a class<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;add/ delete samples<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;"allow reassign" - what does
 it do/ prevent<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;predict <br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;toggle classifcation in the
 view toolbar<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;color codes of the predict
 button<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;crossvalidation and grid search<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;button<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;K-fold, stratified cross
 validation<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;parameters<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;output<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;grid
 search<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;ranged, grid siye (10x10), plot<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;shortcuts of
 &nbsp;matplotlib in the documentation &nbsp;&nbsp; <br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; save a
 classfier to hdf/cellh5<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; load
 annotations for hdf/cellh5<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; 1) load only annotations i.e. feature,
 pixmaps, bounding boxes etc.<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; DANGER: inconsistent data if
 &nbsp;annotations were loaded from a file with different
 segmentation settings.<br>
 
+
 &nbsp;&nbsp;&nbsp; One class support vector machine<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Rational:
 why one wants to use a one class svm<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 difference in the GUI<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Optimize
 parameters, assuptions, method, link to preferences dialog<br>
 
+
 <br>
 
+
 Import Training data Dialog:<br>
+
 
 &nbsp;&nbsp;&nbsp; Purpose: Data preprocessing i.e.
 segmentation, calculation of features, bounding boxes outlines and
 galleries. <br>
 
+
 &nbsp;&nbsp;&nbsp; <br>
+
 
 &nbsp;&nbsp;&nbsp; Input directory: collection of raw
 training images (4d lsm or tiff files) in a directory.
 &nbsp;Multiple colors are possible but no RGB!<br>
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;Output is a hdf5 file that is
 opitimizes for fast reading of the data. This makes it optimal this
 application.<br>
 
+
 &nbsp;&nbsp;&nbsp; <br>
+
 
 &nbsp;&nbsp; &nbsp;Toggle bounding box and toggle contours
 (outlines) causes the current image to be process <br>
 
+
 &nbsp;&nbsp;&nbsp; Option "load on close"<br>
+
 
 &nbsp;&nbsp;&nbsp; start -&gt; precess the complete set
 of triaining images<br>
 
+
 <br>
 
+
 Segmentaition Settings dialog<br>
+
 
 &nbsp;&nbsp;&nbsp; 1) Primay segmenation (CHANNEL X) - drop
 down menu<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; how to turn on/off single channels<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; describe all parameters (KEYWORD in
 qhelp index!!)<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp; 2) secondary segmentation<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; same parameters,
 only exanded region 0 to infinity<br>
 
+
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; save
 settings to xml, load settings from xml/hdf5<br>
 
+
 <br>
 
+
 &nbsp;&nbsp; Data formats<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 CellAnnotator saves its data to hdf5 which is optimzed structures for
@@ -391,36 +523,51 @@ fast IO. This supports the paradigm of interactivity of the appliction.
 All data and settings which where used to produce the data sets
 &nbsp;and classifiers go into this file.<br>
 
+
 It is also possible to load data from cellh5 files and save classifier
 data to a cellh5 file. Cellh5 data structures a not as performant, but
 store much larger data sets, and support data from screening plates.<br>
 
+
 &nbsp;&nbsp;&nbsp; <br>
 
-<br>
 
 <br>
 
-<br>
 
 <br>
 
+
 <br>
+
+
+<br>
+
+
+<br>
+
 
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp; <br>
 
-<br>
 
 <br>
 
-<br>
 
 <br>
 
-<br>
 
 <br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
 
 </body>
 </html>
