@@ -47,6 +47,10 @@
 	  <file>html/images/sort-ascending.png</file>
 	  <file>html/images/sort-descending.png</file>
 	  <file>html/images/sort-classlabels.png</file>
+	  <file>html/images/class-indicator-predicted.png</file>
+	  <file>html/images/class-indicator-unclassified.png</file>
+	  <file>html/images/class-indicator-training-example.png</file>
+	  <file>html/images/contrast-minimal.png</file>
     </files>
   </filterSection>
 </QtHelpProject>
