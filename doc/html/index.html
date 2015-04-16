@@ -2,87 +2,60 @@
 <html>
 <head>
 
-
-
-  
-  
   <link rel="stylesheet" type="text/css" href="css/help.css">
+  <title>CellAnnotator</title>
+
+
 </head>
 
 
 <body>
 
-
-
 <h1><span style="font-weight: bold;"></span>CellAnnotator</h1>
-
-
-
-
 
 <p> CellAnnotator is an interactive tool for supervised
 classifier training.
 It's operating on image galleries or thumbnails rather than raw
-microscope images. Therefore it is working on preprocessed image data.
+microscope images i.e.&nbsp;it is working on preprocessed image data.
 The term <span style="font-style: italic;">preprocessed</span>
-means that raw images are segmented and for each forground object i.e.
+means that raw images are segmented and for each foreground object i.e.
 cell the feature vector,&nbsp;thumbnail, bounding box and outline
 is&nbsp;calculated. A cell is represented by its
-numerical data, the thumbnail is only the visualisation in the
+numerical data, the thumbnail is only the visualization in the
 graphical user interface (GUI).</p>
-
-
 
 <div style="text-align: center;">
 <center><img style="width: 800px; height: 503px;" alt="Main Window" title="Main Window" src="images/mainwindow.png"></center>
 
-
 </div>
 
-
-
-
-<h2><a name="application_features"></a>Application features</h2>
-
-
+<h2><a name="application_features"></a>Application
+features</h2>
 
 <h4>Interactivity</h4>
 
-
-
-The strenght of &nbsp;CellAnnotator is&nbsp;its interactivitiy.
+The strength of &nbsp;CellAnnotator is&nbsp;its interactivity.
 The
-immediate feedback decreases the effort of training and validation to a
-few minutes. Validation is performed using cross validatiaon. But
-the&nbsp;feedback e.g. instant classification result enables even
-unexperienced users to evaluate the classifier visually.<br>
+immediate feedback reduces the time of classifier&nbsp;training and validation to a
+few minutes. Validation is performed using cross validation. The interactive feedback&nbsp;enables even
+unexperienced users to evaluate the classifier visually without interpreting the numbers.<br>
 
-
-
-<h4>Gallery Viewer</h4>
-
-
+<h4>Gallery viewer</h4>
 
 The main widget&nbsp;is the gallery viewer which is the central
 widget&nbsp;of the GUI. It is possible to adjust the gallery view
 by toggling the
-outlines and background masks and turning on/off &nbsp;indicators
-for classification results. Standard functionality such as zooming an
-contrast enhancemend is also provided.<br>
-
-
+outlines and background masks and turning on/off &nbsp;indicator squares
+for predictions results. Standard functionality such as zooming an
+contrast enhancement is of course also provided.<br>
 
 <br>
 
-
-
 <h4>Multiple color support</h4>
 
-
-
 CellAnnotator is always working
-on multiple channels. If the raw images are red and green,
-the viewer also shows both colors. If the raw images were only gray,
+on multiple color channels. If the raw images are red and green,
+the viewer also shows red and green. If the raw images were only gray,
 the
 viewer shows only gray. Multicolor support particularly&nbsp;means
 that the feature vectors
@@ -92,104 +65,67 @@ vector and a classifier is always working on the concatenated feature
 vector. &nbsp;The feature set is the same as in the <a href="http://www.cellcognition.org">Cellcognition project</a>
 and is&nbsp;documented <a href="http://www.doc.cellcognition.org">here</a>.<br>
 
-
-
 <h4>Sorting and ranking:</h4>
 
-
-
-To train a classifier&nbsp;it is necessary to annotate&nbsp; a
+To train a classifier, it is necessary to annotate&nbsp; a
 sufficient number of training examples i.e. cells that
-represent a certain cell morphology. &nbsp;The search &nbsp;for
-a proper training set is usually time consuming and tedius.
+represent a certain cell morphology. The search &nbsp;for
+a proper training set within the raw images is tedious and time consuming.
 CellAnnotator addresses this problem by sorting and ranking the image
 gallery by similarity measures of the feature vectors. If one example
-of a phenotype is found, the gallery can be sorted, and similar
+of a cell morphology is found, the gallery can be sorted, and similar
 objects are presented beside each other to the user.<br>
-
-
 
 <br>
 
-
-
 <h4>Classifier training:</h4>
 
-
-
 Training of a&nbsp;<a href="http://en.wikipedia.org/wiki/Support_vector_machine">Support
-Vector Machine</a>&nbsp;consistst of three parts. First find
+Vector Machine</a> consists of three parts. First find
 the proper
-class definition, second annotate the training samples and last but not
-least validate the classifier. Validation is achived by&nbsp;<a href="http://en.wikipedia.org/wiki/Cross-validation_%28statistics%29">cross
+<span style="font-weight: bold;">class definition</span>, second<span style="font-weight: bold;"> annotate </span>the<span style="font-weight: bold;"> training samples</span> and last but not
+least <span style="font-weight: bold;">validate the classifier</span>. Validation is achieved by&nbsp;<a href="http://en.wikipedia.org/wiki/Cross-validation_%28statistics%29">cross
 validation</a> and <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search">grid
 search</a>, standard methods for support vector classifiers.
-&nbsp;Defining the classes and annoation is usually an iterative
-procedure. This is the strength of CellAnnotator. The user starts for
-example with interphase + mitotic and annotates examples. After grid
+&nbsp;Defining the classes and annotation is usually an iterative
+procedure. This is the big advantage of CellAnnotator, the user starts for
+example with inter phase + mitotic and annotates examples. After grid
 search the predicted classes are indicated for each cell object and it
 is possible to correct for classification and
 annotation&nbsp;errors or add/remove&nbsp;classes to the
 definition. <br>
 
-
-
 <br>
-
-
 
 <h4>Data import:</h4>
 
-
-
-Cellanntoatorr can handle Zeiss lsm files and tiff images. Preprocessing the raw image is a standard
-pipline i.e. segmentation for forground background separation,
+CellAnnotator can handle <span style="font-weight: bold;">Zeiss lsm</span>&nbsp; and <span style="font-weight: bold;">tiff</span> images.
+Preprocessing the raw image is a standard
+pipeline i.e. segmentation for foreground background separation,
 calculation of outlines (contours), bounding boxes, thumbnails and last
 but not least the feature vectors. &nbsp;The data is saved in hdf5
-format, optimized for fast reading. CellAnnotator can also read data
+format, optimized for fast reading, but CellAnnotator can also read data
 from cellh5.<br>
 
-
+<br>
 
 <br>
 
-
+<br>
 
 <br>
 
-
+<br>
 
 <br>
 
-
+<br>
 
 <br>
 
-
-
 <br>
 
-
-
 <br>
-
-
-
-<br>
-
-
-
-<br>
-
-
-
-<br>
-
-
-
-<br>
-
-
 
 </body>
 </html>

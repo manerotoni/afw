@@ -1,48 +1,46 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
+<html><head>
 
 
 
-  
-  
-  <link rel="stylesheet" type="text/css" href="css/help.css">
+
+
 
 
   
   
-  <title>Getting started</title>
-</head>
+  
+  <link rel="stylesheet" type="text/css" href="css/help.css"><title>Getting started</title></head><body>
+<h1><span style="font-weight: bold;"></span>Getting started</h1>
 
 
-<body>
-
-<h1>Getting started</h1>
 
 
 <h3><a name="gui"></a>Graphical User Interface (GUI):</h3>
 
+
 <div style="text-align: justify;">
 
-The graphical user interface contains a menu bar, toolbars for
-sorting/ranking, display options and loading data. There is a separate
-toolbar at the bottom for navigation within a cellh5 file.
-&nbsp;Dockwidgets (sidebars)&nbsp; for <span style="font-weight: bold; font-style: italic;">Annotation</span><span style="font-style: italic;">,</span> <span style="font-weight: bold; font-style: italic;">Sorting </span>and
-<span style="font-weight: bold; font-style: italic;">Contrast</span><span style="font-style: italic;"> </span>enhancement&nbsp;supply most of the functionallity. All
-toolbars and docks can be toggled using the <span style="font-style: italic; font-weight: bold;">View</span><span style="font-weight: bold;"> </span>menu.&nbsp;The <span style="font-weight: bold;">gallery- or thumbnail viewer</span> is the central part of CellAnnotator.
-Its purpose is to display all forground or cell objects. The gallery viewer is not displaying a stiched image, it is
-displaying a real thumbnail gallery where each image is a clickable and
-selectable item. &nbsp;After loading the items are arranged
-arbitraily in the order the appear in the data file. <br>
+The graphical user interface contains a menu bar, tool bars for
+sorting/ranking, display options and data loading. There is a separate
+tool bar at the bottom for navigation within a cellh5 file.
+&nbsp;Dock widgets (sidebars)&nbsp; for <span style="font-weight: bold; font-style: italic;">Annotation</span><span style="font-style: italic;">,</span> <span style="font-weight: bold; font-style: italic;">Sorting </span>and
+<span style="font-weight: bold; font-style: italic;">Contrast</span><span style="font-style: italic;"> </span>enhancement&nbsp;supply most of the functionality. All
+tool bars and docks can be toggled using the <span style="font-style: italic; font-weight: bold;">View</span><span style="font-weight: bold;"> </span>menu.&nbsp;The <span style="font-weight: bold;">gallery- </span>or<span style="font-weight: bold;"> thumbnail viewer</span> is the central part of CellAnnotator.
+Its purpose is to display all foreground or cell objects. The gallery viewer is not displaying a stitched image, it is
+displaying a real thumbnail gallery where each image is a <span style="font-weight: bold;">click able and
+selectable item</span>. &nbsp;After loading the items are unordered as they appear in the data file. <br>
 
-The following sections describe how topen data files, select forground
-objects or items and how to sort those items using the context menu.<br>
+
+The following sections describe how to open data files, select items and how to sort the items using the context menu.<br>
+
 
 <br>
 
 
-<h3><a name="openfile"></a>Open a hdf or
-cellh5 file:&nbsp;</h3>
+
+<h3><a name="openfile"></a>Open a data file</h3>
+
 
 There are &nbsp;three ways to open a data file:
 
@@ -50,7 +48,9 @@ There are &nbsp;three ways to open a data file:
 
 
 
+
 <ol>
+
 
 
 
@@ -58,14 +58,17 @@ There are &nbsp;three ways to open a data file:
 
 
 
+
   <li>Press the open-icon&nbsp;<img style="width: 12px; height: 12px;" alt="open" title="open" src="images/document-open-folder.png">
-in the toolbar</li>
+in the tool bar</li>
 
 
 
-  <li>Drag &amp; drop: drag the hdf-/ cellh5 file from the
-file manager &nbsp;and drop the file in the main window (anywhere,
+
+  <li>Drag &amp; drop: drag the data file from the
+file manager &nbsp;and drop it in the main window (anywhere,
 except in the central gallery viewer)</li>
+
 
 
 
@@ -73,21 +76,21 @@ except in the central gallery viewer)</li>
 
 
 
-<div style="text-align: justify;">A progress bar
-&nbsp;in the status bar of the main window will appear
-&nbsp;beside an abort button. &nbsp;Loading of data causen
-heavy IO of the hard disk and may block the GUI unit loading is
-finished. &nbsp;CellAnnotators own hdf data model is optimized for fast loading. Size
+
+<div style="text-align: justify;">A progress bar and a <span style="font-weight: bold;">"Abort"</span> button will appear at the bottom of the main window. &nbsp;Loading of data causes
+heavy IO and may block the GUI. &nbsp;CellAnnotators own hdf data model is optimized for fast loading. Size
 of the thumbnails is predefined and all thumbnails in the files will be
 loaded. In contrast, Cellh5 does not support thumbnails, they are
 generated during the loading process, which is time consuming. Size of
-the gallery images is alterable and the number auf items that are
+the gallery images is alterable and the number of items that are
 loaded can be changed (default is 500), since Cellh5 is a storage
-formate for HTS-data. <br>
+format for HCS-data. 
 
 
 
-<br>
+
+
+
 
 
 
@@ -95,11 +98,14 @@ formate for HTS-data. <br>
 
 
 
+
 <center><img style="width: 800px; height: 503px;" alt="" title="main window during loading" src="images/mainwindow-loading.png"></center>
 
 
 
+
 <br>
+
 
 
 
@@ -107,12 +113,14 @@ formate for HTS-data. <br>
 
 
 
-To select an item simple double click on an item. To selcect multiple
+
+To select an item, simply double click on the item. To select multiple
 items press the "<span style="font-weight: bold;">CTRL</span>"-button
-and click on the items of &nbsp;interenst consecutively.
+and click on the items of&nbsp; interest consecutively.
 &nbsp;It is also possible to drag the mouse over &nbsp;several
 items while the "<span style="font-weight: bold;">CTRL</span>"-button
 is pressed. <br>
+
 
 
 
@@ -120,7 +128,9 @@ is pressed. <br>
 
 
 
-<center><img title="drag path is displayed while selecting multiple items" style="width: 840px; height: 264px;" alt="" src="images/select-drag.png"><br>
+
+<center><img title="drag path is displayed while selecting multiple items" style="width: 840px; height: 264px;" alt="" src="images/select-drag.png">
+
 
 
 
@@ -128,17 +138,16 @@ is pressed. <br>
 
 
 
+
 <br>
+
 
 
 
 <a name="contextmenugallery"></a>The gallery view has a context Menu. Note the sub menu "throw sort
-anchor" which is a efficient an fast way for sorting the gallery view.
-See the table below for a detailed explaination.<br>
-
-
-
+anchor", which is a efficient an fast way for sorting the gallery view.<br>
 <br>
+
 
 
 
@@ -147,7 +156,9 @@ See the table below for a detailed explaination.<br>
 
 
 
+
 <table style="text-align: left; width: 80%; height: 164px;" border="0" cellpadding="0" cellspacing="0">
+
 
 
 
@@ -155,7 +166,9 @@ See the table below for a detailed explaination.<br>
 
 
 
+
     <tr>
+
 
 
 
@@ -163,10 +176,13 @@ See the table below for a detailed explaination.<br>
 
 
 
+
       <td style="width: 541px;">
       
       
+      
       <table style="width: 577px; height: 164px;" border="1" cellpadding="1" cellspacing="1">
+
 
 
 
@@ -174,11 +190,14 @@ See the table below for a detailed explaination.<br>
 
 
 
+
           <tr>
 
 
 
-            <td style="width: 198px;">refresh<br>
+
+            <td style="width: 198px;">refresh
+
 
 
 
@@ -186,8 +205,10 @@ See the table below for a detailed explaination.<br>
 
 
 
-            <td style="width: 359px;">updates the display
+
+            <td style="width: 359px;">Updates the display
 (shortcut "F5")</td>
+
 
 
 
@@ -195,7 +216,9 @@ See the table below for a detailed explaination.<br>
 
 
 
+
           <tr>
+
 
 
 
@@ -203,9 +226,11 @@ See the table below for a detailed explaination.<br>
 
 
 
-            <td style="width: 359px;">select all items in
+
+            <td style="width: 359px;">Select all items in
 the
 gallery view</td>
+
 
 
 
@@ -213,7 +238,9 @@ gallery view</td>
 
 
 
+
           <tr>
+
 
 
 
@@ -221,13 +248,16 @@ gallery view</td>
 
 
 
-            <td style="width: 359px;">invert the selection
+
+            <td style="width: 359px;">Invert the selection
 in
 the gallery view</td>
 
 
 
+
           </tr>
+
 
 
 
@@ -235,13 +265,16 @@ the gallery view</td>
 
 
 
+
             <td style="width: 198px;">throw sort anchor</td>
 
 
 
+
             <td style="width: 359px;">Sort the items by
-consine
-similary, the currently selected item(s) <br>
+cosine
+similarly, the currently selected item(s) <br>
+
 
 
 serve as reference example for
@@ -249,16 +282,21 @@ the similarity measure </td>
 
 
 
+
           </tr>
 
 
 
+
+        
         
         
         </tbody>
       
       
+      
       </table>
+
 
 
 
@@ -266,10 +304,13 @@ the similarity measure </td>
 
 
 
+
     </tr>
 
 
 
+
+  
   
   
   </tbody>
@@ -277,19 +318,15 @@ the similarity measure </td>
 
 
 
+
 </center>
 
 
 
-<br>
-
-
 
 <br>
-
-
-
 <h3><a name="quicksort"></a>Sorting items (quick sort):</h3>
+
 
 
 
@@ -305,11 +342,14 @@ mean</a> is used &nbsp;as reference example.<br>
 
 
 
+
 <br>
 
 
 
-To quicksort &nbsp;the items in the gallery view do:<br>
+
+To quick sort&nbsp; the items in the gallery view do:<br>
+
 
 
 
@@ -317,19 +357,23 @@ To quicksort &nbsp;the items in the gallery view do:<br>
 
 
 
-  <li><span style="font-weight: bold;">select</span>
+
+  <li><span style="font-weight: bold;">Select</span>
 at least one <span style="font-weight: bold;">item</span>
-in the gallery view</li>
+in the gallery view.</li>
 
 
 
-  <li><span style="font-weight: bold;">right click</span>
-in the gallery view to open the context menu </li>
+
+  <li><span style="font-weight: bold;">Right click</span>
+in the gallery view to open the context menu. </li>
 
 
 
-  <li>click on the menu "<span style="font-weight: bold;">throw
-sort anchor</span>"</li>
+
+  <li>Click on the menu "<span style="font-weight: bold;">throw
+sort anchor</span>".</li>
+
 
 
 
@@ -337,9 +381,10 @@ sort anchor</span>"</li>
 
 
 
-<br>
 
 
 
-</body>
-</html>
+
+
+
+</body></html>
