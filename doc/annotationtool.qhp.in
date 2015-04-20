@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+  <namespace>%s</namespace>
+  <virtualFolder>%s</virtualFolder>
+  <filterSection>
+    <toc>%s</toc>
+    <keywords>%s</keywords>
+    <files>%s</files>
+  </filterSection>
+</QtHelpProject>

@@ -110,10 +110,6 @@ class AtAssistant(QtGui.QMainWindow):
         self.indexDock.show()
         self.contentDock.show()
 
-        #from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        #mport pdb; pdb.set_trace()
-
-
     def closeEvent(self, event):
         self._saveSettings()
 

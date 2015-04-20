@@ -6,51 +6,110 @@
     <toc>
       <section title="CellAnnotator" ref="html/index.html">
         <section title="Getting started" ref="html/getting_started.html"></section>
-        <section title="Shortcuts" ref="html/shortcuts.html"></section>	
-		<section title="User Manual" ref="html/manual.html"></section>	
+        <section title="Shortcuts" ref="html/shortcuts.html"></section>
+		<section title="User Manual" ref="html/manual.html"></section>
       </section>
     </toc>
     <keywords>
-	  <keyword name="Overview" ref="html/index.html"/>
-	  <keyword name="Application features" ref="html/index.html#application_features"/>
+
+      <keyword name="Shortcuts" ref="html/shortcuts.html"/>
+      <keyword name="Overview" ref="html/index.html"/>
+      <keyword name="Application features" ref="html/index.html#application_features"/>
+
       <keyword name="Getting started" ref="html/getting_started.html"/>
-	  <keyword name="GUI" ref="html/getting_started.html#gui"/>
-	  <keyword name="Gallery view context menu" ref="html/getting_started.html#contextmenugallery"/>
-	  <keyword name="Throw sort anchor" ref="html/getting_started.html#quicksort"/>
-	  <keyword name="User Manual" ref="html/manual.html"/>
-	  <keyword name="Throw sort anchor manual)" ref="html/manual.html#throwsortanchor"/>
-	  <keyword name="Open file" ref="html/getting_started.html#openfile"/>
-	  <keyword name="Select items" ref="html/getting_started.html#selectitems"/>
-	  <keyword name="Shortcuts" ref="html/shortcuts.html"/>
+      <keyword name="GUI" ref="html/getting_started.html#gui"/>
+      <keyword name="Gallery view context menu" ref="html/getting_started.html#contextmenugallery"/>
+      <keyword name="Throw sort anchor" ref="html/getting_started.html#quicksort"/>
+      <keyword name="Open data file" ref="html/getting_started.html#openfile"/>
+      <keyword name="Select items" ref="html/getting_started.html#selectitems"/>
+
+      <keyword name="User Manual" ref="html/manual.html"/>
+      <keyword name="Open data file (manual)" ref="html/manual.html#open_a_data_file"/>
+      <keyword name="Sorting" ref="html/manual.html#sorting"/>
+      <keyword name="Throw sort anchor (manual)" ref="html/manual.html#throwsortanchor"/>
+      <keyword name="Sort algorithms" ref="html/manual.html#sort_algorithms"/>
+      <keyword name="Class label indicators" ref="html/manual.html#meaning_of_class_label_indicators"/>
+      <keyword name="Gallery/ thumbnail viewer" ref="html/manual.html#gallery_thumbnail_viewer"/>
+      <keyword name="Select items (manual)" ref="html/manual.html#select_items"/>
+      <keyword name="Multi color mode" ref="html/manual.html#multiple_color_mode"/>
+      <keyword name="View toolbar" ref="html/manual.html#view_toolbar"/>
+      <keyword name="Contrast (manual)" ref="html/manual.html#contrast_enhancement_for_graphics_view"/>
+      <keyword name="Classifier training" ref="html/manual.html#classifier_training"/>
+      <keyword name="Support vector classifier" ref="html/manual.html#support_vector_classifier"/>
+      <keyword name="Save a classifier" ref="html/manual.html#saving_a_classifier"/>
+      <keyword name="Load annotations" ref="html/manual.html#loading_annotations"/>
+      <keyword name="Predict" ref="html/manual.html#predict"/>
+      <keyword name="Cross validation" ref="html/manual.html#cross_validation"/>
+      <keyword name="Grid search" ref="html/manual.html#grid_search"/>
+      <keyword name="Confustion matrix" ref="html/manual.html#confusion_matrix"/>
+      <keyword name="One class support vector machine" ref="html/manual.html#one_class_svm"/>
+      <keyword name="Image preprocessing" ref="html/manual.html#preprocess_raw_images"/>
+      <keyword name="Image data" ref="html/manual.html#raw_image_data"/>
+      <keyword name="Channels" ref="html/manual.html#toggle_color_channels"/>
+      <keyword name="Segmentation" ref="html/manual.html#segmentation"/>
+      <keyword name="Channel for primary segmentation" ref="html/manual.html#channels_primary_segmentation"/>
+      <keyword name="Primary segementation" ref="html/manual.html#primary_Segmentation"/>
+      <keyword name="Non primary segmentation" ref="html/manual.html#non_primary_channels"/>
+      <keyword name="Load/save segmentation settings" ref="html/manual.html#loadsave_settings"/>
+      <keyword name="Data formats" ref="html/manual.html#data_file_formats"/>
     </keywords>
     <files>
-	  <file>html/css/help.css</file>
+      <file>html/css/help.css</file>
       <file>html/index.html</file>
       <file>html/getting_started.html</file>
-	  <file>html/shortcuts.html</file>
-	  <file>html/manual.html</file>
-	  <file>html/images/mainwindow.png</file>
-	  <file>html/images/contrast-dock.png</file>
-	  <file>html/images/sorting-dock.png</file>
-	  <file>html/images/annotation-dock.png</file>
-	  <file>html/images/contrast-dock-small.png</file>
-	  <file>html/images/annotation-dock-small.png</file>
-	  <file>html/images/sorting-dock-small.png</file>
-	  <file>html/images/document-open-folder.png</file> 
-	  <file>html/images/mainwindow-loading.png</file>
-	  <file>html/images/gallery-view-context-menu.png</file>
-	  <file>html/images/select-drag.png</file>
-	  <file>html/images/sorttoolbar.png</file>
-	  <file>html/images/list-remove.png</file>
-	  <file>html/images/list-add.png</file>
-	  <file>html/images/edit-clear.png</file>
-	  <file>html/images/sort-ascending.png</file>
-	  <file>html/images/sort-descending.png</file>
-	  <file>html/images/sort-classlabels.png</file>
-	  <file>html/images/class-indicator-predicted.png</file>
-	  <file>html/images/class-indicator-unclassified.png</file>
-	  <file>html/images/class-indicator-training-example.png</file>
-	  <file>html/images/contrast-minimal.png</file>
+      <file>html/shortcuts.html</file>
+      <file>html/manual.html</file>
+      <file>html/images/annotation-dock-minimal.png</file>
+      <file>html/images/remove-class.png</file>
+      <file>html/images/cellh5navbar.png</file>
+      <file>html/images/games-solve.png</file>
+      <file>html/images/selection.png</file>
+      <file>html/images/save_classifier.png</file>
+      <file>html/images/document-save-as.png</file>
+      <file>html/images/annotation-dock.png</file>
+      <file>html/images/list-add.png</file>
+      <file>html/images/sorting-dock-small.png</file>
+      <file>html/images/confusion-matrix.png</file>
+      <file>html/images/select-drag.png</file>
+      <file>html/images/document-open-folder.png</file>
+      <file>html/images/code-class.png</file>
+      <file>html/images/load_annotations.png</file>
+      <file>html/images/sort-classlabels.png</file>
+      <file>html/images/annotation-dock-treeview.png</file>
+      <file>html/images/contrast-dock.png</file>
+      <file>html/images/class-indicator-unclassified.png</file>
+      <file>html/images/sorting-dock.png</file>
+      <file>html/images/mainwindow.png</file>
+      <file>html/images/chart.png</file>
+      <file>html/images/edit-clear.png</file>
+      <file>html/images/sorttoolbar.png</file>
+      <file>html/images/list-remove-32.png</file>
+      <file>html/images/crossvalidation.png</file>
+      <file>html/images/gridsearch.png</file>
+      <file>html/images/sort-ascending.png</file>
+      <file>html/images/class-indicator-training-example.png</file>
+      <file>html/images/list-add_24x24.png</file>
+      <file>html/images/viewbar.png</file>
+      <file>html/images/gallery-view-context-menu.png</file>
+      <file>html/images/annotation-dock-small.png</file>
+      <file>html/images/contrast-dock-small.png</file>
+      <file>html/images/contrast-dock-minimal.png</file>
+      <file>html/images/euclidiean-sorting.png</file>
+      <file>html/images/cosine-sorting.png</file>
+      <file>html/images/sort-descending.png</file>
+      <file>html/images/load_classifier_24x24.png</file>
+      <file>html/images/class-indicator-predicted.png</file>
+      <file>html/images/annotation-toolbar.png</file>
+      <file>html/images/games-solve_24x24.png</file>
+      <file>html/images/mainwindow-loading.png</file>
+      <file>html/images/segmentation.png</file>
+      <file>html/images/list-remove_24x24.png</file>
+      <file>html/images/preprocess-image-data.png</file>
+      <file>html/images/annotation-dock-minimal-svc2.png</file>
+      <file>html/images/sort-anchor-metaphase.png</file>
+      <file>html/images/annotation-dock-minimal-svc.png</file>
+      <file>html/images/one-class-svm.png</file>
+      <file>html/images/list-remove.png</file>
     </files>
   </filterSection>
 </QtHelpProject>
