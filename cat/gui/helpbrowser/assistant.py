@@ -78,6 +78,7 @@ class AtAssistant(QtGui.QMainWindow):
         self.results = self.hengine.searchEngine().resultWidget()
         self.index = self.hengine.indexWidget()
         self.contents = self.hengine.contentWidget()
+
         self.tabifyDockWidget(self.contentDock, self.indexDock)
         self.tabifyDockWidget(self.contentDock, self.searchDock)
         self.searchDock.hide()
@@ -142,7 +143,7 @@ class AtAssistant(QtGui.QMainWindow):
 
 if __name__ == "__main__":
     import sys
-    import annot.at_rc
+    import cat.cat_rc
     app = QtGui.QApplication(sys.argv)
     hv = AtAssistant(sys.argv[1])
     hv.show()

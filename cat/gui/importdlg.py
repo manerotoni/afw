@@ -54,12 +54,14 @@ class ImportDialog(QtGui.QDialog):
                                     Qt.DirectConnection)
         self.cbar.newContourImage.connect(self.viewer.contourImage)
 
-        self.outputBtn.clicked.connect(self.onOpenOutFile)
-        self.inputBtn.clicked.connect(self.onOpenInputDir)
+        self.dataFileBtn.clicked.connect(self.onOpenOutFile)
+        self.imageDirBtn.clicked.connect(self.onOpenImageDir)
         self.startBtn.clicked.connect(self.raw2hdf)
         self.closeBtn.clicked.connect(self.close)
         self.closeBtn.clicked.connect(self.cbar.clear)
         self.segmentationBtn.clicked.connect(self.onSegmentationBtn)
+
+        self.slider.newValue.connect(self.showObjects)
 
         self.slider.valueChanged.connect(self.showImage)
         self.slider.sliderReleased.connect(self.showObjects)
@@ -82,7 +84,7 @@ class ImportDialog(QtGui.QDialog):
 
     def close(self):
         super(ImportDialog, self).close()
-        ofile = self.outputFile.text()
+        ofile = self.dataFile.text()
         if self.loadOnClose.isChecked() and isfile(ofile):
             self.loadData.emit(ofile)
 
@@ -112,7 +114,7 @@ class ImportDialog(QtGui.QDialog):
 
     def onOpenOutFile(self):
 
-        ofile = self.outputFile.text()
+        ofile = self.dataFile.text()
         if isfile(ofile):
             path = basename(ofile)
         else:
@@ -121,14 +123,14 @@ class ImportDialog(QtGui.QDialog):
         ofile = QFileDialog.getSaveFileName(self, "save to hdf file",
                                             path,
                                             "hdf (*.hdf *.h5)")
-        self.outputFile.setText(ofile)
+        self.dataFile.setText(ofile)
 
-    def onOpenInputDir(self):
+    def onOpenImageDir(self):
         self.cbar.clearContours()
         self.viewer.clearRects()
         self.viewer.clearPolygons()
 
-        idir = self.inputDir.text()
+        idir = self.imageDir.text()
         if isdir(idir):
             path = basename(idir)
         else:
@@ -136,15 +138,15 @@ class ImportDialog(QtGui.QDialog):
 
         # TODO use getOpenFileNames instead
         idir = QFileDialog.getExistingDirectory(self,
-                                                "select output directory",
+                                                "Select an image directory",
                                                 path)
         # cancel button
         if not idir:
             return
 
-        self.inputDir.setText(idir)
-        pattern1 = self.inputDir.text() + "/*.lsm"
-        pattern2 = self.inputDir.text() + "/*.tif"
+        self.imageDir.setText(idir)
+        pattern1 = self.imageDir.text() + "/*.lsm"
+        pattern2 = self.imageDir.text() + "/*.tif"
 
         self._files = glob.glob(pattern1) + glob.glob(pattern2)
 
@@ -208,12 +210,12 @@ class ImportDialog(QtGui.QDialog):
                                          isize=self.metadata.size)
 
     def onError(self, exc):
-        self.startBtn.setText("start")
+        self.startBtn.setText("Start")
         QMessageBox.critical(self, "Error", str(exc))
 
     def onFinished(self):
         self.raise_()
-        self.startBtn.setText("start")
+        self.startBtn.setText("Start")
         QMessageBox.information(self, "finished", "training set saved")
 
     def showSlider(self):
@@ -227,7 +229,7 @@ class ImportDialog(QtGui.QDialog):
     def raw2hdf(self):
 
         if self.thread.isRunning():
-            self.startBtn.setText("start")
+            self.startBtn.setText("Start")
             self.thread.worker.abort()
         else:
             self.viewer.clearPolygons()
@@ -236,7 +238,7 @@ class ImportDialog(QtGui.QDialog):
             try:
                 worker = AtImporter(self._files,
                                     self.metadata,
-                                    self.outputFile.text(),
+                                    self.dataFile.text(),
                                     self.cbar.checkedChannels(),
                                     self.cbar.colors(),
                                     self.segdlg.segmentationParams(),
@@ -253,4 +255,4 @@ class ImportDialog(QtGui.QDialog):
             worker.contourImage.connect(self.cbar.contourImage,
                                         Qt.QueuedConnection)
             self.thread.start(worker)
-            self.startBtn.setText("abort")
+            self.startBtn.setText("Abort")

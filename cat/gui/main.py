@@ -87,7 +87,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionOpenHdf.triggered.connect(self.onFileOpen)
         self.actionCloseHdf.triggered.connect(self.onFileClose)
         self.actionPreferences.triggered.connect(self.onPreferences)
-        self.actionProcessTrainingSet.triggered.connect(self.openImporter)
+        self.actionPreprocessImages.triggered.connect(self.openImporter)
         self.actionExportViewPanel.triggered.connect(self.saveImage)
         self.actionAboutQt.triggered.connect(self.onAboutQt)
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)

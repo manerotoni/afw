@@ -29,7 +29,7 @@
       <item>
        <layout class="QVBoxLayout" name="vbox">
         <property name="spacing">
-         <number>-1</number>
+         <number>3</number>
         </property>
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
