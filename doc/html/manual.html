@@ -18,11 +18,10 @@
 
     <p>
       <ol>
-        <li style="text-align: justify;">Menu: <span style="font-style: italic; font-weight: bold;">File-&gt;Open</span></li>
-        <li>Press the open-icon&nbsp;<img style="width: 12px; height: 12px;" alt="open" title="open" src="images/document-open-folder.png">
-          in the tool bar</li>
+        <li>Menu: <b><i>File-&gt;Open</b></i></li>
+        <li>Press the open-icon<img style="width: auto; height: auto;" alt="open" title="open" src="images/document-open-folder.png">in the tool bar</li>
         <li>Drag &amp; drop: drag a data file from the file manager
-        and drop the file in the main window (anywhere, except in the central gallery viewer)</li>
+          and drop the file in the main window (anywhere, except in the central gallery viewer)</li>
       </ol>
     </p>
 
@@ -45,275 +44,269 @@
       menu to select the sort algorithm.
     </p>
 
-
-    <img style="width: 186px; height: 34px;" alt="" title="sorting toolbar" src="images/sorttoolbar.png"><br>
-
-<br>
-
-The Sorting dock widget allows to define not only but many cells as
-reference
-examples. In this case the <a href="http://en.wikipedia.org/wiki/Arithmetic_mean">arithmetic
-mean</a> is used as reference example, &nbsp;and
-the items in the gallery view are ranked by the current sort
-algorithm. <br>
-
-From top to bottom: Drop down menu for sort
-algorithm,
-tool bar with buttons, list view with reference examples.&nbsp; <span style="font-weight: bold;">Note: double-click on a item in the list
-view selects the item in the
-gallery view to.</span><br>
-
-<br>
-
-<br>
-
-<center><img style="width: 252px; height: 464px;" alt="" title="sorting dock" src="images/sorting-dock.png"></center>
-
-<br>
-
-To add/remove items to the sorting dock , simply select/mark one or
-&nbsp;several items in the graphics view simply press the
-corresponding button (<img style="width: 16px; height: 16px;" alt="" title="add items" src="images/list-add.png">/<img style="width: 16px; height: 16px;" alt="" title="remove items" src="images/list-remove.png">)in
-the dock widget. <br>
-
-<br>
-
-Button in the tool bar:<br>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="Add items" src="images/list-add.png"></td>
-      <td style="width: 923px;">add items</td>
-    </tr>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="Remove items" src="images/list-remove.png"></td>
-      <td style="width: 923px;">remove items</td>
-    </tr>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="clear items" src="images/edit-clear.png"></td>
-      <td style="width: 923px;">clear items</td>
-    </tr>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="sort ascending" src="images/sort-ascending.png"></td>
-      <td style="width: 923px;">sort ascending</td>
-    </tr>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" src="images/sort-descending.png"></td>
-      <td style="width: 923px;">sort descending</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h3><a name="throwsortanchor"></a>Throw sort
-anchor</h3>
-
-Throw sort anchor means that one can select a single cells in the
-gallery view and uses the <a href="./getting_started.html#contextmenugallery">context menu</a>
-to shorten the sorting procedure.<br>
-
-Perform the following steps:
-<ol>
-
-  <li><span style="font-weight: bold;">Select</span>
-at least one <span style="font-weight: bold;">item</span>
-in the gallery view</li>
-  <li><span style="font-weight: bold;">Right-click</span>
-in the gallery view to open the context menu </li>
-  <li>click on the menu "<span style="font-weight: bold;">Throw sort
-anchor</span>"<br>
-  </li>
-</ol>
-
-<h3><a name="sort_algorithms"></a>
-Sort algorithms and similarity measures#</h3>
-
-<h4>Currently
-three methods to rank the items are available:</h4>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td style="width: 150px;"><a href="http://en.wikipedia.org/wiki/Euclidean_distance">Euclidean
-distance</a></td>
-      <td style="width: 794px;">Rank items simply by its
-euclidean distance to the reference example, works well in low
-dimensional space.</td>
-    </tr>
-    <tr>
-      <td style="width: 150px;"><a href="http://en.wikipedia.org/wiki/Cosine_similarity">Cosine
-Similarity</a></td>
-      <td style="width: 794px;">Measures orientation in
-the feature space not distance. This is the default sorting method.
-Robust against
-outliers in one dimension, works well in high dimensional space.</td>
-    </tr>
-    <tr>
-      <td style="width: 150px;">Class labels</td>
-      <td style="width: 794px;">Sorts items first by class
-labels, second whether it is a training example, and third by prediction
-probability. <br>
-      <div style="text-align: left;"><img style="width: 523px; height: 130px;" alt="" title="sort class labels" src="images/sort-classlabels.png"></div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h3><a name="meaning_of_class_label_indicators"></a>Meaning
-of class label indicators:<span style="font-weight: bold;"></span></h3>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td><img style="width: 64px; height: 64px;" alt="" title="unclassified" src="images/class-indicator-unclassified.png"></td>
-      <td>A white (neutral) square indicates that the item has
-not been predicted yet.</td>
-    </tr>
-    <tr>
-      <td><img style="width: 64px; height: 64px;" alt="" title="predicted" src="images/class-indicator-predicted.png"></td>
-      <td>A colored solid square indicates the class color i.e.
-the predicted class.</td>
-    </tr>
-    <tr>
-      <td><img style="width: 64px; height: 64px;" alt="" src="images/class-indicator-training-example.png"></td>
-      <td>A patterned square with a half circle on top indicates
-the predicted and annotated class. Color of the square indicates the
-prediction and the color of the half circle the annotation. Prediction
-and annotation are not necessarily the same.</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h2><span style="font-weight: bold;"></span><a name="gallery_thumbnail_viewer"></a>Gallery/thumbnail
-viewer</h2>
-
-<h3><a name="select_items"></a>Select items</h3>
-
-To select an item double click on one. Select multiple items by
-clicking
-on many items while holding down the <span style="font-weight: bold;">"CTRL"</span>-button.
-&nbsp;Drag the mouse
-while holding down the <span style="font-weight: bold;">"CTRL"-</span>button
-will also select multiple items.<br>
-
-<br>
-
-<img style="width: 322px; height: 64px;" alt="" title="item selection" src="images/selection.png">
-<h3><a name="multiple_color_mode"></a>Multiple
-color mode<a name="rgb_support"></a></h3>
-
-<p>Depending on the input data, CellAnnotator displays one or more
-color
-channels. It is important to know that CellAnnotator does <span style="font-weight: bold;">not support RGB</span>
-images (3-channels, 8bit only). It supports as many color channels as
-there are in the data. The color display also depends on the input
-data. The display color is saved to hdf5 along with the numerical image
-data.&nbsp;<br>
-<span style="text-decoration: underline;">Multi color mode</span> means
-particularly that feature vectors from single
-channels are always concatenated. Therefore it is not possible to
-toggle single channels in the gallery view.<br>
-</p>
-
-<h3><a name="view_toolbar"></a>View
-tool bar</h3>
-
-&nbsp;<img style="width: 620px; height: 34px;" alt="" title="view toolbar" src="images/viewbar.png"><br>
-
-<br>
-
-The first two buttons are to open a file and to trigger a (re-)load of
-the data. The two spin boxes are to set the size of the gallery images
-and
-the number of items to load (both settings are for cellh5 only, the
-custom data file has these values predefined -&gt; widgets are
-disabled).<br>
-
-<br>
-
-<span style="font-weight: bold;">Zoom</span>: It is
-possible to zoom either using the drop down menu or &nbsp;one
-presses the "<span style="font-weight: bold;">SHIFT</span>"-key
-and <span style="font-weight: bold;">scroll the mouse
-wheel.</span><br>
-
-<span style="font-weight: bold;">Classification</span>: Toggle class
-indicator squares in the left bottom corner of a thumbnail.<br>
-
-<span style="font-weight: bold;">Mask</span>: Toggle
-black background mask of a thumbnail.<br>
-
-<span style="font-weight: bold;">Outline</span>: Toggle outlines in a
-thumbnail.<br>
-
-<h3><a name="contrast_enhancement_for_graphics_view"></a>Contrast
-enhancement in the gallery viewer</h3>
-
-<p>
-Microscope images may be extremely dim and at least for
-display
-purpose
-it is necessary to adjust the contrast parameters&nbsp;i.e. <span style="text-decoration: underline;">min.</span> and
-<span style="text-decoration: underline;">max. value</span>,
-<span style="text-decoration: underline;">brightness</span> and <span style="text-decoration: underline;">contrast</span>.&nbsp; A dock
-widget supplies this functionality for each channel independently.
-&nbsp;It can be toggled using the <span style="font-weight: bold;">Menu
-"View"-&gt;"Contrast"</span>
-or
-using the shortcut <span style="font-weight: bold;">"ALT-SHIFT-C"</span>.</p>
-
-<ul>
-
-  <li>Select the channel in the drop down menu.</li>
-  <li>Move the slider to a new value (a tool tip will show the
-current values of all settings).</li>
-  <li>For performance reasons the thumbnails are updated if a
-slider is released.</li>
-</ul>
-
-<center>
-<img style="width: 178px; height: 183px;" alt="" title="contrast dock widget" src="images/contrast-dock-minimal.png"></center>
-
-<h2><a name="classifier_training"></a>
-Classifier training</h2>
+    <p>
+      <img style="width: 186px; height: 34px;" alt="" title="sorting toolbar" src="images/sorttoolbar.png"><br>
+    </p>
 
 
-<p>
-By default, CellAnnotator is facilitating a <a href="http://scikit-learn.org/dev/modules/svm.html#svm">Support
-Vector Classifier</a>, in special cases a <a href="http://scikit-learn.org/stable/auto_examples/svm/plot_oneclass.html">One
-Class Support Vector Machine</a>. Similar to the contrast enhancement,
-there is a dock widget
-for annotation. There first row contains a combo box to select the
-classifier (either support vector classifier or one class svm) and the
-<span style="font-weight: bold;">"<a href="#predict">Predict</a>"</span>-button.
-The tree view below depends on the type of &nbsp;the classifier.
-Only
-the button box at the bottom of the dock is the same for all
-classifiers and will be explained below.</p>
+    <p>
+      The Sorting dock widget allows to define not only but many cells as reference
+      examples. In this case the <a href="http://en.wikipedia.org/wiki/Arithmetic_mean">arithmetic
+        mean</a> is used as reference example, and
+      the items in the gallery view are ranked by the current sort
+      algorithm.
+    </p>
 
-<center><img style="width: 243px; height: 507px;" alt="" title="classifier training" src="images/annotation-dock-minimal-svc.png"></center>
+    <p>
+      From top to bottom: Drop down menu for sort algorithm, tool bar with buttons, list view with reference examples.
+      <b>Note: double-click on a item in the list view selects the item in the gallery view to.</b>
+    </p>
 
-<h3><a name="support_vector_classifier"></a>Support vector classifier</h3>
+    <p>
+      <center><img style="width: 252px; height: 464px;" alt="" title="sorting dock" src="images/sorting-dock.png"></center>
+    </p>
 
-Main Elements are a <span style="font-weight: bold;">tool bar
-</span>and<span style="font-weight: bold;"> annotation tree view:<br>
-<center><img style="width: 200px; height: 155px;" alt="" src="images/annotation-dock-minimal-svc2.png"></center>
-</span><br>
+    <p>
+      To add/remove items to the sorting dock , simply select/mark one or
+      several items in the graphics view simply press the
+      corresponding button (<img style="width: 16px; height: 16px;" alt="" title="add items" src="images/list-add.png">/<img style="width: 16px; height: 16px;" alt="" title="remove items" src="images/list-remove.png">)in
+      the dock widget.
+    </p>
 
-<p>
-Each class is represented by a line in the tree view. &nbsp;It
-consist of name, color and the add button (<img style="width: 16px; height: 16px;" alt="" title="add button" src="images/list-add.png">). Name
-and color can be changed by clicking on the corresponding field in the
-line.</p>
+    <p>
+      Button in the tool bar:
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+          <tr>
+            <td ><img style="width: 16px; height: 16px;" alt="" title="Add items" src="images/list-add.png"></td>
+            <td >Add items</td>
+          </tr>
+          <tr>
+            <td><img style="width: 16px; height: 16px;" alt="" title="Remove items" src="images/list-remove.png"></td>
+            <td>Remove items</td>
+          </tr>
+          <tr>
+            <td><img style="width: 16px; height: 16px;" alt="" title="clear items" src="images/edit-clear.png"></td>
+            <td>Clear items</td>
+          </tr>
+          <tr>
+            <td><img style="width: 16px; height: 16px;" alt="" title="sort ascending" src="images/sort-ascending.png"></td>
+            <td>Sort ascending</td>
+          </tr>
+          <tr>
+            <td><img style="width: 16px; height: 16px;" alt="" src="images/sort-descending.png"></td>
+            <td>Sort descending</td>
+          </tr>
+      </table>
+    </p>
+
+    <p>
+      <h3><a name="throwsortanchor"></a>Throw sort anchor</h3>
+    </p>
+
+    <p>
+      Throw sort anchor means that one can select a single cells in the
+      gallery view and uses the <a href="./getting_started.html#contextmenugallery">context menu</a>
+      to shorten the sorting procedure.<br>
+    </p>
+
+    <p>
+      Perform the following steps:
+    </p>
+
+    <p>
+      <ol>
+        <li><b>Select</b>at least one <b>item</b>in the gallery view</li>
+        <li><b>Right-click</b>
+          in the gallery view to open the context menu </li>
+        <li>click on the menu "<b>Throw sort anchor</b>"</li>
+      </ol>
+    </p>
+
+    <p>
+      <h3><a name="sort_algorithms"></a>
+        Sort algorithms and similarity measures</h3>
+    </p>
+
+    <p>
+      <h4>Currently three methods to rank the items are available:</h4>
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+            <td><a href="http://en.wikipedia.org/wiki/Euclidean_distance">Euclidean distance</a></td>
+            <td>Rank items simply by its
+              euclidean distance to the reference example, works well in low
+              dimensional space.</td>
+          </tr>
+          <tr>
+            <td><a href="http://en.wikipedia.org/wiki/Cosine_similarity">Cosine Similarity</a></td>
+            <td >Measures orientation in the feature space not distance. This is the default sorting method.
+              Robust againstoutliers in one dimension, works well in high dimensional space.</td>
+          </tr>
+          <tr>
+            <td>Class labels</td>
+            <td>Sorts items first by class labels, second whether it is a training example, and third by prediction probability.
+              <img style="width: 523px; height: 130px;" alt="" title="sort class labels" src="images/sort-classlabels.png">
+            </td>
+          </tr>
+      </table>
+    </p>
+
+    <p>
+      <h3><a name="meaning_of_class_label_indicators"></a>Meaning
+        of class label indicators:</h3>
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td><img style="width: 64px; height: 64px;" alt="" title="unclassified" src="images/class-indicator-unclassified.png"></td>
+          <td>A white (neutral) square indicates that the item has
+            not been predicted yet.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 64px; height: 64px;" alt="" title="predicted" src="images/class-indicator-predicted.png"></td>
+          <td>A colored solid square indicates the class color i.e.
+            the predicted class.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 64px; height: 64px;" alt="" src="images/class-indicator-training-example.png"></td>
+          <td>A patterned square with a half circle on top indicates
+            the predicted and annotated class. Color of the square indicates the
+            prediction and the color of the half circle the annotation. Prediction
+            and annotation are not necessarily the same.</td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      <h2><a name="gallery_thumbnail_viewer"></a>Gallery/thumbnail viewer</h2>
+    <p>
+      <h3><a name="select_items"></a>Select items</h3>
+    </p>
+
+    <p>
+      To select an item double click on one. Select multiple items by clicking
+      on many items while holding down the <b>"CTRL"</b>-button.
+      Drag the mouse while holding down the <b>"CTRL"-</b>button
+      will also select multiple items.
+    </p>
+
+
+    <p>
+      <img style="width: 322px; height: 64px;" alt="" title="item selection" src="images/selection.png">
+    </p>
+
+    <p>
+      <h3><a name="multiple_color_mode"></a>Multiple color mode<a name="rgb_support"></a></h3>
+    </p>
+
+    <p>Depending on the input data, CellAnnotator displays one or more color channels.
+      It is important to know that CellAnnotator does <b>not support RGB</b>
+      images (3-channels, 8bit only). It supports as many color channels as
+      there are in the data. The color display also depends on the input
+      data. The display color is saved to hdf5 along with the numerical image
+      data.<br>
+      <u>Multi color mode</u> means
+      particularly that feature vectors from single
+      channels are always concatenated. Therefore it is not possible to
+      toggle single channels in the gallery view.
+    </p>
+
+    <p>
+      <h3><a name="view_toolbar"></a>View tool bar</h3>
+    <p>
+      <img style="width: 620px; height: 34px;" alt="" title="view toolbar" src="images/viewbar.png"><br>
+    </p>
+    <p>
+      The first two buttons are to open a file and to trigger a (re-)load of
+      the data. The two spin boxes are to set the size of the gallery images
+      and
+      the number of items to load (both settings are for cellh5 only, the
+      custom data file has these values predefined -&gt; widgets are
+      disabled).
+    </p>
+
+    <p>
+      <b>Zoom</b>: It is
+      possible to zoom either using the drop down menu or one
+      presses the "<b>SHIFT</b>"-key and <b>scroll the mouse wheel</b><br>.
+      <b>Classification</b>: Toggle class indicator squares in the left bottom corner of a thumbnail.<br>
+      <b>Mask</b>: Toggle black background mask of a thumbnail.<br>
+      <b>Outline</b>: Toggle outlines in a thumbnail.<br>
+    </p>
+
+    <p>
+    <h3><a name="contrast_enhancement_for_graphics_view"></a>Contrast enhancement in the gallery viewer</h3>
+    </p>
+
+    <p>
+      Microscope images may be extremely dim and at least for display purpose
+      it is necessary to adjust the contrast parameters i.e. <u>min.</u> and
+      <u>max. value</u>,
+      <u>brightness</u> and <u>contrast</u>. A dock widget supplies this
+      functionality for each channel independently. It can be toggled using
+      the Menu <b>"View"-&gt;"Contrast"</b> or using the shortcut <b>"ALT-SHIFT-C"</b>.
+    </p>
+
+    <p>
+      <ul>
+        <li>Select the channel in the drop down menu.</li>
+        <li>Move the slider to a new value (a tool tip will show the
+          current values of all settings).</li>
+        <li>For performance reasons the thumbnails are updated if a
+          slider is released.</li>
+      </ul>
+    </p>
+
+
+    <p>
+      <center>
+        <img style="width: 178px; height: 183px;" alt="" title="contrast dock widget" src="images/contrast-dock-minimal.png">
+      </center>
+    </p>
+
+
+    <p>
+      <h2><a name="classifier_training"></a> Classifier training</h2>
+    </p>
+
+    <p>
+      By default, CellAnnotator is facilitating a <a href="http://scikit-learn.org/dev/modules/svm.html#svm">Support
+        Vector Classifier</a>, in special cases a <a href="http://scikit-learn.org/stable/auto_examples/svm/plot_oneclass.html">One
+        Class Support Vector Machine</a>. Similar to the contrast enhancement,
+      there is a dock widget for annotation. There first row contains a combo box to select the
+      classifier (either support vector classifier or one class svm) and the
+      <b>"<a href="#predict">Predict</a>"</b>-button.
+      The tree view below depends on the type of the classifier.
+      Only the button box at the bottom of the dock is the same for all classifiers and will be explained below.
+    </p>
+
+    <p>
+      <center>
+        <img style="width: 243px; height: 507px;" alt="" title="classifier training" src="images/annotation-dock-minimal-svc.png">
+      </center>
+    </p>
+
+    <p>
+      <h3><a name="support_vector_classifier"></a>Support vector classifier</h3>
+    </p>
+
+    <p>
+      Main Elements are a <b>tool bar </b>and<b>annotation tree view</b>:<br>
+      <center><img style="width: 200px; height: 155px;" alt="" src="images/annotation-dock-minimal-svc2.png">
+      </center>
+    </p>
+
+    <p>
+      Each class is represented by a line in the tree view. &nbsp;It
+      consist of name, color and the add button (<img style="width: 16px; height: 16px;" alt="" title="add button" src="images/list-add.png">). Name
+      and color can be changed by clicking on the corresponding field in the
+      line.</p>
 
 <br>
 
