@@ -28,3 +28,8 @@ h6 {
     color: gray;
     font-size: 8pt;
 }
+
+.tdshort {
+    fond-weight: bold;
+    width: 300px;
+}
