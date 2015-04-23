@@ -116,13 +116,12 @@ class HdfWriter(object):
         self.dmodel = HdfDataModel("data")
 
         # save a list of the training sets as attrib of the file
-        try:
+        if self.dmodel.TRAININGDATA in self._file.attrs.keys():
             tsets = self._file.attrs[self.dmodel.TRAININGDATA].tolist()
             tsets.append(self.dmodel.data)
-        except KeyError:
+        else:
             tsets = self.dmodel.data
             self._file.attrs[self.dmodel.TRAININGDATA] = [tsets, ]
-
 
     def close(self):
         self._file.close()
@@ -164,6 +163,9 @@ class HdfWriter(object):
 
     def flush(self):
 
+        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
+        import pdb; pdb.set_trace()
+
         # hdf5 allows only 64kb of header metadata
         try:
             dset = self._file.create_dataset(
@@ -192,3 +194,7 @@ class HdfWriter(object):
                 raise HdfError("Cannot save data to hdf file."
                                  "One of you tables is to large, "
                                  "reduce number of channels")
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise HdfError(str(e))

@@ -79,7 +79,10 @@ class AtConfig(object):
 
         value = settings.value('compression_opts')
         if value.isValid():
-            self.compression_opts = value.toPyObject()
+            try:
+                self.compression_opts = eval(value.toPyObject())
+            except NameError:
+                self.compression_opts = value.toPyObject()
 
         value = settings.value('max_sv_fraction')
         if value.isValid():
