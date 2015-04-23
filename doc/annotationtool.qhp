@@ -57,6 +57,10 @@
     </toc>
 
     <keywords>
+      <keyword name="Shortcuts" ref="html/shortcuts.html"/>
+      <keyword name="Overview" ref="html/index.html"/>
+      <keyword name="Manual" ref="html/manual.html"/>
+      <keyword name="Getting started" ref="html/getting_started.html"/>
       <keyword name="GUI" ref="html/getting_started.html#gui"/>
       <keyword name="Open data file" ref="html/getting_started.html#openfile"/>
       <keyword name="Select items" ref="html/getting_started.html#selectitems"/>

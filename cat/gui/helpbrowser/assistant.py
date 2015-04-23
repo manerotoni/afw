@@ -111,6 +111,17 @@ class AtAssistant(QtGui.QMainWindow):
         self.indexDock.show()
         self.contentDock.show()
 
+    def waitForIndex(self):
+        for i in xrange(50):
+            self.thread().msleep(100)
+            if not self.hengine.indexModel().isCreatingIndex():
+                break
+
+    def openKeyword(self, keyword):
+        self.waitForIndex()
+        links = self.hengine.indexModel().linksForKeyword(keyword)
+        self.hbrowser.setSource(links.values()[0])
+
     def closeEvent(self, event):
         self._saveSettings()
 

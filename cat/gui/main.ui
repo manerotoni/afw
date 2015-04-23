@@ -60,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -91,6 +91,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionHelpManual"/>
+    <addaction name="actionShortcuts"/>
     <addaction name="separator"/>
     <addaction name="actionAboutAnnotationTool"/>
     <addaction name="actionAboutQt"/>
@@ -257,6 +258,16 @@
    </property>
    <property name="text">
     <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionShortcuts">
+   <property name="text">
+    <string>Shortcuts</string>
+   </property>
+  </action>
+  <action name="actionManual">
+   <property name="text">
+    <string>Manual</string>
    </property>
   </action>
  </widget>

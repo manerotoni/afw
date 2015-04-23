@@ -52,7 +52,7 @@ class AtMainWindow(QtGui.QMainWindow):
     def __init__(self, file_=None, *args, **kw):
         super(AtMainWindow, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
-        self.assistant = None
+
         self.setWindowTitle(version.appstr)
         self.setAcceptDrops(True)
 
@@ -62,6 +62,13 @@ class AtMainWindow(QtGui.QMainWindow):
         self.loaderThread = AtThread(self)
         self.loader = AtLoader()
         self._lastdir = expanduser("~")
+
+        try:
+            self.assistant = AtAssistant(MANUAL)
+            self.assistant.hide()
+        except IOError:
+            QMessageBox.information(self, "Information",
+                                    "Sorry help files are not installed")
 
         self.setupToolbar()
         self.tileview = AtGraphicsView(
@@ -94,6 +101,7 @@ class AtMainWindow(QtGui.QMainWindow):
         self.actionFeatureSelection.triggered.connect(
             self.showFeatureDlg)
         self.actionHelpManual.triggered.connect(self.onHelpManual)
+        self.actionShortcuts.triggered.connect(self.onHelpShortcuts)
 
         self.actionRefresh.triggered.connect(self.refresh)
         self.actionSelectAll.triggered.connect(
@@ -129,16 +137,12 @@ class AtMainWindow(QtGui.QMainWindow):
         event.accept()
 
     def onHelpManual(self):
-
-        if self.assistant is None:
-            try:
-                self.assistant = AtAssistant(MANUAL)
-            except IOError:
-                QMessageBox.information(self, "Information",
-                                        "Sorry help files are not installed")
-
         self.assistant.show()
         self.assistant.raise_()
+
+    def onHelpShortcuts(self):
+        self.onHelpManual()
+        self.assistant.openKeyword("Shortcuts")
 
     def refresh(self):
         self.tileview.actionRefresh.trigger()
