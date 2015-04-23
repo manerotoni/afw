@@ -78,6 +78,7 @@ class AtAssistant(QtGui.QMainWindow):
         self.results = self.hengine.searchEngine().resultWidget()
         self.index = self.hengine.indexWidget()
         self.contents = self.hengine.contentWidget()
+
         self.tabifyDockWidget(self.contentDock, self.indexDock)
         self.tabifyDockWidget(self.contentDock, self.searchDock)
         self.searchDock.hide()
@@ -109,6 +110,17 @@ class AtAssistant(QtGui.QMainWindow):
         self._restoreSettings()
         self.indexDock.show()
         self.contentDock.show()
+
+    def waitForIndex(self):
+        for i in xrange(50):
+            self.thread().msleep(100)
+            if not self.hengine.indexModel().isCreatingIndex():
+                break
+
+    def openKeyword(self, keyword):
+        self.waitForIndex()
+        links = self.hengine.indexModel().linksForKeyword(keyword)
+        self.hbrowser.setSource(links.values()[0])
 
     def closeEvent(self, event):
         self._saveSettings()
@@ -142,7 +154,7 @@ class AtAssistant(QtGui.QMainWindow):
 
 if __name__ == "__main__":
     import sys
-    import annot.at_rc
+    import cat.cat_rc
     app = QtGui.QApplication(sys.argv)
     hv = AtAssistant(sys.argv[1])
     hv.show()

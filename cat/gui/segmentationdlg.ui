@@ -42,14 +42,14 @@
      <item>
       <widget class="QPushButton" name="saveBtn">
        <property name="text">
-        <string>save settings</string>
+        <string>Save settings</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="loadBtn">
        <property name="text">
-        <string>load settings</string>
+        <string>Load settings</string>
        </property>
       </widget>
      </item>
@@ -69,7 +69,7 @@
      <item>
       <widget class="QPushButton" name="refreshBtn">
        <property name="text">
-        <string>refresh</string>
+        <string>Refresh</string>
        </property>
        <property name="shortcut">
         <string>F5</string>
@@ -95,7 +95,7 @@
      <item>
       <widget class="QPushButton" name="closeBtn">
        <property name="text">
-        <string>close</string>
+        <string>Close</string>
        </property>
       </widget>
      </item>
@@ -115,7 +115,7 @@
         </font>
        </property>
        <property name="title">
-        <string>segmentation</string>
+        <string>Segmentation</string>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -150,14 +150,14 @@
           <property name="margin">
            <number>3</number>
           </property>
-          <item row="1" column="0">
+          <item row="0" column="0">
            <widget class="QLabel" name="contrastLabel">
             <property name="text">
-             <string>min . contrast</string>
+             <string>Min . threshold</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="1">
            <widget class="QSpinBox" name="minContrast">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -173,10 +173,33 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="windowSizeLabel">
+            <property name="text">
+             <string>Window size</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="windowSize">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximum">
+             <number>1000000</number>
+            </property>
+            <property name="value">
+             <number>30</number>
+            </property>
+           </widget>
+          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="radiusLabel">
             <property name="text">
-             <string>mean radius</string>
+             <string>Mean radius</string>
             </property>
            </widget>
           </item>
@@ -197,36 +220,13 @@
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="windowSizeLabel">
+           <widget class="QLabel" name="robLabel">
             <property name="text">
-             <string>window size</string>
+             <string>Remove border objects</string>
             </property>
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QSpinBox" name="windowSize">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximum">
-             <number>1000000</number>
-            </property>
-            <property name="value">
-             <number>30</number>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="robLabel">
-            <property name="text">
-             <string>remove border objects</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
            <widget class="QCheckBox" name="removeBorderObjects">
             <property name="text">
              <string/>
@@ -236,14 +236,14 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="fillHolesLabel">
             <property name="text">
-             <string>fill holes</string>
+             <string>Fill holes</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="4" column="1">
            <widget class="QCheckBox" name="fillHoles">
             <property name="text">
              <string/>
@@ -277,7 +277,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="normLabel">
             <property name="text">
-             <string>intesity normalization</string>
+             <string>Intesity normalization</string>
             </property>
            </widget>
           </item>
@@ -359,7 +359,7 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;-1 turns off the setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>intesity filter</string>
+             <string>Intesity filter</string>
             </property>
            </widget>
           </item>
@@ -385,7 +385,7 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;-1 turns off the setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>size filter</string>
+             <string>Size filter</string>
             </property>
            </widget>
           </item>
@@ -403,14 +403,14 @@
         </font>
        </property>
        <property name="title">
-        <string>features</string>
+        <string>Features</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
       <widget class="QGroupBox" name="channelbox">
        <property name="title">
-        <string>channels</string>
+        <string>Channels</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="margin">
@@ -431,10 +431,10 @@
           <item row="0" column="0">
            <widget class="QLabel" name="galSizeLabel">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fixed size of a gallery image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fixed size of a gallery image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>gallery size</string>
+             <string>Gallery size</string>
             </property>
            </widget>
           </item>
@@ -476,7 +476,7 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable watershed segmentation to split touching cells&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>watershed</string>
+             <string>Watershed</string>
             </property>
            </widget>
           </item>
@@ -499,7 +499,7 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size Parameter&lt;/p&gt;&lt;p&gt;The seeding algorithm smoothes the distances map and searches for local maxiam. This is the window size of the smoothing filter. i.e. only one seed per window. Larger window means less seeds and vice versa. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>seeding size</string>
+             <string>Seeding size</string>
             </property>
            </widget>
           </item>
@@ -522,7 +522,7 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;z slice selection&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Define a method of zslice selection/ projection. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>z projection</string>
+             <string>Z Projection</string>
             </property>
            </widget>
           </item>
@@ -559,7 +559,7 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;outline smoothing&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Smooth the outline of a cell using morphologial closing follow by opening. The parameter is the size of the structuring element. A value of -1 disables this operation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>outline smoothing</string>
+             <string>Outline smoothing</string>
             </property>
            </widget>
           </item>
@@ -598,7 +598,6 @@
   <tabstop>refreshBtn</tabstop>
   <tabstop>minContrast</tabstop>
   <tabstop>medianRadius</tabstop>
-  <tabstop>windowSize</tabstop>
   <tabstop>removeBorderObjects</tabstop>
   <tabstop>fillHoles</tabstop>
   <tabstop>pchannel</tabstop>

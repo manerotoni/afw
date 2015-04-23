@@ -33,5 +33,5 @@ class AtAboutDialog(QtGui.QDialog):
         label1.setStyleSheet(stylesheet)
         label1.setAlignment(Qt.AlignCenter)
         label1.setText(version.information)
-
         label1.setGeometry(0, 0, 424, 254)
+        label.show()

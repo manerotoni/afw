@@ -28,3 +28,15 @@ h6 {
     color: gray;
     font-size: 8pt;
 }
+
+
+
+table, td, th {
+    border: 1px solid gray;
+    paddding: 5px;
+}
+
+th {
+    background-color: gray;
+    color: white;
+}

@@ -109,7 +109,7 @@ class ViewToolBar(AtToolBar):
         self.zoom.addItem("200%", QtCore.QVariant(2.0))
         self.zoom.addItem("400%", QtCore.QVariant(4.0))
         self.zoom.currentIndexChanged.connect(self.onIndexChanged)
-        self.reloadBtn = QtGui.QPushButton("load", self)
+        self.reloadBtn = QtGui.QPushButton("Load", self)
 
         icon = QtGui.QIcon(":/oxygen/document-open-folder.png")
         self.actionOpen = QtGui.QAction(

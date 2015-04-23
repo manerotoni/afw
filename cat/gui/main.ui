@@ -77,7 +77,7 @@
      <string>Data</string>
     </property>
     <addaction name="actionExportViewPanel"/>
-    <addaction name="actionProcessTrainingSet"/>
+    <addaction name="actionPreprocessImages"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -91,6 +91,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionHelpManual"/>
+    <addaction name="actionShortcuts"/>
     <addaction name="separator"/>
     <addaction name="actionAboutAnnotationTool"/>
     <addaction name="actionAboutQt"/>
@@ -145,13 +146,13 @@
     <string>open from importer</string>
    </property>
   </action>
-  <action name="actionProcessTrainingSet">
+  <action name="actionPreprocessImages">
    <property name="icon">
     <iconset resource="../../qrc/cat_rc.qrc">
      <normaloff>:/segmentation_128x128.png</normaloff>:/segmentation_128x128.png</iconset>
    </property>
    <property name="text">
-    <string>Process training data</string>
+    <string>Preprocess images</string>
    </property>
   </action>
   <action name="actionOpenHdf">
@@ -218,7 +219,6 @@
     <string>Feature Selection Dialog</string>
    </property>
   </action>
-
   <action name="actionHelpManual">
    <property name="text">
     <string>Help Manual</string>
@@ -258,6 +258,16 @@
    </property>
    <property name="text">
     <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionShortcuts">
+   <property name="text">
+    <string>Shortcuts</string>
+   </property>
+  </action>
+  <action name="actionManual">
+   <property name="text">
+    <string>Manual</string>
    </property>
   </action>
  </widget>

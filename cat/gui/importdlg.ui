@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Import training data</string>
+   <string>Preprocess images</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../../qrc/cat_rc.qrc">
@@ -123,7 +123,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSlider" name="slider">
+          <widget class="AtSlider" name="slider">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -197,11 +197,11 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Input directory</string>
+         <string>Image directory</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QLineEdit" name="inputDir">
+          <widget class="QLineEdit" name="imageDir">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -211,7 +211,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="inputBtn">
+          <widget class="QToolButton" name="imageDirBtn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -235,11 +235,11 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>output file</string>
+         <string>Data file</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QLineEdit" name="outputFile">
+          <widget class="QLineEdit" name="dataFile">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -252,7 +252,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="outputBtn">
+          <widget class="QToolButton" name="dataFileBtn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -324,7 +324,7 @@
            </size>
           </property>
           <property name="text">
-           <string>contours</string>
+           <string>Outlines</string>
           </property>
           <property name="shortcut">
            <string>C</string>
@@ -334,14 +334,14 @@
         <item row="4" column="1">
          <widget class="QPushButton" name="startBtn">
           <property name="text">
-           <string>start</string>
+           <string>Start</string>
           </property>
          </widget>
         </item>
         <item row="4" column="0">
          <widget class="QPushButton" name="closeBtn">
           <property name="text">
-           <string>close</string>
+           <string>Close</string>
           </property>
           <property name="checkable">
            <bool>false</bool>
@@ -372,7 +372,7 @@
            </size>
           </property>
           <property name="text">
-           <string>load on close</string>
+           <string>Load on close</string>
           </property>
          </widget>
         </item>
@@ -407,7 +407,7 @@
            </size>
           </property>
           <property name="text">
-           <string>bboxes</string>
+           <string>BBoxes</string>
           </property>
           <property name="shortcut">
            <string>B</string>
@@ -417,7 +417,7 @@
         <item row="1" column="1">
          <widget class="QPushButton" name="segmentationBtn">
           <property name="text">
-           <string>segmentation</string>
+           <string>Segmentation</string>
           </property>
          </widget>
         </item>
@@ -433,6 +433,11 @@
    <class>ImageViewer</class>
    <extends>QGraphicsView</extends>
    <header>cat/gui/imagewidget</header>
+  </customwidget>
+  <customwidget>
+   <class>AtSlider</class>
+   <extends>QSlider</extends>
+   <header>cat/gui/slider</header>
   </customwidget>
  </customwidgets>
  <resources>

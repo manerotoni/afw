@@ -1,881 +1,836 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head>
-
-
-  <link rel="stylesheet" type="text/css" href="css/help.css"><title>User Manual</title></head><body>
-<h1><span style="font-weight: bold;"></span>User
-Manual</h1>
-
-<h2><a name="open_a_data_file"></a>Open a data file</h2>
-
-There are three ways to open a data file:
-<ol>
-
-  <li style="text-align: justify;">Menu: <span style="font-style: italic; font-weight: bold;">File-&gt;Open</span></li>
-  <li>Press the open-icon&nbsp;<img style="width: 12px; height: 12px;" alt="open" title="open" src="images/document-open-folder.png">
-in the tool bar</li>
-  <li>Drag &amp; drop: drag a data file from the
-file manager and drop the file in the main window (anywhere,
-except in the central gallery viewer)</li>
-</ol>
-
-<h3><a name="sorting"></a>Sorting</h3>
-
-Sorting occurs <span style="text-decoration: underline;">linearly</span>
-from the upper left to the bottom right corner.
-It is necessary to define at least one <span style="text-decoration: underline;">reference example</span> for
-sorting.
-After
-sorting the reference example will be positioned always in the upper
-left
-corner of the view.&nbsp;CellAnnotator uses by default the&nbsp;<a href="http://en.wikipedia.org/wiki/Cosine_similarity">cosine
-similarity</a> as measure. Other sort methods are explained <a href="#sort_algorithms">here</a>.<br>
-
-<br>
-
-Sorting is controlled most easily by the
-<span style="font-weight: bold;">sort</span> <span style="font-weight: bold;">tool bar</span>.
-It has buttons to sort ascending, descending and a drop down
-menu to select the sort algorithm.&nbsp;<br>
-
-<br>
-
-<img style="width: 186px; height: 34px;" alt="" title="sorting toolbar" src="images/sorttoolbar.png"><br>
-
-<br>
-
-The Sorting dock widget allows to define not only but many cells as
-reference
-examples. In this case the <a href="http://en.wikipedia.org/wiki/Arithmetic_mean">arithmetic
-mean</a> is used as reference example, &nbsp;and
-the items in the gallery view are ranked by the current sort
-algorithm. <br>
-
-From top to bottom: Drop down menu for sort
-algorithm,
-tool bar with buttons, list view with reference examples.&nbsp; <span style="font-weight: bold;">Note: double-click on a item in the list
-view selects the item in the
-gallery view to.</span><br>
-
-<br>
-
-<br>
-
-<center><img style="width: 252px; height: 464px;" alt="" title="sorting dock" src="images/sorting-dock.png"></center>
-
-<br>
-
-To add/remove items to the sorting dock , simply select/mark one or
-&nbsp;several items in the graphics view simply press the
-corresponding button (<img style="width: 16px; height: 16px;" alt="" title="add items" src="images/list-add.png">/<img style="width: 16px; height: 16px;" alt="" title="remove items" src="images/list-remove.png">)in
-the dock widget. <br>
-
-<br>
-
-Button in the tool bar:<br>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="Add items" src="images/list-add.png"></td>
-      <td style="width: 923px;">add items</td>
-    </tr>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="Remove items" src="images/list-remove.png"></td>
-      <td style="width: 923px;">remove items</td>
-    </tr>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="clear items" src="images/edit-clear.png"></td>
-      <td style="width: 923px;">clear items</td>
-    </tr>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" title="sort ascending" src="images/sort-ascending.png"></td>
-      <td style="width: 923px;">sort ascending</td>
-    </tr>
-    <tr>
-      <td style="width: 21px;"><img style="width: 16px; height: 16px;" alt="" src="images/sort-descending.png"></td>
-      <td style="width: 923px;">sort descending</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h3><a name="throwsortanchor"></a>Throw sort
-anchor</h3>
-
-Throw sort anchor means that one can select a single cells in the
-gallery view and uses the <a href="./getting_started.html#contextmenugallery">context menu</a>
-to shorten the sorting procedure.<br>
-
-Perform the following steps:
-<ol>
-
-  <li><span style="font-weight: bold;">Select</span>
-at least one <span style="font-weight: bold;">item</span>
-in the gallery view</li>
-  <li><span style="font-weight: bold;">Right-click</span>
-in the gallery view to open the context menu </li>
-  <li>click on the menu "<span style="font-weight: bold;">Throw sort
-anchor</span>"<br>
-  </li>
-</ol>
-
-<h3><a name="sort_algorithms"></a>
-Sort algorithms and similarity measures#</h3>
-
-<h4>Currently
-three methods to rank the items are available:</h4>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td style="width: 150px;"><a href="http://en.wikipedia.org/wiki/Euclidean_distance">Euclidean
-distance</a></td>
-      <td style="width: 794px;">Rank items simply by its
-euclidean distance to the reference example, works well in low
-dimensional space.</td>
-    </tr>
-    <tr>
-      <td style="width: 150px;"><a href="http://en.wikipedia.org/wiki/Cosine_similarity">Cosine
-Similarity</a></td>
-      <td style="width: 794px;">Measures orientation in
-the feature space not distance. This is the default sorting method.
-Robust against
-outliers in one dimension, works well in high dimensional space.</td>
-    </tr>
-    <tr>
-      <td style="width: 150px;">Class labels</td>
-      <td style="width: 794px;">Sorts items first by class
-labels, second whether it is a training example, and third by prediction
-probability. <br>
-      <div style="text-align: left;"><img style="width: 523px; height: 130px;" alt="" title="sort class labels" src="images/sort-classlabels.png"></div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h3><a name="meaning_of_class_label_indicators"></a>Meaning
-of class label indicators:<span style="font-weight: bold;"></span></h3>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td><img style="width: 64px; height: 64px;" alt="" title="unclassified" src="images/class-indicator-unclassified.png"></td>
-      <td>A white (neutral) square indicates that the item has
-not been predicted yet.</td>
-    </tr>
-    <tr>
-      <td><img style="width: 64px; height: 64px;" alt="" title="predicted" src="images/class-indicator-predicted.png"></td>
-      <td>A colored solid square indicates the class color i.e.
-the predicted class.</td>
-    </tr>
-    <tr>
-      <td><img style="width: 64px; height: 64px;" alt="" src="images/class-indicator-training-example.png"></td>
-      <td>A patterned square with a half circle on top indicates
-the predicted and annotated class. Color of the square indicates the
-prediction and the color of the half circle the annotation. Prediction
-and annotation are not necessarily the same.</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h2><span style="font-weight: bold;"></span><a name="gallery_thumbnail_viewer"></a>Gallery/thumbnail
-viewer</h2>
-
-<h3><a name="select_items"></a>Select items</h3>
-
-To select an item double click on one. Select multiple items by
-clicking
-on many items while holding down the <span style="font-weight: bold;">"CTRL"</span>-button.
-&nbsp;Drag the mouse
-while holding down the <span style="font-weight: bold;">"CTRL"-</span>button
-will also select multiple items.<br>
-
-<br>
-
-<img style="width: 322px; height: 64px;" alt="" title="item selection" src="images/selection.png">
-<h3><a name="multiple_color_mode"></a>Multiple
-color mode<a name="rgb_support"></a></h3>
-
-<p>Depending on the input data, CellAnnotator displays one or more
-color
-channels. It is important to know that CellAnnotator does <span style="font-weight: bold;">not support RGB</span>
-images (3-channels, 8bit only). It supports as many color channels as
-there are in the data. The color display also depends on the input
-data. The display color is saved to hdf5 along with the numerical image
-data.&nbsp;<br>
-<span style="text-decoration: underline;">Multi color mode</span> means
-particularly that feature vectors from single
-channels are always concatenated. Therefore it is not possible to
-toggle single channels in the gallery view.<br>
-</p>
-
-<h3><a name="view_toolbar"></a>View
-tool bar</h3>
-
-&nbsp;<img style="width: 620px; height: 34px;" alt="" title="view toolbar" src="images/viewbar.png"><br>
-
-<br>
-
-The first two buttons are to open a file and to trigger a (re-)load of
-the data. The two spin boxes are to set the size of the gallery images
-and
-the number of items to load (both settings are for cellh5 only, the
-custom data file has these values predefined -&gt; widgets are
-disabled).<br>
-
-<br>
-
-<span style="font-weight: bold;">Zoom</span>: It is
-possible to zoom either using the drop down menu or &nbsp;one
-presses the "<span style="font-weight: bold;">SHIFT</span>"-key
-and <span style="font-weight: bold;">scroll the mouse
-wheel.</span><br>
-
-<span style="font-weight: bold;">Classification</span>: Toggle class
-indicator squares in the left bottom corner of a thumbnail.<br>
-
-<span style="font-weight: bold;">Mask</span>: Toggle
-black background mask of a thumbnail.<br>
-
-<span style="font-weight: bold;">Outline</span>: Toggle outlines in a
-thumbnail.<br>
-
-<h3><a name="contrast_enhancement_for_graphics_view"></a>Contrast
-enhancement in the gallery viewer</h3>
-
-<p>
-Microscope images may be extremely dim and at least for
-display
-purpose
-it is necessary to adjust the contrast parameters&nbsp;i.e. <span style="text-decoration: underline;">min.</span> and
-<span style="text-decoration: underline;">max. value</span>,
-<span style="text-decoration: underline;">brightness</span> and <span style="text-decoration: underline;">contrast</span>.&nbsp; A dock
-widget supplies this functionality for each channel independently.
-&nbsp;It can be toggled using the <span style="font-weight: bold;">Menu
-"View"-&gt;"Contrast"</span>
-or
-using the shortcut <span style="font-weight: bold;">"ALT-SHIFT-C"</span>.</p>
-
-<ul>
-
-  <li>Select the channel in the drop down menu.</li>
-  <li>Move the slider to a new value (a tool tip will show the
-current values of all settings).</li>
-  <li>For performance reasons the thumbnails are updated if a
-slider is released.</li>
-</ul>
-
-<center>
-<img style="width: 178px; height: 183px;" alt="" title="contrast dock widget" src="images/contrast-dock-minimal.png"></center>
-
-<h2><a name="classifier_training"></a>
-Classifier training</h2>
-
-
-<p>
-By default, CellAnnotator is facilitating a <a href="http://scikit-learn.org/dev/modules/svm.html#svm">Support
-Vector Classifier</a>, in special cases a <a href="http://scikit-learn.org/stable/auto_examples/svm/plot_oneclass.html">One
-Class Support Vector Machine</a>. Similar to the contrast enhancement,
-there is a dock widget
-for annotation. There first row contains a combo box to select the
-classifier (either support vector classifier or one class svm) and the
-<span style="font-weight: bold;">"<a href="#predict">Predict</a>"</span>-button.
-The tree view below depends on the type of &nbsp;the classifier.
-Only
-the button box at the bottom of the dock is the same for all
-classifiers and will be explained below.</p>
-
-<center><img style="width: 243px; height: 507px;" alt="" title="classifier training" src="images/annotation-dock-minimal-svc.png"></center>
-
-<h3><a name="support_vector_classifier"></a>Support vector classifier</h3>
-
-Main Elements are a <span style="font-weight: bold;">tool bar
-</span>and<span style="font-weight: bold;"> annotation tree view:<br>
-<center><img style="width: 200px; height: 155px;" alt="" src="images/annotation-dock-minimal-svc2.png"></center>
-</span><br>
-
-<p>
-Each class is represented by a line in the tree view. &nbsp;It
-consist of name, color and the add button (<img style="width: 16px; height: 16px;" alt="" title="add button" src="images/list-add.png">). Name
-and color can be changed by clicking on the corresponding field in the
-line.</p>
-
-<br>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td style="width: 93px;"><img style="width: 24px; height: 24px;" alt="" title="add class" src="images/code-class.png"></td>
-      <td style="width: 851px;">Add class to tree view.</td>
-    </tr>
-    <tr>
-      <td style="width: 93px;"><img style="width: 24px; height: 24px;" alt="" title="remove class" src="images/remove-class.png"></td>
-      <td style="width: 851px;">Remove class from tree view.</td>
-    </tr>
-    <tr>
-      <td style="width: 93px;"><img style="width: 24px; height: 24px;" alt="" title="cross validation &amp; grid search" src="images/chart.png"></td>
-      <td style="width: 851px;">Open dialog for cross
-validation &amp; grid search.</td>
-    </tr>
-    <tr>
-      <td style="width: 93px;">allow reassign</td>
-      <td style="width: 851px;">If this option is disabled
-(default) it
-is not possible to annotate a cell which is already annotated to a
-different class. This option helps to prevent annotation errors. For
-reannotation in case of already wrong annotated cells enable this
-option and reannotation is possible without any warning.</td>
-    </tr>
-    <tr>
-      <td><img style="width: 24px; height: 24px;" alt="" title="remove items" src="images/list-remove_24x24.png"></td>
-      <td>Remove annotations - selected items from class.</td>
-    </tr>
-    <tr>
-      <td><img style="width: 24px; height: 24px;" alt="" title="clear treeview" src="images/edit-clear.png"></td>
-      <td>Clear class definition and remove all items.</td>
-    </tr>
-    <tr>
-      <td><img style="width: 24px; height: 24px;" alt="" title="save classifier" src="images/document-save-as.png"></td>
-      <td>Saves the current classifier to the data file.</td>
-    </tr>
-    <tr>
-      <td><img style="width: 24px; height: 23px;" alt="" title="load annotations" src="images/load_classifier_24x24.png"></td>
-      <td>Load annotations of a previously defined classifier. </td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h3><a name="save_classifer_and_load_annotations"></a>Save a classifier
-and load annotations</h3>
-
-<p>The Dialogs for <a name="saving_a_classifier"></a>saving
-a classifier and <a name="loading_annotations"></a>loading
-annotations are
-similar. To save a classifier one has to provide a <span style="text-decoration: underline;">filename</span> a
-<span style="text-decoration: underline;">classifier name</span> and a
-custom <span style="text-decoration: underline;">description</span>.
-It is possible to overwrite a
-classifier. To load annotations, a
-drop down menu shows a list of classifiers already saved
-in the file. The description is read only. Feature are loaded
-unnormalized and one has to re-run cross validation.</p>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td><img style="width: 378px; height: 229px;" alt="" title="load annotations" src="images/load_annotations.png"><br>
-      </td>
-      <td><img style="width: 378px; height: 229px;" alt="" title="save classifier" src="images/save_classifier.png"><br>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<br>
-
-<strong><span style="color: rgb(255, 0, 0); font-weight: bold;">CAUTION:</span><br style="color: rgb(255, 0, 0); font-weight: bold;">
-<span style="color: rgb(255, 0, 0); font-weight: bold;">Be
-aware that
-feature vectors depend on the segmentation of &nbsp;the raw
-images.
-&nbsp;If &nbsp;you load annotations from a file segmented with
-different segmentation parameters, the resulting classifier will be
-flawed!</span></strong><br>
-
-<span style="font-weight: bold;"></span><br>
-
-<h3>&nbsp;<a name="predict"></a>Predict</h3>
-
-<p>For prediction toggle the class label indicators in the gallery
-viewer
-i.e. &nbsp;enable the check box "Classification" in the view
-tool bar. Then simply press the "Predict"&nbsp;button &nbsp;and
-the view gets updated. Sometimes an item can't be predicted because
-it's
-feature vector contains NAN's making prediction impossible. The
-"Predict"-button is color encoded meaning it indicating a necessary
-update:</p>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td><span style="color: rgb(255, 0, 0);">Predict</span></td>
-      <td>Update required: either the parameters of the
-classifier or the training set has changed.</td>
-    </tr>
-    <tr>
-      <td><span style="color: rgb(0, 153, 0);">Predict</span></td>
-      <td>No update required.</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h3><a name="cross_validation"></a>Cross
-validation</h3>
-
-<p>Open the dialog by clicking on the&nbsp;<img style="width: 24px; height: 24px;" alt="" title="crossvalidation dialog" src="images/chart.png">
-button. If possible grid search is triggered directly after the dialog
-pops up. The dialog consists of three tabs and some buttons at the
-bottom.</p>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td>Cross Validation</td>
-      <td>Trigger cross validation for the current setup of
-parameters (no grid search).</td>
-    </tr>
-    <tr>
-      <td>Grid search</td>
-      <td>Trigger grid search.</td>
-    </tr>
-    <tr>
-      <td>Apply </td>
-      <td>Apply current parameters to the classifier, leave the
-dialog open.</td>
-    </tr>
-    <tr>
-      <td>Ok</td>
-      <td>Apply current parameters to the classifier and close
-the dialog.</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<p>The first tab (Cross Validation &amp; Grid Search) is to
-setup
-parameters. Five or ten-fold cross validation, grid size for grid search
-or
-setup <span style="font-weight: bold;">Gamma</span> and <span style="font-weight: bold;">C</span> the <span style="font-weight: bold;">cost</span> parameter manually. The output
-contains for
-different measures of accuracy namely <span style="font-weight: bold;">Accuracy,
-F1, Precession </span>and<span style="font-weight: bold;">
-Recall</span>. A detailed description of the measures can be
-found in the
-documentation of the <a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">sklearn
-python package.</a> </p>
-
-<center><img style="width: 537px; height: 488px;" alt="" title="cross validation" src="images/crossvalidation.png"></center>
-
-<br>
-
-<br>
-
-<h3><a name="grid_search"></a>Grid search</h3>
-
-<p>The result of a grid search is displayed as a contour plot in a
-logarithmic scale. The yellow cross hairs indicates the optimal
-parameters. The value displayed is the <span style="font-weight: bold;">Accuracy</span>
-measure mentioned
-above.</p>
-
-<center><img style="width: 537px; height: 488px;" alt="" title="grid search" src="images/gridsearch.png"></center>
-
-<br>
-
-<br>
-
-<h3><a name="confusion_matrix"></a>Confusion
-matrix</h3>
-
-<p>The third tab shows the <span style="text-decoration: underline;">confusion
-matrix</span>
-</p>
-
-<center><img style="width: 537px; height: 488px;" alt="" title="confusion matrix" src="images/confusion-matrix.png"></center>
-
-<h3><a name="one_class_svm"></a>One class
-support vector machine</h3>
-
-
-<p><span style="font-weight: bold;">Rational</span>:
-The basic idea of a one class support vector machine is to
-find&nbsp; <span style="font-weight: bold;">abnormal objects</span> or
-<span style="font-weight: bold;">outliers</span> that are different
-from <span style="font-weight: bold;">normal
-objects</span> or <span style="font-weight: bold;">inliers</span>.
-Here the idea was inverted and the one class svm is used to find
-inliers. The second goal is to
-<span style="font-weight: bold;">minimize the training
-effort</span>. In a two-class support vector machine one
-always has to train what's an inlier and what's an outliers. <span style="font-weight: bold;">Here we train only inliers i.e.
-during training one annotates only cells of interest</span>.
-The drawback is a
-lower robustness against a low number of &nbsp;annotations and the
-fact that support vectors are usually classified as outliers (which due
-to numerical rounding errors). Nevertheless if the number of
-annotations is high enough the one class svm performs well.</p>
-
-<p>The parameter setup is slightly different. Since cross
-validation is
-not possible one has to setup the parameter semi-manually. </p>
-
-<table style="text-align: left; width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td style="width: 90px; text-align: center;">Nu</td>
-      <td style="width: 920px;">Minimum fraction of outliers in the
-training set
-(training error). In this use case it is a valid assumption to have a
-very low number of training errors (1%).</td>
-    </tr>
-    <tr>
-      <td style="width: 90px; text-align: center;">Gamma</td>
-      <td style="width: 920px;">Kernel band width: A smaller value
-means a lower fraction
-of support vectors, a higher value means more support vectors. To many
-support vectors can lead to over fitting.</td>
-    </tr>
-    <tr>
-      <td style="text-align: center; width: 90px;"><img style="width: 24px; height: 24px;" alt="" title="estimate gamma" src="images/games-solve_24x24.png"></td>
-      <td style="width: 920px;">Estimate Gamma&nbsp;under the
-constraint that max.
-20% of the
-training samples are support vectors. The value of 20% can be adjusted
-in the <span style="font-weight: bold;">"Preferences"</span> dialog of
-the application. Nu still has to be set
-manually.
-</td>
-    </tr>
-    <tr>
-      <td style="text-align: center; width: 90px;"><img style="width: 24px; height: 24px;" alt="" title="add item" src="images/list-add_24x24.png"></td>
-      <td style="width: 920px;">Add items to the training set (annotate
-items as inlier).</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-
-<center>
-<img style="width: 243px; height: 507px;" alt="" title="one class svm" src="images/one-class-svm.png"><br>
-<div style="text-align: left;">
-</div>
-
-</center>
-
-<h2><a name="preprocess_raw_images"></a>Preprocess
-raw images</h2>
-
-CellAnnotator&nbsp;is an interactive application. To increase
-response time and prevent unnecessary computation of data some steps in
-the pipeline are preprocessed such as segmentation, calculation of
-bounding boxes, features or thumbnails. Preprocessing raw
-image is a separate step. <br>
-
-<br>
-
-<ul>
-
-  <li>Open Dialog "Preprocess image data" in the menu "<span style="font-weight: bold;">Data -&gt; Preprocess image
-data</span>":</li>
-</ul>
-
-<center><img style="width: 953px; height: 712px;" alt="" title="preprocess image data" src="images/preprocess-image-data.png"></center>
-
-<br>
-
-<br>
-
-<h3><a name="raw_image_data"></a><a name="support_image_formats"></a>Raw
-image data:</h3>
-
-Currently CellAnnotator supports <a name="4D_zeiss-lsm"></a><span style="font-weight: bold;">4D Zeiss-lsm</span> image and <a name="4D_tiff_images"></a>4D tiff images.
-4D means (x,y,z,c) &nbsp;i.e. <a name="z-stacks"></a>z-stacks and multiple color channels
-are supported. Each color channel has to be one single gray value
-image. <br>
-
-<span style="font-weight: bold;">CellAnnotator does not
-support RGB images!</span><br>
-
-To keep things simple raw images have be located in one single
-directory, the <span style="font-weight: bold;">Image
-Directory</span>, on the hard disk. <span style="font-weight: bold; color: rgb(51, 204, 0);">No sub
-directories are scanned and there is not no special naming
-convention for the image&nbsp;files.</span> The output file
-or <a href="#data_file_formats"><span style="font-weight: bold;">data file</span></a>
-is a hdf file that is optimized for fast reading and writing the
-data. This supports the paradigm of interactivity.<br>
-
-<br>
-
-<h3><a name="toggle_color_channels"></a>Enabling/disabling
-color channels</h3>
-The color channels can be toggled by clicking on the check boxes. The
-the color map can be changed to. Contrast sliders work similar
-&nbsp;as those for the gallery viewer. Additionally there is
-&nbsp;a <span style="font-weight: bold;">"Auto"</span>-button that cuts off 1% of the image histogram and the
-buttons <span style="font-weight: bold;">"Min/Max"</span> and <span style="font-weight: bold;">"Reset"</span> are self explanatory.<br>
-
-<br>
-The screen shot above shows bounding boxes and outlines. Both can be
-toggled by clicking the corresponding check box. Be aware that enabling
-one of those options triggers segmentation of the current image.
-Processing is fast for small images (e.g. 512x512 pixels) but
-segmentation scales quadratically with images size, not mentioning the
-feature calculation, which depends on the number of foreground objects.<br>
-
-<br>
-<br>
-<br>
-
-<table style="background-color: rgb(192, 192, 192); width: 100%;" border="0" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td><span style="font-weight: bold;">HINT:</span><br>
-It is good practice to use <span style="font-weight: bold;">size and intensity filters</span>
-to
-reduce the number of foreground objects. Small objects (&lt;100
-px²)
-can be removed since the origin usually from noise and dim objects
-caused by of focus cells. They have ragged outlines and lot of features
-evaluate to NAN which make objects unpredictable.</td>
-    </tr>
-  </tbody>
-</table>
-
-&nbsp; <br>
-
-<table style="width: 100%;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td>Load on close</td>
-      <td> Open the data file and load items to the gallery view
-after closing the dialog.</td>
-    </tr>
-    <tr>
-      <td>Close</td>
-      <td>Close the dialog.</td>
-    </tr>
-    <tr>
-      <td>Start</td>
-      <td>Start image preprocessing for all images.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2><a name="segmentation"></a>Segmentation</h2>
-
-
-<p>Segmentation is based on a simple <span style="font-weight: bold;">Local Adaptive Threshold</span>
-with
-Gaussian blurring filter as preprocessing step to reduce noise. &nbsp;Size and intensity
-filters can be used to remove artefacts. The screen shot below shows the
-&nbsp;setup dialog. <br>
-There are three columns: <span style="font-weight: bold;">Channels, Segmentation, Features </span>and
-there is one row for each color channel. &nbsp;The first row is
-always for the primary segmentation i.e. the channel where the local adaptive threshold
-is applied. All other channels segment only an expanded region
-depending on the primary segmentation.</p>
-
-<center><img style="width: 748px; height: 478px;" alt="" title="Segmentation settings" src="images/segmentation.png"></center>
-
-<br>
-
-<table style="background-color: rgb(192, 192, 192); width: 100%;" border="0" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td><span style="font-weight: bold;">HINT</span><br>To process only necessary color channels it is possible to <a href="#toggle_color_channels">enable
-or disable</a> them. Disabled channels will not be saved to the
-data file.</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-<h4><span style="font-weight: bold;"></span><a name="channels_primary_segmentation"></a>Channels
-(primary
-segmentation)</h4>
-
-<table style="text-align: left; width: 1058px; height: 212px;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td style="width: 184px; font-style: italic;">"Channels 1"</td>
-      <td style="width: 854px;">Select the color channel
-in the drop down menu. The list in the menu is updated automatically if
-the image directory is changed.<br>
-</td>
-    </tr>
-    <tr>
-      <td style="width: 184px;">Gallery size</td>
-      <td style="width: 854px;">Size of the thumbnails
-(bounding boxes) around foreground objects. This value is fixed and
-can't be changed later on. </td>
-    </tr>
-    <tr>
-      <td style="width: 184px;">Watershed</td>
-      <td style="width: 854px;">Enable/disable watershed
-segmentation.</td>
-    </tr>
-    <tr>
-      <td style="width: 184px;">Seeding size</td>
-      <td style="width: 854px;">Size parameter for finding
-seed for the watershed segmentation. Seeding is applying minimum and
-maximum filters. This parameter is the the size of the filters. There is
-only one seed within an area of radius seeding size. </td>
-    </tr>
-    <tr>
-      <td style="width: 184px;">Z Project</td>
-      <td style="width: 854px;">Standard method for z
-slice selection. (select, minimum projection, mean and maximum
-projection)</td>
-    </tr>
-    <tr>
-      <td style="width: 184px;">Outline smoothing </td>
-      <td style="width: 854px;">Smoothes outlines of
-foreground objects using a morphological closing operation followed by
-an morphological opening. Dim out of focus cells have usually a ragged
-outline causing a lot of features to be invalid. Smoothing outlines
-helps to overcome this problem and increases classifier performance.
-The parameter is the size of the structuring element of the
-morphological operation. Negative values disable outline smoothing.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4><a name="primary_Segmentation"></a>Primary
-Segmentation</h4>
-
-<table style="text-align: left; width: 1050px; height: 248px;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td>Min. contrast</td>
-      <td>Minimum contrast (or threshold) for local adaptive
-threshold segmentation.</td>
-    </tr>
-    <tr>
-      <td>Mean radius</td>
-      <td>Radius in pixels for the Gaussian blurring filter.</td>
-    </tr>
-    <tr>
-      <td>Window size</td>
-      <td>Window size used for local adaptive thresholding.</td>
-    </tr>
-    <tr>
-      <td>Remove border objects</td>
-      <td>Removes all foreground objects that touches the image
-boundary (border objects are artefacts)<br>
-</td>
-    </tr>
-    <tr>
-      <td>Fill holes</td>
-      <td>Topologically close&nbsp;all foreground objects.</td>
-    </tr>
-    <tr>
-      <td>Intensity normalization</td>
-      <td>Renormalize input images from min/max (by default 0,
-255) to unsigned 8 bit images. The range depends on the histogram and
-data type of the images.</td>
-    </tr>
-    <tr>
-      <td>Intensity filter</td>
-      <td>Remove objects outside the intensity range (min, max).
-A value of -1disables the border e.g. (10, -1) filters all objects with
-a mean intensity lower than 10 (uint8 gray values).</td>
-    </tr>
-    <tr>
-      <td>Size filter</td>
-      <td>Remove foreground objects outside the range (min, max).
-A value of &nbsp;-1 disables the border e.g. (100, -1) filters all
-objects smaller than 100 px².</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4><span style="font-weight: bold;"><a name="non_primary_channels"></a>Non
-primary
-channels.</span></h4>
-
-<table style="text-align: left; width: 1054px; height: 49px;" border="1" cellpadding="0" cellspacing="0">
-
-  <tbody>
-    <tr>
-      <td>Intensity Normalization</td>
-      <td>Renormalize input images from min/max (by default 0,
-255) to unsigned 8
-bit images. The range depends on the histogram and data type of the
-images</td>
-    </tr>
-    <tr>
-      <td>Expansion size</td>
-      <td>Distance between primary outline and expanded outline
-(any value from 0 to inf)</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-
-Feature groups are based on the implementation of the <a href="http://cellcognition.org/">Cellcogniton</a>
-project. Disabled feature groups will not be calculated, thus
-preprocessing is faster.
-<h3><a name="loadsave_settings"></a>Load/Save segmentation settings<br>
-</h3>
-
-Segmentation settings are automatically sa<span style="font-weight: bold;">v</span>ed to the data file.
-Additionally it is possible to save settings as xml file which can be
-edited manually.
-&nbsp;Loading or reusing of settings is therefore possible either
-from
-the <span style="font-weight: bold;">data file</span> or <span style="font-weight: bold;">from xml</span>.<br>
-
-<br>
-
-<h2><a name="data_file_formats"></a>Data file
-formats:</h2>
-
-The term "data file" which was used quite often above means either a hdf5 file, or a cellh5 file.<br>
-<ul>
-
-  <li><span style="font-weight: bold;">Hdf5</span>
-- CellAnnotator saves its data to hdf5 which is optimized structures for
-fast IO. This supports the paradigm of interactivity of the application.
-All data and settings which where used to produce the data sets and classifiers go into this file.</li>
-  <li><span style="font-weight: bold;">CellH5</span>
-- It is also possible to load data from cellh5 files and save
-classifier
-data to a cellh5 file. Cellh5 data structures are not as per formant, but
-store much larger data sets, and support data from screening plates (plate layout).
-Further cellh5 supports saving of tracking and event data. The cellh5
-navigation tool bar enables navigation and loading from
-different plates, wells and sites. Future version will also enable
-loading of event data, loading of multiple color channels and train merged channel classifiers.<br>
-</li>
-</ul>
-
-<center><img style="width: 414px; height: 24px;" alt="" title="cellh5 navigation toolbar" src="images/cellh5navbar.png"></center>
-
-<br>
-
-<br>
-
-</body></html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css"  href="css/help.css">
+    <title>User Manual</title>
+  </head>
+  <body>
+    <p>
+      <h1>User Manual</h1>
+    </p>
+
+    <p>
+      <h2><a name="open_a_data_file"></a>Open a data file</h2>
+    </p>
+
+    <p>
+      There are three ways to open a data file:
+    </p>
+
+    <p>
+      <ol>
+        <li>Menu: <b><i>File-&gt;Open</b></i></li>
+        <li>Press the open-icon<img style="width: auto; height: auto;" alt="open" title="open" src="images/document-open-folder.png">in the tool bar</li>
+        <li>Drag &amp; drop: drag a data file from the file manager
+          and drop the file in the main window (anywhere, except in the central gallery viewer)</li>
+      </ol>
+    </p>
+
+    <p>
+      <h3><a name="sorting"></a>Sorting</h3>
+    </p>
+
+    <p>Sorting occurs <span style="text-decoration: underline;">linearly</span>
+      from the upper left to the bottom right corner. It is necessary to define at least one <span style="text-decoration: underline;">reference example</span> for
+      sorting. After sorting the reference example will be positioned
+      always in the upper left corner of the view. CellAnnotator uses
+      by default the <a href="http://en.wikipedia.org/wiki/Cosine_similarity">cosine
+        similarity</a> as measure. Other sort methods are explained <a href="#sort_algorithms">here</a>.
+    </p>
+
+    <p>
+      Sorting is controlled most easily by the
+      <b>sort tool bar</b>.
+      It has buttons to sort ascending, descending and a drop down
+      menu to select the sort algorithm.
+    </p>
+
+    <p>
+      <img style="width: 186px; height: 34px;" alt="" title="sorting toolbar" src="images/sorttoolbar.png"><br>
+    </p>
+
+
+    <p>
+      The Sorting dock widget allows to define not only but many cells as reference
+      examples. In this case the <a href="http://en.wikipedia.org/wiki/Arithmetic_mean">arithmetic
+        mean</a> is used as reference example, and
+      the items in the gallery view are ranked by the current sort
+      algorithm.
+    </p>
+
+    <p>
+      From top to bottom: Drop down menu for sort algorithm, tool bar with buttons, list view with reference examples.
+      <b>Note: double-click on a item in the list view selects the item in the gallery view to.</b>
+    </p>
+
+    <p>
+      <center><img style="width: 252px; height: 464px;" alt="" title="sorting dock" src="images/sorting-dock.png"></center>
+    </p>
+
+    <p>
+      To add/remove items to the sorting dock , simply select/mark one or
+      several items in the graphics view simply press the
+      corresponding button (<img style="width: 16px; height: 16px;" alt="" title="add items" src="images/list-add.png">/<img style="width: 16px; height: 16px;" alt="" title="remove items" src="images/list-remove.png">)in
+      the dock widget.
+    </p>
+
+    <p>
+      Button in the tool bar:
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+          <tr>
+            <td ><img style="width: 16px; height: 16px;" alt="" title="Add items" src="images/list-add.png"></td>
+            <td >Add items</td>
+          </tr>
+          <tr>
+            <td><img style="width: 16px; height: 16px;" alt="" title="Remove items" src="images/list-remove.png"></td>
+            <td>Remove items</td>
+          </tr>
+          <tr>
+            <td><img style="width: 16px; height: 16px;" alt="" title="clear items" src="images/edit-clear.png"></td>
+            <td>Clear items</td>
+          </tr>
+          <tr>
+            <td><img style="width: 16px; height: 16px;" alt="" title="sort ascending" src="images/sort-ascending.png"></td>
+            <td>Sort ascending</td>
+          </tr>
+          <tr>
+            <td><img style="width: 16px; height: 16px;" alt="" src="images/sort-descending.png"></td>
+            <td>Sort descending</td>
+          </tr>
+      </table>
+    </p>
+
+    <p>
+      <h3><a name="throwsortanchor"></a>Throw sort anchor</h3>
+    </p>
+
+    <p>
+      Throw sort anchor means that one can select a single cells in the
+      gallery view and uses the <a href="./getting_started.html#contextmenugallery">context menu</a>
+      to shorten the sorting procedure.<br>
+    </p>
+
+    <p>
+      Perform the following steps:
+    </p>
+
+    <p>
+      <ol>
+        <li><b>Select</b>at least one <b>item</b>in the gallery view</li>
+        <li><b>Right-click</b>
+          in the gallery view to open the context menu </li>
+        <li>click on the menu "<b>Throw sort anchor</b>"</li>
+      </ol>
+    </p>
+
+    <p>
+      <h3><a name="sort_algorithms"></a>
+        Sort algorithms and similarity measures</h3>
+    </p>
+
+    <p>
+      <h4>Currently three methods to rank the items are available:</h4>
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+            <td><a href="http://en.wikipedia.org/wiki/Euclidean_distance">Euclidean distance</a></td>
+            <td>Rank items simply by its
+              euclidean distance to the reference example, works well in low
+              dimensional space.</td>
+          </tr>
+          <tr>
+            <td><a href="http://en.wikipedia.org/wiki/Cosine_similarity">Cosine Similarity</a></td>
+            <td >Measures orientation in the feature space not distance. This is the default sorting method.
+              Robust againstoutliers in one dimension, works well in high dimensional space.</td>
+          </tr>
+          <tr>
+            <td>Class labels</td>
+            <td>Sorts items first by class labels, second whether it is a training example, and third by prediction probability.
+              <img style="width: 523px; height: 130px;" alt="" title="sort class labels" src="images/sort-classlabels.png">
+            </td>
+          </tr>
+      </table>
+    </p>
+
+    <p>
+      <h3><a name="meaning_of_class_label_indicators"></a>Meaning
+        of class label indicators:</h3>
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td><img style="width: 64px; height: 64px;" alt="" title="unclassified" src="images/class-indicator-unclassified.png"></td>
+          <td>A white (neutral) square indicates that the item has
+            not been predicted yet.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 64px; height: 64px;" alt="" title="predicted" src="images/class-indicator-predicted.png"></td>
+          <td>A colored solid square indicates the class color i.e.
+            the predicted class.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 64px; height: 64px;" alt="" src="images/class-indicator-training-example.png"></td>
+          <td>A patterned square with a half circle on top indicates
+            the predicted and annotated class. Color of the square indicates the
+            prediction and the color of the half circle the annotation. Prediction
+            and annotation are not necessarily the same.</td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      <h2><a name="gallery_thumbnail_viewer"></a>Gallery/thumbnail viewer</h2>
+    <p>
+      <h3><a name="select_items"></a>Select items</h3>
+    </p>
+
+    <p>
+      To select an item double click on one. Select multiple items by clicking
+      on many items while holding down the <b>"CTRL"</b>-button.
+      Drag the mouse while holding down the <b>"CTRL"-</b>button
+      will also select multiple items.
+    </p>
+
+
+    <p>
+      <img style="width: 322px; height: 64px;" alt="" title="item selection" src="images/selection.png">
+    </p>
+
+    <p>
+      <h3><a name="multiple_color_mode"></a>Multiple color mode<a name="rgb_support"></a></h3>
+    </p>
+
+    <p>Depending on the input data, CellAnnotator displays one or more color channels.
+      It is important to know that CellAnnotator does <b>not support RGB</b>
+      images (3-channels, 8bit only). It supports as many color channels as
+      there are in the data. The color display also depends on the input
+      data. The display color is saved to hdf5 along with the numerical image
+      data.<br>
+      <u>Multi color mode</u> means
+      particularly that feature vectors from single
+      channels are always concatenated. Therefore it is not possible to
+      toggle single channels in the gallery view.
+    </p>
+
+    <p>
+      <h3><a name="view_toolbar"></a>View tool bar</h3>
+    <p>
+      <img style="width: 620px; height: 34px;" alt="" title="view toolbar" src="images/viewbar.png"><br>
+    </p>
+    <p>
+      The first two buttons are to open a file and to trigger a (re-)load of
+      the data. The two spin boxes are to set the size of the gallery images
+      and
+      the number of items to load (both settings are for cellh5 only, the
+      custom data file has these values predefined -&gt; widgets are
+      disabled).
+    </p>
+
+    <p>
+      <b>Zoom</b>: It is
+      possible to zoom either using the drop down menu or one
+      presses the "<b>SHIFT</b>"-key and <b>scroll the mouse wheel</b><br>.
+      <b>Classification</b>: Toggle class indicator squares in the left bottom corner of a thumbnail.<br>
+      <b>Mask</b>: Toggle black background mask of a thumbnail.<br>
+      <b>Outline</b>: Toggle outlines in a thumbnail.<br>
+    </p>
+
+    <p>
+    <h3><a name="contrast_enhancement_for_graphics_view"></a>Contrast enhancement in the gallery viewer</h3>
+    </p>
+
+    <p>
+      Microscope images may be extremely dim and at least for display purpose
+      it is necessary to adjust the contrast parameters i.e. <u>min.</u> and
+      <u>max. value</u>,
+      <u>brightness</u> and <u>contrast</u>. A dock widget supplies this
+      functionality for each channel independently. It can be toggled using
+      the Menu <b>"View"-&gt;"Contrast"</b> or using the shortcut <b>"ALT-SHIFT-C"</b>.
+    </p>
+
+    <p>
+      <ul>
+        <li>Select the channel in the drop down menu.</li>
+        <li>Move the slider to a new value (a tool tip will show the
+          current values of all settings).</li>
+        <li>For performance reasons the thumbnails are updated if a
+          slider is released.</li>
+      </ul>
+    </p>
+
+
+    <p>
+      <center>
+        <img style="width: 178px; height: 183px;" alt="" title="contrast dock widget" src="images/contrast-dock-minimal.png">
+      </center>
+    </p>
+
+
+    <p>
+      <h2><a name="classifier_training"></a> Classifier training</h2>
+    </p>
+
+    <p>
+      By default, CellAnnotator is facilitating a <a href="http://scikit-learn.org/dev/modules/svm.html#svm">Support
+        Vector Classifier</a>, in special cases a <a href="http://scikit-learn.org/stable/auto_examples/svm/plot_oneclass.html">One
+        Class Support Vector Machine</a>. Similar to the contrast enhancement,
+      there is a dock widget for annotation. There first row contains a combo box to select the
+      classifier (either support vector classifier or one class svm) and the
+      <b>"<a href="#predict">Predict</a>"</b>-button.
+      The tree view below depends on the type of the classifier.
+      Only the button box at the bottom of the dock is the same for all classifiers and will be explained below.
+    </p>
+
+    <p>
+      <center>
+        <img style="width: 243px; height: 507px;" alt="" title="classifier training" src="images/annotation-dock-minimal-svc.png">
+      </center>
+    </p>
+
+    <p>
+      <h3><a name="support_vector_classifier"></a>Support vector classifier</h3>
+    </p>
+
+    <p>
+      Main Elements are a <b>tool bar </b>and<b>annotation tree view</b>:<br>
+      <center><img style="width: 200px; height: 155px;" alt="" src="images/annotation-dock-minimal-svc2.png">
+      </center>
+    </p>
+
+    <p>
+      Each class is represented by a line in the tree view. &nbsp;It
+      consist of name, color and the add button (<img style="width: 16px; height: 16px;" alt="" title="add button" src="images/list-add.png">). Name
+      and color can be changed by clicking on the corresponding field in the
+      line.
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td><img style="width: 24px; height: 24px;" alt="" title="add class" src="images/code-class.png"></td>
+          <td>Add class to tree view.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 24px; height: 24px;" alt="" title="remove class" src="images/remove-class.png"></td>
+          <td>Remove class from tree view.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 24px; height: 24px;" alt="" title="cross validation &amp; grid search" src="images/chart.png"></td>
+          <td>Open dialog for cross validation &amp; grid search.</td>
+        </tr>
+        <tr>
+          <td>allow reassign</td>
+          <td>If this option is disabled (default) it is not possible to annotate a cell which is already annotated to a
+            different class. This option helps to prevent annotation errors. For reannotation in case of already wrong annotated cells enable this
+            option and reannotation is possible without any warning.</td>
+          </tr>
+        <tr>
+          <td><img style="width: 24px; height: 24px;" alt="" title="remove items" src="images/list-remove_24x24.png"></td>
+          <td>Remove annotations - selected items from class.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 24px; height: 24px;" alt="" title="clear treeview" src="images/edit-clear.png"></td>
+            <td>Clear class definition and remove all items.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 24px; height: 24px;" alt="" title="save classifier" src="images/document-save-as.png"></td>
+          <td>Saves the current classifier to the data file.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 24px; height: 23px;" alt="" title="load annotations" src="images/load_classifier_24x24.png"></td>
+          <td>Load annotations of a previously defined classifier. </td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      <h3><a name="save_classifer_and_load_annotations"></a>Save a classifier and load annotations</h3>
+    </p>
+
+    <p>
+      The Dialogs for <a name="saving_a_classifier"></a>saving a classifier and <a name="loading_annotations"></a>loading
+      annotations are similar. To save a classifier one has to provide a <u>filename</u> a
+      <u>classifier name</u> and a custom <u>description</u>. It is possible to overwrite a
+      classifier. To load annotations, a drop down menu shows a list of classifiers already saved
+      in the file. The description is read only. Feature are loaded unnormalized and one has to re-run
+      cross validation.
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td><img style="width: 378px; height: 229px;" alt="" title="load annotations" src="images/load_annotations.png"><br>
+          </td>
+          <td><img style="width: 378px; height: 229px;" alt="" title="save classifier" src="images/save_classifier.png"><br>
+          </td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      <b><span style="color: red;">CAUTION:<br>
+          Be aware that feature vectors depend on the segmentation of the raw images.
+          If you load annotations from a file segmented with different segmentation parameters,
+          the resulting classifier will be flawed!</span></b>
+    </p>
+
+    <p>
+      <h3><a name="predict"></a>Predict</h3>
+    </p>
+
+    <p>
+      For prediction toggle the class label indicators in the gallery viewer
+      i.e. enable the check box "Classification" in the view
+      tool bar. Then simply press the "Predict" button and
+      the view gets updated. Sometimes an item can't be predicted because
+      it's feature vector contains NAN's making prediction impossible. The
+      "Predict"-button is color encoded meaning it indicating a necessary
+      update:
+    </p>
+
+    <p>
+      <table  border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td><span style="color: rgb(255, 0, 0);">Predict</span></td>
+          <td>Update required: either the parameters of the
+            classifier or the training set has changed.</td>
+        </tr>
+        <tr>
+          <td><span style="color: rgb(0, 153, 0);">Predict</span></td>
+          <td>No update required.</td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      <h3><a name="cross_validation"></a>Cross validation</h3>
+    </p>
+
+    <p>Open the dialog by clicking on the <img style="width: 24px; height: 24px;" alt="" title="crossvalidation dialog" src="images/chart.png">
+      button. If possible grid search is triggered directly after the dialog
+      pops up. The dialog consists of three tabs and some buttons at the
+      bottom.
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td>Cross Validation</td>
+          <td>Trigger cross validation for the current setup of parameters (no grid search).</td>
+        </tr>
+        <tr>
+          <td>Grid search</td>
+          <td>Trigger grid search.</td>
+        </tr>
+        <tr>
+          <td>Apply </td>
+          <td>Apply current parameters to the classifier, leave the
+            dialog open.</td>
+        </tr>
+        <tr>
+          <td>Ok</td>
+          <td>Apply current parameters to the classifier and close
+            the dialog.</td>
+        </tr>
+      </table>
+    </p>
+
+    <p>The first tab (Cross Validation &amp; Grid Search) is to setup parameters. Five or ten-fold cross validation, grid size for grid search
+      or setup <b>Gamma</b> and <b>C</b> the <b>cost</b> parameter manually. The output
+      contains for different measures of accuracy namely <b>Accuracy, F1,Precession </b>and
+      <b>Recall</b>. A detailed description of the measures can be
+      found in the documentation of the
+      <a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">sklearn python package.</a>
+    </p>
+
+    <p>
+      <center>
+        <img style="width: 537px; height: 488px;" alt="" title="cross validation" src="images/crossvalidation.png">
+      </center>
+    </p>
+
+
+    <p>
+      <h3><a name="grid_search"></a>Grid search</h3>
+    </p>
+
+    <p>
+      The result of a grid search is displayed as a contour plot in a
+      logarithmic scale. The yellow cross hairs indicates the optimal
+      parameters. The value displayed is the <b>Accuracy</b> measure mentioned above.
+    </p>
+
+    <p>
+      <center>
+        <img style="width: 537px; height: 488px;" alt="" title="grid search" src="images/gridsearch.png">
+      </center>
+    <p>
+
+    <p>
+      <h3><a name="confusion_matrix"></a>Confusion matrix</h3>
+    </p>
+
+    <p>
+    <p>The third tab shows the <u>confusion matrix</u>
+    </p>
+
+    <p>
+      <center>
+        <img style="width: 537px; height: 488px;" alt="" title="confusion matrix" src="images/confusion-matrix.png">
+      </center>
+    <p>
+
+    <p>
+      <h3><a name="one_class_svm"></a>One class support vector machine</h3>
+    </p>
+
+    <p><span style="font-weight: bold;">Rational</span>:
+      The basic idea of a one class support vector machine is to
+      find&nbsp; <span style="font-weight: bold;">abnormal objects</span> or
+      <span style="font-weight: bold;">outliers</span> that are different
+      from <span style="font-weight: bold;">normal
+        objects</span> or <span style="font-weight: bold;">inliers</span>.
+      Here the idea was inverted and the one class svm is used to find
+      inliers. The second goal is to
+      <span style="font-weight: bold;">minimize the training
+        effort</span>. In a two-class support vector machine one
+      always has to train what's an inlier and what's an outliers. <span style="font-weight: bold;">Here we train only inliers i.e.
+        during training one annotates only cells of interest</span>.
+      The drawback is a
+      lower robustness against a low number of &nbsp;annotations and the
+      fact that support vectors are usually classified as outliers (which due
+      to numerical rounding errors). Nevertheless if the number of
+      annotations is high enough the one class svm performs well.</p>
+
+    <p>The parameter setup is slightly different. Since cross validation is
+      not possible one has to setup the parameter semi-manually.
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2""0" cellspacing="0">
+        <tr>
+          <td>Nu</td>
+          <td>Minimum fraction of outliers in the training set
+            (training error). In this use case it is a valid assumption to have a
+            very low number of training errors (1%).</td>
+        </tr>
+        <tr>
+          <td>Gamma</td>
+          <td>Kernel band width: A smaller value
+            means a lower fraction of support vectors, a higher value means more support vectors. To many
+            support vectors can lead to over fitting.</td>
+        </tr>
+        <tr>
+          <td><img style="width: 24px; height: 24px;" alt="" title="estimate gamma" src="images/games-solve_24x24.png"></td>
+          <td>Estimate Gamma under the constraint that max. 20% of the
+            training samples are support vectors. The value of 20% can be adjusted
+            in the <b>"Preferences"</b> dialog of the application. Nu still has to be set
+            manually.
+          </td>
+        </tr>
+        <tr>
+          <td><img style="width: 24px; height: 24px;" alt="" title="add item" src="images/list-add_24x24.png"></td>
+          <td>Add items to the training set (annotate items as inlier).</td>
+        </tr>
+    </table>
+    </p>
+
+    <p>
+      <center>
+        <img style="width: 243px; height: 507px;" alt="" title="one class svm" src="images/one-class-svm.png">
+      </center>
+    </p>
+
+    <p>
+      <h2><a name="preprocess_raw_images"></a>Preprocess raw images</h2>
+    </p>
+
+    <p>
+      CellAnnotator&nbsp;is an interactive application. To increase
+      response time and prevent unnecessary computation of data some steps in
+      the pipeline are preprocessed such as segmentation, calculation of
+      bounding boxes, features or thumbnails. Preprocessing raw
+      image is a separate step.
+    </p>
+
+    <p>
+      <ul>
+        <li>Open Dialog "Preprocess image data" in the menu "<b>Data -&gt; Preprocess image data</b>":</li>
+      </ul>
+    <p>
+
+    <p>
+      <center>
+        <img style="width: 953px; height: 712px;" alt="" title="preprocess image data" src="images/preprocess-image-data.png">
+      </center>
+    </p>
+
+    <p>
+      <h3><a name="raw_image_data"></a><a name="support_image_formats"></a>Raw image data:</h3>
+    </p>
+
+    <p>
+      Currently CellAnnotator supports <a name="4D_zeiss-lsm"></a><b>4D Zeiss-lsm</b> image and <a name="4D_tiff_images"></a>4D tiff images.
+      4D means (x,y,z,c) i.e. <a name="z-stacks"></a>z-stacks and multiple color channels
+      are supported. Each color channel has to be one single gray value
+      image.
+      <b>CellAnnotator does not support RGB images!</b>
+
+      To keep things simple raw images have be located in one single
+      directory, the <b>Image Directory</b>, on the hard disk.
+      <span style="font-weight: bold; color: rgb(51, 204, 0);">No sub directories are scanned and there is not no special naming
+        convention for the image files.</span> The output file
+      or <a href="#data_file_formats"><b>data file</b></a>
+      is a hdf file that is optimized for fast reading and writing the
+      data. This supports the paradigm of interactivity.
+    </p>
+
+    <p>
+      <h3><a name="toggle_color_channels"></a>Enabling/disabling color channels</h3>
+    </p>
+
+    <p>
+      The color channels can be toggled by clicking on the check boxes. The
+      the color map can be changed to. Contrast sliders work similar
+      &nbsp;as those for the gallery viewer. Additionally there is
+      &nbsp;a <b>"Auto"</b>-button that cuts off 1% of the image histogram and the
+      buttons <b>"Min/Max"</b> and <b>"Reset"</b> are self explanatory.<br>
+      <br>
+      The screen shot above shows bounding boxes and outlines. Both can be
+      toggled by clicking the corresponding check box. Be aware that enabling
+      one of those options triggers segmentation of the current image.
+      Processing is fast for small images (e.g. 512x512 pixels) but
+      segmentation scales quadratically with images size, not mentioning the
+      feature calculation, which depends on the number of foreground objects.
+    </p>
+    <br>
+
+    <p>
+      <table style="background-color: rgb(192, 192, 192); width: 100%;" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td><span style="font-weight: bold;">HINT:</span><br>
+              It is good practice to use <b>size and intensity filters</b> to
+              reduce the number of foreground objects. Small objects (&lt;100 px²)
+              can be removed since the origin usually from noise and dim objects
+              caused by of focus cells. They have ragged outlines and lot of features
+              evaluate to NAN which make objects unpredictable.</td>
+          </tr>
+      </table>
+    </p>
+    <p>
+
+    <p>
+      <table style="width: 100%;" border="1" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Load on close</td>
+          <td> Open the data file and load items to the gallery view
+            after closing the dialog.</td>
+        </tr>
+        <tr>
+          <td>Close</td>
+          <td>Close the dialog.</td>
+        </tr>
+        <tr>
+          <td>Start</td>
+          <td>Start image preprocessing for all images.</td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      <h2><a name="segmentation"></a>Segmentation</h2>
+    </p>
+
+    <p>
+      Segmentation is based on a simple <b>Local Adaptive Threshold</b>
+      with Gaussian blurring filter as preprocessing step to reduce noise. Size and intensity
+      filters can be used to remove artefacts. The screen shot below shows the
+      &nbsp;setup dialog. <br>
+      There are three columns: <b>Channels, Segmentation, Features </b>and
+      there is one row for each color channel. &nbsp;The first row is
+      always for the primary segmentation i.e. the channel where the local adaptive threshold
+      is applied. All other channels segment only an expanded region
+      depending on the primary segmentation.
+    </p>
+
+    <p>
+      <center>
+        <img style="width: 748px; height: 478px;" alt="" title="Segmentation settings" src="images/segmentation.png">
+      </center>
+    </p>
+
+    <p>
+      <table style="background-color: rgb(192, 192, 192); width: 100%;" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td><span style="font-weight: bold;">HINT</span><br>To process only necessary color channels it is possible to <a href="#toggle_color_channels">enable
+              or disable</a> them. Disabled channels will not be saved to the
+            data file.</td>
+        </tr>
+      </table>
+    </p>
+
+
+    <p>
+      <h4><span style="font-weight: bold;"></span><a name="channels_primary_segmentation"></a>
+        Channels (primary segmentation)</h4>
+    <p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td><i>"Channels 1"</i></td>
+          <td>Select the color channel in the drop down menu. The list in the menu is updated automatically if
+            the image directory is changed.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>Gallery size</td>
+          <td>Size of the thumbnails (bounding boxes) around foreground objects. This value is fixed and
+            can't be changed later on. </td>
+        </tr>
+        <tr>
+          <td>Watershed</td>
+          <td>Enable/disable watershed segmentation.</td>
+        </tr>
+        <tr>
+          <td>Seeding size</td>
+          <td>Size parameter for finding seed for the watershed segmentation. Seeding is applying minimum and
+            maximum filters. This parameter is the the size of the filters. There is
+            only one seed within an area of radius seeding size. </td>
+        </tr>
+        <tr>
+          <td>Z Project</td>
+          <td>Standard method for z
+            slice selection. (select, minimum projection, mean and maximum projection)</td>
+        </tr>
+        <tr>
+          <td>Outline smoothing </td>
+          <td>Smoothes outlines of
+            foreground objects using a morphological closing operation followed by
+            an morphological opening. Dim out of focus cells have usually a ragged
+            outline causing a lot of features to be invalid. Smoothing outlines
+            helps to overcome this problem and increases classifier performance.
+            The parameter is the size of the structuring element of the
+            morphological operation. Negative values disable outline smoothing.</td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      <h4><a name="primary_Segmentation"></a>Primary Segmentation</h4>
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td>Min. contrast</td>
+          <td>Minimum contrast (or threshold) for local adaptive threshold segmentation.</td>
+        </tr>
+        <tr>
+          <td>Mean radius</td>
+          <td>Radius in pixels for the Gaussian blurring filter.</td>
+        </tr>
+        <tr>
+          <td>Window size</td>
+          <td>Window size used for local adaptive thresholding.</td>
+        </tr>
+        <tr>
+          <td>Remove border objects</td>
+          <td>Removes all foreground objects that touches the image boundary (border objects are artefacts)<br>
+          </td>
+        </tr>
+        <tr>
+          <td>Fill holes</td>
+          <td>Topologically close&nbsp;all foreground objects.</td>
+        </tr>
+        <tr>
+          <td>Intensity normalization</td>
+          <td>Renormalize input images from min/max (by default 0, 255) to unsigned 8 bit images. The range depends on the histogram and data type of the images.</td>
+        </tr>
+        <tr>
+          <td>Intensity filter</td>
+          <td>Remove objects outside the intensity range (min, max). A value of -1disables the border e.g. (10, -1) filters all objects with
+            a mean intensity lower than 10 (uint8 gray values).</td>
+        </tr>
+        <tr>
+          <td>Size filter</td>
+          <td>Remove foreground objects outside the range (min, max).
+            A value of &nbsp;-1 disables the border e.g. (100, -1) filters all
+            objects smaller than 100 px².</td>
+        </tr>
+      </table>
+    <p>
+
+    <p>
+      <h4><span style="font-weight: bold;"><a name="non_primary_channels"></a>
+          Non primary channels.</span></h4>
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td>Intensity Normalization</td>
+          <td>Renormalize input images from min/max (by default 0, 255) to unsigned 8
+            bit images. The range depends on the histogram and data type of the images</td>
+        </tr>
+        <tr>
+          <td>Expansion size</td>
+          <td>Distance between primary outline and expanded outline (any value from 0 to inf)</td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      Feature groups are based on the implementation of the <a href="http://cellcognition.org/">Cellcogniton</a>
+      project. Disabled feature groups will not be calculated, thus
+      preprocessing is faster.
+
+    <p>
+      <h3><a name="loadsave_settings"></a>Load/Save segmentation settings</h3>
+    </p>
+
+
+    <p>
+      Segmentation settings are automatically saved to the data file.
+      Additionally it is possible to save settings as xml file which can be
+      edited manually. Loading or reusing of settings is therefore possible either
+      from the <b>data file</b> or <b>from xml</b>.
+    </p>
+
+    <p>
+      <h2><a name="data_file_formats"></a>Data file formats:</h2>
+    </p>
+
+    <p>
+      The term "data file" which was used quite often above means either a hdf5 file, or a cellh5 file.
+    </p>
+
+    <p>
+      <ul>
+        <li><b>Hdf5</b> - CellAnnotator saves its data to hdf5 which is optimized structures for
+          fast IO. This supports the paradigm of interactivity of the application.
+          All data and settings which where used to produce the data sets and classifiers go into this file.</li>
+        <li><b>CellH5</b> - It is also possible to load data from cellh5 files and save
+          classifier data to a cellh5 file. Cellh5 data structures are not as per formant, but
+          store much larger data sets, and support data from screening plates (plate layout).
+          Further cellh5 supports saving of tracking and event data. The cellh5
+          navigation tool bar enables navigation and loading from
+          different plates, wells and sites. Future version will also enable
+          loading of event data, loading of multiple color channels and train merged channel classifiers.<br>
+        </li>
+      </ul>
+    </p>
+
+    <p>
+      <center>
+        <img style="width: 414px; height: 24px;" alt="" title="cellh5 navigation toolbar" src="images/cellh5navbar.png">
+      </center>
+    </p>
+
+  </body>
+</html>

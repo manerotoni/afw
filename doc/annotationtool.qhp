@@ -4,60 +4,63 @@
   <virtualFolder>html</virtualFolder>
   <filterSection>
     <toc>
-      <section title="CellAnnotator" ref="html/index.html">
-        <section title="Application_features" ref="html/index.html#applicaton_features"></section>
-        <section title="Getting started" ref="html/getting_started.html">
-          <section ref="html/getting_started.html#gui" title="Graphical User Interface"></section>
-          <section ref="html/getting_started.html#openfile" title="Open a data file"></section>
-          <section ref="html/getting_started.html#selectitems" title="Select items - working with the gallery viewer"></section>
-          <section ref="html/getting_started.html#quicksort" title="Sorting items (quick sort)"></section>
+      <section title="Application_features" ref="html/index.html#applicaton_features"></section>
+      <section title="Shortcuts" ref="html/shortcuts.html"></section>
+      <section title="Getting started" ref="html/getting_started.html">
+        <section ref="html/getting_started.html#gui" title="Graphical User Interface"></section>
+        <section ref="html/getting_started.html#openfile" title="Open a data file"></section>
+        <section ref="html/getting_started.html#selectitems" title="Select items - working with the gallery viewer"></section>
+        <section ref="html/getting_started.html#quicksort" title="Sorting items (quick sort)"></section>
+      </section>
+      <section title="User Manual" ref="html/manual.html">
+        <section ref="html/manual.html#open_a_data_file" title="Open a data file"></section>
+        <section ref="html/manual.html#sorting" title="Sorting">
+          <section ref="html/manual.html#throwsortanchor" title="Throw sort anchor"></section>
+          <section ref="html/manual.html#sort_algorithms" title="Sort Algorithms"></section>
+          <section ref="html/manual.html#meaning_of_class_label_indicators"
+                   title="Class label indicators"></section>
         </section>
-        <section title="Shortcuts" ref="html/shortcuts.html"></section>
-        <section title="User Manual" ref="html/manual.html">
-          <section ref="html/manual.html#open_a_data_file" title="Open a data file"></section>
-          <section ref="html/manual.html#sorting" title="Sorting">
-            <section ref="html/manual.html#throwsortanchor" title="Throw sort anchor"></section>
-            <section ref="html/manual.html#sort_algorithms" title="Sort Algorithms"></section>
-            <section ref="html/manual.html#meaning_of_class_label_indicators"
-                     title="Class label indicators"></section>
-          </section>
-          <section ref="html/manual.html#gallery_thumbnail_viewer" title="Gallery/thumbnail viewer">
-            <section ref="html/manual.html#select_items" title="Select items"></section>
-            <section ref="html/manual.html#multiple_color_mode" title="Multi color mode"></section>
-            <section ref="html/manual.html#view_toolbar" title="View toolbar"></section>
-            <section ref="html/manual.html#contrast_enhancement_for_graphics_view" title="Contrast Enhancement"></section>
-          </section>
-          <section ref="html/manual.html#classifier_training" title="Classifier training">
-            <section ref="html/manual.html#support_vector_classifier" title="Support vector classifier"></section>
-            <section
-                ref="html/manual.html#save_classifer_and_load_annotations"
-                title="Save a classifier"></section>
-            <section ref="html/manual.html#predict" title="Predict"></section>
-            <section ref="html/manual.html#cross_validation"
-                     title="Cross validation"></section>
-            <section ref="html/manual.html#grid_search" title="Grid search"></section>
-            <section ref="html/manual.html#confusion_matrix"
-                     title="Confusion matrix"></section>
-            <section ref="html/manual.html#one_class_svm"
-                     title="One class support vector machine"></section>
-          </section>
+        <section ref="html/manual.html#gallery_thumbnail_viewer" title="Gallery/thumbnail viewer">
+          <section ref="html/manual.html#select_items" title="Select items"></section>
+          <section ref="html/manual.html#multiple_color_mode" title="Multi color mode"></section>
+          <section ref="html/manual.html#view_toolbar" title="View toolbar"></section>
+          <section ref="html/manual.html#contrast_enhancement_for_graphics_view" title="Contrast Enhancement"></section>
+        </section>
+        <section ref="html/manual.html#classifier_training" title="Classifier training">
+          <section ref="html/manual.html#support_vector_classifier" title="Support vector classifier"></section>
+          <section
+              ref="html/manual.html#save_classifer_and_load_annotations"
+              title="Save a classifier"></section>
+          <section ref="html/manual.html#predict" title="Predict"></section>
+          <section ref="html/manual.html#cross_validation"
+                   title="Cross validation"></section>
+          <section ref="html/manual.html#grid_search" title="Grid search"></section>
+          <section ref="html/manual.html#confusion_matrix"
+                   title="Confusion matrix"></section>
+          <section ref="html/manual.html#one_class_svm"
+                   title="One class support vector machine"></section>
+        </section>
 
-          <section  ref="html/manual.html#preprocess_raw_images" title="Preprocessing image data">
-            <section ref="html/manual.html#raw_image_data" title="Image formats"></section>
-            <section ref="html/manual.html#toggle_color_channels" title="Enabling/disabling color channels"></section>
-            <section  ref="html/manual.html#segmentation" title="Segmentation">
-              <section ref="html/manual.html#channels_primary_segmentation" title="Choose channel for primary segementation"></section>
-              <section ref="html/manual.html#primary_Segmentation" title="Primary segmentation"></section>
-              <section ref="html/manual.html#non_primary_channels" title="Non primary segmentation"></section>
-              <section ref="html/manual.html#loadsave_settings" title="Load/Save segmentation settings"></section>
-            </section>
+        <section  ref="html/manual.html#preprocess_raw_images" title="Preprocessing image data">
+          <section ref="html/manual.html#raw_image_data" title="Image formats"></section>
+          <section ref="html/manual.html#toggle_color_channels" title="Enabling/disabling color channels"></section>
+          <section  ref="html/manual.html#segmentation" title="Segmentation">
+            <section ref="html/manual.html#channels_primary_segmentation" title="Choose channel for primary segementation"></section>
+            <section ref="html/manual.html#primary_Segmentation" title="Primary segmentation"></section>
+            <section ref="html/manual.html#non_primary_channels" title="Non primary segmentation"></section>
+            <section ref="html/manual.html#loadsave_settings" title="Load/Save segmentation settings"></section>
           </section>
         </section>
         <section ref="html/manual.html#data_file_formats" title="Data file formats"></section>
       </section>
+
     </toc>
 
     <keywords>
+      <keyword name="Shortcuts" ref="html/shortcuts.html"/>
+      <keyword name="Overview" ref="html/index.html"/>
+      <keyword name="Manual" ref="html/manual.html"/>
+      <keyword name="Getting started" ref="html/getting_started.html"/>
       <keyword name="GUI" ref="html/getting_started.html#gui"/>
       <keyword name="Open data file" ref="html/getting_started.html#openfile"/>
       <keyword name="Select items" ref="html/getting_started.html#selectitems"/>
