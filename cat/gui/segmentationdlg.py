@@ -100,11 +100,11 @@ class SegmentationDialog(QtGui.QWidget):
         self.zsliceMethod.addItems(ZProject.names())
         self.zsliceMethod.currentIndexChanged.connect(
             self.onZSliceMethodChanged)
-        self.zslice.valueChanged.connect(self.emitParamsChanged)
+        #self.zslice.valueChanged.connect(self.emitParamsChanged)
         self.zslice.valueChanged.connect(self.emitImageUpdate)
 
-        self.outlineSmoothing.valueChanged.connect(
-            self.emitParamsChanged)
+        #self.outlineSmoothing.valueChanged.connect(
+        #    self.emitParamsChanged)
 
     def onZSliceMethodChanged(self, index):
 

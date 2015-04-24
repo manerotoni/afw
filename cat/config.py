@@ -80,7 +80,8 @@ class AtConfig(object):
         value = settings.value('compression_opts')
         if value.isValid():
             try:
-                self.compression_opts = eval(value.toPyObject())
+                # is not necessarily a string
+                self.compression_opts = eval(value.toString())
             except NameError:
                 self.compression_opts = value.toPyObject()
 
