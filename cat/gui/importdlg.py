@@ -185,7 +185,10 @@ class ImportDialog(QtGui.QDialog):
         self.cbar.setImages(images, list(proc.iterprops()))
 
     def showObjects(self):
-        if not (self.contoursCb.isChecked() or self.showBBoxes.isChecked()):
+
+        if not (self.contoursCb.isChecked() or \
+                    self.showBBoxes.isChecked() or not \
+                    self._files):
             return
 
         index = self.slider.value()
