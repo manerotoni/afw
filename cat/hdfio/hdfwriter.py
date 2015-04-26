@@ -160,11 +160,7 @@ class HdfWriter(object):
             for i, cnt in enumerate(contours):
                 dset[i, :] = cnt
 
-
     def flush(self):
-
-        from PyQt4.QtCore import pyqtRemoveInputHook; pyqtRemoveInputHook()
-        import pdb; pdb.set_trace()
 
         # hdf5 allows only 64kb of header metadata
         try:

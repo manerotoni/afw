@@ -15,7 +15,7 @@ from os.path import join, dirname
 from PyQt4 import uic
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QApplication, QCursor
+from PyQt4.QtGui import QApplication, QCursor, QMessageBox
 
 from cat.classifiers.classifiers import Classifier
 from cat.gui.saveclassifierdlg import SaveClassifierDialog

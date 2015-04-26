@@ -13,6 +13,7 @@ import warnings
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
+from cat.config import AtConfig
 from cat.classifiers.itemclass import UnClassified
 from cat.gui.painting import AtPainter
 
@@ -65,8 +66,12 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         self.qimages = list(item.iterQImages())
         self._is_training_sample = False
 
+        ccolor = AtConfig().contours_complementary_color
+
         if item.contour is not None:
             for contour, color in item.iterContours():
+                if ccolor:
+                    color = AtPainter.complementaryColor(color)
                 self.setContour(contour, color)
 
         self.setFlag(self.ItemIsSelectable)
