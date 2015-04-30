@@ -165,7 +165,7 @@ class AtContrastSliderWidget(QtGui.QWidget):
         self.minMaxBtn.clicked.connect(self.settings.setImageToMinMax)
         self.resetBtn.clicked.connect(self.settings.reset)
         self.autoBtn.clicked.connect(self.settings.setAuto)
-        self.autoBtn.setToolTip("cuts of 1% of the histogram")
+        self.autoBtn.setToolTip("Cuts of 1% of the histogram")
 
         self.minimum.valueChanged.connect(self.settings.setMinimum)
         self.maximum.valueChanged.connect(self.settings.setMaximum)
@@ -213,7 +213,7 @@ class AtContrastSliderWidget(QtGui.QWidget):
 
     def valuesToolTip(self, dummy=None):
         # is connected to slider.valueChanged which emits an integer value
-        msg = ("min: %d\nmax: %d\ncontrast: %d\nbrightness: %d"
+        msg = ("Min: %d\nMax: %d\nContrast: %d\nBrightness: %d"
                %(self.settings.minimum, self.settings.maximum,
                  self.settings.contrast, self.settings.brightness))
 
