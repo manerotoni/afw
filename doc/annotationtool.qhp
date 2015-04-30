@@ -37,6 +37,8 @@
           <section ref="html/manual.html#grid_search" title="Grid search"></section>
           <section ref="html/manual.html#confusion_matrix"
                    title="Confusion matrix"></section>
+          <section ref="html/manual.html#mpl_navbar"
+                   title="Matplotlib Navigation Toolbar"></section>
           <section ref="html/manual.html#one_class_svm"
                    title="One class support vector machine"></section>
         </section>
@@ -51,9 +53,12 @@
             <section ref="html/manual.html#loadsave_settings" title="Load/Save segmentation settings"></section>
           </section>
         </section>
+        <section  ref="html/manual.html#preferences" title="Preferences">
+          <section ref="html/manual.html#preferences_general" title="Preferences General"></section>
+          <section ref="html/manual.html#preferences_io" title="Preferences Data IO"></section>
+        </section>
         <section ref="html/manual.html#data_file_formats" title="Data file formats"></section>
       </section>
-
     </toc>
 
     <keywords>
@@ -99,6 +104,10 @@
       <keyword name="Non primary channel" ref="html/manual.html#non_primary_channels"/>
       <keyword name="Load/save segmentation settings" ref="html/manual.html#loadsave_settings"/>
       <keyword name="Data file formats" ref="html/manual.html#data_file_formats"/>
+      <keyword name="Matplotlib Navigation Toolbar" ref="html/manual.html#mpl_navbar"/>
+      <keyword name="Preferences" ref="html/manual.html#preferences"/>
+      <keyword name="Preferences General" ref="html/manual.html#preferences_general"/>
+      <keyword name="Preferences Data IO" ref="html/manual.html#preferences_io"/>
     </keywords>
     <files>
       <file>html/css/help.css</file>
@@ -157,6 +166,9 @@
       <file>html/images/sorting-dock.png</file>
       <file>html/images/sorttoolbar.png</file>
       <file>html/images/viewbar.png</file>
+      <file>html/images/navigationtoolbar2.png</file>
+      <file>html/images/preferences-general.png</file>
+      <file>html/images/preferences-io.png</file>
     </files>
   </filterSection>
 </QtHelpProject>

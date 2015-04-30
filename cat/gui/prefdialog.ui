@@ -89,7 +89,7 @@
      <item>
       <widget class="QStackedWidget" name="stack">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="general">
         <layout class="QVBoxLayout" name="verticalLayout">
@@ -102,7 +102,7 @@
             <item>
              <widget class="QCheckBox" name="complementary_colors">
               <property name="text">
-               <string>use complementary colors for outlines</string>
+               <string>Use complementary colors for outlines</string>
               </property>
              </widget>
             </item>
