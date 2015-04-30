@@ -84,8 +84,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         return "%s-%s" %(self.frame, self.objid)
 
     def hoverEnterEvent(self, event):
-        txt = ("item: %d\n"
-               "class: %s") %(self.index, self.class_.name)
+        txt = ("%s") %(self.class_.name)
         QtGui.QToolTip.showText(QtGui.QCursor.pos(), txt)
 
     def _classRect(self):
@@ -241,9 +240,6 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
             self._mask.show()
         else:
             self._mask.hide()
-
-        # if toggle_contours:
-        #         self.toggleContours(not state)
 
         self.setSelected(is_selected)
 
