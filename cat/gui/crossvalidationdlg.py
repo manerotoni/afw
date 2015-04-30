@@ -11,6 +11,7 @@ __licence__ = 'GPL'
 
 from os.path import splitext
 import numpy as np
+import traceback
 from multiprocessing import cpu_count
 from matplotlib.figure import Figure
 from matplotlib import cm
@@ -176,7 +177,8 @@ class CrossValidationDialog(QtGui.QWidget):
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.gridSearch()
         except Exception as e:
-            QMessageBox.warning(self, "Waarning", str(e))
+            traceback.print_exc()
+            QMessageBox.warning(self, "Warning", str(e))
         finally:
             QApplication.restoreOverrideCursor()
 
@@ -191,6 +193,11 @@ class CrossValidationDialog(QtGui.QWidget):
         cv = StratifiedKFold(y=self.labels, n_folds=self.kfold)
         grid = GridSearchCV(SVC(), param_grid=param_grid, cv=cv,
                             n_jobs=cpu_count()-1)
+
+        if np.isnan(self.features).any():
+            raise RuntimeError("There is a NAN in the feature table. "
+                               "I can't proceed, sorry... "
+                               "Rerun preprocessing and remove weird cells")
 
         grid.fit(self.features, self.labels)
         est = grid.best_estimator_
