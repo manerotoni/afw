@@ -74,7 +74,8 @@ class AtConfig(object):
         settings.beginGroup('Preferences')
 
         value = settings.value('compression', type=str)
-        self.compression = value
+        if value is not None:
+            self.compression = value
 
         value = settings.value('compression_opts')
         if value:
@@ -85,18 +86,23 @@ class AtConfig(object):
                 self.compression_opts = value
 
         value = settings.value('max_sv_fraction', type=float)
-        self.max_sv_fraction = value
+        if value is not None:
+            self.max_sv_fraction = value
 
         value = settings.value('interactive_item_limit', type=int)
-        self.interactive_item_limit = value
+        if value is not None:
+            self.interactive_item_limit = value
 
         value = settings.value('default_sorter', type=str)
-        self.default_sorter = value
+        if value is not None:
+            self.default_sorter = value
 
         value = settings.value('default_feature_group', type=str)
-        self.default_feature_group = value
+        if value is not None:
+            self.default_feature_group = value
 
         value = settings.value('contours_complementary_color', type=bool)
-        self.contours_complementary_color = value
+        if value is not None:
+            self.contours_complementary_color = value
 
         settings.endGroup()

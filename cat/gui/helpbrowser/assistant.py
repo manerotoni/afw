@@ -149,10 +149,10 @@ class AtAssistant(QtWidgets.QMainWindow):
         settings.beginGroup('HelpBrowser')
 
         geometry = settings.value('geometry')
-        if geometry:
+        if geometry is not None:
             self.restoreGeometry(geometry)
         state = settings.value('state')
-        if state:
+        if state is not None:
             self.restoreState(state)
         settings.endGroup()
 

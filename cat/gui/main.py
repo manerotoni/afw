@@ -67,7 +67,6 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.loader = AtLoader()
         self._lastdir = expanduser("~")
 
-
         try:
             self.assistant = AtAssistant(MANUAL)
             self.assistant.hide()
@@ -116,7 +115,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
         self.loader.finished.connect(self.onLoadingFinished)
 
-        # self._restoreSettings()
+        self._restoreSettings()
         self.show()
         if file_ is not None:
             self.loader.openFile(file_)
