@@ -41,7 +41,7 @@ class MouseWheelView(QtWidgets.QGraphicsView):
     def wheelEvent(self, event):
 
         if event.modifiers() == QtCore.Qt.ShiftModifier:
-            if event.angleDelta().x() > 0:
+            if event.angleDelta().y() > 0:
                 factor = 1.1
             else:
                 factor = 0.9
@@ -99,28 +99,25 @@ class AtGraphicsView(MouseWheelView):
     def createContextMenu(self):
         self.context_menu = QtWidgets.QMenu(self)
         self.context_menu.setTearOffEnabled(True)
-        self.context_menu.addAction(self.actionReorder)
+        self.context_menu.addAction(self.actionRefresh)
         self.context_menu.addAction(self.actionSelectAll)
         self.context_menu.addAction(self.actionInvertSelection)
         self.context_menu.addSeparator()
         self.context_menu.addAction(self.actionThrowAnchor)
 
     def createActions(self):
-        self.actionReorder = QtWidgets.QAction(
-            "&refresh", self, triggered=lambda: self.reorder(True))
-        self.actionSelectAll = QtWidgets.QAction("select &all", self,
+
+        self.actionRefresh = QtWidgets.QAction(
+            "&Refresh", self, triggered=lambda: self.reorder(True))
+        self.actionSelectAll = QtWidgets.QAction("Select &all", self,
                                              triggered=self.scene().selectAll)
 
         self.actionInvertSelection = QtWidgets.QAction(
-            "&invert selection", self, triggered=self.scene().invertSelection)
+            "&Invert Selection", self, triggered=self.scene().invertSelection)
 
         self.actionThrowAnchor = QtWidgets.QAction(
-            "&throw sort anchor", self,
+            "&Throw Sort Anchor", self,
             triggered=self.parent().onThrowAnchor)
-
-        self.actionAddSorter = QtWidgets.QAction(
-            "add to &sorter panel", self,
-            triggered=self.parent().addToSortPanel)
 
     def toggleClassIndicators(self, state):
         self._show_classes = state
@@ -130,6 +127,10 @@ class AtGraphicsView(MouseWheelView):
     def toggleMasks(self, state):
         for item in self.items:
             item.toggleMask(state)
+
+    def toggleOutlines(self, state):
+        for item in self.items:
+            item.toggleOutline(state)
 
     def selectedItems(self):
         return self.scene().selectedItems()

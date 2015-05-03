@@ -33,6 +33,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
     ClassColumn = 0
     ColorColumn = 1
     ButtonColumn = 2
+    SampleCountColumn = 3
 
     classesChanged = QtCore.pyqtSignal(dict)
 
@@ -41,11 +42,13 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     def __init__(self, *args, **kw):
         super(AtMultiClassSvmItemModel, self).__init__(*args, **kw)
+        self.insertColumns(2, 2)
         self._item_classnames = dict()
         self._color_cycle = cycle(self._colors)
         self._reassign = False
         # only top level items are editable
         self.dataChanged.connect(self.onDataChanged)
+        self._setHeader()
 
     def dropMimeData(self, mimedata, action, row, column, parentIndex):
 
@@ -73,10 +76,10 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         return ret
 
     def _setHeader(self):
-        # default columns
-        self.setHeaderData(0, Qt.Horizontal, "class")
-        self.setHeaderData(1, Qt.Horizontal, "color")
-        self.setHeaderData(2, Qt.Horizontal, "button")
+        self.setHeaderData(0, Qt.Horizontal, "Class")
+        self.setHeaderData(1, Qt.Horizontal, "Color")
+        self.setHeaderData(2, Qt.Horizontal, "  +  ")
+        self.setHeaderData(3, Qt.Horizontal, " # ")
 
     def _brushFromColor(self, color):
         color = QtGui.QColor(color)
@@ -132,6 +135,10 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
     def onDataChanged(self, topleft, bottomright):
         self.emitClassesChanged()
 
+    def resizeAllColumnsToContents(self):
+        for i in xrange(self.columnCount()):
+            self.parent().resizeColumnToContents(i)
+
     def currentClasses(self):
         """Construct a class defintion from the model by iteration over
         the 'toplevel items'."""
@@ -172,6 +179,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         color_item = QtGui.QStandardItem(color)
         color_item.setBackground(self._brushFromColor(color))
         button_item = QtGui.QStandardItem()
+        count_item = QtGui.QStandardItem()
+        count_item.setData(QtCore.QVariant(0), Qt.DisplayRole)
 
         # XXX refactor this to a item factory
         name_item.setDragEnabled(True)
@@ -184,11 +193,12 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         name_item.setEditable(True)
         color_item.setEditable(True)
 
-        self.appendRow([name_item, color_item, button_item])
+        self.appendRow([name_item, color_item, button_item, count_item])
 
         self.parent().openPersistentEditor(
             self.index(self.rowCount()-1, self.ButtonColumn))
 
+        self.resizeAllColumnsToContents()
         self.layoutChanged.emit()
         self.emitClassesChanged()
 
@@ -227,6 +237,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             childs = self.prepareRowItems(item)
             class_item.appendRow(childs)
 
+
         elif self._reassign:
             old_class = self._item_classnames[item.hash]
             oclass_item = self.findClassItems(old_class)
@@ -236,9 +247,15 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             class_item = self.findClassItems(class_name)
             class_item.appendRow(childs)
             self._item_classnames[item.hash] = class_name
+
         elif class_name != self._item_classnames[item.hash]:
             raise DoubleAnnotationError("Item %d already annotated as %s"
                                         %(item.index, class_name))
+
+    def updateCounts(self, row):
+        index = self.index(row, self.SampleCountColumn)
+        count = self.item(row, 0).rowCount()
+        self.setData(index, QtCore.QVariant(count), Qt.DisplayRole)
 
     # removeAnnoations
     def removeItems(self, indices):
@@ -259,7 +276,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
     @property
     def labels(self):
 
-        all_labels = np.array([])
+        all_labels = np.array([], dtype=int)
         nfeatures = self.items[0].features.size
         classes = self.currentClasses()
 
@@ -284,16 +301,17 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
         sample_info = None
 
         for label, class_ in classes.iteritems():
+
             parent = self.item(label, 0)
             nitems = parent.rowCount()
             sinfo = np.empty((nitems, ), dtype=dt)
 
             for i, item in enumerate(self.iterItems(parent)):
                 sinfo[i] = np.array((item.index, item.path), dtype=dt)
-            try:
-                sample_info = np.vstack((sample_info, sinfo))
-            except ValueError:
+            if sample_info is None:
                 sample_info = sinfo
+            else:
+                sample_info = np.hstack((sample_info, sinfo))
 
         return sample_info
 

@@ -15,6 +15,7 @@ from os.path import isfile, isdir, basename
 from os.path import splitext, expanduser
 
 from PyQt5 import uic
+from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFileDialog
@@ -28,6 +29,8 @@ from cat.segmentation.multicolor import LsmProcessor
 
 
 class ImportDialog(QtWidgets.QDialog):
+
+    loadData = QtCore.pyqtSignal(str)
 
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
@@ -51,12 +54,14 @@ class ImportDialog(QtWidgets.QDialog):
                                     Qt.DirectConnection)
         self.cbar.newContourImage.connect(self.viewer.contourImage)
 
-        self.outputBtn.clicked.connect(self.onOpenOutFile)
-        self.inputBtn.clicked.connect(self.onOpenInputDir)
+        self.dataFileBtn.clicked.connect(self.onOpenOutFile)
+        self.imageDirBtn.clicked.connect(self.onOpenImageDir)
         self.startBtn.clicked.connect(self.raw2hdf)
         self.closeBtn.clicked.connect(self.close)
         self.closeBtn.clicked.connect(self.cbar.clear)
         self.segmentationBtn.clicked.connect(self.onSegmentationBtn)
+
+        self.slider.newValue.connect(self.showObjects)
 
         self.slider.valueChanged.connect(self.showImage)
         self.slider.sliderReleased.connect(self.showObjects)
@@ -66,6 +71,7 @@ class ImportDialog(QtWidgets.QDialog):
         self.showBBoxes.stateChanged.connect(self.showObjects)
         self.segdlg.paramsChanged.connect(self.showObjects)
         self.segdlg.refreshBtn.clicked.connect(self.showObjects)
+        self.segdlg.imageUpdate.connect(self.showImage)
         self.segdlg.activateChannels.connect(self.cbar.activateChannels)
         self.segdlg.changeColor.connect(self.cbar.setColor)
 
@@ -75,6 +81,12 @@ class ImportDialog(QtWidgets.QDialog):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_F5:
             self.showObjects()
+
+    def close(self):
+        super(ImportDialog, self).close()
+        ofile = self.dataFile.text()
+        if self.loadOnClose.isChecked() and isfile(ofile):
+            self.loadData.emit(ofile)
 
     def onNextBtn(self):
         self.slider.setValue(self.slider.value()+1)
@@ -103,7 +115,7 @@ class ImportDialog(QtWidgets.QDialog):
 
     def onOpenOutFile(self):
 
-        ofile = self.outputFile.text()
+        ofile = self.dataFile.text()
         if isfile(ofile):
             path = basename(ofile)
         else:
@@ -111,15 +123,15 @@ class ImportDialog(QtWidgets.QDialog):
 
         ofile = QFileDialog.getSaveFileName(self, "save to hdf file",
                                             path,
-                                            "hdf (*.hdf *.h5)")
-        self.outputFile.setText(ofile)
+                                            "hdf (*.hdf *.h5)")[0]
+        self.dataFile.setText(ofile)
 
-    def onOpenInputDir(self):
+    def onOpenImageDir(self):
         self.cbar.clearContours()
         self.viewer.clearRects()
         self.viewer.clearPolygons()
 
-        idir = self.inputDir.text()
+        idir = self.imageDir.text()
         if isdir(idir):
             path = basename(idir)
         else:
@@ -127,15 +139,15 @@ class ImportDialog(QtWidgets.QDialog):
 
         # TODO use getOpenFileNames instead
         idir = QFileDialog.getExistingDirectory(self,
-                                                "select output directory",
+                                                "Select an image directory",
                                                 path)
         # cancel button
         if not idir:
             return
 
-        self.inputDir.setText(idir)
-        pattern1 = self.inputDir.text() + "/*.lsm"
-        pattern2 = self.inputDir.text() + "/*.tif"
+        self.imageDir.setText(idir)
+        pattern1 = self.imageDir.text() + "/*.lsm"
+        pattern2 = self.imageDir.text() + "/*.tif"
 
         self._files = glob.glob(pattern1) + glob.glob(pattern2)
 
@@ -146,7 +158,9 @@ class ImportDialog(QtWidgets.QDialog):
         self._files.sort()
         self.dirinfo.setText("%d images found" %len(self._files))
 
-        proc = LsmProcessor(self._files[0])
+        proc = LsmProcessor(self._files[0],
+                            self.segdlg.segmentationParams(),
+                            self.cbar.checkedChannels())
         self.metadata = proc.metadata
         self.metadata.n_images = len(self._files)
         images = list(proc.iterQImages())
@@ -154,13 +168,16 @@ class ImportDialog(QtWidgets.QDialog):
         self.cbar.setImages(images, list(proc.iterprops()))
 
         self.segdlg.setRegions(self.cbar.allChannels())
+        self.segdlg.setMaxZSlice(self.metadata.n_zslices-1)
         self.slider.setRange(0, self.metadata.n_images-1)
         self.slider.setValue(0)
         self.showObjects()
 
     def showImage(self, index=0):
         try:
-            proc = LsmProcessor(self._files[index])
+            proc = LsmProcessor(self._files[index],
+                                self.segdlg.segmentationParams(),
+                                self.cbar.checkedChannels())
         except IndexError:
             return
         self.viewer.clearPolygons()
@@ -169,17 +186,21 @@ class ImportDialog(QtWidgets.QDialog):
         self.cbar.setImages(images, list(proc.iterprops()))
 
     def showObjects(self):
-        if not (self.contoursCb.isChecked() or self.showBBoxes.isChecked()):
+
+        if not (self.contoursCb.isChecked() or \
+                    self.showBBoxes.isChecked() or not \
+                    self._files):
             return
 
         index = self.slider.value()
         try:
-            mp = LsmProcessor(self._files[index])
+            mp = LsmProcessor(self._files[index],
+                              self.segdlg.segmentationParams(),
+                              self.cbar.checkedChannels())
             # first channel for primary segementation
-            mp.segmentation(self.segdlg.segmentationParams(),
-                        self.cbar.checkedChannels())
+            mp.segmentation()
         except Exception as e:
-            QMessageBox.critical(self, "Error", str(e))
+            QMessageBox.critical(self, "Error", "%s:%s"  %(type(e), str(e)))
         finally:
             if not mp.objects:
                 return
@@ -193,12 +214,12 @@ class ImportDialog(QtWidgets.QDialog):
                                          isize=self.metadata.size)
 
     def onError(self, exc):
-        self.startBtn.setText("start")
+        self.startBtn.setText("Start")
         QMessageBox.critical(self, "Error", str(exc))
 
     def onFinished(self):
         self.raise_()
-        self.startBtn.setText("start")
+        self.startBtn.setText("Start")
         QMessageBox.information(self, "finished", "training set saved")
 
     def showSlider(self):
@@ -212,7 +233,7 @@ class ImportDialog(QtWidgets.QDialog):
     def raw2hdf(self):
 
         if self.thread.isRunning():
-            self.startBtn.setText("start")
+            self.startBtn.setText("Start")
             self.thread.worker.abort()
         else:
             self.viewer.clearPolygons()
@@ -221,7 +242,7 @@ class ImportDialog(QtWidgets.QDialog):
             try:
                 worker = AtImporter(self._files,
                                     self.metadata,
-                                    self.outputFile.text(),
+                                    self.dataFile.text(),
                                     self.cbar.checkedChannels(),
                                     self.cbar.colors(),
                                     self.segdlg.segmentationParams(),
@@ -238,4 +259,4 @@ class ImportDialog(QtWidgets.QDialog):
             worker.contourImage.connect(self.cbar.contourImage,
                                         Qt.QueuedConnection)
             self.thread.start(worker)
-            self.startBtn.setText("abort")
+            self.startBtn.setText("Abort")

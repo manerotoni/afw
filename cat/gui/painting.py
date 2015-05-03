@@ -73,6 +73,6 @@ class AtPainter(object):
         b = 255 - color.blue()
 
         if r == g == b:
-            return QtGui.QColor(255, 255, 255)
+            return QtGui.QColor(255, 255, 0)
         else:
             return QtGui.QColor(r, g, b)

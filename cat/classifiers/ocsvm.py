@@ -27,7 +27,6 @@ from .classifiers import Classifier, ClfWriter, ClfDataModel
 
 class OcSvmWriter(ClfWriter):
 
-
     def __init__(self, name, file_, description=None, remove_existing=False):
         super(OcSvmWriter, self).__init__(file_)
         self.dmodel = ClfDataModel(name)
@@ -44,7 +43,7 @@ class OcSvmWriter(ClfWriter):
             raise HdfError("Classifer with name %s exists already"
                            %name + str(e))
 
-        grp.attrs[self.dmodel.NAME] = "one class support vector machine"
+        grp.attrs[self.dmodel.NAME] = OneClassSvm.name
         grp.attrs[self.dmodel.LIB] = self.dmodel.OneClassSvm
         grp.attrs[self.dmodel.VERSION] = sklearn.__version__
 
@@ -89,15 +88,29 @@ class OcSvmParameterWidget(QtWidgets.QFrame):
         self.treeview.activated.connect(parent.onActivated)
         self.treeview.setModel(AtOneClassSvmItemModel())
         self.treeview.setSelectionMode(self.treeview.ContiguousSelection)
+        self.treeview.setSortingEnabled(True)
+
+        self.counter = QtWidgets.QLabel("---", self)
 
         gbox.addWidget(QtWidgets.QLabel("Nu", self.nu), 0, 0)
         gbox.addWidget(self.nu, 0, 1)
+
         gbox.addWidget(QtWidgets.QLabel("Gamma", self.gamma), 1, 0)
         gbox.addWidget(self.gamma, 1, 1)
+        gbox.addWidget(self.counter, 2, 1)
         gbox.addWidget(self.estBtn, 1, 2)
         gbox.addWidget(self.addBtn, 2, 2)
-        gbox.addWidget(QtWidgets.QLabel("add items"), 2, 0)
+        gbox.addWidget(QtWidgets.QLabel("Item count:"), 2, 0)
         gbox.addWidget(self.treeview, 3, 0, 2, 0)
+
+        parent.itemCountChanged.connect(self.updateCounter)
+
+    def updateCounter(self):
+        counts = len(self.treeview.model().items)
+        if counts == 0:
+            self.counter.setText("---")
+        else:
+            self.counter.setText("%d" %counts)
 
 
 class OneClassSvm(Classifier):

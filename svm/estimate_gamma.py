@@ -73,5 +73,8 @@ if __name__ == "__main__":
 
     # ax.semilogx()
     ax.grid()
+    ax.set_xlabel("gamma")
+    ax.set_ylabel("fraction of support vectors")
+    ax.axhline(0.2, lw=2, ls="--")
     # ax.legend(frameon=False)
     plt.show()

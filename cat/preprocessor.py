@@ -18,32 +18,32 @@ class PreProcessor(object):
     be an integer or a list of integers.
     """
 
-    def __init__(self, data, index=None, pca=False):
+    def __init__(self, data, index=None, pca=False, min_std=10e-9):
 
         self.data = data
         self._pca = None
 
+        self._zs = ZScore(data, replace_inf=True)
+        data = self._zs.normalize(data)
+
         # to remove columns that contaim nan's and have zero variance
-        mask_nan = np.invert(np.isnan(data.sum(axis=0)))* \
-                   (data.std(axis=0) > 0.0)
+        mask_nan = np.invert(np.isnan(data.sum(axis=0)))
         self._mask = np.ones(mask_nan.shape).astype(bool)
 
         if index is not None:
             self._mask[:] = False
             self._mask[index] = True
 
-        self._mask*=mask_nan
-
+        self._mask *= mask_nan
 
         data = self.filter(data)
-        self._zs = ZScore(data)
 
         if pca:
-            data1 = self.normalize(data)
-            self._pca = PCA(data1, minfrac=0.05)
-            self.traindata = self._pca.project(data1)
+            # data1 = data self.normalize(data)
+            self._pca = PCA(data, minfrac=0.05)
+            self.traindata = self._pca.project(data)
         else:
-            self.traindata = self.normalize(data)
+            self.traindata = data #self.normalize(data)
 
     @property
     def std(self):
@@ -72,7 +72,7 @@ class PreProcessor(object):
         return data[:, self._mask]
 
     def __call__(self, data):
-        data1 = self.normalize(self.filter(data))
+        data1 = self.filter(self.normalize(data))
         if self._pca is None:
             return data1
         else:

@@ -55,7 +55,8 @@ class NavToolBar(AtToolBar):
 
     @property
     def coordinate(self):
-        return Ch5Coord(self.plate.currentText(),
+        return Ch5Coord(Ch5Coord.SAMPLE,
+                        self.plate.currentText(),
                         self.well.currentText(),
                         self.site.currentText(),
                         self.region.currentText())
@@ -96,6 +97,8 @@ class ViewToolBar(AtToolBar):
 
         self.classification = QtWidgets.QCheckBox("Classifcation", self)
         self.masking = QtWidgets.QCheckBox("Mask", self)
+        self.outline = QtWidgets.QCheckBox("Outline", self)
+        self.outline.setCheckState(QtCore.Qt.Checked)
 
         self.zoom =  QtWidgets.QComboBox(self)
         self.zoom.addItem("100%", QtCore.QVariant(1.0))
@@ -107,22 +110,24 @@ class ViewToolBar(AtToolBar):
         self.zoom.addItem("200%", QtCore.QVariant(2.0))
         self.zoom.addItem("400%", QtCore.QVariant(4.0))
         self.zoom.currentIndexChanged.connect(self.onIndexChanged)
-        self.reloadBtn = QtWidgets.QPushButton("load", self)
+
+        self.reloadBtn = QtWidgets.QPushButton("Load", self)
 
         icon = QtGui.QIcon(":/oxygen/document-open-folder.png")
         self.actionOpen = QtWidgets.QAction(
-            icon, "open", self)
+            icon, "Open Data File", self)
         self.addAction(self.actionOpen)
         self.addWidget(self.reloadBtn)
         self.addSeparator()
-        self.addWidget(QtWidgets.QLabel("gallery size:", self))
+        self.addWidget(QtWidgets.QLabel("Gallery Size:", self))
         self.addWidget(self.galSize)
-        self.addWidget(QtWidgets.QLabel("number items:", self))
+        self.addWidget(QtWidgets.QLabel("Number Items:", self))
         self.addWidget(self.nItems)
         self.addSeparator()
         self.addWidget(self.zoom)
         self.addWidget(self.classification)
         self.addWidget(self.masking)
+        self.addWidget(self.outline)
 
     def updateToolbar(self, props):
 

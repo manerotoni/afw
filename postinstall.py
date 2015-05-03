@@ -24,15 +24,15 @@ def install():
         os.mkdir(start_menu)
         directory_created(start_menu)
 
-    link = os.path.join(start_menu, 'AnnotationTool.lnk')
-    command = os.path.join(sys.prefix, 'Scripts', 'AnnotationTool.py')
-    icon = os.path.join(sys.prefix, 'share', 'AnnotationTool', 'annotationtool.ico')
+    link = os.path.join(start_menu, 'CellAnnotator.lnk')
+    command = os.path.join(sys.prefix, 'Scripts', 'CellAnnotator.py')
+    icon = os.path.join(sys.prefix, 'share', 'Cellannotator', 'annotationtool.ico')
     workdir = "%HOMEDRIVE%%HOMEPATH%"
-    mkshortcut(pythonw, 'AnnotationTool', link, command, workdir, icon)
+    mkshortcut(pythonw, 'CellAnnotator', link, command, workdir, icon)
 
 def remove():
     start_menu = get_special_folder_path('CSIDL_COMMON_PROGRAMS')
-    link = os.path.join(start_menu, 'AnnotationTool.lnk')
+    link = os.path.join(start_menu, 'Cellannotator.lnk')
     os.remove(link)
 
 if sys.argv[1] == '-install':
@@ -40,7 +40,7 @@ if sys.argv[1] == '-install':
         install()
     except Exception as e:
         fp = open(os.path.join(os.path.expanduser("~"),
-                               "AnnotationToolInstallError.txt"), 'a')
+                               "CellannotatorInstallError.txt"), 'a')
         fp.write(e.message)
         raise
 else:

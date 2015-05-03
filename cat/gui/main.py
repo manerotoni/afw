@@ -8,6 +8,7 @@ __licence__ = 'GPL'
 import sys
 from os.path import splitext, basename, expanduser
 
+
 from PyQt5 import uic
 from PyQt5 import QtGui
 from PyQt5 import QtCore
@@ -15,19 +16,26 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtGui import QKeySequence
+
 
 from cat import version
+from cat.config import AtConfig
 from cat.gui.graphicsview import AtGraphicsView
 from cat.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from cat.gui.sidebar import AtSortWidget
 from cat.gui.sidebar import AtAnnotationWidget
+from cat.gui.sidebar import AtContrastWidget
 from cat.gui.importdlg import ImportDialog
 from cat.gui.aboutdialog import AtAboutDialog
 from cat.gui.featuredlg import AtFeatureSelectionDlg
+from cat.gui.helpbrowser import AtAssistant
+from cat.gui.helpbrowser import MANUAL
+
+from cat.gui.prefdialog import AtPreferencesDialog
 
 from cat.threading import AtThread
 from cat.threading import AtLoader
-
 
 from cat import cat_rc
 
@@ -47,6 +55,8 @@ class AtMainWindow(QtWidgets.QMainWindow):
     def __init__(self, file_=None, *args, **kw):
         super(AtMainWindow, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
+
+
         self.setWindowTitle(version.appstr)
         self.setAcceptDrops(True)
 
@@ -56,6 +66,14 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.loaderThread = AtThread(self)
         self.loader = AtLoader()
         self._lastdir = expanduser("~")
+
+
+        try:
+            self.assistant = AtAssistant(MANUAL)
+            self.assistant.hide()
+        except IOError:
+            QMessageBox.information(self, "Information",
+                                    "Sorry help files are not installed")
 
         self.setupToolbar()
         self.tileview = AtGraphicsView(
@@ -67,6 +85,8 @@ class AtMainWindow(QtWidgets.QMainWindow):
             self.tileview.toggleClassIndicators, Qt.QueuedConnection)
         self.toolBar.masking.stateChanged.connect(
             self.tileview.toggleMasks, Qt.QueuedConnection)
+        self.toolBar.outline.stateChanged.connect(
+            self.tileview.toggleOutlines, Qt.QueuedConnection)
 
         self.setCentralWidget(self.tileview)
         self.setupDock()
@@ -78,15 +98,25 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.abort.connect(self.loader.abort)
         self.actionOpenHdf.triggered.connect(self.onFileOpen)
         self.actionCloseHdf.triggered.connect(self.onFileClose)
-        self.actionProcessTrainingSet.triggered.connect(self.openImporter)
+        self.actionPreferences.triggered.connect(self.onPreferences)
+        self.actionPreprocessImages.triggered.connect(self.openImporter)
         self.actionExportViewPanel.triggered.connect(self.saveImage)
         self.actionAboutQt.triggered.connect(self.onAboutQt)
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
         self.actionFeatureSelection.triggered.connect(
             self.showFeatureDlg)
+        self.actionHelpManual.triggered.connect(self.onHelpManual)
+        self.actionShortcuts.triggered.connect(self.onHelpShortcuts)
+
+        self.actionRefresh.triggered.connect(self.refresh)
+        self.actionSelectAll.triggered.connect(
+            self.tileview.actionSelectAll.trigger)
+        self.actionInvertSelection.triggered.connect(
+            self.tileview.actionInvertSelection.trigger)
+
         self.loader.finished.connect(self.onLoadingFinished)
 
-        self._restoreSettings()
+        # self._restoreSettings()
         self.show()
         if file_ is not None:
             self.loader.openFile(file_)
@@ -111,16 +141,32 @@ class AtMainWindow(QtWidgets.QMainWindow):
     def dragLeaveEvent(self, event):
         event.accept()
 
+    def onHelpManual(self):
+        self.assistant.show()
+        self.assistant.raise_()
+
+    def onHelpShortcuts(self):
+        self.onHelpManual()
+        self.assistant.openKeyword("Shortcuts")
+
+    def refresh(self):
+        self.tileview.actionRefresh.trigger()
+        self.contrast.enhanceContrast()
+
     def showFeatureDlg(self):
         self.featuredlg.show()
         self.featuredlg.raise_()
+
+    def onPreferences(self):
+        dlg = AtPreferencesDialog(self)
+        dlg.exec_()
 
     def onAboutQt(self):
         QMessageBox.aboutQt(self, "about Qt")
 
     def onAbout(self):
         dlg = AtAboutDialog(self)
-        dlg.show()
+        dlg.exec_()
 
     def _saveSettings(self):
         settings = QtCore.QSettings(version.organisation, version.appname)
@@ -130,6 +176,9 @@ class AtMainWindow(QtWidgets.QMainWindow):
         settings.setValue('classifier',
                           self.annotation.classifiers.currentText())
         settings.endGroup()
+
+        AtConfig().saveSettings()
+
 
     def _restoreSettings(self):
         settings = QtCore.QSettings(version.organisation, version.appname)
@@ -146,21 +195,33 @@ class AtMainWindow(QtWidgets.QMainWindow):
         if clfname:
             self.annotation.setCurrentClassifier(clfname)
 
+        AtConfig().restoreSettings()
         settings.endGroup()
 
     def closeEvent(self, event):
+        self.assistant.close()
         self._saveSettings()
         try:
             self.abort.emit()
             self.loaderThread.wait()
             self.loader.close()
+
+            if self.assistant is not None:
+                self.assistant.close()
+
         except AttributeError:
             pass
 
     def setupDock(self):
+        self.contrast = AtContrastWidget(self, self.tileview)
         self.sorting = AtSortWidget(self, self.tileview, self.featuredlg)
         self.annotation = AtAnnotationWidget(
             self, self.tileview, self.featuredlg)
+
+        self.contrastdock = QtWidgets.QDockWidget("Contrast", self)
+        self.contrastdock.setWidget(self.contrast)
+        self.contrastdock.setObjectName("contrast")
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.contrastdock)
 
         self.sortdock = QtWidgets.QDockWidget("Sorting", self)
         self.sortdock.setWidget(self.sorting)
@@ -174,8 +235,19 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
         self.tabifyDockWidget(self.sortdock, self.annodock)
 
-        self.menuView.addAction(self.sortdock.toggleViewAction())
-        self.menuView.addAction(self.annodock.toggleViewAction())
+        # add action to the view menu
+        sort_action = self.sortdock.toggleViewAction()
+        sort_action.setShortcuts(QKeySequence(Qt.ALT +  Qt.SHIFT + Qt.Key_S))
+        self.menuView.addAction(sort_action)
+
+        anno_action = self.annodock.toggleViewAction()
+        anno_action.setShortcuts(QKeySequence(Qt.ALT +  Qt.SHIFT + Qt.Key_A))
+        self.menuView.addAction(anno_action)
+
+        contrast_action = self.contrastdock.toggleViewAction()
+        contrast_action.setShortcuts(
+            QKeySequence(Qt.ALT +  Qt.SHIFT + Qt.Key_C))
+        self.menuView.addAction(contrast_action)
 
         # crosslink sorter dock and sorter toolbar
         self.sortToolBar.sortAlgorithm.currentIndexChanged.connect(
@@ -208,7 +280,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
         filename = QFileDialog.getSaveFileName(self, "Save as ...",
                                                self._lastdir,
-                                               "png - Image (*.png)")
+                                               "png - Image (*.png)")[0]
 
         if filename:
             scene = self.tileview.scene()
@@ -226,6 +298,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.navToolBar.updateToolbar(props.coordspace)
         self.toolBar.updateToolbar(props)
         self.sorting.setChannelNames(props.channel_names)
+        self.contrast.setChannelNames(props.channel_names, props.colors)
 
     def setupToolbar(self):
         self.toolBar = ViewToolBar(self)
@@ -242,6 +315,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
     def openImporter(self):
         dlg = ImportDialog(self)
+        dlg.loadData.connect(self._openAndLoad)
         dlg.exec_()
 
     def onThrowAnchor(self):
@@ -277,6 +351,11 @@ class AtMainWindow(QtWidgets.QMainWindow):
             QMessageBox.critical(self, "Error", msg)
         else:
             self.statusBar().showMessage(basename(file_))
+
+    def _openAndLoad(self, file_):
+        self.onFileClose()
+        self._fileOpen(file_)
+        self.loadItems()
 
     def onLoadingFinished(self):
         self.annotation.setFeatureNames(self.loader.featureNames)

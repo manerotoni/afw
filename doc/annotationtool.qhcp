@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<QHelpCollectionProject version="1.0">
+  <assistant>
+    <title>Annotation Tool</title>
+    <startPage>qthelp://annotationtool/html/html/index.html</startPage>
+    <cacheDirectory>annotationtool</cacheDirectory>
+    <aboutMenuText>
+      <text>CellAnnotator</text>
+      <text language="en">About CellAnnotator...</text>
+    </aboutMenuText>
+  </assistant>
+  <docFiles>
+    <generate>
+      <file>
+        <input>annotationtool.qhp</input>
+        <output>../cat/gui/helpbrowser/annotationtool.qch</output>
+      </file>
+    </generate>
+  </docFiles>
+</QHelpCollectionProject>

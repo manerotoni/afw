@@ -19,19 +19,18 @@ from PyQt5.QtCore import Qt
 
 from .sidebar import NoSampleError
 
+
 class AtStandardItemModel(QtGui.QStandardItemModel):
 
     def __init__(self, *args, **kw):
         super(AtStandardItemModel, self).__init__(*args, **kw)
         self._items = OrderedDict()
-        self.insertColumns(0, 3)
+        self.insertColumns(0, 2)
         self._setHeader()
 
     def _setHeader(self):
-        # default columns
         self.setHeaderData(0, Qt.Horizontal, QtCore.QVariant("item"))
-        self.setHeaderData(1, Qt.Horizontal, QtCore.QVariant("frame"))
-        self.setHeaderData(2, Qt.Horizontal, QtCore.QVariant("label"))
+        self.setHeaderData(1, Qt.Horizontal, QtCore.QVariant("index"))
 
     def prepareRowItems(self, *args, **kw):
         raise NotImplementedError
@@ -89,11 +88,10 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
 
         return sample_info
 
-
     def prepareRowItems(self, item):
-        items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), str(item.index)),
-                 QtGui.QStandardItem(str(item.frame)),
-                 QtGui.QStandardItem(str(item.objid))]
+
+        items = [QtGui.QStandardItem(QtGui.QIcon(item.pixmap), ""),
+                 QtGui.QStandardItem(str(item.index))]
 
         items[0].setData(QtCore.QVariant(item.hash))
 
@@ -127,6 +125,8 @@ class AtSorterItemModel(AtStandardItemModel):
 
 
 class AtOneClassSvmItemModel(AtStandardItemModel):
+
+    updateCounts = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kw):
         super(AtOneClassSvmItemModel, self).__init__(*args, **kw)

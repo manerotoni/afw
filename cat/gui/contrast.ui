@@ -65,7 +65,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>brightness</string>
+        <string>Brightness</string>
        </property>
       </widget>
      </item>
@@ -104,7 +104,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>contrast</string>
+        <string>Contrast</string>
        </property>
       </widget>
      </item>
@@ -117,7 +117,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>minimum</string>
+        <string>Minimum</string>
        </property>
       </widget>
      </item>
@@ -143,7 +143,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>maximum</string>
+        <string>Maximum</string>
        </property>
       </widget>
      </item>
@@ -163,14 +163,14 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>min/max</string>
+        <string>Min/max</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="autoBtn">
        <property name="text">
-        <string>auto</string>
+        <string>Auto</string>
        </property>
       </widget>
      </item>
@@ -183,7 +183,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>reset</string>
+        <string>Reset</string>
        </property>
       </widget>
      </item>

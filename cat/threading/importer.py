@@ -77,14 +77,14 @@ class AtImporter(QtCore.QObject):
                 self.progressUpdate.emit(i+1)
                 self.interruption_point()
                 self.thread().msleep(self.PYDELAY)
-                mp = LsmProcessor(file_, gsize)
+                mp = LsmProcessor(file_, self.seg_params, self.channels, gsize)
 
                 # first channel for primary segementation
-                mp.segmentation(self.seg_params, self.channels)
+                mp.segmentation()
                 mp.calculateFeatures(self.feature_groups)
                 objects = mp.objects
                 # saveData ignores empty objects
-                image = mp.image[:, :, self.channels.keys()]
+                image = mp.image[:, :, :, self.channels.keys()]
                 writer.saveData(objects, image)
 
                 self.contourImage.emit(tuple(mp.iterQImages()),

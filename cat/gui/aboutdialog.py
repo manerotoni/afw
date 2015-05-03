@@ -30,8 +30,9 @@ class AtAboutDialog(QtWidgets.QDialog):
         self.setWindowTitle('About %s' %version.appname)
         self.setFixedSize(424, 254)
 
-        label1 = QtWidgets.QLabel(self)
-        label1.setAlignment(Qt.AlignCenter)
-        label1.setText(version.information)
-
-        label1.setGeometry(0, 0, 424, 254)
+        label = QtWidgets.QLabel(self)
+        label.setStyleSheet(stylesheet)
+        label.setAlignment(Qt.AlignCenter)
+        label.setText(version.information)
+        label.setGeometry(0, 0, 424, 254)
+        label.show()

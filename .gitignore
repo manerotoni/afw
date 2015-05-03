@@ -13,3 +13,7 @@ cat_rc.py
 build
 dist
 _oxygen_
+*.qhc
+*.qch
+.annotationtool
+*.orig

@@ -18,9 +18,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
-from cat.hdfio.readercore import HdfError
 from cat.classifiers.classifiers import Classifier
-from cat.gui.savehdfdlg import SaveClassifierDialog
+from cat.gui.saveclassifierdlg import SaveClassifierDialog
+from cat.gui.loadannotationsdlg import LoadAnnotationsDialog
 
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
@@ -36,6 +36,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         uic.loadUi(uifile, self)
 
         self.saveBtn.clicked.connect(self.onSave)
+        self.loadBtn.clicked.connect(self.onLoadAnnotations)
 
         self._setupClassifiers()
         self.classifiers.currentIndexChanged.connect(
@@ -101,6 +102,7 @@ class AtAnnotationWidget(AtSideBarWidget):
         for item in items:
             item.setTrainingSample(class_)
             self.model.addAnnotation(item, class_name)
+        self.itemCountChanged.emit()
 
     def estimateParameters(self):
         try:
@@ -131,45 +133,6 @@ class AtAnnotationWidget(AtSideBarWidget):
     def setFeatureNames(self, features):
         self.featuredlg.addFeatureList(features)
 
-    def onSave(self):
-        clf = self.currentClassifier()
-        if not self.itemView().model().rowCount():
-            QMessageBox.information(self, "information", "Nothing to save!")
-            return
-
-        dlg = SaveClassifierDialog(self)
-        dlg.name = clf.name.replace(" ", "_").lower()
-
-        hdffile = self.parent.loader.file
-        if hdffile is None or hdffile.mode != hdffile.READWRITE:
-            dlg.path = ""
-        else:
-            dlg.path = hdffile.filename
-
-        dlg.exec_()
-
-        if dlg.result() == dlg.Rejected:
-            return
-
-        if hdffile.filename != dlg.path:
-            hdffile = dlg.path
-
-        labels = self.itemView().model().labels
-        sinfo = self.itemView().model().sample_info
-        try:
-            clf.saveToHdf(dlg.name,
-                          hdffile,
-                          self.featuredlg.checkedItems(),
-                          dlg.description,
-                          dlg.overwrite,
-                          labels,
-                          sinfo)
-        except HdfError as e:
-            QMessageBox.critical(self, "error", str(e))
-        else:
-            QMessageBox.information(self, "information",
-                                    "Data saved successfully")
-
     def onPredict(self):
 
         try:
@@ -197,3 +160,21 @@ class AtAnnotationWidget(AtSideBarWidget):
                 item.setClass(prediction[0])
             except ValueError:
                 warnings.warn("feature vector contains NaN's")
+
+    def onSave(self):
+        clf = self.currentClassifier()
+        if not self.itemView().model().rowCount():
+            QMessageBox.information(self, "information", "Nothing to save!")
+            return
+
+
+        labels = self.itemView().model().labels
+        sinfo = self.itemView().model().sample_info
+
+        dlg = SaveClassifierDialog(clf, labels, sinfo, parent=self)
+        dlg.path = self.parent.loader.file.filename
+        dlg.exec_()
+
+    def onLoadAnnotations(self):
+        dlg = LoadAnnotationsDialog(self)
+        dlg.exec_()

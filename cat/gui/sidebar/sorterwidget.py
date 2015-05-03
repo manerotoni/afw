@@ -24,7 +24,7 @@ from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
 from .models import  AtSorterItemModel
 
-from .feature_tables import FeatureTables
+
 from cat.segmentation.channelname import ChannelName as cn
 
 
@@ -32,7 +32,7 @@ class AtChannelFeatureGroupsWidget(QtWidgets.QWidget):
 
     selectionChanged = QtCore.pyqtSignal()
 
-    def __init__(self, title, table,  *args, **kw):
+    def __init__(self, title, *args, **kw):
         super(AtChannelFeatureGroupsWidget, self).__init__(*args, **kw)
         self.setLayout(QtWidgets.QVBoxLayout())
         self.gbox = QtWidgets.QGroupBox(self)
@@ -40,16 +40,13 @@ class AtChannelFeatureGroupsWidget(QtWidgets.QWidget):
         self.gbox.setLayout(QtWidgets.QVBoxLayout())
         self.layout().addWidget(self.gbox)
         self.layout().setContentsMargins(0, 0, 0, 0)
+        self.layout().setSpacing(1)
+
         self.gbox.layout().setContentsMargins(1, 1, 1, 1)
         self.gbox.layout().setSpacing(1)
 
-
         self.gbox.setTitle(cn.display(title))
-
-        if table is None:
-            self._table = FeatureTables.values()[0]
-        else:
-            self._table = FeatureTables[table]
+        self._table = AtConfig.FeatureGroups[AtConfig().default_feature_group]
 
         for group, names in self._table.iteritems():
             self.addFeatureGroup(group, names)
@@ -97,8 +94,6 @@ class AtSortWidget(AtSideBarWidget):
             lambda: self.tileview.reorder(force_update=True))
 
         self._channels = tuple()
-        self.ftable.addItems(FeatureTables.keys())
-        self.ftable.currentIndexChanged[str].connect(self.onTableChanged)
 
     def setupToolBar(self):
 
@@ -114,7 +109,7 @@ class AtSortWidget(AtSideBarWidget):
         self.addBtn.pressed.connect(self.onAdd)
 
         self.removeBtn = QtWidgets.QToolButton()
-        self.removeBtn.setToolTip("Remove selected items")
+        self.removeBtn.setToolTip("Remove selected Items")
         self.removeBtn.setIcon(QtGui.QIcon(":/oxygen/list-remove.png"))
         self.removeBtn.setSizePolicy(
             QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -122,14 +117,14 @@ class AtSortWidget(AtSideBarWidget):
 
 
         self.removeAllBtn = QtWidgets.QToolButton()
-        self.removeAllBtn.setToolTip("Add items")
+        self.removeAllBtn.setToolTip("Clear Items")
         self.removeAllBtn.setIcon(QtGui.QIcon(":/oxygen/edit-clear.png"))
         self.removeAllBtn.setSizePolicy(
             QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.removeAllBtn.pressed.connect(self.removeAll)
 
         self.sortAscendingBtn = QtWidgets.QToolButton()
-        self.sortAscendingBtn.setToolTip("Add items")
+        self.sortAscendingBtn.setToolTip("Sort ascending")
         self.sortAscendingBtn.setIcon(
             QtGui.QIcon(":/oxygen/sort-ascending.png"))
         self.sortAscendingBtn.setSizePolicy(
@@ -137,7 +132,7 @@ class AtSortWidget(AtSideBarWidget):
         self.sortAscendingBtn.pressed.connect(self.sortAscending)
 
         self.sortDescendingBtn = QtWidgets.QToolButton()
-        self.sortDescendingBtn.setToolTip("Add items")
+        self.sortDescendingBtn.setToolTip("Sort descending")
         self.sortDescendingBtn.setIcon(
             QtGui.QIcon(":/oxygen/sort-descending.png"))
         self.sortDescendingBtn.setSizePolicy(
@@ -150,18 +145,15 @@ class AtSortWidget(AtSideBarWidget):
         toolbar.addWidget(self.sortAscendingBtn)
         toolbar.addWidget(self.sortDescendingBtn)
 
-    def onTableChanged(self, table):
-        self.setChannelNames(self._channels, table)
-
     def _iterGroups(self):
         for i in xrange(self.fbox.count()):
             yield self.fbox.itemAt(i).widget()
 
-    def setChannelNames(self, channel_names, table=None):
+    def setChannelNames(self, channel_names):
         self.clearChannels()
         self._channels = channel_names
         for chn in channel_names:
-            fgw = AtChannelFeatureGroupsWidget(chn, table, self)
+            fgw = AtChannelFeatureGroupsWidget(chn, self)
             self.fbox.insertWidget(self.fbox.count(), fgw)
             fgw.selectionChanged.connect(self.onSelectionChanged)
             setattr(self, chn.lower(), fgw)

@@ -13,25 +13,45 @@ import numpy as np
 from collections import OrderedDict
 
 from qimage2ndarray import gray2qimage
-
+import vigra
 from cecog import ccore
 from cecog.environment import CecogEnvironment
 
 from cat.imageio import LsmImage, TiffImage
+from cat.imageio.imagecore import ImageCore
 from cat.segmentation import ObjectDict, ImageObject
 from cat.segmentation.morpho import watershed
-
+from cat.segmentation import ZProject
 
 import mimetypes
 mimetypes.add_type('image/lsm', '.lsm')
+
+
+def zProjection(image, method):
+
+    if method == ZProject.Maximum:
+        return image.max(axis=ImageCore.Idx_z)
+    elif method == ZProject.Mean:
+        return image.mean(axis=ImageCore.Idx_z)
+    elif method == ZProject.Minimum:
+        return image.min(axis=ImageCore.Idx_z)
+    else:
+        raise Run("Projection method not defined")
 
 
 class MultiChannelProcessor(object):
 
     _environ = CecogEnvironment(redirect=False, debug=False)
 
-    def __init__(self, filename, gallery_size=60):
+    def __init__(self, filename, params, channels, gallery_size=60):
         super(MultiChannelProcessor, self).__init__()
+
+        if not isinstance(params, OrderedDict):
+            raise RuntimeError("Segmentation paramters must be ordered\n"
+                               "cannot determine the primary channel")
+
+        self.params = params
+        self.channels = channels
 
         self._image = None
         self._reader = None
@@ -64,12 +84,19 @@ class MultiChannelProcessor(object):
         else:
             channels = self.channels.keys()
 
+        zprojection = self.params.values()[0].zprojection
+        stack = self.params.values()[0].zslice
+
         for ci in channels:
-            image = self._reader.get_image(stack=0, channel=ci)
+            if zprojection == ZProject.Select:
+                image = self._reader.get_image(stack=stack, channel=ci)
+            else:
+                image = zProjection(self.image[:, :, :, ci], zprojection)
+
             yield gray2qimage(image, normalize=False)
 
     def _gallery_image(self, center, gallery_size=50):
-        height, width, nchannels = self.image.shape
+        height, width, zslices, nchannels = self.image.shape
         halfsize = int(np.floor(gallery_size/2.0))
 
         xmin = center.x - halfsize
@@ -91,7 +118,14 @@ class MultiChannelProcessor(object):
             ymin = height - gallery_size
             ymax = height
 
-        gimg = self.image[ymin:ymax, xmin:xmax, self._channel_idx]
+        zprojection = self.params.values()[0].zprojection
+        stack = self.params.values()[0].zslice
+
+        if zprojection == ZProject.Select:
+            gimg = self.image[ymin:ymax, xmin:xmax, stack, self._channel_idx]
+        else:
+            gimg = self.image[ymin:ymax, xmin:xmax, :, self._channel_idx]
+            gimg = zProjection(gimg, zprojection)
         return gimg
 
     @property
@@ -139,55 +173,63 @@ class MultiChannelProcessor(object):
                         container.haralick_distance = param
                         container.applyFeature(group)
 
-    def segmentation(self, params, channels):
-
-        if not isinstance(params, OrderedDict):
-            raise RuntimeError("Segmentation paramters must be ordered\n"
-                               "cannot determine the primary channel")
+    def segmentation(self):
 
         # needed for gallery images
-        self._channel_idx = channels.keys()
+        self._channel_idx = self.channels.keys()
         # the master (primary) channel is determined by the first item
         # the segmentation parameters (OrderedDict)
-        channels_r = OrderedDict([(v, k) for k, v in channels.items()])
+        channels_r = OrderedDict([(v, k) for k, v in self.channels.items()])
 
         try:
-            imaster = channels_r[params.keys()[0]]
+            imaster = channels_r[self.params.keys()[0]]
         except KeyError:
             raise KeyError("Primary channel is deactivated!")
 
         # segment the master first
-        cname = channels[imaster]
+        cname = self.channels[imaster]
 
-        image = self.image[:, :, imaster].copy()
+        if self.params[cname].zprojection == ZProject.Select:
+            image = self.image[:,  :, self.params[cname].zslice, :].copy()
+        else:
+            image = zProjection(self.image[:, :, :, :].copy(),
+                                self.params[cname].zprojection)
 
         self._containers[cname] = \
-            self.threshold(image, **params[cname]._asdict())
+            self.threshold(image[:, :, imaster], **self.params[cname]._asdict())
 
         label_image = self._containers[cname].img_labels.toArray()
-        self._filter(self._containers[cname], params[cname])
+        self._filter(self._containers[cname], self.params[cname])
 
-        for i, name in channels.iteritems():
+        for i, name in self.channels.iteritems():
             if i == imaster:
                 continue
+
             self._containers[name] = self.seededExpandedRegion(
-                self.image[:, :, i].copy(), label_image, *params[name])
+                image[:, :, i], label_image, *self.params[name])
 
     def threshold(self, image, median_radius, window_size, min_contrast,
                   remove_borderobjects, fill_holes, norm_min=0, norm_max=255,
-                  use_watershed=True, seeding_size=5,
+                  use_watershed=True, seeding_size=5, outline_smoothing=1,
                   *args, **kw):
 
         image = self.normalize(image, norm_min, norm_max)
         image = ccore.numpy_to_image(image, copy=True)
-        image_smoothed = ccore.disc_median(image, median_radius)
-        # image_smoothed = ccore.gaussianFilter(image, median_radius)
+
+        image_smoothed = ccore.gaussianFilter(image, median_radius)
 
         label_image = ccore.window_average_threshold(
             image_smoothed, window_size, min_contrast)
 
         if fill_holes:
             ccore.fill_holes(label_image)
+
+        if outline_smoothing >= 1:
+            label_image = vigra.filters.discClosing(
+                label_image.toArray(), outline_smoothing)
+            label_image = vigra.filters.discOpening(
+                label_image, outline_smoothing)
+            label_image = ccore.numpy_to_image(label_image, copy=True)
 
         if use_watershed:
             label_image = label_image.toArray()
@@ -274,8 +316,9 @@ class MultiChannelProcessor(object):
 
 class LsmProcessor(MultiChannelProcessor):
 
-    def __init__(self, filename, gallery_size=50):
-        super(LsmProcessor, self).__init__(filename, gallery_size)
+    def __init__(self, filename, params, channels, gallery_size=50):
+        super(LsmProcessor, self).__init__(filename, params, channels,
+                                           gallery_size)
 
         mtype = mimetypes.guess_type(filename)[0]
 

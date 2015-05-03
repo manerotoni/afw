@@ -21,7 +21,7 @@ from cat.gui.painting import AtPainter
 
 HdfFileInfo = namedtuple("HdfFileInfo",
                          ["gal_settings_mutable", "n_items", "gallery_size",
-                          "coordspace", "channel_names"])
+                          "coordspace", "channel_names", "colors"])
 
 
 class HdfError(Exception):
@@ -63,15 +63,18 @@ class HdfItem(object):
 
         iinfo = np.iinfo(self.image.dtype)
         ncolors = abs(iinfo.max - iinfo.min) + 1
+        luts = [AtPainter.lut_from_color(QColor(c), ncolors)
+                for c in self.colors]
+
         for i, color in enumerate(self.colors):
-            lut = AtPainter.lut_from_color(QColor(color), ncolors)
             if self.image.ndim == 2:
                 image = gray2qimage(self.image, normalize=False)
             else:
                 image = gray2qimage(self.image[:, :, i], normalize=False)
-            image.setColorTable(lut)
+            image.setColorTable(luts[i])
             yield image
 
+    @property
     def pixmap(self):
         # XXX be aware of thread safety
         images = list(self.iterQImages())
@@ -80,6 +83,10 @@ class HdfItem(object):
     def iterContours(self):
         for i, color in enumerate(self.colors):
             yield self.contour[i], QColor(color)
+
+    def clear(self):
+        """Only a dummy method to be compatible with other methods."""
+        pass
 
 
 class HdfFile(h5py.File):

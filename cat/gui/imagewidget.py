@@ -1,7 +1,7 @@
 """
 imageviewer.py
 
-QGraphicsView widget with pan ans zoom features (ctrl + mouse)
+QGraphicsView widget with pan and zoom features (CTRL + mouse)
 and a minimalistic context menu.
 """
 
@@ -52,11 +52,12 @@ class ImageViewer(QtWidgets.QGraphicsView):
         self.setViewportUpdateMode(self.SmartViewportUpdate)
 
         self._pixmap = QtWidgets.QGraphicsPixmapItem()
-        self._pixmap.setShapeMode(QtWidgets.QGraphicsPixmapItem.BoundingRectShape)
-        # self._pixmap.setTransformationMode(Qt.SmoothTransformation)
+        self._pixmap.setShapeMode(
+            QtWidgets.QGraphicsPixmapItem.BoundingRectShape)
+
         self._polygonitems = list()
         self.scene().addItem(self._pixmap)
-        self.setToolTip("ctrl+mouse to pan/zoom")
+        self.setToolTip("CTRL+Mouse to pan/zoom")
 
         self.createActions()
         self.createContextMenu()
@@ -71,17 +72,18 @@ class ImageViewer(QtWidgets.QGraphicsView):
         self.context_menu.addAction(self.actionZoomOut)
 
     def createActions(self):
+
         self.actionOrigSize = QtWidgets.QAction(
-            "&original size", self, triggered=self.origsize)
-        self.actionExpand = QtWidgets.QAction("&expand image", self,
+            "&Original Size", self, triggered=self.origsize)
+        self.actionExpand = QtWidgets.QAction("&Expand Image", self,
                 checkable=True, triggered=self.expand)
-        self.actionMaximize = QtWidgets.QAction("&maximize image", self,
+        self.actionMaximize = QtWidgets.QAction("&Maximize Image", self,
                 checkable=True, triggered=self.maximize)
 
-        self.actionZoomIn = QtWidgets.QAction("zoom in (+)", self,
+        self.actionZoomIn = QtWidgets.QAction("Zoom in (+)", self,
                 checkable=False, triggered=self.zoomIn)
 
-        self.actionZoomOut = QtWidgets.QAction("zoom out (-)", self,
+        self.actionZoomOut = QtWidgets.QAction("Zoom out (-)", self,
                 checkable=False, triggered=self.zoomOut)
 
         actiongrp = QtWidgets.QActionGroup(self)

@@ -91,14 +91,17 @@ class HdfCache(object):
             self.bbox = np.append(self.bbox, bbox)
             self.features = np.append(self.features, features)
             self.gallery = np.concatenate((self.gallery, gallery), axis=3)
+
         self._images.append(image)
 
     @property
     def image(self):
         shape = self._images[0].shape + (len(self._images), )
         images = np.empty(shape, self._images[0].dtype)
+
         for i, image in enumerate(self._images):
-            images[:, :, :, i] = image
+            images[:, :, :, :, i] = image
+
         return images
 
 
@@ -113,13 +116,12 @@ class HdfWriter(object):
         self.dmodel = HdfDataModel("data")
 
         # save a list of the training sets as attrib of the file
-        try:
+        if self.dmodel.TRAININGDATA in self._file.attrs.keys():
             tsets = self._file.attrs[self.dmodel.TRAININGDATA].tolist()
             tsets.append(self.dmodel.data)
-        except KeyError:
+        else:
             tsets = self.dmodel.data
             self._file.attrs[self.dmodel.TRAININGDATA] = [tsets, ]
-
 
     def close(self):
         self._file.close()
@@ -158,7 +160,6 @@ class HdfWriter(object):
             for i, cnt in enumerate(contours):
                 dset[i, :] = cnt
 
-
     def flush(self):
 
         # hdf5 allows only 64kb of header metadata
@@ -176,7 +177,7 @@ class HdfWriter(object):
             self._write_contours()
 
             images = self._cache.image
-            chunksize = images.shape[:2] + (1, 1)
+            chunksize = images.shape[:2] + (1, 1, 1)
             dset = self._file.create_dataset(self.dmodel.images,
                                              data=images,
                                              chunks=chunksize,
@@ -189,3 +190,7 @@ class HdfWriter(object):
                 raise HdfError("Cannot save data to hdf file."
                                  "One of you tables is to large, "
                                  "reduce number of channels")
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise HdfError(str(e))

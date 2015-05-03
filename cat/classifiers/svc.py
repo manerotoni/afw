@@ -1,4 +1,3 @@
-
 """
 multiclasssvm.py
 """
@@ -108,6 +107,10 @@ class SvcParameterWidget(QtWidgets.QFrame):
         model.classesChanged.connect(parent.updateClassifier)
         self.treeview.setModel(model)
 
+        self.treeview.setColumnWidth(0, 75)
+        self.treeview.setColumnWidth(1, 75)
+        self.treeview.setColumnWidth(2, 30)
+
         self.addClassBtn = QtWidgets.QToolButton()
         self.addClassBtn.setToolTip("Add new class")
         self.addClassBtn.setIcon(QtGui.QIcon(":/oxygen/code-class.png"))
@@ -155,6 +158,12 @@ class SvcParameterWidget(QtWidgets.QFrame):
         vbox.addWidget(frame)
         vbox.addWidget(self.treeview)
 
+        parent.itemCountChanged.connect(self.updateCounts)
+
+    def updateCounts(self):
+        for i in xrange(self.treeview.model().rowCount()):
+            self.treeview.model().updateCounts(i)
+
     def onAddBtn(self):
         self.treeview.model().addClass()
 
@@ -200,7 +209,7 @@ class SvcWriter(ClfWriter):
             raise HdfError("Classifer with name %s exists already"
                            %name + str(e))
 
-        grp.attrs[self.dmodel.NAME] = "support vector classifier"
+        grp.attrs[self.dmodel.NAME] = Svc.name
         grp.attrs[self.dmodel.LIB] = self.dmodel.SupportVectorClassifier
         grp.attrs[self.dmodel.VERSION] = sklearn.__version__
 
@@ -208,7 +217,7 @@ class SvcWriter(ClfWriter):
             grp.attrs[self.dmodel.DESCRIPTION] = description
 
     def saveAnnotations(self, labels):
-        # not more than 256 classess
+        # max 256 classes!
         labels = labels.astype(np.uint8)
         dset = self.h5f.create_dataset(self.dmodel.annotations,
                                        data=labels,

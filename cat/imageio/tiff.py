@@ -19,12 +19,6 @@ from .imagecore import ImageCore
 
 class TiffImage(ImageCore):
 
-    _Order = ('x', 'y', 'z', 'c')
-    Idx_x = 0
-    Idx_y = 1
-    Idx_z = 2
-    Idx_c = 3
-
     def __init__(self, filename):
         # vigra does not talk in unicode
         filename = str(filename)

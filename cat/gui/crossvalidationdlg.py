@@ -11,6 +11,7 @@ __licence__ = 'GPL'
 
 from os.path import splitext
 import numpy as np
+import traceback
 from multiprocessing import cpu_count
 from matplotlib.figure import Figure
 from matplotlib import cm
@@ -29,7 +30,6 @@ from sklearn import cross_validation
 from sklearn.metrics import confusion_matrix
 from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import StratifiedKFold
-
 
 from cat.qmpl import QFigureWidget
 from cat.gui.sidebar.sidebar import NoSampleError
@@ -101,6 +101,7 @@ class CrossValidationDialog(QtWidgets.QWidget):
                 self.parent().model.features)
         except NoSampleError:
             return
+
         preprocessor = self.classifier.setupPreProcessor(features)
         features = self.classifier.normalize(features)
 
@@ -121,6 +122,7 @@ class CrossValidationDialog(QtWidgets.QWidget):
 
     def showMessage(self, message=''):
         self.output.append(message)
+        QApplication.processEvents()
 
     def addFigure(self, title, figure):
 
@@ -176,12 +178,13 @@ class CrossValidationDialog(QtWidgets.QWidget):
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.gridSearch()
         except Exception as e:
+            traceback.print_exc()
             QMessageBox.warning(self, "Warning", str(e))
         finally:
             QApplication.restoreOverrideCursor()
 
     def gridSearch(self):
-
+        self.tabWidget.setCurrentWidget(self.paramTab)
         self.showMessage('Grid search using %d-fold cross_validation'
                          %self.kfold)
         C = np.logspace(-6, 6, self.grid_C.value())
@@ -191,6 +194,12 @@ class CrossValidationDialog(QtWidgets.QWidget):
         cv = StratifiedKFold(y=self.labels, n_folds=self.kfold)
         grid = GridSearchCV(SVC(), param_grid=param_grid, cv=cv,
                             n_jobs=cpu_count()-1)
+
+        if np.isnan(self.features).any():
+            raise RuntimeError("There is a NAN in the feature table. "
+                               "I can't proceed, sorry... "
+                               "Rerun preprocessing and remove weird cells")
+
         grid.fit(self.features, self.labels)
         est = grid.best_estimator_
 

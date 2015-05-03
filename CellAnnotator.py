@@ -8,6 +8,7 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ ='GPL'
 
 import os
+from os.path import dirname, join
 import sys
 import argparse
 
@@ -35,7 +36,11 @@ if __name__ == '__main__':
         raise SystemExit("File does not exist!")
 
     app = QApplication(sys.argv)
-    mw = AtMainWindow(args.file)
+
+    # windows always sucks!!
+    if sys.platform.startswith("win"):
+        sqldrivers = join(dirname(QtGui.__file__), "plugins")
+        app.addLibraryPath(sqldrivers)
 
 
     splash_pix = QPixmap(':annotationtool_about.png')
@@ -46,6 +51,7 @@ if __name__ == '__main__':
                        alignment=Qt.AnchorHorizontalCenter|
                        Qt.AnchorVerticalCenter)
     app.processEvents()
+    mw = AtMainWindow(args.file)
     mw.show()
     app.thread().msleep(1500)
     splash.finish(mw)

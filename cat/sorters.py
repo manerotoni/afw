@@ -57,7 +57,7 @@ class Sorter(object):
 
 #         # PCA does the z scoring automatically
 #         # zscored mean value of pca procjected treedata
-#         zs = ZScore(self.data)
+#         zs = ZScore(self.data, replace_inf=True)
 #         data_zs = zs.normalize(self.data)
 #         data_zs = filter_nans(data_zs)
 
@@ -87,7 +87,7 @@ class CosineSimilarity(Sorter):
             raise SortingError(("CosineSimilarity needs at least 2 "
                                 "features for sorting"))
 
-        zs = ZScore(self.data)
+        zs = ZScore(self.data, replace_inf=True)
         data_zs = zs.normalize(self.data)
 
         # z-scored mean value of pca procjected treedata
@@ -128,7 +128,7 @@ class EucledianDistance(Sorter):
         if self.treedata is None:
             raise SortingError("No examples for similarity measure available!")
 
-        zs = ZScore(self.data)
+        zs = ZScore(self.data, replace_inf=True)
         data_zs = zs.normalize(self.data)
 
         # z-scored mean value of pca procjected treedata
