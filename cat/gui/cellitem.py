@@ -13,10 +13,12 @@ import warnings
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
 
 from cat.config import AtConfig
 from cat.classifiers.itemclass import UnClassified
 from cat.gui.painting import AtPainter
+
 
 class StackOrder(object):
     pixmap = 0
@@ -24,6 +26,7 @@ class StackOrder(object):
     contour = 400
     class_indicator = 500
     selector = 1000
+
 
 class Colors(object):
     # selected = QtGui.QColor("#87CEFA")
@@ -49,6 +52,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
     """
 
     BOUNDARY = 2.0
+    PENWIDTH = 1.0
 
     def __init__(self, item, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
@@ -93,8 +97,8 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
         size = self.BOUNDARY*5
-        rect.setX(rect0.x())
-        rect.setY(rect0.y() + rect0.height() - size)
+        rect.setX(rect0.x() + self.PENWIDTH/2.0)
+        rect.setY(rect0.y() + rect0.height() - size - self.PENWIDTH/2.0)
         rect.setSize(QtCore.QSizeF(size, size))
         return rect
 
@@ -103,8 +107,9 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         brush.setStyle(QtCore.Qt.NoBrush)
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
+        pen.setWidth(self.PENWIDTH)
         pen.setColor(Colors.neutral)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setJoinStyle(Qt.MiterJoin)
 
         rect = self._classRect()
         self._classrect = QtWidgets.QGraphicsRectItem(rect)
@@ -129,7 +134,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         pen = QtGui.QPen()
         pen.setColor(Colors.selected)
         pen.setWidthF(self.BOUNDARY)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setJoinStyle(Qt.MiterJoin)
 
         rect = self._selectorRect()
         self._selrect = QtWidgets.QGraphicsRectItem(rect)
@@ -217,8 +222,8 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
     def boundingRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
-        rect.setX(rect0.x())
-        rect.setY(rect0.y())
+        rect.setX(rect0.x() + 0.5)
+        rect.setY(rect0.y() - 0.5)
         rect.setSize(rect0.size())
         return rect
 
@@ -255,12 +260,14 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
                     item.hide()
 
     def addMask(self, polygon):
-        rect = self.boundingRect()
+
+        rect = self.childrenBoundingRect()
 
         brush = QtGui.QBrush()
         brush.setStyle(QtCore.Qt.SolidPattern)
         pen = QtGui.QPen()
         pen.setColor(Colors.mask)
+        pen.setWidth(0)
 
         path = QtGui.QPainterPath()
         path.addRect(rect)
@@ -278,8 +285,8 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
         size = self.BOUNDARY*5
-        rect.setX(rect0.x())
-        rect.setY(rect0.y() + rect0.height() - 1.5*size)
+        rect.setX(rect0.x() + self.PENWIDTH/2.0)
+        rect.setY(rect0.y() + rect0.height() - 1.5*size - self.PENWIDTH*1.5)
         rect.setSize(QtCore.QSizeF(size, size))
         return rect
 
@@ -288,6 +295,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         brush.setStyle(QtCore.Qt.SolidPattern)
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
+        pen.setJoinStyle(Qt.MiterJoin)
         pen.setColor(Colors.neutral)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
 
