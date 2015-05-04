@@ -12,13 +12,19 @@ from os.path import dirname, join
 import sys
 import argparse
 
-import sip
+# special case on windoze
+try:
+    import PyQt5.sip as sip
+except ImportError:
+    import sip
+
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
 
 from matplotlib import use
 use("Qt5Agg")
 
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
@@ -53,7 +59,7 @@ if __name__ == '__main__':
     app.processEvents()
     mw = AtMainWindow(args.file)
     mw.show()
-    app.thread().msleep(1500)
+    app.thread().msleep(1000)
     splash.finish(mw)
 
     sys.exit(app.exec_())

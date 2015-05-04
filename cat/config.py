@@ -78,11 +78,11 @@ class AtConfig(object):
             self.compression = value
 
         value = settings.value('compression_opts')
-        if value:
-            try:
+        if value is not None:
+            if isinstance(value, basestring):
                 # is not necessarily a string
                 self.compression_opts = eval(value)
-            except NameError:
+            else:
                 self.compression_opts = value
 
         value = settings.value('max_sv_fraction', type=float)

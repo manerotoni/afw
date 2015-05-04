@@ -53,6 +53,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
 
     BOUNDARY = 2.0
     PENWIDTH = 1.0
+    CONTOURWIDTH = 1.0
 
     def __init__(self, item, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
@@ -231,13 +232,14 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
 
         pen = QtGui.QPen()
         pen.setColor(color)
+        pen.setWidth(self.CONTOURWIDTH)
         polygon = QtGui.QPolygonF([QtCore.QPointF(*p) for p in contour])
         item = QtWidgets.QGraphicsPolygonItem(self)
         item.setPolygon(polygon)
         item.setPos(self.pos())
         item.setPen(pen)
         item.setZValue(StackOrder.contour)
-        item.setOpacity(0.5)
+        # item.setOpacity(0.5)
         self.addMask(polygon)
         self.addToGroup(item)
 

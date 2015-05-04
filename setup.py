@@ -19,7 +19,8 @@ import build_helpers
 
 pyrcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
               'outfile': join('cat', 'cat_rc.py'),
-              'pyrccbin': 'pyrcc5'}
+              'pyrccbin': join('C:\\', 'Python27', 'Lib', 'site-packages',
+                               'PyQt5', 'pyrcc5.exe')}
 
 help_opts = {'infile': join('doc', 'annotationtool.qhcp'),
              'outfile':
