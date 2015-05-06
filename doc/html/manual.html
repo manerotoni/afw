@@ -486,6 +486,20 @@
     <p>
 
     <p>
+      <h3><a name="mpl_navbar"></a>Matplotlib Navigation Toolbar</h3>
+    </p>
+
+    <p>By clicking in the plot and using the shortcut <b>t</b> the matplotlib navigationtool shows up at the bottom of a plot. See <a href="./shortcuts.html"><b>shortcuts</b> for a detailed description.
+    </p>
+
+    <p>
+      <center>
+        <img alt="" title="matplotlib navigation toolbar" src="images/navigationtoolbar2.png">
+      </center>
+    </p>
+
+
+    <p>
       <h3><a name="one_class_svm"></a>One class support vector machine</h3>
     </p>
 
@@ -800,6 +814,69 @@
       Additionally it is possible to save settings as xml file which can be
       edited manually. Loading or reusing of settings is therefore possible either
       from the <b>data file</b> or <b>from xml</b>.
+    </p>
+
+    <p>
+      <h2><a name="preferences"></a>Preferences</h2>
+    </p>
+
+    <p>
+      Application Preferences can be found in the Menu <b><i>File -&gt Preferences</i></b>.
+    </p>
+
+    <p>
+      <h3><a name="preferences_general"></a>Preferences - General</h3>
+    </p>
+
+    <p>
+      <center>
+        <img alt="" title="Preferences - General" src="images/preferences-general.png">
+      </center>
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td>Use complementary colors for outlines</td>
+          <td>If enabled, outlines are displayed in complementary colors e.g. thumbnails are red, outlines are cyan.
+            For gray level images the outlines are yellow. If this option is disabled outlines use the same color as the thumbnails.</td>
+        </tr>
+        <tr>
+          <td>Default similarity metric</td>
+          <td>Set the default metric for the method <a href="#throwsortanchor">Throw sort anchor</a></td>
+        </tr>
+        <tr>
+          <td>Max. fraction of outliers</td>
+          <td>Parameter estimation for the <a href=#one_class_svm>One Class SVM</a> assumes a that max. 20% of the trainings samples are support vectors. This option allows to change the value. A high fraction of support vectors may lead to overfitting.</td>
+        </tr>
+      </table>
+    </p>
+
+    <p>
+      <h3><a name="preferences_io"></a>Preferences - Data IO</h3>
+    </p>
+
+    <p>
+      <center>
+        <img alt="" title="Preferences - Data IO" src="images/preferences-io.png">
+      </center>
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td>Hdf5 compression</td>
+          <td>Use <b>"gzip"</b>, <b>"lzf"</b> or <b>"None"</b> as compression algorithm. Degree of compression ranges from 1 (low compression)
+            to 9 (high compression). "lzf" has no options. Default is gzip, 4. This is a good compromise of speed vs. compression factor.
+            It is recommended to not change the default.</td>
+        </tr>
+        <tr>
+          <td>Limit for interactive loading</td>
+          <td>The number of items controlls which loading strategy is used. Data sets containing more items than this number use interactive
+            loading i.e. each single item is loaded and instantly displayed. Smaller data sets are loaded and displayed on block. Loading speed
+            depends on the hardware and data format. In case of cellh5 interactive loading is always on.</a></td>
+        </tr>
+      </table>
     </p>
 
     <p>

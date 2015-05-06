@@ -113,13 +113,13 @@ class ViewToolBar(AtToolBar):
 
         icon = QtGui.QIcon(":/oxygen/document-open-folder.png")
         self.actionOpen = QtGui.QAction(
-            icon, "open", self)
+            icon, "Open Data File", self)
         self.addAction(self.actionOpen)
         self.addWidget(self.reloadBtn)
         self.addSeparator()
-        self.addWidget(QtGui.QLabel("gallery size:", self))
+        self.addWidget(QtGui.QLabel("Gallery Size:", self))
         self.addWidget(self.galSize)
-        self.addWidget(QtGui.QLabel("number items:", self))
+        self.addWidget(QtGui.QLabel("Number Items:", self))
         self.addWidget(self.nItems)
         self.addSeparator()
         self.addWidget(self.zoom)

@@ -107,20 +107,20 @@ class AtGraphicsView(MouseWheelView):
 
     def createActions(self):
         self.actionRefresh = QtGui.QAction(
-            "&refresh", self, triggered=lambda: self.reorder(True))
-        self.actionSelectAll = QtGui.QAction("select &all", self,
+            "&Refresh", self, triggered=lambda: self.reorder(True))
+        self.actionSelectAll = QtGui.QAction("Select &All", self,
                                              triggered=self.scene().selectAll)
 
         self.actionInvertSelection = QtGui.QAction(
-            "&invert selection", self, triggered=self.scene().invertSelection)
+            "&Invert Selection", self, triggered=self.scene().invertSelection)
 
         self.actionThrowAnchor = QtGui.QAction(
-            "&throw sort anchor", self,
+            "&Throw Sort Anchor", self,
             triggered=self.parent().onThrowAnchor)
 
-        self.actionAddSorter = QtGui.QAction(
-            "add to &sorter panel", self,
-            triggered=self.parent().addToSortPanel)
+        # self.actionAddSorter = QtGui.QAction(
+        #     "Add to &Sorter anel", self,
+        #     triggered=self.parent().addToSortPanel)
 
     def toggleClassIndicators(self, state):
         self._show_classes = state

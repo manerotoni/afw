@@ -55,7 +55,7 @@ class ImageViewer(QtGui.QGraphicsView):
         # self._pixmap.setTransformationMode(Qt.SmoothTransformation)
         self._polygonitems = list()
         self.scene().addItem(self._pixmap)
-        self.setToolTip("ctrl+mouse to pan/zoom")
+        self.setToolTip("CTRL+Mouse to pan/zoom")
 
         self.createActions()
         self.createContextMenu()
@@ -71,16 +71,16 @@ class ImageViewer(QtGui.QGraphicsView):
 
     def createActions(self):
         self.actionOrigSize = QtGui.QAction(
-            "&original size", self, triggered=self.origsize)
-        self.actionExpand = QtGui.QAction("&expand image", self,
+            "&Original Size", self, triggered=self.origsize)
+        self.actionExpand = QtGui.QAction("&Expand Image", self,
                 checkable=True, triggered=self.expand)
-        self.actionMaximize = QtGui.QAction("&maximize image", self,
+        self.actionMaximize = QtGui.QAction("&Maximize Image", self,
                 checkable=True, triggered=self.maximize)
 
-        self.actionZoomIn = QtGui.QAction("zoom in (+)", self,
+        self.actionZoomIn = QtGui.QAction("Zoom in (+)", self,
                 checkable=False, triggered=self.zoomIn)
 
-        self.actionZoomOut = QtGui.QAction("zoom out (-)", self,
+        self.actionZoomOut = QtGui.QAction("Zoom out (-)", self,
                 checkable=False, triggered=self.zoomOut)
 
         actiongrp = QtGui.QActionGroup(self)

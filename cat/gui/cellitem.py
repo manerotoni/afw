@@ -12,10 +12,13 @@ import warnings
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from PyQt4.Qt import Qt
+
 
 from cat.config import AtConfig
 from cat.classifiers.itemclass import UnClassified
 from cat.gui.painting import AtPainter
+
 
 class StackOrder(object):
     pixmap = 0
@@ -23,6 +26,7 @@ class StackOrder(object):
     contour = 400
     class_indicator = 500
     selector = 1000
+
 
 class Colors(object):
     # selected = QtGui.QColor("#87CEFA")
@@ -48,6 +52,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     """
 
     BOUNDARY = 2.0
+    PENWIDTH = 1.0
 
     def __init__(self, item, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
@@ -84,16 +89,15 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         return "%s-%s" %(self.frame, self.objid)
 
     def hoverEnterEvent(self, event):
-        txt = ("item: %d\n"
-               "class: %s") %(self.index, self.class_.name)
+        txt = ("%s") %(self.class_.name)
         QtGui.QToolTip.showText(QtGui.QCursor.pos(), txt)
 
     def _classRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
         size = self.BOUNDARY*5
-        rect.setX(rect0.x())
-        rect.setY(rect0.y() + rect0.height() - size)
+        rect.setX(rect0.x() + self.PENWIDTH/2.0)
+        rect.setY(rect0.y() + rect0.height() - size - self.PENWIDTH/2.0)
         rect.setSize(QtCore.QSizeF(size, size))
         return rect
 
@@ -102,8 +106,9 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         brush.setStyle(QtCore.Qt.NoBrush)
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
+        pen.setWidth(self.PENWIDTH)
         pen.setColor(Colors.neutral)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setJoinStyle(Qt.MiterJoin)
 
         rect = self._classRect()
         self._classrect = QtGui.QGraphicsRectItem(rect)
@@ -128,7 +133,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         pen = QtGui.QPen()
         pen.setColor(Colors.selected)
         pen.setWidthF(self.BOUNDARY)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setJoinStyle(Qt.MiterJoin)
 
         rect = self._selectorRect()
         self._selrect = QtGui.QGraphicsRectItem(rect)
@@ -215,8 +220,8 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
     def boundingRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
-        rect.setX(rect0.x())
-        rect.setY(rect0.y())
+        rect.setX(rect0.x() + 0.5)
+        rect.setY(rect0.y() - 0.5)
         rect.setSize(rect0.size())
         return rect
 
@@ -242,9 +247,6 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         else:
             self._mask.hide()
 
-        # if toggle_contours:
-        #         self.toggleContours(not state)
-
         self.setSelected(is_selected)
 
     def toggleOutline(self, state):
@@ -256,12 +258,14 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
                     item.hide()
 
     def addMask(self, polygon):
-        rect = self.boundingRect()
+
+        rect = self.childrenBoundingRect()
 
         brush = QtGui.QBrush()
         brush.setStyle(QtCore.Qt.SolidPattern)
         pen = QtGui.QPen()
         pen.setColor(Colors.mask)
+        pen.setWidth(0)
 
         path = QtGui.QPainterPath()
         path.addRect(rect)
@@ -279,8 +283,8 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
         size = self.BOUNDARY*5
-        rect.setX(rect0.x())
-        rect.setY(rect0.y() + rect0.height() - 1.5*size)
+        rect.setX(rect0.x() + self.PENWIDTH/2.0)
+        rect.setY(rect0.y() + rect0.height() - 1.5*size - self.PENWIDTH*1.5)
         rect.setSize(QtCore.QSizeF(size, size))
         return rect
 
@@ -289,6 +293,8 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         brush.setStyle(QtCore.Qt.SolidPattern)
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
+        pen.setWidth(self.PENWIDTH)
+        pen.setJoinStyle(Qt.MiterJoin)
         pen.setColor(Colors.neutral)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
 

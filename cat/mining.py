@@ -28,7 +28,10 @@ class ZScore(object):
     def __init__(self, data, min_variance=10e-9, replace_inf=True):
         self.mean = data.mean(axis=0)
         self.std = data.std(axis=0)
+
         if replace_inf:
+            # supresses RuntimeWarning nan < 0.0
+            self.std[np.isnan(self.std)] = 0.0
             # features with no variance should be filtered out later
             self.std[self.std <= min_variance] = np.nan
 
