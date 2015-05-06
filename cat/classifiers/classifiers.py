@@ -38,9 +38,11 @@ class ClfDataModel(object):
     FEATURE_SELECTION = "feature_selection"
     DESCRIPTION = "description"
 
+    CLASSIFIER_ROOT = "/classifiers"
+
     def __init__(self, name):
         self.name = name
-        self.path = "/classifiers/%s" %name
+        self.path = "%s/%s" %(self.CLASSIFIER_ROOT, name)
         self.parameters = "%s/parameters" %self.path
         self.training_set = "%s/training_set" %self.path
         self.classdef = "%s/class_definition" %self.path

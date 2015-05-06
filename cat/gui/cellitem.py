@@ -230,7 +230,7 @@ class CellGraphicsItem(QtGui.QGraphicsItemGroup):
         item.setPos(self.pos())
         item.setPen(pen)
         item.setZValue(StackOrder.contour)
-        item.setOpacity(0.5)
+        item.setOpacity(0.8)
         self.addMask(polygon)
         self.addToGroup(item)
 
