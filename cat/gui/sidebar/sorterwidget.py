@@ -46,6 +46,7 @@ class AtChannelFeatureGroupsWidget(QtWidgets.QWidget):
         self.gbox.layout().setSpacing(1)
 
         self.gbox.setTitle(cn.display(title))
+
         self._table = AtConfig.FeatureGroups[AtConfig().default_feature_group]
 
         for group, names in self._table.iteritems():

@@ -148,12 +148,14 @@ class AtAssistant(QtWidgets.QMainWindow):
         settings = QtCore.QSettings(version.organisation, version.appname)
         settings.beginGroup('HelpBrowser')
 
-        geometry = settings.value('geometry')
-        if geometry is not None:
+        if settings.contains('geometry'):
+            geometry = settings.value('geometry')
             self.restoreGeometry(geometry)
-        state = settings.value('state')
-        if state is not None:
+
+        if settings.contains('state'):
+            state = settings.value('state')
             self.restoreState(state)
+
         settings.endGroup()
 
     def close(self):

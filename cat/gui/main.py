@@ -183,15 +183,16 @@ class AtMainWindow(QtWidgets.QMainWindow):
         settings = QtCore.QSettings(version.organisation, version.appname)
         settings.beginGroup('Gui')
 
-        geometry = settings.value('geometry')
-        if geometry:
+        if settings.contains('geometry'):
+            geometry = settings.value('geometry')
             self.restoreGeometry(geometry)
-        state = settings.value('state')
-        if state:
+
+        if settings.contains('state'):
+            state = settings.value('state')
             self.restoreState(state)
 
-        clfname = settings.value("classifier")
-        if clfname:
+        if settings.contains('classifier'):
+            clfname = settings.value("classifier")
             self.annotation.setCurrentClassifier(clfname)
 
         AtConfig().restoreSettings()
