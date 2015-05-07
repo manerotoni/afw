@@ -41,6 +41,9 @@
      </property>
      <item>
       <widget class="QPushButton" name="saveBtn">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save settings&lt;/p&gt;&lt;p&gt;Save segmentation setting to an xml file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Save settings</string>
        </property>
@@ -48,6 +51,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="loadBtn">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load settings&lt;/p&gt;&lt;p&gt;Load segmentation settings either from xml or hdf5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Load settings</string>
        </property>
@@ -68,6 +74,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="refreshBtn">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Refresh&lt;/p&gt;&lt;p&gt;Update image segmentation using the current settings&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Refresh</string>
        </property>
@@ -153,7 +162,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="contrastLabel">
             <property name="text">
-             <string>Min . threshold</string>
+             <string>Min . Threshold</string>
             </property>
            </widget>
           </item>
@@ -175,6 +184,9 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="windowSizeLabel">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Window size of the local adaptive threshold.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Window size</string>
             </property>
@@ -198,6 +210,9 @@
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="radiusLabel">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Disk radius of a Gaussian blurring filter in pixels to reduce noise before thresholding.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Mean radius</string>
             </property>
@@ -221,6 +236,9 @@
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="robLabel">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filter out foreground objects that touch the image border.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Remove border objects</string>
             </property>
@@ -238,6 +256,9 @@
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="fillHolesLabel">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Close gaps in foreground objects (only topologically closed objects).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Fill holes</string>
             </property>
@@ -269,6 +290,9 @@
           </property>
           <item row="0" column="1">
            <widget class="QSpinBox" name="normMin">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum intensity value of the input image. Values smaller are set to zero.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="maximum">
              <number>999999999</number>
             </property>
@@ -276,6 +300,14 @@
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="normLabel">
+            <property name="toolTip">
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Intensity normalisation. &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Images are converted to 8bit regardless of the original data type. Intesity normalisation defines the dynmaic range of input image.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Intesity normalization</string>
             </property>
@@ -283,6 +315,9 @@
           </item>
           <item row="0" column="2">
            <widget class="QSpinBox" name="normMax">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum intensity value of the input image. Values large are set to 255 (8bit).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="maximum">
              <number>999999999</number>
             </property>
@@ -308,7 +343,7 @@
           <item row="1" column="2">
            <widget class="QSpinBox" name="sizeMax">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;-1 turns off the setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum value of the size filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="minimum">
              <number>-1</number>
@@ -324,7 +359,7 @@
           <item row="0" column="1">
            <widget class="QSpinBox" name="intensityMin">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;-1 turns off the setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum value of the intesity filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="minimum">
              <number>-1</number>
@@ -340,7 +375,7 @@
           <item row="0" column="2">
            <widget class="QSpinBox" name="intensityMax">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;-1 turns off the setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum value of the intesity filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="minimum">
              <number>-1</number>
@@ -356,7 +391,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="intesityLabel">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;-1 turns off the setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Intensity filter&lt;/p&gt;&lt;p&gt;Filter foreground objects by mean intesity. A value of -1 disables the filter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Intesity filter</string>
@@ -366,7 +401,7 @@
           <item row="1" column="1">
            <widget class="QSpinBox" name="sizeMin">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;-1 turns off the setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum value of the size filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="minimum">
              <number>-1</number>
@@ -382,7 +417,7 @@
           <item row="1" column="0">
            <widget class="QLabel" name="sizeLabel">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;-1 turns off the setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size filter&lt;/p&gt;&lt;p&gt;Filter foreground objects by size (min, max) in px². A value of -1 disables the filter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Size filter</string>
@@ -496,7 +531,7 @@
           <item row="4" column="0">
            <widget class="QLabel" name="seedingSizeLabel">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size Parameter&lt;/p&gt;&lt;p&gt;The seeding algorithm smoothes the distances map and searches for local maxiam. This is the window size of the smoothing filter. i.e. only one seed per window. Larger window means less seeds and vice versa. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size Parameter&lt;/p&gt;&lt;p&gt;The seeding algorithm smoothes the distances map and searches for local maxima. This is the window size of the smoothing filter. i.e. only one seed per window. A larger window means less seeds and vice versa. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Seeding size</string>
@@ -506,7 +541,7 @@
           <item row="4" column="1">
            <widget class="QSpinBox" name="seedingSize">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size Parameter&lt;/p&gt;&lt;p&gt;The seeding algorithm smoothes the distances map and searches for local maxiam. This is the window size of the smoothing filter. i.e. only one seed per window. Larger window means less seeds and vice versa. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size Parameter&lt;/p&gt;&lt;p&gt;The seeding algorithm smoothes the distances map and searches for local maxima. This is the window size of the smoothing filter. i.e. only one seed per window. A larger window means less seeds and vice versa. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="maximum">
              <number>10000</number>
@@ -519,7 +554,7 @@
           <item row="5" column="0">
            <widget class="QLabel" name="zslice_label">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;z slice selection&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Define a method of zslice selection/ projection. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;z slice selection&lt;/p&gt;&lt;p&gt;Define a method of zslice selection/ projection. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Z Projection</string>
@@ -529,21 +564,21 @@
           <item row="6" column="1">
            <widget class="QSpinBox" name="zslice">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;z slice selection&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Define a method of zslice selection/ projection. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;z slice selection&lt;/p&gt;&lt;p&gt;Define a method of zslice selection/ projection. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
           <item row="5" column="1">
            <widget class="QComboBox" name="zsliceMethod">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;z slice selection&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Define a method of zslice selection/ projection. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;z slice selection&lt;/p&gt;&lt;p&gt;Define a method of zslice selection/ projection. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
           <item row="7" column="1">
            <widget class="QSpinBox" name="outlineSmoothing">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;outline smoothing&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Smooth the outline of a cell using morphologial closing follow by opening. The parameter is the size of the structuring element. A value of -1 disables this operation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Outline smoothing&lt;/p&gt;&lt;p&gt;Smooth the outline of a cell using morphologial closing followed by an opening. The parameter is the size of the structuring element. A value of -1 disables this operation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="minimum">
              <number>-1</number>
@@ -556,7 +591,7 @@
           <item row="7" column="0">
            <widget class="QLabel" name="contour_label">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;outline smoothing&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Smooth the outline of a cell using morphologial closing follow by opening. The parameter is the size of the structuring element. A value of -1 disables this operation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Outline smoothing&lt;/p&gt;&lt;p&gt;Smooth the outline of a cell using morphologial closing followed by an opening. The parameter is the size of the structuring element. A value of -1 disables this operation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Outline smoothing</string>
