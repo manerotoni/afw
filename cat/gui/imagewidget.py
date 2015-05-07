@@ -39,6 +39,8 @@ class ImageWidget(QtWidgets.QWidget):
 
 class ImageViewer(QtWidgets.QGraphicsView):
 
+    ContourWidth = 0.0
+
     def __init__(self, *args, **kw):
         super(ImageViewer, self).__init__(*args, **kw)
         self.setScene(QtWidgets.QGraphicsScene())
@@ -216,6 +218,7 @@ class ImageViewer(QtWidgets.QGraphicsView):
                 for contour in contours:
                     pen = QtGui.QPen()
                     pen.setColor(color)
+                    pen.setWidth(self.ContourWidth)
                     self.scene().addPolygon(contour, pen=pen)
 
     def drawRects(self, rects):

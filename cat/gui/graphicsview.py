@@ -74,7 +74,7 @@ class AtGraphicsView(MouseWheelView):
     def __init__(self, parent, gsize, show_classes=False, *args, **kw):
         super(AtGraphicsView, self).__init__(parent, *args, **kw)
         self.gsize = gsize
-        self._grid = ItemGrid(self.gsize+CellGraphicsItem.BOUNDARY)
+        self._grid = ItemGrid(self.gsize+CellGraphicsItem.BoundaryWidth)
         self._hdf = None
         self._show_classes = show_classes
 
