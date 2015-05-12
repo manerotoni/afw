@@ -73,36 +73,35 @@ class AtConfig(object):
         settings = QSettings(version.organisation, version.appname)
         settings.beginGroup('Preferences')
 
-        value = settings.value('compression', type=str)
-        if value is not None:
+        if settings.contains('compression'):
+            value = settings.value('compression', None)
             self.compression = value
 
-        value = settings.value('compression_opts')
-        if value is not None:
+        if settings.contains('compression_opts'):
+            value = settings.value('compression_opts', None)
             if isinstance(value, basestring):
-                # is not necessarily a string
                 self.compression_opts = eval(value)
             else:
                 self.compression_opts = value
 
-        value = settings.value('max_sv_fraction', type=float)
-        if value is not None:
+        if settings.contains('max_sv_fraction'):
+            value = settings.value('max_sv_fraction', type=float)
             self.max_sv_fraction = value
 
-        value = settings.value('interactive_item_limit', type=int)
-        if value is not None:
+        if settings.contains('interactive_item_limit'):
+            value = settings.value('interactive_item_limit', 5000, type=int)
             self.interactive_item_limit = value
 
-        value = settings.value('default_sorter', type=str)
-        if value is not None:
+        if settings.contains('default_sorter'):
+            value = settings.value('default_sorter', type=str)
             self.default_sorter = value
 
-        value = settings.value('default_feature_group', type=str)
-        if value is not None:
+        if settings.contains('default_feature_group'):
+            value = settings.value('default_feature_group')
             self.default_feature_group = value
 
-        value = settings.value('contours_complementary_color', type=bool)
-        if value is not None:
+        if settings.contains('contours_complementary_color'):
+            value = settings.value('contours_complementary_color', type=bool)
             self.contours_complementary_color = value
 
         settings.endGroup()

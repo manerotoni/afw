@@ -61,8 +61,8 @@ class LoadAnnotationsDialog(QtWidgets.QDialog):
                 hdf = h5py.File(file_, "r")
                 clf_names = hdf['classifiers'].keys()
             except KeyError as e:
-                QtGui.QMessageBox.critical(self, "Error",
-                                           "No classifiers found")
+                QMessageBox.critical(self, "Error", "No classifiers found")
+                self.openBtn.setEnabled(False)
                 return
 
             else:
@@ -101,7 +101,11 @@ class LoadAnnotationsDialog(QtWidgets.QDialog):
 
         hdf = guessHdfType(self._path.text())
         dmodel = ClfDataModel(self.classifier_name.currentText())
-        name = hdf[dmodel.path].attrs[dmodel.NAME]
+
+        try:
+            name = hdf[dmodel.path].attrs[dmodel.NAME]
+        except KeyError:
+            return
         lib = hdf[dmodel.path].attrs[dmodel.LIB]
 
         # switch classifier before loading

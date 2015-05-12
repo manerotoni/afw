@@ -56,6 +56,7 @@ class AtPreferencesDialog(QtWidgets.QDialog):
         self.hdf_compression.addItems(atc.Compression.keys())
         self.hdf_compression.setCurrentIndex(
             self.hdf_compression.findText(atc.compression))
+
         self.updateCompressionOptions(self.hdf_compression.currentText())
 
         self.hdf_compopts.setCurrentIndex(
@@ -100,4 +101,4 @@ class AtPreferencesDialog(QtWidgets.QDialog):
         atc.interactive_item_limit = self.interactive_item_limit.value()
         atc.compression = self.hdf_compression.currentText()
         atc.compression_opts = self.hdf_compopts.itemData(
-            self.hdf_compopts.currentIndex()).toPyObject()
+            self.hdf_compopts.currentIndex())

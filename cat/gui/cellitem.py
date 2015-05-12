@@ -51,9 +51,8 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
     """Item group to show a pixmap, the segmentation and annotation as one item.
     """
 
-    BOUNDARY = 2.0
-    PENWIDTH = 1.0
-    CONTOURWIDTH = 1.0
+    BoundaryWidth = 2.0
+    ContourWidth = 0.0
 
     def __init__(self, item, *args, **kw):
         super(CellGraphicsItem, self).__init__(*args, **kw)
@@ -97,9 +96,9 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
     def _classRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
-        size = self.BOUNDARY*5
-        rect.setX(rect0.x() + self.PENWIDTH/2.0)
-        rect.setY(rect0.y() + rect0.height() - size - self.PENWIDTH/2.0)
+        size = self.BoundaryWidth*5
+        rect.setX(rect0.x() + self.ContourWidth/2.0)
+        rect.setY(rect0.y() + rect0.height() - size - self.ContourWidth/2.0)
         rect.setSize(QtCore.QSizeF(size, size))
         return rect
 
@@ -108,7 +107,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         brush.setStyle(QtCore.Qt.NoBrush)
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
-        pen.setWidth(self.PENWIDTH)
+        pen.setWidth(self.ContourWidth)
         pen.setColor(Colors.neutral)
         pen.setJoinStyle(Qt.MiterJoin)
 
@@ -123,10 +122,11 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
     def _selectorRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
-        rect.setX(rect0.x() + self.BOUNDARY/2)
-        rect.setY(rect0.y() + self.BOUNDARY/2)
+        rect.setX(rect0.x() + self.BoundaryWidth/2)
+        rect.setY(rect0.y() + self.BoundaryWidth/2)
         rect.setSize(
-            rect0.size() - QtCore.QSizeF(self.BOUNDARY, self.BOUNDARY))
+            rect0.size() - QtCore.QSizeF(
+                self.BoundaryWidth, self.BoundaryWidth))
         return rect
 
     def _addSelectorRect(self):
@@ -134,7 +134,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         brush.setStyle(QtCore.Qt.NoBrush)
         pen = QtGui.QPen()
         pen.setColor(Colors.selected)
-        pen.setWidthF(self.BOUNDARY)
+        pen.setWidthF(self.BoundaryWidth)
         pen.setJoinStyle(Qt.MiterJoin)
 
         rect = self._selectorRect()
@@ -232,14 +232,14 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
 
         pen = QtGui.QPen()
         pen.setColor(color)
-        pen.setWidth(self.CONTOURWIDTH)
+        pen.setWidth(self.ContourWidth)
         polygon = QtGui.QPolygonF([QtCore.QPointF(*p) for p in contour])
         item = QtWidgets.QGraphicsPolygonItem(self)
         item.setPolygon(polygon)
         item.setPos(self.pos())
         item.setPen(pen)
         item.setZValue(StackOrder.contour)
-        # item.setOpacity(0.5)
+
         self.addMask(polygon)
         self.addToGroup(item)
 
@@ -286,9 +286,9 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
     def _tsRect(self):
         rect0 = self.childrenBoundingRect()
         rect = QtCore.QRectF()
-        size = self.BOUNDARY*5
-        rect.setX(rect0.x() + self.PENWIDTH/2.0)
-        rect.setY(rect0.y() + rect0.height() - 1.5*size - self.PENWIDTH*1.5)
+        size = self.BoundaryWidth*5
+        rect.setX(rect0.x() + self.ContourWidth/2.0)
+        rect.setY(rect0.y() + rect0.height() - 1.5*size - self.ContourWidth*1.5)
         rect.setSize(QtCore.QSizeF(size, size))
         return rect
 
