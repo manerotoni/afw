@@ -108,6 +108,10 @@ class XmlConfReader(XmlConf):
         return [validate_tagname(ac, reverse=True) for ac in
                 self.root.attrib[self.ACTIVE_CHANNELS].split()]
 
+    def channels(self):
+        return sorted([validate_tagname(c.tag, reverse=True)
+                       for c in self.root.getchildren()])
+
     def color(self, channel):
         """Return the predefined color of a channel as hexcolor."""
         element = self.root.xpath(validate_tagname(channel))[0]

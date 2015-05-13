@@ -239,7 +239,6 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         item.setPos(self.pos())
         item.setPen(pen)
         item.setZValue(StackOrder.contour)
-
         self.addMask(polygon)
         self.addToGroup(item)
 
@@ -297,6 +296,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         brush.setStyle(QtCore.Qt.SolidPattern)
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
+        pen.setWidth(self.PENWIDTH)
         pen.setJoinStyle(Qt.MiterJoin)
         pen.setColor(Colors.neutral)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)
