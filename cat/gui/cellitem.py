@@ -296,7 +296,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         brush.setStyle(QtCore.Qt.SolidPattern)
         brush.setColor(Colors.neutral)
         pen = QtGui.QPen()
-        pen.setWidth(self.PENWIDTH)
+        pen.setWidth(self.ContourWidth)
         pen.setJoinStyle(Qt.MiterJoin)
         pen.setColor(Colors.neutral)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)

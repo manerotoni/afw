@@ -57,7 +57,7 @@ class CrossValidationDialog(QtWidgets.QWidget):
     gridSearchFinished = QtCore.pyqtSignal()
     crossValidationFinished = QtCore.pyqtSignal()
 
-    ScoringMethods = ("accuracy", "f1", "precision", "recall")
+    ScoringMethods = ("accuracy", "f1_weighted", "precision", "recall")
 
     def __init__(self, parent, classifier, *args, **kw):
         super(CrossValidationDialog, self).__init__(parent=parent, *args, **kw)
