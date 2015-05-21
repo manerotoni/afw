@@ -77,7 +77,7 @@ class MultiChannelProcessor(object):
     def image(self):
         del self._image
 
-    def iterQImages(self, all_channels=True, normalize=False):
+    def iterQImages(self, all_channels=True, normalize=True):
         """Iterator over to qimage converted images, one qimage per channel."""
         if all_channels:
             channels = range(self._reader.channels)

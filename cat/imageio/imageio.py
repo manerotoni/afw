@@ -11,7 +11,6 @@ __licence__ = 'GPL'
 import numpy as np
 from pylsm.lsmreader import Lsmimage
 
-
 class ImageProps(object):
     """Describes basic image data types. It determines min/max grey values
     ranges and the bitdepth."""
@@ -24,14 +23,16 @@ class ImageProps(object):
 
         self.image_min = image.min()
         self.image_max = image.max()
+        self.bitdepth = np.nbytes[image.dtype]*8
 
         if np.issubdtype(np.int, image.dtype) or \
                 np.issubdtype(np.uint, image.dtype):
             iinfo = np.iinfo(image.dtype)
             self.min = iinfo.min
             self.max = iinfo.max
-            self.range = self.max - self.min
-            self.histogram = np.histogram(image.flatten(), bins=self.range)
+            self.range = 2**self.bitdepth
+            bins = range(self.range)
+            self.histogram = np.histogram(image.flatten(), bins=bins)
 
         elif np.issubdtype(np.float, image.dtype):
             finfo = np.finfo(image.dtype)
@@ -39,22 +40,22 @@ class ImageProps(object):
             self.max = 1.0
             self.range = 1.0
             self.histogram = np.histogram(image.flatten(), bins=256)
-        self.bitdepth = np.nbytes[image.dtype]*8
+            self.hist_minmax = self.histogram
 
 
-    def autoRange(self):
+    def autoRange(self, value=0.1):
         """Return minimum and maximum values of an image that cut of 1 percent of
         the image histogram
         """
-        hist = self.histogram[0]
 
-        npixels = hist.sum()
-        hmin = np.floor(npixels/100.0*0.1) # 0.5 % of the pixes
-        hmax = np.floor(npixels - hmin)
+        hist = self.histogram[0]
         csum = hist.cumsum()
+        npixels = csum[-1]
+        hmin = npixels*value*0.005 # 0.5 % of the pixes
+        hmax = npixels - hmin
 
         try:
-            maximum = csum[csum <= hmax].size - 1
+            maximum = min(csum[csum <= hmax].size, hist.size - 1)
         except ValueError:
             maximum = self.image_max
 
@@ -63,10 +64,11 @@ class ImageProps(object):
         except ValueError:
             minimum = self.image_min
 
-        return minimum, maximum
+        return np.array((minimum, maximum))
 
-    def dynamicRange(self):
-        return self.image_min, self.image_max
+    @property
+    def dynamic_range(self):
+        return np.array([self.image_min, self.image_max])
 
 
 class MetaData(object):

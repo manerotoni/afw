@@ -41,8 +41,6 @@ class BaCCalculator(QtCore.QObject):
     @image_properties.setter
     def image_properties(self, prop):
         self._image_properties = prop
-        self.image_minimum = prop.min
-        self.image_maximum = prop.max
 
     @image_properties.deleter
     def image_properties(self):
@@ -110,8 +108,17 @@ class BaCCalculator(QtCore.QObject):
         self.update()
         self.valuesUpdated.emit()
 
-    def setAuto(self):
-        self.minimum, self.maximum = self.image_properties.autoRange()
+    def setAuto(self, mf=0.3):
+
+        ip = self.image_properties
+        hmin, hmax = ip.autoRange(value=0.05)
+        fac = self.slider_range/float(ip.dynamic_range.ptp())
+
+        hmin = (hmin - ip.image_min)*fac
+        hmax = (hmax - ip.image_min)*fac
+
+        arange = np.array([hmin*mf, hmax + mf*(self.slider_range - hmax)])
+        self.minimum, self.maximum = np.round(arange, 0).astype(int)
         self.update()
         self.valuesUpdated.emit()
 
@@ -170,6 +177,7 @@ class AtContrastSliderWidget(QtWidgets.QWidget):
         self.resetBtn.clicked.connect(self.buttonClicked.emit)
         self.autoBtn.clicked.connect(self.buttonClicked.emit)
 
+        self.buttonClicked.connect(self.valuesToolTip)
         self.updateSliders()
 
     @property

@@ -189,7 +189,7 @@ class SegmentationDialog(QtWidgets.QWidget):
         self.clearRegions()
         self.pchannel.clear()
         for i, name in enumerate(names):
-            norm_min, norm_max = image_properties[i].dynamicRange()
+            norm_min, norm_max = image_properties[i].dynamic_range
             if i > 0 : # assuming the first item is for the primary segmentation
                 self.addExpandedRegion(name, norm_min, norm_max)
             else:
