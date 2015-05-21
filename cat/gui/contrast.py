@@ -111,24 +111,7 @@ class BaCCalculator(QtCore.QObject):
         self.valuesUpdated.emit()
 
     def setAuto(self):
-
-        hist = self.image_properties.histogram[0]
-        npixels = hist.sum()
-        hmin = np.floor(npixels/100.0*0.1) # 0.5 % of the pixes
-        hmax = np.floor(npixels - hmin)
-        csum = hist.cumsum()
-
-        try:
-            self.maximum = csum[csum <= hmax].size - 1
-        except ValueError:
-            self.maximum = self.image_properties.image_max
-
-        try:
-            self.minimum = max(csum[csum <= hmin].size - 1, 0)
-        except ValueError:
-            self.minimum = self.image_properties.image_min
-
-
+        self.minimum, self.maximum = self.image_properties.autoRange()
         self.update()
         self.valuesUpdated.emit()
 

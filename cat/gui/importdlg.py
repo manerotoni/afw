@@ -164,10 +164,11 @@ class ImportDialog(QtWidgets.QDialog):
         self.metadata = proc.metadata
         self.metadata.n_images = len(self._files)
         images = list(proc.iterQImages())
+        props = list(proc.iterprops())
         self.cbar.addChannels(len(images))
         self.cbar.setImages(images, list(proc.iterprops()))
 
-        self.segdlg.setRegions(self.cbar.allChannels())
+        self.segdlg.setRegions(self.cbar.allChannels(), props)
         self.segdlg.setMaxZSlice(self.metadata.n_zslices-1)
         self.slider.setRange(0, self.metadata.n_images-1)
         self.slider.setValue(0)

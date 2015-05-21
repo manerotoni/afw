@@ -77,7 +77,7 @@ class MultiChannelProcessor(object):
     def image(self):
         del self._image
 
-    def iterQImages(self, all_channels=True):
+    def iterQImages(self, all_channels=True, normalize=False):
         """Iterator over to qimage converted images, one qimage per channel."""
         if all_channels:
             channels = range(self._reader.channels)
@@ -93,7 +93,7 @@ class MultiChannelProcessor(object):
             else:
                 image = zProjection(self.image[:, :, :, ci], zprojection)
 
-            yield gray2qimage(image, normalize=False)
+            yield gray2qimage(image, normalize=normalize)
 
     def _gallery_image(self, center, gallery_size=50):
         height, width, zslices, nchannels = self.image.shape

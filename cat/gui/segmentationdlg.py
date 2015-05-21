@@ -70,6 +70,10 @@ class ExpansionWidget(QtWidgets.QGroupBox):
         self.normMax.setValue(params.norm_max)
         self.setValue(params.expansion_size)
 
+    def setNormalisation(self, norm_min, norm_max):
+        self.normMin.setValue(norm_min)
+        self.normMax.setValue(norm_max)
+
 
 class SegmentationDialog(QtWidgets.QWidget):
 
@@ -89,7 +93,6 @@ class SegmentationDialog(QtWidgets.QWidget):
         super(SegmentationDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
         self.setWindowFlags(Qt.Tool)
-#        self.setWindowModality(Qt.NonModal)
         # row count (rowCount from gridlayout is not reliable!)
         self._rcount = 1
 
@@ -101,11 +104,7 @@ class SegmentationDialog(QtWidgets.QWidget):
         self.zsliceMethod.addItems(ZProject.names())
         self.zsliceMethod.currentIndexChanged.connect(
             self.onZSliceMethodChanged)
-        #self.zslice.valueChanged.connect(self.emitParamsChanged)
         self.zslice.valueChanged.connect(self.emitImageUpdate)
-
-        #self.outlineSmoothing.valueChanged.connect(
-        #    self.emitParamsChanged)
 
     def onZSliceMethodChanged(self, index):
 
@@ -149,8 +148,9 @@ class SegmentationDialog(QtWidgets.QWidget):
 
         self.paramsChanged.emit()
 
-    def addExpandedRegion(self, name):
+    def addExpandedRegion(self, name, norm_min, norm_max):
         expw = ExpansionWidget(self)
+        expw.setNormalisation(norm_min, norm_max)
         ftrbox = FeatureBox(self)
 
         expw.setValue(expw.value()+ self._rcount)
@@ -185,15 +185,19 @@ class SegmentationDialog(QtWidgets.QWidget):
 
         self.pchannel.removeItem(self.pchannel.findText(region))
 
-    def setRegions(self, names):
+    def setRegions(self, names, image_properties):
         self.clearRegions()
         self.pchannel.clear()
         for i, name in enumerate(names):
+            norm_min, norm_max = image_properties[i].dynamicRange()
             if i > 0 : # assuming the first item is for the primary segmentation
-                self.addExpandedRegion(name)
+                self.addExpandedRegion(name, norm_min, norm_max)
             else:
                 self.pchannel.addItems(names)
                 self.pchannel.setCurrentIndex(0)
+                self.normMin.setValue(norm_min)
+                self.normMax.setValue(norm_max)
+
 
     def _primaryParams(self):
         return PrimaryParams(self.medianRadius.value(),
@@ -318,7 +322,6 @@ class SegmentationDialog(QtWidgets.QWidget):
         self.blockSignals(oldstate)
         self.emitImageUpdate()
         self.emitParamsChanged()
-
 
     def _updateExtendedRegion(self, index, settings):
         """Update the form for extended segementation region by given by name"""

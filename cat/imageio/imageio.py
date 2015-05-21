@@ -42,6 +42,33 @@ class ImageProps(object):
         self.bitdepth = np.nbytes[image.dtype]*8
 
 
+    def autoRange(self):
+        """Return minimum and maximum values of an image that cut of 1 percent of
+        the image histogram
+        """
+        hist = self.histogram[0]
+
+        npixels = hist.sum()
+        hmin = np.floor(npixels/100.0*0.1) # 0.5 % of the pixes
+        hmax = np.floor(npixels - hmin)
+        csum = hist.cumsum()
+
+        try:
+            maximum = csum[csum <= hmax].size - 1
+        except ValueError:
+            maximum = self.image_max
+
+        try:
+            minimum = max(csum[csum <= hmin].size - 1, 0)
+        except ValueError:
+            minimum = self.image_min
+
+        return minimum, maximum
+
+    def dynamicRange(self):
+        return self.image_min, self.image_max
+
+
 class MetaData(object):
     """Meta data of an image, such as size, number of channels its dtype.
     Furhter ther is the number of images which is similar to the stack size.
