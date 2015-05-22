@@ -69,8 +69,7 @@ class AtAssistant(QtWidgets.QMainWindow):
 
         self.hengine = QtHelp.QHelpEngine(collections_file)
         self.hengine.setupData()
-        self._doc = qchfile = join(dirname(__file__), 'annotationtool.qch')
-        self.hengine.registerDocumentation(qchfile)
+        self.hengine.registerDocumentation(collections_file.replace('.qhc', '.qch'))
 
         self.hengine.searchEngine().reindexDocumentation()
         self.hbrowser = AtHelpBrowser()
