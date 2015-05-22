@@ -30,18 +30,19 @@ class ImageProps(object):
             iinfo = np.iinfo(image.dtype)
             self.min = iinfo.min
             self.max = iinfo.max
-            self.range = 2**self.bitdepth
-            bins = range(self.range)
+            bins = range(2**self.bitdepth)
             self.histogram = np.histogram(image.flatten(), bins=bins)
 
         elif np.issubdtype(np.float, image.dtype):
             finfo = np.finfo(image.dtype)
             self.min = 0.0
             self.max = 1.0
-            self.range = 1.0
             self.histogram = np.histogram(image.flatten(), bins=256)
             self.hist_minmax = self.histogram
 
+    @property
+    def range(self):
+        return np.array([self.min, self.max])
 
     def autoRange(self, value=0.1):
         """Return minimum and maximum values of an image that cut of 1 percent of
