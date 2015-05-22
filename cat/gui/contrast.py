@@ -204,10 +204,15 @@ class AtContrastSliderWidget(QtWidgets.QWidget):
         self.valuesUpdated.emit()
 
     def valuesToolTip(self, dummy=None):
+
+        c = self.settings.image_properties.range/ \
+            float(self.settings.slider_range)
         # is connected to slider.valueChanged which emits an integer value
         msg = ("Min: %d\nMax: %d\nContrast: %d\nBrightness: %d"
-               %(self.settings.minimum, self.settings.maximum,
-                 self.settings.contrast, self.settings.brightness))
+               %(round(self.settings.minimum*c, 0),
+                 round(self.settings.maximum*c, 0),
+                 round(self.settings.contrast*c, 0),
+                 round(self.settings.brightness*c, 0)))
 
         QtWidgets.QToolTip.showText(QtGui.QCursor.pos(), msg, self)
 
