@@ -70,10 +70,13 @@ class ExpansionWidget(QtWidgets.QGroupBox):
         self.normMax.setValue(params.norm_max)
         self.setValue(params.expansion_size)
 
-    def setNormalisation(self, norm_min, norm_max):
+    def setNormalisation(self, norm_min, norm_max, min=None, max=None):
         self.normMin.setValue(norm_min)
         self.normMax.setValue(norm_max)
 
+        if min is not None and max is not None:
+            self.normMin.setRange(min, max)
+            self.normMax.setRange(min, max)
 
 class SegmentationDialog(QtWidgets.QWidget):
 
@@ -148,9 +151,9 @@ class SegmentationDialog(QtWidgets.QWidget):
 
         self.paramsChanged.emit()
 
-    def addExpandedRegion(self, name, norm_min, norm_max):
+    def addExpandedRegion(self, name, norm_min, norm_max, min, max):
         expw = ExpansionWidget(self)
-        expw.setNormalisation(norm_min, norm_max)
+        expw.setNormalisation(norm_min, norm_max, min, max)
         ftrbox = FeatureBox(self)
 
         expw.setValue(expw.value()+ self._rcount)
@@ -189,14 +192,17 @@ class SegmentationDialog(QtWidgets.QWidget):
         self.clearRegions()
         self.pchannel.clear()
         for i, name in enumerate(names):
-            norm_min, norm_max = image_properties[i].dynamic_range
+            ip = image_properties[i]
+            norm_min, norm_max = ip.dynamic_range
             if i > 0 : # assuming the first item is for the primary segmentation
-                self.addExpandedRegion(name, norm_min, norm_max)
+                self.addExpandedRegion(name, norm_min, norm_max, ip.min, ip.max)
             else:
                 self.pchannel.addItems(names)
                 self.pchannel.setCurrentIndex(0)
                 self.normMin.setValue(norm_min)
                 self.normMax.setValue(norm_max)
+                self.normMax.setRange(ip.min, ip.max)
+                self.normMin.setRange(ip.min, ip.max)
 
 
     def _primaryParams(self):
