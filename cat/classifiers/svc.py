@@ -113,7 +113,7 @@ class SvcParameterWidget(QtWidgets.QFrame):
 
         self.addClassBtn = QtWidgets.QToolButton()
         self.addClassBtn.setToolTip("Add new class")
-        self.addClassBtn.setIcon(QtGui.QIcon(":/oxygen/code-class.png"))
+        self.addClassBtn.setIcon(QtGui.QIcon(":/add-class.png"))
         self.addClassBtn.setSizePolicy(
             QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.addClassBtn.pressed.connect(self.onAddBtn)

@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
+    <file>add-class.png</file>
     <file>load_classifier.png</file>
     <file>segmentation_128x128.png</file>
     <file>oxygen/document-close-icon.png</file>
