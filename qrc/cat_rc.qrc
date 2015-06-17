@@ -1,5 +1,10 @@
 <RCC>
   <qresource prefix="/">
+    <file alias="backward.png">oxygen/backward.png</file>
+    <file alias="forward.png">oxygen/forward.png</file>
+    <file alias="home.png">oxygen/home.png</file>
+    <file alias="print.png">oxygen/print.png</file>
+    <file alias="reload.png">oxygen/reload.png</file>
     <file>add-class.png</file>
     <file>load_classifier.png</file>
     <file>segmentation_128x128.png</file>
