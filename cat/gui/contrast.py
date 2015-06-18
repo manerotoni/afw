@@ -204,6 +204,8 @@ class AtContrastSliderWidget(QtWidgets.QWidget):
         self.valuesUpdated.emit()
 
     def valuesToolTip(self, dummy=None):
+        if self.settings.image_properties is None:
+            return
 
         c = (self.settings.image_properties.max+1)/ \
             float(self.settings.slider_range)
