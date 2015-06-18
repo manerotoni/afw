@@ -19,7 +19,11 @@ class ChannelName(object):
     """
 
     @classmethod
-    def abreviate(self, name):
+    def splitFeatureName(cls, fname):
+        return fname.split('-')
+
+    @classmethod
+    def abreviate(cls, name):
 
         if not name.lower().startswith("channel"):
             raise ValueError("Invalid channel name")
@@ -37,7 +41,7 @@ class ChannelName(object):
             return "ch%s" %ns[1]
 
     @classmethod
-    def number(self, name):
+    def number(cls, name):
 
         if name.lower().startswith("channel "):
             return int(name[8:])
@@ -51,7 +55,7 @@ class ChannelName(object):
             raise ValueError("Invalid channel name")
 
     @classmethod
-    def from_abreviation(self, name):
+    def from_abreviation(cls, name):
 
         if name.startswith("ch"):
             return "Channel %d" %int(name[2:])

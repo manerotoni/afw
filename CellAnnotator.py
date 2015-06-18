@@ -5,7 +5,7 @@ CellAnnotator.py
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
-__licence__ ='GPL'
+__licence__ = 'GPL'
 
 import os
 from os.path import dirname, join

@@ -15,7 +15,9 @@ from collections import defaultdict
 
 from cat.config import AtConfig
 from cat.xmlconf import XmlConfWriter
+from cat.features import FeatureGroups
 
+from cat.segmentation.channelname import ChannelName as cn
 
 class HdfDataModel(object):
 
@@ -39,6 +41,7 @@ class HdfDataModel(object):
         self.gallery = "%s/gallery" %self.data
         self.bbox = "%s/bbox" %self.data
         self.features = "%s/features" %self.data
+        self.fgroups = "%s/feature_groups" %self.data
         self.settings = "/settings/segmentation"
 
 
@@ -55,6 +58,7 @@ class HdfCache(object):
         self.colors = colors
         self._images = list()
 
+        self.feature_names = feature_names
         self._dt_gallery = gallery_dtype
         self._dt_bbox = [('label', np.uint32), ('x', np.uint16),
                          ('y', np.uint16), ('top', np.uint16),
@@ -63,7 +67,20 @@ class HdfCache(object):
 
         self._dt_features = [(str(n), np.float32) for n in feature_names]
         self._dt_contours = h5py.special_dtype(vlen=np.uint16)
+        self._dt_groups = [('feature', "S64")] + \
+            [(str(g), "S64") for g in FeatureGroups.keys()]
 
+        # setup the table of feature groups
+        self.fgroups = np.empty((len(feature_names), ), dtype=self._dt_groups)
+        for i, fname in enumerate(feature_names):
+            line = [fname]
+
+            for v in FeatureGroups.values():
+                fname2 = cn.splitFeatureName(fname)[1]
+                line.append(v.inverse[fname2])
+            line = tuple([str(l) for l in line])
+
+            self.fgroups[i] = np.array(line, dtype=self._dt_groups)
 
     def appendData(self, objectsdict, image):
         nobj = len(objectsdict)
@@ -148,7 +165,7 @@ class HdfWriter(object):
                                        self._colors)
             self._cache.appendData(objectsdict, image)
 
-    def _write_contours(self):
+    def _writeContours(self):
 
         for cname, contours in self._cache.contours.iteritems():
             path = "%s/%s" %(self.dmodel.contours, cname.replace(" ", "_"))
@@ -174,7 +191,10 @@ class HdfWriter(object):
                 self.dmodel.gallery, data=self._cache.gallery,
                 chunks=(self._cache.gallery.shape[:2] + (1, 1)),
                 compression=self._compression, compression_opts=self._copts)
-            self._write_contours()
+            dset = self._file.create_dataset(
+                self.dmodel.fgroups, data=self._cache.fgroups,
+                compression=self._compression, compression_opts=self._copts)
+            self._writeContours()
 
             images = self._cache.image
             chunksize = images.shape[:2] + (1, 1, 1)
