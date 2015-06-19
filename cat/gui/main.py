@@ -298,7 +298,6 @@ class AtMainWindow(QtWidgets.QMainWindow):
     def updateToolbars(self, props):
         self.navToolBar.updateToolbar(props.coordspace)
         self.toolBar.updateToolbar(props)
-        self.sorting.setFeatureGroups(props.feature_groups)
         self.contrast.setChannelNames(props.channel_names, props.colors)
 
     def setupToolbar(self):
@@ -360,6 +359,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
     def onLoadingFinished(self):
         self.annotation.setFeatureNames(self.loader.featureNames)
+        self.sorting.setFeatureGroups(self.loader.featureGroups)
 
     def onDropEvent(self, path):
         self._fileOpen(path)

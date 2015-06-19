@@ -29,6 +29,7 @@ class AtLoader(QtCore.QObject):
         self._nitems = None
         self._aborted = False
         self._feature_names = None
+        self._fgroups = None
 
     def __call__(self):
         self._aborted = False
@@ -52,6 +53,13 @@ class AtLoader(QtCore.QObject):
             raise RuntimeError("No dataset loaded yet")
         return self._feature_names
 
+    @property
+    def featureGroups(self):
+        """Return the feature names of the last dataset loaded"""
+        if self._fgroups is None:
+            raise RuntimeError("No dataset loaded yet")
+        return self._fgroups
+
     def openFile(self, file_):
         self.close()
         self._h5f = guessHdfType(file_)
@@ -70,6 +78,7 @@ class AtLoader(QtCore.QObject):
         if self._h5f is not None:
             self._h5f.close()
             self._feature_names = None
+            self._fgroups = None
             self._h5f = None
 
     def abort(self):
@@ -82,6 +91,7 @@ class AtLoader(QtCore.QObject):
 
         # feature names of the last dataset loaded
         self._feature_names = self._h5f.featureNames(self._coordinate['region'])
+        self._fgroups = self._h5f.featureGroups(self._coordinate['region'])
 
         if AtConfig().interactive_item_limit < self._h5f.numberItems(self._coordinate):
             self._loadItemsSingle()

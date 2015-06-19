@@ -21,8 +21,7 @@ from cat.gui.painting import AtPainter
 
 HdfFileInfo = namedtuple("HdfFileInfo",
                          ["gal_settings_mutable", "n_items", "gallery_size",
-                          "coordspace", "channel_names", "colors",
-                          "feature_groups"])
+                          "coordspace", "channel_names", "colors"])
 
 
 class HdfError(Exception):

@@ -45,14 +45,11 @@ class AtTrainingSetIO(HdfFile):
                   'site': cspace.values()[0].values()[0].keys(),
                   'region': cspace.values()[0].values()[0].values()[0]}
 
-
-        fgroups = self.featureGroups()
-
         return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
                            self.numberItems(), self.gsize, cspace,
-                           self.channelNames, self.colors, fgroups)
+                           self.channelNames, self.colors)
 
-    def featureGroups(self):
+    def featureGroups(self, region=None):
         """Return the feature groups as nested dictionaries.
         e.g. {channel: {meta_group: { group: (feature_list)}}}"""
         fg = self[self.dmodel.feature_groups]

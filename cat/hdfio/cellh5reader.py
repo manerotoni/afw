@@ -16,7 +16,11 @@ import base64
 
 import time
 import numpy as np
+from collections import OrderedDict
 from cat.hdfio.readercore import HdfFile, HdfItem, HdfFileInfo
+from cat.segmentation.channelname import ChannelName as cn
+from cat.features import FGroup
+
 
 # regular expressin that matches
 #/sample/0/plate/H2b_aTub_MD20x_exp911/experiment/0/
@@ -92,7 +96,7 @@ class Ch5Reader(HdfFile):
     _rname = "region_name"
     _channel_index = "channel_idx"
     _tidx = "time_idx"
-
+    _feature_groups = "feature_groups"
 
     def __init__(self, *args, **kw):
         super(Ch5Reader, self).__init__(*args, **kw)
@@ -111,17 +115,19 @@ class Ch5Reader(HdfFile):
                   'site': cspace.values()[0].values()[0].keys(),
                   'region': cspace.values()[0].values()[0].values()[0]}
 
-        fgroups = self.featureGroups()
-        return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
-                           self.numberItems(), self.gsize, cspace,
-                           self.channelNames, self.colors, fgroups)
+        return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE, 500, 65,
+                           cspace, self.channelNames, self.colors)
 
-
-
-    def featureGroups(self):
+    def featureGroups(self, region):
         """Return the feature groups as nested dictionaries.
         e.g. {channel: {meta_group: { group: (feature_list)}}}"""
-        fg = self[self.dmodel.feature_groups]
+
+        path = "%s/%s/object_features" %(self._features_def_key, region)
+
+        fg = self[path]
+        gmap = dict()
+        for l in fg.attrs[self._feature_groups]:
+            gmap[l[0]] = l[1]
 
         ftrs = fg.dtype.names[0]
         groups = fg.dtype.names[1:]
@@ -133,14 +139,14 @@ class Ch5Reader(HdfFile):
             meta_group = OrderedDict()
             for group in groups:
                 fgroup = FGroup(group, [(g, []) for g in np.unique(fg[group])])
-                meta_group[group] = fgroup
+                meta_group[gmap[group]] = fgroup
             ch_groups[channel] = meta_group
 
         for line in fg:
-            channel, fname = cn.splitFeatureName(line[0])
-            channel = cn.validFromShort(channel)
-            for i, group in enumerate(groups):
-                ch_groups[channel][group][line[i+1]].append(fname)
+            fname = line[0]
+            for channel in channels:
+                for i, group in enumerate(groups):
+                    ch_groups[channel][gmap[group]][line[i+1]].append(fname)
         return ch_groups
 
     # @property
