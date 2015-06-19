@@ -11,7 +11,7 @@ __all__ = ("AtTrainingSetIO", )
 import numpy as np
 from cat.hdfio.readercore import HdfFile, HdfFileInfo, HdfItem
 from cat.hdfio.hdfwriter import HdfDataModel
-
+from collections import OrderedDict()
 
 class AtTrainingSetIO(HdfFile):
     """Reader and writer for the annotation tool trainingset data. The file
@@ -46,6 +46,22 @@ class AtTrainingSetIO(HdfFile):
         return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
                            self.numberItems(), self.gsize, cspace,
                            self.channelNames, self.colors)
+
+    @property
+    def featureGroups(self):
+        fg = self[self.dmodel.feature_groups]
+
+        fnames = fg.dtype.names()[0]
+        groups = fg.dtype.names()[1:]
+        fgroups = OrderedDict()
+
+        for group in groups:
+            fgroups[group] = defaultdict(list)
+
+        for line in fg:
+
+
+
     @property
     def colors(self):
         colors = self[self.dmodel.images].attrs[self.dmodel.COLORS]

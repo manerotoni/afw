@@ -113,6 +113,9 @@ class HdfFile(h5py.File):
         by child classes."""
         raise NotImplementedError()
 
+    def featureGroups(self):
+        raise NotImplementedError()
+
     def channelNames(self):
         raise NotImplementedError()
 
