@@ -111,8 +111,37 @@ class Ch5Reader(HdfFile):
                   'site': cspace.values()[0].values()[0].keys(),
                   'region': cspace.values()[0].values()[0].values()[0]}
 
-        return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE, 500, 65, cspace,
-                           self.channelNames, self.colors)
+        fgroups = self.featureGroups()
+        return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
+                           self.numberItems(), self.gsize, cspace,
+                           self.channelNames, self.colors, fgroups)
+
+
+
+    def featureGroups(self):
+        """Return the feature groups as nested dictionaries.
+        e.g. {channel: {meta_group: { group: (feature_list)}}}"""
+        fg = self[self.dmodel.feature_groups]
+
+        ftrs = fg.dtype.names[0]
+        groups = fg.dtype.names[1:]
+
+        channels = self.channelNames
+        ch_groups = OrderedDict()
+
+        for channel in channels:
+            meta_group = OrderedDict()
+            for group in groups:
+                fgroup = FGroup(group, [(g, []) for g in np.unique(fg[group])])
+                meta_group[group] = fgroup
+            ch_groups[channel] = meta_group
+
+        for line in fg:
+            channel, fname = cn.splitFeatureName(line[0])
+            channel = cn.validFromShort(channel)
+            for i, group in enumerate(groups):
+                ch_groups[channel][group][line[i+1]].append(fname)
+        return ch_groups
 
     # @property
     # def colors(self):
