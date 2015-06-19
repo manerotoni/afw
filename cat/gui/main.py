@@ -298,7 +298,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
     def updateToolbars(self, props):
         self.navToolBar.updateToolbar(props.coordspace)
         self.toolBar.updateToolbar(props)
-        self.sorting.setChannelNames(props.channel_names)
+        self.sorting.setFeatureGroups(props.feature_groups)
         self.contrast.setChannelNames(props.channel_names, props.colors)
 
     def setupToolbar(self):

@@ -32,7 +32,7 @@ class AtChannelFeatureGroupsWidget(QtWidgets.QWidget):
 
     selectionChanged = QtCore.pyqtSignal()
 
-    def __init__(self, title, *args, **kw):
+    def __init__(self, title, table, *args, **kw):
         super(AtChannelFeatureGroupsWidget, self).__init__(*args, **kw)
         self.setLayout(QtWidgets.QVBoxLayout())
         self.gbox = QtWidgets.QGroupBox(self)
@@ -47,7 +47,7 @@ class AtChannelFeatureGroupsWidget(QtWidgets.QWidget):
 
         self.gbox.setTitle(cn.display(title))
 
-        self._table = AtConfig.FeatureGroups[AtConfig().default_feature_group]
+        self._table = table
 
         for group, names in self._table.iteritems():
             self.addFeatureGroup(group, names)
@@ -150,16 +150,17 @@ class AtSortWidget(AtSideBarWidget):
         for i in xrange(self.fbox.count()):
             yield self.fbox.itemAt(i).widget()
 
-    def setChannelNames(self, channel_names):
-        self.clearChannels()
-        self._channels = channel_names
-        for chn in channel_names:
-            fgw = AtChannelFeatureGroupsWidget(chn, self)
+    def setFeatureGroups(self, feature_groups):
+        self.clearFeatureGroups()
+        self._channels = feature_groups.keys()
+        for chn, tables in feature_groups.iteritems():
+            table = tables[AtConfig().default_feature_group]
+            fgw = AtChannelFeatureGroupsWidget(chn, table, self)
             self.fbox.insertWidget(self.fbox.count(), fgw)
             fgw.selectionChanged.connect(self.onSelectionChanged)
             setattr(self, chn.lower(), fgw)
 
-    def clearChannels(self):
+    def clearFeatureGroups(self):
         for i in xrange(self.fbox.count()):
             item = self.fbox.takeAt(0)
             item.widget().close()

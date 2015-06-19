@@ -41,7 +41,7 @@ class HdfDataModel(object):
         self.gallery = "%s/gallery" %self.data
         self.bbox = "%s/bbox" %self.data
         self.features = "%s/features" %self.data
-        self.fgroups = "%s/feature_groups" %self.data
+        self.feature_groups = "%s/feature_groups" %self.data
         self.settings = "/settings/segmentation"
 
 
@@ -192,7 +192,7 @@ class HdfWriter(object):
                 chunks=(self._cache.gallery.shape[:2] + (1, 1)),
                 compression=self._compression, compression_opts=self._copts)
             dset = self._file.create_dataset(
-                self.dmodel.fgroups, data=self._cache.fgroups,
+                self.dmodel.feature_groups, data=self._cache.fgroups,
                 compression=self._compression, compression_opts=self._copts)
             self._writeContours()
 

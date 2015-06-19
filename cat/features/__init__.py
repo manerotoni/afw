@@ -5,4 +5,4 @@ __init__.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-from cecog.features import FeatureGroups
+from cecog.features import *

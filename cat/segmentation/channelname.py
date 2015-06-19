@@ -63,9 +63,13 @@ class ChannelName(object):
             raise ValueError("Invalid channel name")
 
     @classmethod
-    def validate(self, name):
+    def validate(cls, name):
         return name.replace(" ", "_")
 
     @classmethod
-    def display(self, name):
+    def display(cls, name):
         return name.replace("_", " ")
+
+    @classmethod
+    def validFromShort(cls, name):
+        return cls.validate(cls.from_abreviation(name))

@@ -9,9 +9,11 @@ __all__ = ("AtTrainingSetIO", )
 
 
 import numpy as np
+from collections import OrderedDict
 from cat.hdfio.readercore import HdfFile, HdfFileInfo, HdfItem
 from cat.hdfio.hdfwriter import HdfDataModel
-from collections import OrderedDict()
+from cat.segmentation.channelname import ChannelName as cn
+from cat.features import FGroup
 
 class AtTrainingSetIO(HdfFile):
     """Reader and writer for the annotation tool trainingset data. The file
@@ -43,24 +45,37 @@ class AtTrainingSetIO(HdfFile):
                   'site': cspace.values()[0].values()[0].keys(),
                   'region': cspace.values()[0].values()[0].values()[0]}
 
+
+        fgroups = self.featureGroups()
+
         return HdfFileInfo(self.GALLERY_SETTINGS_MUTABLE,
                            self.numberItems(), self.gsize, cspace,
-                           self.channelNames, self.colors)
+                           self.channelNames, self.colors, fgroups)
 
-    @property
     def featureGroups(self):
+        """Return the feature groups as nested dictionaries.
+        e.g. {channel: {meta_group: { group: (feature_list)}}}"""
         fg = self[self.dmodel.feature_groups]
 
-        fnames = fg.dtype.names()[0]
-        groups = fg.dtype.names()[1:]
-        fgroups = OrderedDict()
+        ftrs = fg.dtype.names[0]
+        groups = fg.dtype.names[1:]
 
-        for group in groups:
-            fgroups[group] = defaultdict(list)
+        channels = self.channelNames
+        ch_groups = OrderedDict()
+
+        for channel in channels:
+            meta_group = OrderedDict()
+            for group in groups:
+                fgroup = FGroup(group, [(g, []) for g in np.unique(fg[group])])
+                meta_group[group] = fgroup
+            ch_groups[channel] = meta_group
 
         for line in fg:
-
-
+            channel, fname = cn.splitFeatureName(line[0])
+            channel = cn.validFromShort(channel)
+            for i, group in enumerate(groups):
+                ch_groups[channel][group][line[i+1]].append(fname)
+        return ch_groups
 
     @property
     def colors(self):
