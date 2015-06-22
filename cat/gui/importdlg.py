@@ -38,7 +38,6 @@ class ImportDialog(QtWidgets.QDialog):
         self.metadata =  None
         self._files  = None
 
-        self.setWindowTitle("Import Training Data")
         self.progressBar.hide()
 
         self.segdlg = SegmentationDialog(self)
