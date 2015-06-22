@@ -16,11 +16,11 @@ from PyQt5 import uic
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, pyqtSignal
 
-from cat.gui.featurebox import FeatureBox
 from cat.hdfio.trainingset import AtTrainingSetIO
 from cat.segmentation import PrimaryParams, ExpansionParams
 from cat.segmentation import SRG_TYPE, ZProject
 from cat.xmlconf import XmlConfReader, XmlConfWriter
+from cat.segmentation.options import feature_groups
 
 import mimetypes
 mimetypes.add_type('application/ch5', '.ch5')
@@ -80,12 +80,11 @@ class ExpansionWidget(QtWidgets.QGroupBox):
 
 class SegmentationDialog(QtWidgets.QWidget):
 
-    _ncols = 3
+    _ncols = 2
 
     # indices for widgetAt method
     NAME = 0
     SEGMENTATION = 1
-    FEATURES = 2
 
     activateChannels = pyqtSignal(list)
     changeColor = pyqtSignal(str, str)
@@ -154,12 +153,10 @@ class SegmentationDialog(QtWidgets.QWidget):
     def addExpandedRegion(self, name, norm_min, norm_max, min, max):
         expw = ExpansionWidget(self)
         expw.setNormalisation(norm_min, norm_max, min, max)
-        ftrbox = FeatureBox(self)
 
         expw.setValue(expw.value()+ self._rcount)
         self.regionBox.addWidget(ChLabel(name), self._rcount, self.NAME)
         self.regionBox.addWidget(expw, self._rcount, self.SEGMENTATION)
-        self.regionBox.addWidget(ftrbox, self._rcount, self.FEATURES)
         self._rcount += 1
 
     def _rowIndexOfRegion(self, region):
@@ -237,13 +234,17 @@ class SegmentationDialog(QtWidgets.QWidget):
         return sparams
 
     def featureGroups(self):
+        # legacy method keep for compatibility, calculating all features for
+        # all channels --> copying the feature_groups dictionary, no checkboxes
+        # a custom selection.
+
         fgroups = dict()
         for i in xrange(self._rcount):
             try:
                 name = self.widgetAt(i, self.NAME).text()
             except AttributeError:
                 name = self.pchannel.currentText()
-            fgroups[name] = self.widgetAt(i, self.FEATURES).featureGroups()
+            fgroups[name] = feature_groups.copy()
         return fgroups
 
     def onSaveBtn(self):
@@ -322,9 +323,6 @@ class SegmentationDialog(QtWidgets.QWidget):
 
         self.outlineSmoothing.setValue(segpar.outline_smoothing)
 
-        fwidget = self.widgetAt(0, self.FEATURES)
-        fwidget.setFeatureGroups(settings[XmlConfReader.FEATUREGROUPS])
-
         self.blockSignals(oldstate)
         self.emitImageUpdate()
         self.emitParamsChanged()
@@ -334,9 +332,6 @@ class SegmentationDialog(QtWidgets.QWidget):
 
         ewidget = self.widgetAt(index, self.SEGMENTATION)
         ewidget.setParams(settings[XmlConfReader.SEGMENTATION])
-
-        fwidget = self.widgetAt(index, self.FEATURES)
-        fwidget.setFeatureGroups(settings[XmlConfReader.FEATUREGROUPS])
 
 
 if __name__ == "__main__":
