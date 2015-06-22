@@ -114,7 +114,10 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.actionInvertSelection.triggered.connect(
             self.tileview.actionInvertSelection.trigger)
 
-        self.loader.finished.connect(self.onLoadingFinished)
+        self.featuredlg.selectionChanged.connect(
+            self.annotation.predictionInvalid)
+
+        self.loader.started.connect(self.onLoadingStarted)
 
         self._restoreSettings()
         self.show()
@@ -330,6 +333,8 @@ class AtMainWindow(QtWidgets.QMainWindow):
     def onFileClose(self):
         self.loader.close()
         self.tileview.clear()
+        self.featuredlg.clear()
+        self.sorting.clear()
 
     def onFileOpen(self):
 
@@ -357,8 +362,9 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self._fileOpen(file_)
         self.loadItems()
 
-    def onLoadingFinished(self):
+    def onLoadingStarted(self):
         self.annotation.setFeatureNames(self.loader.featureNames)
+        self.featuredlg.setFeatureGroups(self.loader.featureGroups)
         self.sorting.setFeatureGroups(self.loader.featureGroups)
 
     def onDropEvent(self, path):

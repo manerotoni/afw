@@ -14,7 +14,9 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
 
+from cat.config import AtConfig
 from .sidebar import AtSideBarWidget
+from .sidebar import AtChannelFeatureGroupsWidget
 
 class AtFeatureModel(QtGui.QStandardItemModel):
 
@@ -99,6 +101,8 @@ class AtContextTreeView(QtWidgets.QTreeView):
 
 class AtFeatureSelectionDlg(QtWidgets.QWidget):
 
+    selectionChanged = QtCore.pyqtSignal(tuple)
+
     def __init__(self, *args, **kw):
         super(AtFeatureSelectionDlg, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
@@ -116,6 +120,36 @@ class AtFeatureSelectionDlg(QtWidgets.QWidget):
         self.setSourceModel(self.model)
         self.selectAll.stateChanged.connect(self.toggleAll)
         self.selectedOnly.stateChanged.connect(self.view.model().setStateFilter)
+        self.selectionChanged.connect(self.setSelectionByName)
+
+    def setFeatureGroups(self, feature_groups):
+        self.clearFeatureGroups()
+        self._channels = feature_groups.keys()
+        for chn, tables in feature_groups.iteritems():
+            table = tables[AtConfig().default_feature_group]
+            fgw = AtChannelFeatureGroupsWidget(chn, table, self)
+            self.fbox.insertWidget(self.fbox.count(), fgw)
+            fgw.selectionChanged.connect(self.onSelectionChanged)
+            setattr(self, chn.lower(), fgw)
+
+    def clearFeatureGroups(self):
+        for i in xrange(self.fbox.count()):
+            item = self.fbox.takeAt(0)
+            item.widget().close()
+        self._channels = None
+
+    def onSelectionChanged(self):
+        self.selectionChanged.emit(self.currentFeatureNames())
+
+    def currentFeatureNames(self):
+        feature_names = list()
+        for widget in self._iterGroups():
+            feature_names.extend(widget.currentFeatureNames())
+        return tuple(feature_names)
+
+    def _iterGroups(self):
+        for i in xrange(self.fbox.count()):
+            yield self.fbox.itemAt(i).widget()
 
     def setSourceModel(self, model):
         self.proxyModel.setSourceModel(model)
@@ -163,6 +197,10 @@ class AtFeatureSelectionDlg(QtWidgets.QWidget):
                     "%s-%s" %(ch_item.text(), name_item.text())
 
         return odict
+
+    def clear(self):
+        self.model.clear()
+        self.clearFeatureGroups()
 
     def addFeatureList(self, feature_names):
 

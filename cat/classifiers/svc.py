@@ -133,8 +133,8 @@ class SvcParameterWidget(QtWidgets.QFrame):
         model.allowReassign(self.allowReassign.isChecked())
 
         self.crossValidBtn = QtWidgets.QToolButton()
-        self.crossValidBtn.setToolTip("Pop up cross-validation dialog")
-        self.crossValidBtn.setIcon(QtGui.QIcon(":/oxygen/chart.png"))
+        self.crossValidBtn.setToolTip("Cross-validation Dialog")
+        self.crossValidBtn.setIcon(QtGui.QIcon(":grid-search.png"))
         self.crossValidBtn.setSizePolicy(
             QSizePolicy.Preferred, QSizePolicy.Preferred)
 

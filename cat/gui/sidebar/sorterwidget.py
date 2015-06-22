@@ -5,7 +5,7 @@ sortwidget.py
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ('AtSortWidget', )
+__all__ = ('AtSortWidget', 'AtChannelFeatureGroupsWidget')
 
 
 from os.path import dirname, join
@@ -146,6 +146,9 @@ class AtSortWidget(AtSideBarWidget):
         toolbar.addWidget(self.sortAscendingBtn)
         toolbar.addWidget(self.sortDescendingBtn)
 
+    def clear(self):
+        self.clearFeatureGroups()
+
     def _iterGroups(self):
         for i in xrange(self.fbox.count()):
             yield self.fbox.itemAt(i).widget()
@@ -164,6 +167,7 @@ class AtSortWidget(AtSideBarWidget):
         for i in xrange(self.fbox.count()):
             item = self.fbox.takeAt(0)
             item.widget().close()
+        self._channels = None
 
     def onSelectionChanged(self):
         self.selectionChanged.emit(self.currentFeatureNames())

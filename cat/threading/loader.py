@@ -20,6 +20,7 @@ class AtLoader(QtCore.QObject):
     progressUpdate = QtCore.pyqtSignal(int)
     fileOpened = QtCore.pyqtSignal("PyQt_PyObject")
     finished = QtCore.pyqtSignal()
+    started = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kw):
         super(AtLoader, self).__init__(*args, **kw)
@@ -92,6 +93,7 @@ class AtLoader(QtCore.QObject):
         # feature names of the last dataset loaded
         self._feature_names = self._h5f.featureNames(self._coordinate['region'])
         self._fgroups = self._h5f.featureGroups(self._coordinate['region'])
+        self.started.emit()
 
         if AtConfig().interactive_item_limit < self._h5f.numberItems(self._coordinate):
             self._loadItemsSingle()
