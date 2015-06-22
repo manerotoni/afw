@@ -111,13 +111,16 @@ class ViewToolBar(AtToolBar):
         self.zoom.addItem("400%", QtCore.QVariant(4.0))
         self.zoom.currentIndexChanged.connect(self.onIndexChanged)
 
-        self.reloadBtn = QtWidgets.QPushButton("Load", self)
+        icon = QtGui.QIcon(":/oxygen/document-new.png")
+        self.actionNew = QtWidgets.QAction(
+            icon, "New Data File", self)
+        self.addAction(self.actionNew)
 
         icon = QtGui.QIcon(":/oxygen/document-open-folder.png")
         self.actionOpen = QtWidgets.QAction(
             icon, "Open Data File", self)
         self.addAction(self.actionOpen)
-        self.addWidget(self.reloadBtn)
+
         self.addSeparator()
         self.addWidget(QtWidgets.QLabel("Gallery Size:", self))
         self.addWidget(self.galSize)

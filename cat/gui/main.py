@@ -96,10 +96,10 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.loader.progressUpdate.connect(self.progressbar.setValue)
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
+        self.actionNewFile.triggered.connect(self.newDataFile)
         self.actionOpenHdf.triggered.connect(self.onFileOpen)
         self.actionCloseHdf.triggered.connect(self.onFileClose)
         self.actionPreferences.triggered.connect(self.onPreferences)
-        self.actionPreprocessImages.triggered.connect(self.openImporter)
         self.actionExportViewPanel.triggered.connect(self.saveImage)
         self.actionAboutQt.triggered.connect(self.onAboutQt)
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
@@ -307,7 +307,8 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.toolBar = ViewToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.toolBar.actionOpen.triggered.connect(self.onFileOpen)
-        self.toolBar.reloadBtn.clicked.connect(self.loadItems)
+        self.toolBar.actionNew.triggered.connect(self.newDataFile)
+        self.actionReloadFile.triggered.connect(self.loadItems)
 
         self.navToolBar = NavToolBar(self)
         self.addToolBar(QtCore.Qt.BottomToolBarArea, self.navToolBar)
@@ -316,7 +317,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.sortToolBar = SortToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.sortToolBar)
 
-    def openImporter(self):
+    def newDataFile(self):
         dlg = ImportDialog(self)
         dlg.loadData.connect(self._openAndLoad)
         dlg.exec_()
