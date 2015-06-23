@@ -176,5 +176,9 @@ class AtAnnotationWidget(AtSideBarWidget):
         dlg.exec_()
 
     def onLoadAnnotations(self):
-        dlg = LoadAnnotationsDialog(self)
+        try:
+            file_ = self.parent.loader.file.filename
+        except AttributeError:
+            return
+        dlg = LoadAnnotationsDialog(file_, self)
         dlg.exec_()

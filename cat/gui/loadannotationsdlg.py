@@ -10,7 +10,7 @@ __all__ = ("LoadAnnotationsDialog", )
 import h5py
 import numpy as np
 
-from os.path import splitext, expanduser
+from os.path import splitext, expanduser, isfile
 from PyQt5 import uic
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
@@ -24,15 +24,16 @@ from cat.hdfio.guesser import guessHdfType
 
 class LoadAnnotationsDialog(QtWidgets.QDialog):
 
-    def __init__(self, *args, **kw):
+    def __init__(self, file_, *args, **kw):
         super(LoadAnnotationsDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
         uic.loadUi(uifile, self)
 
+        self._file = file_
         self.descriptions = dict()
         self.progressBar.hide()
 
-        self.pathBtn.clicked.connect(self.onPathBtn)
+        self.loadFileInfo(file_)
         self.classifier_name.currentIndexChanged[str].connect(
             self.onClassifierChanged)
 
@@ -46,17 +47,9 @@ class LoadAnnotationsDialog(QtWidgets.QDialog):
         else:
             self._description.appendPlainText(txt)
 
-    def onPathBtn(self):
+    def loadFileInfo(self, file_):
 
-        file_ = QFileDialog.getOpenFileName( \
-            self, "Select a config file", expanduser('~'),
-            ("hdf5 files (*.hdf5 *.h5 *.he5 *.hdf *.hdf4 *.he2 *.he5 *.ch5;;"
-            ";;All files (*.*)"))[0]
-
-        if file_:
-            self._path.setText(file_)
-            self.path = file_
-
+        if isfile(file_):
             try:
                 hdf = h5py.File(file_, "r")
                 clf_names = hdf['classifiers'].keys()
@@ -96,10 +89,8 @@ class LoadAnnotationsDialog(QtWidgets.QDialog):
         return items
 
     def accept(self):
-        if not self._path.text():
-            return
 
-        hdf = guessHdfType(self._path.text())
+        hdf = guessHdfType(self._file)
         dmodel = ClfDataModel(self.classifier_name.currentText())
 
         try:
