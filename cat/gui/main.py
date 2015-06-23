@@ -365,8 +365,11 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
     def onLoadingStarted(self):
         self.annotation.setFeatureNames(self.loader.featureNames)
-        self.featuredlg.setFeatureGroups(self.loader.featureGroups)
-        self.sorting.setFeatureGroups(self.loader.featureGroups)
+        try:
+            self.featuredlg.setFeatureGroups(self.loader.featureGroups)
+            self.sorting.setFeatureGroups(self.loader.featureGroups)
+        except RuntimeError as e:
+            pass
 
     def onDropEvent(self, path):
         self._fileOpen(path)
