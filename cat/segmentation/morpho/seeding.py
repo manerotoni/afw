@@ -49,8 +49,8 @@ def find_seeds(img_edt, size=5):
 
 
     img_lmax = ndimage.filters.maximum_filter(img_edt, size)
-    img_lmax = ndimage.filters.gaussian_filter(img_lmax, size)
-    lmax_x, lmax_y = local_maxima(img_lmax, size, 0.01)
+    img_lmax = ndimage.filters.gaussian_filter(img_lmax, size/1.5)
+    lmax_x, lmax_y = local_maxima(img_lmax, size, 0.001)
 
     seeds = np.zeros(img_edt.shape, dtype=bool)
     seeds[lmax_y, lmax_x] = True

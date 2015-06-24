@@ -39,6 +39,16 @@ def zProjection(image, method):
         raise Run("Projection method not defined")
 
 
+def outlineSmoothing(label_image, outline_smoothing):
+
+    label_image = vigra.filters.discClosing(
+        label_image, outline_smoothing)
+    label_image = vigra.filters.discOpening(
+        label_image, outline_smoothing)
+
+    return label_image
+
+
 class MultiChannelProcessor(object):
 
     _environ = CecogEnvironment(redirect=False, debug=False)
@@ -225,14 +235,13 @@ class MultiChannelProcessor(object):
             ccore.fill_holes(label_image)
 
         if outline_smoothing >= 1:
-            label_image = vigra.filters.discClosing(
-                label_image.toArray(), outline_smoothing)
-            label_image = vigra.filters.discOpening(
-                label_image, outline_smoothing)
+            label_image = outlineSmoothing(label_image.toArray(),
+                                           outline_smoothing)
             label_image = ccore.numpy_to_image(label_image, copy=True)
 
+
         if use_watershed:
-            label_image = label_image.toArray()
+            label_image = label_image.toArray().copy()
             label_image = watershed(label_image, seeding_size=seeding_size)
             label_image = ccore.numpy_to_image(
                 label_image.astype(np.int16), copy=True)
