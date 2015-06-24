@@ -87,7 +87,7 @@ class ViewToolBar(AtToolBar):
         self.setObjectName("ViewToolbar")
 
         self.galSize = QtWidgets.QSpinBox(self)
-        self.galSize.setRange(0, 256)
+        self.galSize.setRange(0, 10e4)
         self.galSize.setValue(65)
 
         self.nItems = QtWidgets.QSpinBox(self)
