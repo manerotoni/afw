@@ -31,10 +31,10 @@ class HdfError(Exception):
 class HdfItem(object):
 
     __slots__ = ['image', 'contour', 'features', 'index', 'frame',
-                 'objid', 'colors', 'hash', 'path']
+                 'objid', 'colors', 'hash', 'path', 'treatment']
 
     def __init__(self, image, contour, features, index, objid=None, frame=None,
-                 colors=None, path=None):
+                 colors=None, path=None, treatment=None):
         self.image = image
         self.contour = contour
         self.features = features
@@ -42,6 +42,7 @@ class HdfItem(object):
         self.frame = frame
         self.objid = objid
         self.path = path
+        self.treatment = treatment
 
         if image.ndim == 2: # gray image
             self.colors = ["#ffffff"]

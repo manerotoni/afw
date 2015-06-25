@@ -60,8 +60,8 @@ class HdfCache(object):
 
         self.feature_names = feature_names
         self._dt_gallery = gallery_dtype
-        self._dt_bbox = [('label', np.uint32), ('x', np.uint16),
-                         ('y', np.uint16), ('top', np.uint16),
+        self._dt_bbox = [('treatment', "S128"), ('label', np.uint32),
+                         ('x', np.uint16), ('y', np.uint16), ('top', np.uint16),
                          ('bottom', np.uint16), ('left', np.uint16),
                          ('right', np.uint16)]
 
@@ -92,8 +92,9 @@ class HdfCache(object):
 
         # need to cast to the correct type
         for i, (label, obj) in enumerate(objectsdict.iteritems()):
-            bbox[i] = np.array((label, ) + obj.center + obj.bbox,
-                               dtype=self._dt_bbox)
+            bbox[i] = np.array(
+                (str(obj.treatment), label) + obj.center + obj.bbox,
+                dtype=self._dt_bbox)
             features[i] = obj.features.astype(np.float32)
             gallery[:, :, :, i] = obj.gallery_image.astype(np.uint16)
 

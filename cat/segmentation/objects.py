@@ -23,7 +23,8 @@ class ImageObject(object):
     # Simple wrapper class for the c++ objects to python plus some
     # extra functinality.
 
-    def __init__(self, name, cobj, contours_coords, label=None):
+    def __init__(self, name, cobj, contours_coords,
+                 treatment=None, label=None):
 
         self.name = name
         self.center = Center(cobj.oCenterAbs.x, cobj.oCenterAbs.y)
@@ -31,6 +32,7 @@ class ImageObject(object):
                          cobj.oRoi.upperLeft.y, cobj.oRoi.lowerRight.y)
 
         self.label  = label
+        self.treatment = treatment
         self.prediction_proba = {}
         self.class_= None
         self.gallery_image = None

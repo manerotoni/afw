@@ -71,6 +71,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         self.index = item.index
         self.hash = item.hash
         self.path = item.path
+        self.treatment = item.treatment
         self.qimages = list(item.iterQImages())
         self._is_training_sample = False
 
@@ -97,7 +98,12 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
 
     def hoverEnterEvent(self, event):
 
-        txt = ("%s") %(self.class_.name)
+        if self.treatment not in (None, "None"):
+            txt = self.treatment
+            txt += ("\n%s") %(self.class_.name)
+        else:
+            txt = ("%s") %(self.class_.name)
+
         QtWidgets.QToolTip.showText(QtGui.QCursor.pos(), txt)
 
     def _classRect(self):

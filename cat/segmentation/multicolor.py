@@ -53,7 +53,8 @@ class MultiChannelProcessor(object):
 
     _environ = CecogEnvironment(redirect=False, debug=False)
 
-    def __init__(self, filename, params, channels, gallery_size=60):
+    def __init__(self, filename, params, channels,
+                 gallery_size=60, treatment=None):
         super(MultiChannelProcessor, self).__init__()
 
         if not isinstance(params, OrderedDict):
@@ -62,7 +63,7 @@ class MultiChannelProcessor(object):
 
         self.params = params
         self.channels = channels
-
+        self.treatment = treatment
         self._image = None
         self._reader = None
         self._objects = None
@@ -145,7 +146,8 @@ class MultiChannelProcessor(object):
             for i, (name, container) in enumerate(self._containers.iteritems()):
                 for label, cobj in container.getObjects().iteritems():
                     obj = ImageObject(
-                        name, cobj, container.getCrackCoordinates(label), label)
+                        name, cobj, container.getCrackCoordinates(label),
+                        self.treatment, label)
 
                     if odict.has_key(label):
                         odict.concatenate(name, label, obj)

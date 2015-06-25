@@ -151,7 +151,8 @@ class AtTrainingSetIO(HdfFile):
         for i in xrange(gal.shape[3]):
             yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], index=i,
                           objid=datatbl["label"][i], frame=i, colors=cols,
-                          path=self.dmodel.features)
+                          path=self.dmodel.features,
+                          treatment=datatbl['treatment'][i])
 
     def itemsFromClassifier(self, indices, *args, **kw):
         """List of HdfItems using a list of indices."""
@@ -169,4 +170,5 @@ class AtTrainingSetIO(HdfFile):
             yield HdfItem(gal[:, :, :, i], cnts[i], ftrs[i], index=indices[i],
                           objid=datatbl["label"][i], frame=indices[i],
                           colors=cols,
-                          path=self.dmodel.features)
+                          path=self.dmodel.features,
+                          treatment=datatbl['treatment'][i])

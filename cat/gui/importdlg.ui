@@ -197,17 +197,21 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Image directory</string>
+         <string>Image data</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QLineEdit" name="imageDir">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QComboBox" name="comboBox">
+           <item>
+            <property name="text">
+             <string>Flat file sturcture</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Directories with different treatment</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item>
