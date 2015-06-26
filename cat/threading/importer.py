@@ -73,11 +73,12 @@ class AtImporter(QtCore.QObject):
 
         try:
             gsize = self.seg_params.values()[0].gallery_size
-            for i, file_ in enumerate(self.files):
+            for i, (file_, treatment) in enumerate(self.files.iteritems()):
                 self.progressUpdate.emit(i+1)
                 self.interruption_point()
                 self.thread().msleep(self.PYDELAY)
-                mp = LsmProcessor(file_, self.seg_params, self.channels, gsize)
+                mp = LsmProcessor(file_, self.seg_params, self.channels, gsize,
+                                  treatment)
 
                 # first channel for primary segementation
                 mp.segmentation()

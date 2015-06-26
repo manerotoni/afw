@@ -167,7 +167,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             QMessageBox.information(self, "information", "Nothing to save!")
             return
 
-
         labels = self.itemView().model().labels
         sinfo = self.itemView().model().sample_info
 

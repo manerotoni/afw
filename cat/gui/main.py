@@ -6,8 +6,7 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 import sys
-from os.path import splitext, basename, expanduser
-
+from os.path import splitext, basename, expanduser, dirname, abspath
 
 from PyQt5 import uic
 from PyQt5 import QtGui
@@ -31,11 +30,10 @@ from cat.gui.aboutdialog import AtAboutDialog
 from cat.gui.featuredlg import AtFeatureSelectionDlg
 from cat.gui.helpbrowser import AtAssistant
 from cat.gui.helpbrowser import MANUAL
-
 from cat.gui.prefdialog import AtPreferencesDialog
-
 from cat.threading import AtThread
 from cat.threading import AtLoader
+from cat.export import CsvExporter, StatsExporter
 
 from cat import cat_rc
 
@@ -101,6 +99,8 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.actionCloseHdf.triggered.connect(self.onFileClose)
         self.actionPreferences.triggered.connect(self.onPreferences)
         self.actionExportViewPanel.triggered.connect(self.saveImage)
+        self.actionSaveData2Csv.triggered.connect(self.saveData2Csv)
+        self.actionSaveCountingStats.triggered.connect(self.saveCountingStats)
         self.actionAboutQt.triggered.connect(self.onAboutQt)
         self.actionAboutAnnotationTool.triggered.connect(self.onAbout)
         self.actionFeatureSelection.triggered.connect(
@@ -281,10 +281,11 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.statusBar().addPermanentWidget(frame)
 
     def saveImage(self):
+        filename = QFileDialog.getSaveFileName(
+            self, "Save image as ...",
+            self._lastdir.replace('.hdf', '.png'),
+            "png - Image (*.png)")[0]
 
-        filename = QFileDialog.getSaveFileName(self, "Save as ...",
-                                               self._lastdir,
-                                               "png - Image (*.png)")[0]
 
         if filename:
             scene = self.tileview.scene()
@@ -296,6 +297,34 @@ class AtMainWindow(QtWidgets.QMainWindow):
             scene.render(painter)
             painter.end()
             image.save(filename)
+            self.statusBar().showMessage("Image saved to %s" %filename)
+
+    def saveData2Csv(self):
+
+        filename = QFileDialog.getSaveFileName(
+            self, "Save csv-file as ...",
+            self._lastdir.replace(".hdf", ".csv"),
+            "Comma separated values (*.csv)")[0]
+
+        if filename:
+            features = self.featuredlg.checkedItems()
+            exporter = CsvExporter(filename, self.tileview.items,
+                                   features)
+            exporter.save()
+            self.statusBar().showMessage("Image saved to %s" %filename)
+
+    def saveCountingStats(self):
+
+        filename = QFileDialog.getSaveFileName(
+            self, "Save csv-file as ...",
+            self._lastdir.replace(".hdf", "_statistics.csv"),
+            "Comma separated values (*.csv)")[0]
+
+        if filename:
+            features = self.featuredlg.checkedItems()
+            exporter = StatsExporter(filename, self.tileview.items,
+                                     features)
+            exporter.save()
             self.statusBar().showMessage("Image saved to %s" %filename)
 
     def updateToolbars(self, props):
@@ -318,7 +347,8 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.sortToolBar)
 
     def newDataFile(self):
-        dlg = ImportDialog(self)
+        dlg = ImportDialog(self,
+                           Qt.WindowMinMaxButtonsHint|Qt.WindowCloseButtonHint)
         dlg.loadData.connect(self._openAndLoad)
         dlg.exec_()
 
@@ -348,7 +378,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
             self.loadItems()
 
     def _fileOpen(self, file_):
-        self._lastdir = basename(file_)
+        self._lastdir = abspath(file_)
         try:
             self.loader.openFile(file_)
         except Exception as e:

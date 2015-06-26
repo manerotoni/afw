@@ -199,33 +199,29 @@
         <property name="title">
          <string>Image data</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QComboBox" name="comboBox">
-           <item>
-            <property name="text">
-             <string>Flat file sturcture</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Directories with different treatment</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="structType"/>
          </item>
          <item>
-          <widget class="QToolButton" name="imageDirBtn">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>...</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="hbox_2">
+           <item>
+            <widget class="QLineEdit" name="imageDir"/>
+           </item>
+           <item>
+            <widget class="QToolButton" name="imageDirBtn">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -239,7 +235,7 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Data file</string>
+         <string>Output data file</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>

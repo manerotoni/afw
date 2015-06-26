@@ -13,6 +13,7 @@ import glob
 import traceback
 from os.path import isfile, isdir, basename
 from os.path import splitext, expanduser
+from collections import OrderedDict
 
 from PyQt5 import uic
 from PyQt5 import QtCore
@@ -26,6 +27,7 @@ from cat.threading import AtImporter
 from cat.gui.channelbar import ChannelBar
 from cat.gui.segmentationdlg import SegmentationDialog
 from cat.segmentation.multicolor import LsmProcessor
+from cat.imageio.filescanner import FileScanner
 
 
 class ImportDialog(QtWidgets.QDialog):
@@ -35,6 +37,9 @@ class ImportDialog(QtWidgets.QDialog):
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
         uic.loadUi(splitext(__file__)[0]+'.ui', self)
+
+        self.structType.addItems(FileScanner.scanners())
+
         self.metadata =  None
         self._files  = None
 
@@ -145,21 +150,21 @@ class ImportDialog(QtWidgets.QDialog):
             return
 
         self.imageDir.setText(idir)
-        pattern1 = self.imageDir.text() + "/*.lsm"
-        pattern2 = self.imageDir.text() + "/*.tif"
 
-        self._files = glob.glob(pattern1) + glob.glob(pattern2)
+        scanner = FileScanner(self.structType.currentText(), idir)
+        self._files = scanner()
 
         if not self._files:
             QMessageBox.warning(self, "Error", "No files found")
             return
 
-        self._files.sort()
         self.dirinfo.setText("%d images found" %len(self._files))
 
-        proc = LsmProcessor(self._files[0],
+        proc = LsmProcessor(self._files.keys()[0],
                             self.segdlg.segmentationParams(),
-                            self.cbar.checkedChannels())
+                            self.cbar.checkedChannels(),
+                            treatment=self._files.values()[0])
+
         self.metadata = proc.metadata
         self.metadata.n_images = len(self._files)
         images = list(proc.iterQImages())
@@ -174,10 +179,15 @@ class ImportDialog(QtWidgets.QDialog):
         self.showObjects()
 
     def showImage(self, index=0):
+        # no image directory yet
+        if self._files is None:
+            return
+
         try:
-            proc = LsmProcessor(self._files[index],
+            proc = LsmProcessor(self._files.keys()[index],
                                 self.segdlg.segmentationParams(),
-                                self.cbar.checkedChannels())
+                                self.cbar.checkedChannels(),
+                                treatment=self._files.values()[index])
         except IndexError:
             return
         self.viewer.clearPolygons()
@@ -188,15 +198,16 @@ class ImportDialog(QtWidgets.QDialog):
     def showObjects(self):
 
         if not (self.contoursCb.isChecked() or \
-                    self.showBBoxes.isChecked() or not \
-                    self._files):
+                    self.showBBoxes.isChecked()) or  \
+                    self._files is None:
             return
 
         index = self.slider.value()
         try:
-            mp = LsmProcessor(self._files[index],
+            mp = LsmProcessor(self._files.keys()[index],
                               self.segdlg.segmentationParams(),
-                              self.cbar.checkedChannels())
+                              self.cbar.checkedChannels(),
+                              treatment=self._files.values()[index])
             # first channel for primary segementation
             mp.segmentation()
         except Exception as e:

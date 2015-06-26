@@ -327,9 +327,10 @@ class MultiChannelProcessor(object):
 
 class LsmProcessor(MultiChannelProcessor):
 
-    def __init__(self, filename, params, channels, gallery_size=50):
+    def __init__(self, filename, params, channels,
+                 gallery_size=50, treatment=None):
         super(LsmProcessor, self).__init__(filename, params, channels,
-                                           gallery_size)
+                                           gallery_size, treatment)
 
         mtype = mimetypes.guess_type(filename)[0]
 
