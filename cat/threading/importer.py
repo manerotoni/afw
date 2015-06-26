@@ -91,6 +91,8 @@ class AtImporter(QtCore.QObject):
                 self.contourImage.emit(tuple(mp.iterQImages()),
                                        objects.contours)
 
+            self.progressSetRange.emit(0, 0)
+            self.progressUpdate.emit(-1)
             writer.flush()
             self.finished.emit()
 
