@@ -44,6 +44,9 @@ class Sorter(object):
     def sorters(cls):
         return sorted(cls._classes.keys())
 
+    def requiresTreeData(self):
+        return True
+
 # class PcaBackProjectedDistance(Sorter):
 #     """Sorting data by performing a PCA, taking only 99% of the variance,
 #     back projecting the the reduced feature set and sort after the difference
@@ -108,6 +111,9 @@ class ClassLabel(Sorter):
         self.class_labels = [i.class_.label for i in items]
         self.annotations =  [i.isTrainingSample() for i in items]
         self.scores = [i.class_.score for i in items]
+
+    def requiresTreeData(self):
+        return False
 
     def __call__(self):
         try:

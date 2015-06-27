@@ -207,7 +207,8 @@ class AtSortWidget(AtSideBarWidget):
         try:
             sorter = Sorter(self.sortAlgorithm.currentText(), all_items,
                             self.sort_filter_indices)
-            sorter.treedata = self.sortFilterFeatures(self.model.features)
+            if sorter.requiresTreeData():
+                sorter.treedata = self.sortFilterFeatures(self.model.features)
         except NoSampleError:
             return
 
