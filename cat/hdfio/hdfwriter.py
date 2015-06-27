@@ -192,6 +192,9 @@ class HdfWriter(object):
                 self.dmodel.gallery, data=self._cache.gallery,
                 chunks=(self._cache.gallery.shape[:2] + (1, 1)),
                 compression=self._compression, compression_opts=self._copts)
+
+            dset.attrs[HdfDataModel.COLORS] = [str(c) for c in self._cache.colors]
+
             dset = self._file.create_dataset(
                 self.dmodel.feature_groups, data=self._cache.fgroups,
                 compression=self._compression, compression_opts=self._copts)
@@ -204,7 +207,6 @@ class HdfWriter(object):
                                              chunks=chunksize,
                                              compression=self._compression,
                                              compression_opts=self._copts)
-            dset.attrs[HdfDataModel.COLORS] = [str(c) for c in self._cache.colors]
 
         except ValueError as e:
             if "Object header message is too large" in str(e):

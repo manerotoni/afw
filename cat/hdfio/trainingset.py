@@ -76,7 +76,7 @@ class AtTrainingSetIO(HdfFile):
 
     @property
     def colors(self):
-        colors = self[self.dmodel.images].attrs[self.dmodel.COLORS]
+        colors = self[self.dmodel.gallery].attrs[self.dmodel.COLORS]
         colors = [str(c) for c in colors] # no unicode
         return tuple(colors)
 

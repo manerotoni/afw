@@ -102,6 +102,7 @@ class AtLoader(QtCore.QObject):
             self._loadItemsSingle()
         else:
             self._loadItemsBulk()
+            self.progressUpdate.emit(-1)
 
         self.finished.emit()
 

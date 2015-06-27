@@ -91,7 +91,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.setupProgressBar()
 
         self.loader.fileOpened.connect(self.updateToolbars)
-        self.loader.progressUpdate.connect(self.progressbar.setValue)
+        self.loader.progressUpdate.connect(self.updateProgressBar)
         self.loader.itemLoaded.connect(self.tileview.addItem)
         self.abort.connect(self.loader.abort)
         self.actionNewFile.triggered.connect(self.newDataFile)
@@ -124,6 +124,13 @@ class AtMainWindow(QtWidgets.QMainWindow):
         if file_ is not None:
             self.loader.openFile(file_)
             self.loadItems()
+
+    def updateProgressBar(self, value):
+
+        if value < 0:
+            self.progressbar.setRange(0, 0)
+
+        self.progressbar.setValue(value)
 
     def dragEnterEvent(self, event):
         event.acceptProposedAction()
