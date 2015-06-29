@@ -124,10 +124,10 @@
          </sizepolicy>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save&lt;/p&gt;&lt;p&gt;Saves the classifier, its parameters and the training data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save Classifier&lt;/p&gt;&lt;p&gt;Saves the classifier, its parameters and the training data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Save</string>
+         <string>Save Classifier</string>
         </property>
         <property name="icon">
          <iconset resource="../../../qrc/cat_rc.qrc">
@@ -144,10 +144,10 @@
          </sizepolicy>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load annotations&lt;/p&gt;&lt;p&gt;Load annoations from an already trained classifier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load Classifier&lt;/p&gt;&lt;p&gt;Load a classifier from the currently opened file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Load annotations</string>
+         <string>Load Classifier</string>
         </property>
         <property name="icon">
          <iconset resource="../../../qrc/cat_rc.qrc">

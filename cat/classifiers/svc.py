@@ -244,10 +244,6 @@ class Svc(Classifier):
         self._clf = sklearn.svm.SVC(C=1.0, kernel=self.KERNEL, gamma=0.0,
                                     probability=True)
 
-    def setParameters(self, params):
-        assert isinstance(params, dict)
-        self._clf.set_params(**params)
-
     def parameterWidget(self, parent):
         """Returns the classifier specific parameter widget."""
         if self._pwidget is None:

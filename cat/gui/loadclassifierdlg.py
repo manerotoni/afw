@@ -1,11 +1,11 @@
 """
-loadannotationsdlg.py
+loadclassifierdlg.py
 """
 
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-__all__ = ("LoadAnnotationsDialog", )
+__all__ = ("LoadClassifierDialog", )
 
 import h5py
 import numpy as np
@@ -22,10 +22,10 @@ from cat.hdfio.trainingset import AtTrainingSetIO
 from cat.hdfio.guesser import guessHdfType
 
 
-class LoadAnnotationsDialog(QtWidgets.QDialog):
+class LoadClassifierDialog(QtWidgets.QDialog):
 
     def __init__(self, file_, *args, **kw):
-        super(LoadAnnotationsDialog, self).__init__(*args, **kw)
+        super(LoadClassifierDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
         uic.loadUi(uifile, self)
 
@@ -120,8 +120,15 @@ class LoadAnnotationsDialog(QtWidgets.QDialog):
             msg = "Classifier %s not supported" %lib
             QMessageBox.critical(self, "Error", msg)
 
+        params = dict(hdf[dmodel.classdef].attrs)
+        for k, v in params.items():
+            if v == 'None':
+                params[k] = None
+
+        self.parent().setClassifierParameters(params)
+
         hdf.close()
-        super(LoadAnnotationsDialog, self).accept()
+        super(LoadClassifierDialog, self).accept()
 
     def _loadMultiClass(self, model, hdf, dmodel):
         norm = hdf[dmodel.normalization].value

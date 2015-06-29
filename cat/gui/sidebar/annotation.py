@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from cat.classifiers.classifiers import Classifier
 from cat.gui.saveclassifierdlg import SaveClassifierDialog
-from cat.gui.loadannotationsdlg import LoadAnnotationsDialog
+from cat.gui.loadclassifierdlg import LoadClassifierDialog
 
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
@@ -123,6 +123,10 @@ class AtAnnotationWidget(AtSideBarWidget):
         name = self.classifiers.itemData(index)
         return getattr(self, name)
 
+    def setClassifierParameters(self, params):
+        clf = self.currentClassifier()
+        clf.setParameters(params)
+
     def itemView(self):
         return self.stack.currentWidget().treeview
 
@@ -184,6 +188,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             file_ = self.parent.loader.file.filename
         except AttributeError:
             return
-        dlg = LoadAnnotationsDialog(file_, self)
+        dlg = LoadClassifierDialog(file_, self)
         dlg.accepted.connect(self.clearItems)
         dlg.exec_()
