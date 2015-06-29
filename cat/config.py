@@ -54,6 +54,9 @@ class AtConfig(object):
         self.default_sorter = Sorter.CosineSimilarity
         self.default_feature_group = self.FeatureGroups.keys()[0]
 
+        # include raw image data into the hdf file
+        self.save_raw_images = False
+
     def saveSettings(self):
 
         settings = QSettings(version.organisation, version.appname)
@@ -66,6 +69,7 @@ class AtConfig(object):
         settings.setValue('default_feature_group', self.default_feature_group)
         settings.setValue('contours_complementary_color',
                           self.contours_complementary_color)
+        settings.setValue('save_raw_images', self.save_raw_images)
         settings.endGroup()
 
     def restoreSettings(self):
@@ -103,5 +107,9 @@ class AtConfig(object):
         if settings.contains('contours_complementary_color'):
             value = settings.value('contours_complementary_color', type=bool)
             self.contours_complementary_color = value
+
+        if settings.contains('save_raw_images'):
+            value = settings.value('save_raw_images', type=bool)
+            self.save_raw_images = value
 
         settings.endGroup()

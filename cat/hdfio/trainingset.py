@@ -92,7 +92,7 @@ class AtTrainingSetIO(HdfFile):
         return self[self.dmodel.gallery].shape[0]
 
     def imageSize(self):
-        return self[self.dmodel.images].shape[:2]
+        return self[self.dmodel.gallery].attrs[self.dmodel.IMAGESIZE]
 
     # XXX set attributes to hdffile
     def numberItems(self, coordinate=None):

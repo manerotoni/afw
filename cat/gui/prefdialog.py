@@ -62,6 +62,8 @@ class AtPreferencesDialog(QtWidgets.QDialog):
         self.hdf_compopts.setCurrentIndex(
             self.hdf_compopts.findText(str(atc.compression_opts)))
 
+        self.saveRawImages.setChecked(atc.save_raw_images)
+
     def compoptsUpdated(self, option):
         self._compopts_old[self.hdf_compression.currentText()] = option
 
@@ -102,3 +104,4 @@ class AtPreferencesDialog(QtWidgets.QDialog):
         atc.compression = self.hdf_compression.currentText()
         atc.compression_opts = self.hdf_compopts.itemData(
             self.hdf_compopts.currentIndex())
+        atc.save_raw_images = self.saveRawImages.isChecked()
