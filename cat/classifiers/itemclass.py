@@ -17,6 +17,8 @@ from PyQt5.QtCore import Qt
 class ItemClass(QtCore.QObject):
     """Definiton of one single class, in terms of machine learing."""
 
+    UnClassified = 'unclassified'
+
     def __init__(self, name, color, label, score=0.0):
         self.color = color
         self.name = name
@@ -50,7 +52,7 @@ class ItemClass(QtCore.QObject):
     def brush(self):
         brush = QtGui.QBrush()
         brush.setColor(self.color)
-        if self.label is None:
+        if self.name == self.UnClassified:
             brush.setStyle(Qt.NoBrush)
         else:
             brush.setStyle(Qt.SolidPattern)
@@ -60,7 +62,7 @@ class ItemClass(QtCore.QObject):
     def brush_trainingsample(self):
         brush = QtGui.QBrush()
         brush.setColor(self.color)
-        if self.label is None:
+        if self.name == self.UnClassified:
             brush.setStyle(Qt.NoBrush)
         else:
             brush.setStyle(Qt.Dense5Pattern)
@@ -84,4 +86,4 @@ class ItemClass(QtCore.QObject):
 
 
 
-UnClassified = ItemClass("unclassified", QtGui.QColor("white"), 10**9)
+UnClassified = ItemClass(ItemClass.UnClassified, QtGui.QColor("white"), 10**9)

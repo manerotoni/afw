@@ -174,10 +174,16 @@ class AtAnnotationWidget(AtSideBarWidget):
         dlg.path = self.parent.loader.file.filename
         dlg.exec_()
 
+    def clearItems(self):
+        for item in self.tileview.items:
+            item.clear()
+
     def onLoadAnnotations(self):
+
         try:
             file_ = self.parent.loader.file.filename
         except AttributeError:
             return
         dlg = LoadAnnotationsDialog(file_, self)
+        dlg.accepted.connect(self.clearItems)
         dlg.exec_()

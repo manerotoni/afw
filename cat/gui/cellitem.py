@@ -159,8 +159,8 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
 
     def clear(self):
         try:
-            self.setClass(UnClassified)
             self.clearTrainingSample()
+            self.setClass(UnClassified)
         except RuntimeError as e:
             warnings.warn(str(e))
 
