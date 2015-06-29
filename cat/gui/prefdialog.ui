@@ -290,7 +290,7 @@
             <item>
              <widget class="QCheckBox" name="saveRawImages">
               <property name="text">
-               <string>Save Raw Images To hdf5</string>
+               <string>Save Raw Images to hdf5</string>
               </property>
              </widget>
             </item>
