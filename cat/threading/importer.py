@@ -86,7 +86,7 @@ class AtImporter(QtCore.QObject):
                 objects = mp.objects
                 # saveData ignores empty objects
                 image = mp.image[:, :, :, self.channels.keys()]
-                writer.saveData(objects, image)
+                writer.saveData(objects, image, treatment)
 
                 self.contourImage.emit(tuple(mp.iterQImages()),
                                        objects.contours)

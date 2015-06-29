@@ -26,6 +26,7 @@ class HdfDataModel(object):
     COLORS = "colors"
     CHANNELS = "channels"
     IMAGESIZE = "image_size"
+    TREATMENT = "treatment"
 
     # XXX remove this in later versions
     class Legacy(object):
@@ -60,6 +61,7 @@ class HdfCache(object):
         self.colors = colors
         self.image_size = size
         self._images = list()
+        self._treatment = list()
 
         self.feature_names = feature_names
         self._dt_gallery = gallery_dtype
@@ -85,7 +87,7 @@ class HdfCache(object):
 
             self.fgroups[i] = np.array(line, dtype=self._dt_groups)
 
-    def appendData(self, objectsdict, image):
+    def appendData(self, objectsdict, image, treatment):
         nobj = len(objectsdict)
         nftrs = len(objectsdict.feature_names)
 
@@ -114,6 +116,7 @@ class HdfCache(object):
             self.gallery = np.concatenate((self.gallery, gallery), axis=3)
 
         self._images.append(image)
+        self._treatment.append(treatment)
 
     @property
     def image(self):
@@ -124,6 +127,10 @@ class HdfCache(object):
             images[:, :, :, :, i] = image
 
         return images
+
+    @property
+    def treatment(self):
+        return [str(t) for t in self._treatment]
 
 
 class HdfWriter(object):
@@ -160,7 +167,7 @@ class HdfWriter(object):
         txt = xml.toString()
         dset = self._file.create_dataset(self.dmodel.settings, data=txt)
 
-    def saveData(self, objectsdict, image):
+    def saveData(self, objectsdict, image, treatment):
         # sometimes there are not objects found in an image
         # and objectsdict is empty
         if objectsdict:
@@ -171,7 +178,7 @@ class HdfWriter(object):
 
             if not self._save_raw_images:
                 image = None
-            self._cache.appendData(objectsdict, image)
+            self._cache.appendData(objectsdict, image, treatment)
 
     def _writeContours(self):
 
@@ -216,6 +223,7 @@ class HdfWriter(object):
                                                  chunks=chunksize,
                                                  compression=self._compression,
                                                  compression_opts=self._copts)
+                dset.attrs[self.dmodel.TREATMENT] = self._cache.treatment
 
         except ValueError as e:
             if "Object header message is too large" in str(e):
