@@ -70,6 +70,7 @@ class MouseWheelView(QtWidgets.QGraphicsView):
 class AtGraphicsView(MouseWheelView):
 
     itemLoaded = QtCore.pyqtSignal(int)
+    emitSelectedItems = QtCore.pyqtSignal(list)
 
     def __init__(self, parent, gsize, show_classes=False, *args, **kw):
         super(AtGraphicsView, self).__init__(parent, *args, **kw)

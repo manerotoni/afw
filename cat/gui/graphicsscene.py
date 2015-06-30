@@ -29,6 +29,12 @@ class AtGraphicsScene(QtWidgets.QGraphicsScene):
         self._multiselect = False
         self._selector = None
 
+        self.selectionChanged.connect(self.onSelectionChanged)
+
+    def selectItem(self, item):
+        if not item.isSelected():
+            item.setSelected(True)
+
     def mouseMoveEvent(self, event):
 
         if self._multiselect:
@@ -44,7 +50,7 @@ class AtGraphicsScene(QtWidgets.QGraphicsScene):
         if (event.modifiers() == QtCore.Qt.ControlModifier and
             item is not None and
             self._multiselect):
-            item.setSelected(True)
+            self.selectItem(item)
         else:
             super(AtGraphicsScene, self).mouseMoveEvent(event)
 
@@ -88,8 +94,14 @@ class AtGraphicsScene(QtWidgets.QGraphicsScene):
 
     def selectAll(self):
         for item in self.items():
-            item.setSelected(True)
+            self.selectItem(item)
 
     def invertSelection(self):
         for item in self.items():
             item.setSelected(not item.isSelected())
+
+    def onSelectionChanged(self):
+        view = self.views()[0]
+        items = self.selectedItems()
+        hashes = [i.hash for i in items]
+        view.emitSelectedItems.emit(hashes)

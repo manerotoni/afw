@@ -228,9 +228,9 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
 
     def paint(self, painter, option, widget):
         if self.isSelected():
-            self._selrect.show()
+            self.toggleSelRect(True)
         else:
-            self._selrect.hide()
+            self.toggleSelRect(False)
 
     def boundingRect(self):
         rect0 = self.childrenBoundingRect()
@@ -253,6 +253,13 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         item.setZValue(StackOrder.contour)
         self.addMask(polygon)
         self.addToGroup(item)
+
+    def toggleSelRect(self, state):
+
+        if state:
+            self._selrect.show()
+        else:
+            self._selrect.hide()
 
     def toggleMask(self, state, toggle_contours=True):
         is_selected = self.isSelected()

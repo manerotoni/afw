@@ -120,7 +120,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
                 self._items[key].setTrainingSample(classes[index.row()])
         return ret
 
-
     def findClassItems(self, class_name, match=Qt.MatchExactly):
 
         items = super(AtMultiClassSvmItemModel, self).findItems(
@@ -220,6 +219,12 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             child = class_item.child(row)
             if child.data() == hashvalue:
                 return child.index()
+
+    def findIndexFromHash(self, hashvalue):
+        classes = self.currentClasses()
+        for label, class_ in classes.iteritems():
+            parent = self.item(label, 0)
+            return self.findChildIndex(hashvalue, parent)
 
     def addAnnotation(self, item, class_name):
         """Add samples to class definitions. Distinguish 3 cases:
