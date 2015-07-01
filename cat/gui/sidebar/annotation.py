@@ -50,14 +50,6 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.tileview.emitSelectedItems.connect(
             self.selectByHashes)
 
-    def selectByHashes(self, hashes):
-        smodel = self.itemView().selectionModel()
-        smodel.clearSelection()
-        for hash_ in hashes:
-            idx = self.model.findIndexFromHash(hash_)
-            if idx is not None:
-                smodel.select(idx, smodel.Select|smodel.Rows)
-
     def onActivated(self, index):
         hkey = self.model.hashkey(index)
         self.tileview.selectByKey(hkey)

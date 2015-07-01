@@ -25,6 +25,14 @@ class AtSideBarWidget(QtWidgets.QWidget):
         self.featuredlg = featuredlg
         self.parent = parent
 
+    def selectByHashes(self, hashes):
+        smodel = self.itemView().selectionModel()
+        smodel.clearSelection()
+        for hash_ in hashes:
+            idx = self.model.findIndexFromHash(hash_)
+            if idx is not None:
+                smodel.select(idx, smodel.Select|smodel.Rows)
+
     def removeSelected(self):
         model_indices =  self.itemView().selectionModel().selectedRows()
         model_indices.reverse()

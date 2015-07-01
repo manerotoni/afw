@@ -264,6 +264,7 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
 
     # removeAnnoations
     def removeItems(self, indices):
+        indices = sorted(indices, key=lambda i: -1*i.row())
         for index in indices:
             parent = self.item(index.parent().row(), 0)
             if parent is not None:

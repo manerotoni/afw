@@ -38,6 +38,9 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
     def hashkey(self):
         raise NotImplementedError
 
+    def findIndexFromHash(self, hashvalue):
+        raise NotImplementedError
+
     def clear(self):
         for i in range(self.rowCount()):
             self.removeRow(0)
@@ -102,6 +105,7 @@ class AtStandardItemModel(QtGui.QStandardItemModel):
         return items
 
     def removeItems(self, indices):
+        indices = sorted(indices, key=lambda i: -1*i.row())
         for index in indices:
             self.removeRow(index.row())
 
@@ -130,6 +134,12 @@ class AtOneClassSvmItemModel(AtStandardItemModel):
 
     def __init__(self, *args, **kw):
         super(AtOneClassSvmItemModel, self).__init__(*args, **kw)
+
+    def findIndexFromHash(self, hashvalue):
+        for row in xrange(self.rowCount()):
+            item = self.item(row, 0)
+            if item.data() == hashvalue:
+                return item.index()
 
     def addAnnotation(self, item, class_name=None):
         # No class_names in the one class support vector machine..
