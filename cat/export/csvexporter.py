@@ -20,7 +20,7 @@ class CsvExporter(object):
 
     def save(self):
 
-        header = ['class', 'class_label', 'treatment']
+        header = ['class', 'class_label', 'treatment', 'training sample']
         header.extend(self._features.values())
 
         with open(self._filename, 'wb') as fp:
@@ -28,7 +28,8 @@ class CsvExporter(object):
             writer.writerow(header)
 
             for item in self._items:
-                line = [item.class_.name, item.class_.label, item.treatment]
+                line = [item.class_.name, item.class_.label, item.treatment,
+                        str(item.isTrainingSample())]
                 line.extend(item.features[self._features.keys()].tolist())
                 writer.writerow(line)
 
