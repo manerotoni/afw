@@ -27,7 +27,7 @@ import mimetypes
 mimetypes.add_type('image/lsm', '.lsm')
 
 
-def zProjection(image, method):
+def zProjection(image, method, zslice=0):
 
     if method == ZProject.Maximum:
         return image.max(axis=ImageCore.Idx_z)
@@ -35,8 +35,13 @@ def zProjection(image, method):
         return image.mean(axis=ImageCore.Idx_z)
     elif method == ZProject.Minimum:
         return image.min(axis=ImageCore.Idx_z)
+    elif method in (ZProject.Select, ZProject.MaxTotalIntensity):
+        if image.ndim == 4:
+            return image[:,  :, zslice, :]
+        else:
+            return image[:,  :, zslice]
     else:
-        raise Run("Projection method not defined")
+        raise RuntimeError("Projection method not defined")
 
 
 def outlineSmoothing(label_image, outline_smoothing):
@@ -70,6 +75,31 @@ class MultiChannelProcessor(object):
         self.gsize = gallery_size
         self._filename = filename
         self._containers = OrderedDict()
+        self._imaster = None
+        self._zslice = None
+
+    @property
+    def zslice(self):
+        if self._zslice is None:
+            ppar = self.params.values()[0]
+            if ppar.zprojection == ZProject.MaxTotalIntensity:
+                self._zslice = np.argmax(
+                    self.image[:,:,:, self.imaster].sum(axis=0).sum(axis=0))
+            else:
+                self._zslice = ppar.zslice
+        return self._zslice
+
+    @property
+    def imaster(self):
+        if self._imaster is None:
+            # the master (primary) channel is determined by the first item
+            # the segmentation parameters (OrderedDict)
+            channels_r = OrderedDict([(v, k) for k, v in self.channels.items()])
+            try:
+                self._imaster = channels_r[self.params.keys()[0]]
+            except KeyError:
+                raise KeyError("Primary channel is deactivated!")
+        return self._imaster
 
     @property
     def metadata(self):
@@ -96,14 +126,9 @@ class MultiChannelProcessor(object):
             channels = self.channels.keys()
 
         zprojection = self.params.values()[0].zprojection
-        stack = self.params.values()[0].zslice
 
         for ci in channels:
-            if zprojection == ZProject.Select:
-                image = self._reader.get_image(stack=stack, channel=ci)
-            else:
-                image = zProjection(self.image[:, :, :, ci], zprojection)
-
+            image = zProjection(self.image[:, :, :, ci], zprojection, self.zslice)
             yield gray2qimage(image, normalize=normalize)
 
     def _gallery_image(self, center, gallery_size=50):
@@ -130,13 +155,9 @@ class MultiChannelProcessor(object):
             ymax = height
 
         zprojection = self.params.values()[0].zprojection
-        stack = self.params.values()[0].zslice
 
-        if zprojection == ZProject.Select:
-            gimg = self.image[ymin:ymax, xmin:xmax, stack, self._channel_idx]
-        else:
-            gimg = self.image[ymin:ymax, xmin:xmax, :, self._channel_idx]
-            gimg = zProjection(gimg, zprojection)
+        gimg = self.image[ymin:ymax, xmin:xmax, :, self._channel_idx]
+        gimg = zProjection(gimg, zprojection, self.zslice)
         return gimg
 
     @property
@@ -191,30 +212,32 @@ class MultiChannelProcessor(object):
         self._channel_idx = self.channels.keys()
         # the master (primary) channel is determined by the first item
         # the segmentation parameters (OrderedDict)
-        channels_r = OrderedDict([(v, k) for k, v in self.channels.items()])
+        # channels_r = OrderedDict([(v, k) for k, v in self.channels.items()])
 
-        try:
-            imaster = channels_r[self.params.keys()[0]]
-        except KeyError:
-            raise KeyError("Primary channel is deactivated!")
+        # try:
+        #     imaster = channels_r[self.params.keys()[0]]
+        # except KeyError:
+        #     raise KeyError("Primary channel is deactivated!")
 
         # segment the master first
-        cname = self.channels[imaster]
+        cname = self.channels[self.imaster]
+        # if self.params[cname].zprojection == ZProject.MaxTotalIntensity:
+        #     self._zslice = np.argmax(
+        #         self.image[:,:,:,imaster].sum(axis=0).sum(axis=0))
+        # else:
+        #     self._zslice = self.params[cname].zslice
 
-        if self.params[cname].zprojection == ZProject.Select:
-            image = self.image[:,  :, self.params[cname].zslice, :].copy()
-        else:
-            image = zProjection(self.image[:, :, :, :].copy(),
-                                self.params[cname].zprojection)
+        image = zProjection(self.image[:, :, :, :].copy(),
+                            self.params[cname].zprojection, self.zslice)
 
         self._containers[cname] = \
-            self.threshold(image[:, :, imaster], **self.params[cname]._asdict())
+            self.threshold(image[:, :, self.imaster], **self.params[cname]._asdict())
 
         label_image = self._containers[cname].img_labels.toArray()
         self._filter(self._containers[cname], self.params[cname])
 
         for i, name in self.channels.iteritems():
-            if i == imaster:
+            if i == self.imaster:
                 continue
 
             self._containers[name] = self.seededExpandedRegion(

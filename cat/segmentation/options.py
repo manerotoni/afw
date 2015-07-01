@@ -30,10 +30,12 @@ class ZProject(object):
     Maximum = 1
     Mean = 2
     Minimum = 3
+    MaxTotalIntensity = 4
 
     @classmethod
     def names(cls):
-        return ("select", "maximum", "mean", "minimum")
+        return ("select", "maximum", "mean", "minimum",
+                "max. total intesity")
 
 
 feature_groups = {'granulometry': None,
