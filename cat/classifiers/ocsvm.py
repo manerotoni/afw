@@ -162,6 +162,11 @@ class OneClassSvm(Classifier):
                 self._params.gamma.setValue(gamma)
                 break
 
+    def setParameters(self, params):
+        assert isinstance(params, dict)
+        self._params.nu.setValue(params['nu'])
+        self._params.gamma.setValue(params['gamma'])
+
     @property
     def nu(self):
         if not (0.0 < self._params.nu.value() <= 1.0):
