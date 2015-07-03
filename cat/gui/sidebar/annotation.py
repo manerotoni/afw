@@ -171,7 +171,6 @@ class AtAnnotationWidget(AtSideBarWidget):
     def onSave(self):
         clf = self.currentClassifier()
         if not self.itemView().model().rowCount():
-            QMessageBox.information(self, "information", "Nothing to save!")
             return
 
         labels = self.itemView().model().labels
