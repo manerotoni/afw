@@ -16,6 +16,10 @@ import vigra
 import numpy as np
 from .imagecore import ImageCore
 
+XYC = vigra.AxisTags(vigra.AxisInfo.x, vigra.AxisInfo.y,
+                     vigra.AxisInfo.c)
+XYZC = vigra.AxisTags(vigra.AxisInfo.x, vigra.AxisInfo.y,
+                      vigra.AxisInfo.z, vigra.AxisInfo.c)
 
 class TiffImage(ImageCore):
 
@@ -30,29 +34,14 @@ class TiffImage(ImageCore):
             raise RuntimeError("5d images are not supported")
 
         self._dtype = info.getDtype()
-        image = vigra.impex.readVolume(filename, dtype=self._dtype)
+        image = vigra.impex.readImage(filename, dtype=self._dtype)
 
-        # correct the axestags
-        axistags = info.getAxisTags()
-        for at in image.axistags:
-            if at not in axistags:
-                axistags.append(at)
-        self._image = self._swap2xyzc(image, axistags)
+        if info.getAxisTags() == XYC:
+            self._image = np.expand_dims(image.transposeToNumpyOrder(), axis=2)
+        elif info.getAxisTags() == XYZC:
+            self._image = image
+
         self._shape = self._image.shape
-
-    def _swap2xyzc(self, image, axistags):
-        """Swap axes of the array that it follows the convention xyzc"""
-
-        target = (vigra.AxisInfo.x, vigra.AxisInfo.y,
-                  vigra.AxisInfo.z, vigra.AxisInfo.c)
-
-        target_idx =  [axistags.index(t) for t in self._Order]
-
-        for i, j in enumerate(target_idx):
-            if i != j and i < j:
-                image = image.swapaxes(i, j)
-
-        return image
 
     @property
     def bitdepth(self):
@@ -71,11 +60,14 @@ class TiffImage(ImageCore):
 
     @property
     def size(self):
-        return self._shape[self.Idx_y], self._shape[self.Idx_x]
+        return self._shape[self.Idx_x], self._shape[self.Idx_y]
 
     @property
     def channels(self):
         return self._shape[self.Idx_c]
 
     def get_image(self, stack=0, channel=0):
-        return self._image[:, :, stack, channel].transposeToNumpyOrder()
+        if isinstance(self._image, np.ndarray):
+            return self._image[:, :, stack, channel]
+        else:
+            return self._image[:, :, stack, channel].transposeToNumpyOrder()

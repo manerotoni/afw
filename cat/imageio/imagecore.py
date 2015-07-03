@@ -13,7 +13,6 @@ from .imageio import ImageProps, MetaData
 
 class ImageCore(object):
 
-    _Order = ('x', 'y', 'z', 'c')
     Idx_x = 0
     Idx_y = 1
     Idx_z = 2
