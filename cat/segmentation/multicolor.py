@@ -15,7 +15,6 @@ from collections import OrderedDict
 from qimage2ndarray import gray2qimage
 import vigra
 from cecog import ccore
-from cecog.environment import CecogEnvironment
 
 from cat.imageio import LsmImage, TiffImage
 from cat.imageio.imagecore import ImageCore
@@ -55,8 +54,6 @@ def outlineSmoothing(label_image, outline_smoothing):
 
 
 class MultiChannelProcessor(object):
-
-    _environ = CecogEnvironment(redirect=False, debug=False)
 
     def __init__(self, filename, params, channels,
                  gallery_size=60, treatment=None):
@@ -214,18 +211,8 @@ class MultiChannelProcessor(object):
         # the segmentation parameters (OrderedDict)
         # channels_r = OrderedDict([(v, k) for k, v in self.channels.items()])
 
-        # try:
-        #     imaster = channels_r[self.params.keys()[0]]
-        # except KeyError:
-        #     raise KeyError("Primary channel is deactivated!")
-
         # segment the master first
         cname = self.channels[self.imaster]
-        # if self.params[cname].zprojection == ZProject.MaxTotalIntensity:
-        #     self._zslice = np.argmax(
-        #         self.image[:,:,:,imaster].sum(axis=0).sum(axis=0))
-        # else:
-        #     self._zslice = self.params[cname].zslice
 
         image = zProjection(self.image[:, :, :, :].copy(),
                             self.params[cname].zprojection, self.zslice)
