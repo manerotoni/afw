@@ -15,7 +15,6 @@ from os.path import join
 from distutils.core import setup
 
 from cat import version
-import build_helpers
 
 pyrcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
               'outfile': join('cat', 'cat_rc.py'),

@@ -8,7 +8,7 @@ Popup dialog to perform cross validation and gridsearch.
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
-
+import sys
 from os.path import splitext
 import numpy as np
 import traceback
@@ -50,6 +50,11 @@ def _font_size(value):
     else:
         return 10
 
+def njobs():
+    if hasattr(sys, 'frozen'):
+        return 1
+    else:
+        return cpu_count() - 1
 
 class CrossValidationDialog(QtWidgets.QWidget):
 
@@ -193,7 +198,7 @@ class CrossValidationDialog(QtWidgets.QWidget):
 
         cv = StratifiedKFold(y=self.labels, n_folds=self.kfold)
         grid = GridSearchCV(SVC(), param_grid=param_grid, cv=cv,
-                            n_jobs=cpu_count()-1)
+                            n_jobs=njobs())
 
         if np.isnan(self.features).any():
             raise RuntimeError("There is a NAN in the feature table. "

@@ -482,12 +482,12 @@
   <customwidget>
    <class>ImageViewer</class>
    <extends>QGraphicsView</extends>
-   <header>cat/gui/imagewidget</header>
+   <header location="global">cat.gui.imagewidget</header>
   </customwidget>
   <customwidget>
    <class>AtSlider</class>
    <extends>QSlider</extends>
-   <header>cat/gui/slider</header>
+   <header location="global">cat.gui.slider</header>
   </customwidget>
  </customwidgets>
  <resources>
