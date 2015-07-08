@@ -454,7 +454,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;BBoxes&lt;/p&gt;&lt;p&gt;Show bounding boxes of the foreground objects&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>BBoxes</string>
+           <string>Gallery BBoxes</string>
           </property>
           <property name="shortcut">
            <string>B</string>
