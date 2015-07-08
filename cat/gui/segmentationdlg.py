@@ -70,13 +70,14 @@ class ExpansionWidget(QtWidgets.QGroupBox):
         self.normMax.setValue(params.norm_max)
         self.setValue(params.expansion_size)
 
-    def setNormalisation(self, norm_min, norm_max, min=None, max=None):
+    def setNormalisation(self, norm_min, norm_max, min_=None, max_=None,
+                         default=255):
         self.normMin.setValue(norm_min)
-        self.normMax.setValue(norm_max)
+        self.normMax.setValue(max(default, norm_max))
 
-        if min is not None and max is not None:
-            self.normMin.setRange(min, max)
-            self.normMax.setRange(min, max)
+        if min_ is not None and max_ is not None:
+            self.normMin.setRange(min_, max_)
+            self.normMax.setRange(min_, max_)
 
 class SegmentationDialog(QtWidgets.QWidget):
 
@@ -117,10 +118,10 @@ class SegmentationDialog(QtWidgets.QWidget):
         self.emitImageUpdate()
         self.paramsChanged.emit()
 
-    def setMaxZSlice(self, value, default=255):
+    def setMaxZSlice(self, value):
         if self.zslice.value() >= value:
             self.zslice.setValue(value)
-        self.zslice.setMaximum(max(default, value))
+        self.zslice.setMaximum(value)
 
     def emitImageUpdate(self, dummy=None):
         self.imageUpdate.emit(self.parent().slider.value())
@@ -185,7 +186,7 @@ class SegmentationDialog(QtWidgets.QWidget):
 
         self.pchannel.removeItem(self.pchannel.findText(region))
 
-    def setRegions(self, names, image_properties):
+    def setRegions(self, names, image_properties, default=255):
         self.clearRegions()
         self.pchannel.clear()
         for i, name in enumerate(names):
@@ -197,7 +198,7 @@ class SegmentationDialog(QtWidgets.QWidget):
                 self.pchannel.addItems(names)
                 self.pchannel.setCurrentIndex(0)
                 self.normMin.setValue(norm_min)
-                self.normMax.setValue(norm_max)
+                self.normMax.setValue(max(default, norm_max))
                 self.normMax.setRange(ip.min, ip.max)
                 self.normMin.setRange(ip.min, ip.max)
 
