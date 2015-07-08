@@ -86,8 +86,8 @@ class ImportDialog(QtWidgets.QDialog):
         if event.key() == Qt.Key_F5:
             self.showObjects()
 
-    def close(self):
-        super(ImportDialog, self).close()
+    def closeEvent(self, event):
+        super(ImportDialog, self).closeEvent(event)
         ofile = self.dataFile.text()
         if self.loadOnClose.isChecked() and isfile(ofile):
             self.loadData.emit(ofile)
