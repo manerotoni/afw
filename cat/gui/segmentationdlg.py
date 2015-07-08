@@ -117,10 +117,10 @@ class SegmentationDialog(QtWidgets.QWidget):
         self.emitImageUpdate()
         self.paramsChanged.emit()
 
-    def setMaxZSlice(self, value):
+    def setMaxZSlice(self, value, default=255):
         if self.zslice.value() >= value:
             self.zslice.setValue(value)
-        self.zslice.setMaximum(value)
+        self.zslice.setMaximum(max(default, value))
 
     def emitImageUpdate(self, dummy=None):
         self.imageUpdate.emit(self.parent().slider.value())
