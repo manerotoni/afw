@@ -50,6 +50,10 @@ class AtAnnotationWidget(AtSideBarWidget):
         self.tileview.emitSelectedItems.connect(
             self.selectByHashes)
 
+    def removeAll(self):
+        super(AtAnnotationWidget, self).removeAll()
+        self.clearItems()
+
     def onActivated(self, index):
         hkey = self.model.hashkey(index)
         self.tileview.selectByKey(hkey)
