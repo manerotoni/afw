@@ -8,6 +8,7 @@
       <section title="Shortcuts" ref="html/shortcuts.html"></section>
       <section title="Getting started" ref="html/getting_started.html">
         <section ref="html/getting_started.html#gui" title="Graphical User Interface"></section>
+        <section ref="html/getting_started.html#newfile" title="Create a new data file"></section>
         <section ref="html/getting_started.html#openfile" title="Open a data file"></section>
         <section ref="html/getting_started.html#selectitems" title="Select items - working with the gallery viewer"></section>
         <section ref="html/getting_started.html#quicksort" title="Sorting items (quick sort)"></section>
@@ -29,7 +30,7 @@
         <section ref="html/manual.html#classifier_training" title="Classifier training">
           <section ref="html/manual.html#support_vector_classifier" title="Support vector classifier"></section>
           <section
-              ref="html/manual.html#save_classifer_and_load_annotations"
+              ref="html/manual.html#save_classifer_and_load_classifier"
               title="Save a classifier"></section>
           <section ref="html/manual.html#predict" title="Predict"></section>
           <section ref="html/manual.html#cross_validation"
@@ -41,6 +42,8 @@
                    title="Matplotlib Navigation Toolbar"></section>
           <section ref="html/manual.html#one_class_svm"
                    title="One class support vector machine"></section>
+
+
         </section>
 
         <section  ref="html/manual.html#preprocess_raw_images" title="Preprocessing image data">
@@ -52,12 +55,14 @@
             <section ref="html/manual.html#non_primary_channels" title="Non primary segmentation"></section>
             <section ref="html/manual.html#loadsave_settings" title="Load/Save segmentation settings"></section>
           </section>
+          <section ref="html/manual.html#treatment_info" title="Treatment and Experimental Conditions"></section>
         </section>
         <section  ref="html/manual.html#preferences" title="Preferences">
           <section ref="html/manual.html#preferences_general" title="Preferences General"></section>
           <section ref="html/manual.html#preferences_io" title="Preferences Data IO"></section>
         </section>
-        <section ref="html/manual.html#data_file_formats" title="Data file formats"></section>
+        <section ref="html/manual.html#data_export" title="Data export"></section>
+        <section ref="html/manual.html#feature_groups" title="Feature Groups"></section>
       </section>
     </toc>
 
@@ -68,6 +73,7 @@
       <keyword name="Getting started" ref="html/getting_started.html"/>
       <keyword name="GUI" ref="html/getting_started.html#gui"/>
       <keyword name="Open data file" ref="html/getting_started.html#openfile"/>
+      <keyword name="New data file" ref="html/getting_started.html#newfile"/>
       <keyword name="Select items" ref="html/getting_started.html#selectitems"/>
       <keyword name="Context menu gallery viewer" ref="html/getting_started.html#contextmenugallery"/>
       <keyword name="Throw sort anchor" ref="html/getting_started.html#quicksort"/>
@@ -85,9 +91,9 @@
       <keyword name="Contrast enhancement" ref="html/manual.html#contrast_enhancement_for_graphics_view"/>
       <keyword name="Classifier training" ref="html/manual.html#classifier_training"/>
       <keyword name="Support vector classifier (SVC)" ref="html/manual.html#support_vector_classifier"/>
-      <keyword name="Save/load classifiers" ref="html/manual.html#save_classifer_and_load_annotations"/>
+      <keyword name="Save/load classifiers" ref="html/manual.html#save_classifer_and_load_classifier"/>
       <keyword name="Save a classifier" ref="html/manual.html#saving_a_classifier"/>
-      <keyword name="Load annotations" ref="html/manual.html#loading_annotations"/>
+      <keyword name="Load a classifier" ref="html/manual.html#load_classifier"/>
       <keyword name="Predict" ref="html/manual.html#predict"/>
       <keyword name="Cross validation" ref="html/manual.html#cross_validation"/>
       <keyword name="Gridsearch" ref="html/manual.html#grid_search"/>
@@ -108,6 +114,9 @@
       <keyword name="Preferences" ref="html/manual.html#preferences"/>
       <keyword name="Preferences General" ref="html/manual.html#preferences_general"/>
       <keyword name="Preferences Data IO" ref="html/manual.html#preferences_io"/>
+      <keyword name="Treatment" ref="html/manual.html#treatment_info"/>
+      <keyword name="Experimental Conditions" ref="html/manual.html#treatment_info"/>
+
     </keywords>
     <files>
       <file>html/css/help.css</file>
@@ -147,7 +156,7 @@
       <file>html/images/list-remove-32.png</file>
       <file>html/images/list-remove.png</file>
       <file>html/images/list-remove_24x24.png</file>
-      <file>html/images/load_annotations.png</file>
+      <file>html/images/load_classifier.png</file>
       <file>html/images/load_classifier_24x24.png</file>
       <file>html/images/mainwindow-loading.png</file>
       <file>html/images/mainwindow.png</file>

@@ -81,5 +81,27 @@
       format, optimized for fast reading, but CellAnnotator can also read data
       from cellh5.
     </p>
+
+    <p>
+      <h4>Keeps track of experimental treament:</h4>
+    </p>
+
+    <p>
+      Cellannotator keeps track of the experimental treatment. Treatment imformation is provided by the way how raw images are organized on the hard disk. There are two possibilities to organize image data:
+
+    <p>
+      <ol>
+        <li><b>FlatDirectory</b> - no treatment information</li>
+        <li><b>DirectoryPerTreatment</b> - the directory names are used as treatment.</li>
+      </ol>
+    </p>
+
+    <p>
+It's up to the user to provide proper directory structures. Each microscopy uses a different output format and its not possible to support every thing.
+<br><i>We keep things simple:</i> <b>Move all images belonging to one treatment into one subdirectory and move all such directory into one directory.</b>
+    </p>
+
+    </p>
+
   </body>
 </html>

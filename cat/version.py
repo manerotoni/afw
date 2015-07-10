@@ -7,11 +7,11 @@ __licence__ = 'GPL'
 
 
 MAJOR = 0
-MINOR = 5
+MINOR = 6
 
 organisation = "IMBA"
 appname = "CellAnnotator"
-version = "%s.%s%s" %(MAJOR, MINOR, "-alpha")
+version = "%s.%s%s" %(MAJOR, MINOR, "")
 appstr = '%s-%s' %(appname, version)
 
 information = ('<p style="font-size:xx-large;color:white"><b>%s %s</b></p><br>'

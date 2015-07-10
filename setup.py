@@ -13,6 +13,7 @@ __licence__ = 'GPL'
 import glob
 from os.path import join
 from distutils.core import setup
+import build_helpers
 
 from cat import version
 

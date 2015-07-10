@@ -9,6 +9,21 @@
     </p>
 
     <p>
+      <h2><a name="newfile"></a>Create a new data file</h2>
+    </p>
+
+    <p>
+      <ol>
+        <li style="text-align: justify;">Menu: <i>File-&gt;New data file</i></li>
+        <li>Press the new-icon <img style="width: 12px; height: 12px;" alt="open" title="open" src="images/document-new.png"> in the tool bar</li>
+      </ol>
+    </p>
+
+    <p>See section <a href="./manual.html#preprocess_raw_images">Preprocess Raw Image</a> for details.
+    </p>
+
+
+    <p>
       <h2><a name="open_a_data_file"></a>Open a data file</h2>
     </p>
 
@@ -288,7 +303,7 @@
 
     <p>
       <center>
-        <img style="width: 243px; height: 507px;" alt="" title="classifier training" src="images/annotation-dock-minimal-svc.png">
+        <img  alt="" title="classifier training" src="images/annotation-dock-minimal-svc.png">
       </center>
     </p>
 
@@ -343,40 +358,34 @@
         </tr>
         <tr>
           <td><img style="width: 24px; height: 23px;" alt="" title="load annotations" src="images/load_classifier_24x24.png"></td>
-          <td>Load annotations of a previously defined classifier. </td>
+          <td>Load a previously defined classifier. </td>
         </tr>
       </table>
     </p>
 
     <p>
-      <h3><a name="save_classifer_and_load_annotations"></a>Save a classifier and load annotations</h3>
+      <h3><a name="save_classifer_and_load_classifier"></a>Save and load a classifier</h3>
     </p>
 
     <p>
-      The Dialogs for <a name="saving_a_classifier"></a>saving a classifier and <a name="loading_annotations"></a>loading
-      annotations are similar. To save a classifier one has to provide a <u>filename</u> a
+      The Dialogs for <a name="saving_a_classifier"></a>saving and loading a classifier <a name="load_classifier"></a> are similar. To save a classifier one has to provide a <u>filename</u> a
       <u>classifier name</u> and a custom <u>description</u>. It is possible to overwrite a
-      classifier. To load annotations, a drop down menu shows a list of classifiers already saved
-      in the file. The description is read only. Feature are loaded unnormalized and one has to re-run
+      classifier. To load a classifier, a drop down menu shows a list of classifiers saved
+      in the currently opened data file. The description is read only.
       cross validation.
     </p>
 
     <p>
-      <table border="1" cellpadding="2" cellspacing="0">
-        <tr>
-          <td><img style="width: 378px; height: 229px;" alt="" title="load annotations" src="images/load_annotations.png"><br>
-          </td>
-          <td><img style="width: 378px; height: 229px;" alt="" title="save classifier" src="images/save_classifier.png"><br>
-          </td>
-        </tr>
-      </table>
-    </p>
-
-    <p>
-      <b><span style="color: red;">CAUTION:<br>
-          Be aware that feature vectors depend on the segmentation of the raw images.
-          If you load annotations from a file segmented with different segmentation parameters,
-          the resulting classifier will be flawed!</span></b>
+      <center>
+        <table border="1" cellpadding="2" cellspacing="0">
+          <tr>
+            <td><img style="width: 378px; height: 229px;" alt="" title="load annotations" src="images/load_classifier.png"><br>
+            </td>
+            <td><img style="width: 378px; height: 229px;" alt="" title="save classifier" src="images/save_classifier.png"><br>
+            </td>
+          </tr>
+        </table>
+      </center>
     </p>
 
     <p>
@@ -556,12 +565,12 @@
 
     <p>
       <center>
-        <img style="width: 243px; height: 507px;" alt="" title="one class svm" src="images/one-class-svm.png">
+        <img alt="" title="one class svm" src="images/one-class-svm.png">
       </center>
     </p>
 
     <p>
-      <h2><a name="preprocess_raw_images"></a>Preprocess raw images</h2>
+      <h2><a name="preprocess_raw_images"></a>New Data file (preprocess raw images)</h2>
     </p>
 
     <p>
@@ -569,17 +578,18 @@
       response time and prevent unnecessary computation of data some steps in
       the pipeline are preprocessed such as segmentation, calculation of
       bounding boxes, features or thumbnails. Preprocessing raw
-      image is a separate step.
+      images is the first step for image analysis and classifier training.
     </p>
 
     <p>
       <ul>
-        <li>Open Dialog "Preprocess image data" in the menu "<b>Data -&gt; Preprocess image data</b>":</li>
+        <li>Open Dialog "New data file" in the menu "<b>File -&gt; New data file</b>":</li>
       </ul>
     <p>
 
     <p>
       <center>
+        <a name="figure_processing_dialog"></a>
         <img style="width: 953px; height: 712px;" alt="" title="preprocess image data" src="images/preprocess-image-data.png">
       </center>
     </p>
@@ -595,13 +605,26 @@
       image.
       <b>CellAnnotator does not support RGB images!</b>
 
-      To keep things simple raw images have be located in one single
-      directory, the <b>Image Directory</b>, on the hard disk.
-      <span style="font-weight: bold; color: rgb(51, 204, 0);">No sub directories are scanned and there is not no special naming
-        convention for the image files.</span> The output file
-      or <a href="#data_file_formats"><b>data file</b></a>
-      is a hdf file that is optimized for fast reading and writing the
-      data. This supports the paradigm of interactivity.
+    <p>
+      <h3><a name="treatment_info"></a>Treatment and Experimental conditions</h3>
+    </p>
+
+    By default CellAnnotator expects all raw images saved in one single directory, the <b>Image Directory</b>. No information about the experimental conditions is provided. To provide information about the experimental conditions move all images to subdirectories, where each subdirectory name corresponds to one single treatment. <br>
+    There is a drop down menu in the upper right corner of the preprocessing dialog <a href="#figure_processing_dialog">(see figure above)</a> to choose between these two options. The output file or <a href="#data_file_formats"><b>data file</b></a> is a hdf file that is optimized for fast reading and writing the data. This supports the paradigm of interactivity.
+
+    <p>
+      <table style="width: 100%;" border="1" cellpadding="0" cellspacing="0">
+        <tr>
+          <td></td>
+          <td>FlatDirectory</td>
+          <td>Scan the <b>Image directory</b> for lsm and tiff files. No subdirectories are scanned. </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>DirectoryPerTreatment</td>
+          <td>Scan each subdirectory of the <b>Image directory</b> for lsm and tiff files. No furhter (sub-)subdirectories are scanned. The names of the subdirectories are used as identifiers of the treatment.</td>
+        </tr>
+      </table>
     </p>
 
     <p>
@@ -665,7 +688,7 @@
       with Gaussian blurring filter as preprocessing step to reduce noise. Size and intensity
       filters can be used to remove artefacts. The screen shot below shows the
       &nbsp;setup dialog. <br>
-      There are three columns: <b>Channels, Segmentation, Features </b>and
+      There are two columns: <b>Channels, Segmentation</b>and
       there is one row for each color channel. &nbsp;The first row is
       always for the primary segmentation i.e. the channel where the local adaptive threshold
       is applied. All other channels segment only an expanded region
@@ -674,7 +697,7 @@
 
     <p>
       <center>
-        <img style="width: 748px; height: 478px;" alt="" title="Segmentation settings" src="images/segmentation.png">
+        <img alt="" title="Segmentation settings" src="images/segmentation.png">
       </center>
     </p>
 
@@ -875,6 +898,12 @@
             loading i.e. each single item is loaded and instantly displayed. Smaller data sets are loaded and displayed on block. Loading speed
             depends on the hardware and data format. In case of cellh5 interactive loading is always on.</a></td>
         </tr>
+
+        <tr>
+          <td>Image Data</td>
+          <td>Save raw image data to hdf5</td>
+        </tr>
+
       </table>
     </p>
 
