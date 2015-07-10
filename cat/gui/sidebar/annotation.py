@@ -99,6 +99,7 @@ class AtAnnotationWidget(AtSideBarWidget):
     def addAnnotation(self, class_name):
         try:
             self.addItems(self.tileview.selectedItems(), class_name)
+            self.clearSelection()
         except DoubleAnnotationError as e:
             QMessageBox.warning(self, "Warning", str(e))
 

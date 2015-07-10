@@ -242,7 +242,6 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             childs = self.prepareRowItems(item)
             class_item.appendRow(childs)
 
-
         elif self._reassign:
             old_class = self._item_classnames[item.hash]
             oclass_item = self.findClassItems(old_class)

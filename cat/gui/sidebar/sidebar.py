@@ -52,6 +52,11 @@ class AtSideBarWidget(QtWidgets.QWidget):
         items = self.tileview.selectedItems()
         self.addItems(items)
 
+    def clearSelection(self):
+        items = self.tileview.selectedItems()
+        for item in items:
+            item.setSelected(False)
+
     def onActivated(self, index):
         item = self.model.item(index.row())
         hashkey = item.data()
