@@ -124,6 +124,10 @@
       <file>html/index.html</file>
       <file>html/manual.html</file>
       <file>html/shortcuts.html</file>
+      <file>html/data_example.html</file>
+      <file>html/counts_statistics.html</file>
+      <file>html/images/feature_list.png</file>
+      <file>html/images/feature_groups.png</file>
       <file>html/images/annotation-dock-minimal-svc.png</file>
       <file>html/images/annotation-dock-minimal-svc2.png</file>
       <file>html/images/annotation-dock-minimal.png</file>

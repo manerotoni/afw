@@ -937,5 +937,75 @@
       </center>
     </p>
 
+    <p>
+      <h2><a name="data_export"></a>Data export</h2>
+    </p>
+
+    <p>
+      It is possible to export data for further analysis with external programs.
+      See the menu <b>Data</b> to proceed
+    </p>
+
+    <p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td>Save View Panel as image</td>
+          <td>Saves the current gallery view as png image.</td>
+        </tr>
+        <tr>
+          <td>Save counting statistics</td>
+          <td>For a quick overview over the counts per class and treatment after classification. <a href="./counts_statistics.html">Here is an example</a></td>
+
+        </tr>
+
+        <tr>
+          <td>Save data to csv</td>
+          <td>
+            Saves data of all cells in the gallery view in a csv file. The convetion is one line per cell. Each column represents a different attribute. e.g class name, class label, treatment, training sample, feature(s). <a href="./data_example.html">Here is an example</a>. <a href="http://doc.cellcognition.org">The meaning of the features is documented somewhere else.</a>
+
+          </td>
+        </tr>
+
+      </table>
+    </p>
+
+    <p>
+      <h2><a name="feature_groups"></a>Feature groups</h2>
+    </p>
+
+    <p>
+      The current implementation uses the feature set of the <a href="http://doc.cellcognition.org">cellcognition-framework</a>. It consists of 239 single values including simple features like <i>mean intensity</i> or <i>roisize</i> but also more abstract ones like <i>Haralick features</i>, descriping the texture of a foreground object. It is important to note that different color channels are treated independently i.e. it is possible to toggle features (or feature groups) always separately.<br>
+
+By Default all 239 features are used for analysis but it is possible to select only a subset and there are two ways to do this. Select feature by name and select feature by group.
+ First open the <b>Feature selection Dialog (Menu: View)</b>:
+    </p>
+
+    <p>
+      <center>
+        <table style="width: 50px" border="1" cellpadding="2" cellspacing="0">
+          <tr>
+            <th><b>Select features by name</b></th>
+            <th><b>Select features by group</b></th>
+          </tr>
+          <tr>
+            <td>This is the general case. Only selected (checked) features are used for sorting and classification.
+            </td>
+            <td>
+Here it is possible to toggle features in groups. Feature groups are provided alongside with the feature names by the hdf5 and cellh5 files and updated automatically if a file is opened. Feature groups provide a more intutitive access to the choise of the features since feature names are choosen usually cryptically.
+            </td>
+          </tr>
+          <tr>
+            <td><center><img src="images/feature_list.png"></center>
+            </td>
+            <td><center><img src="images/feature_groups.png"></center>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">Both feature names and feature groups are saved in the hdf file (or ch5 file resp.) and both depend on the image processing applicaton that processed the input data. CellAnnotator and Cellcognition use the same feature set. Cellprofiler uses it own feature set.
+            </td>
+          </tr>
+        </table>
+      </center>
+    </p>
   </body>
 </html>
