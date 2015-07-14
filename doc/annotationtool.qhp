@@ -179,8 +179,11 @@
       <file>html/images/sorting-dock.png</file>
       <file>html/images/sorttoolbar.png</file>
       <file>html/images/viewbar.png</file>
+      <file>html/images/view-options.png</file>
       <file>html/images/navigationtoolbar2.png</file>
       <file>html/images/preferences-general.png</file>
+      <file>html/images/flatdirectory.png</file>
+      <file>html/images/directory-per-treatment.png</file>
       <file>html/images/preferences-io.png</file>
     </files>
   </filterSection>

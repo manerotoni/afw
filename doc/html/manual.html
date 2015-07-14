@@ -41,11 +41,12 @@
     </p>
 
     <p>
-      <h3><a name="sorting"></a>Sorting</h3>
+      <h2><a name="sorting"></a>Sorting</h2>
     </p>
 
     <p>Sorting occurs <span style="text-decoration: underline;">linearly</span>
-      from the upper left to the bottom right corner. It is necessary to define at least one <span style="text-decoration: underline;">reference example</span> for
+      from the upper left to the bottom right corner. It is necessary to define, dependent on the sort algorithm,
+      at least one <span style="text-decoration: underline;">reference example</span> for
       sorting. After sorting the reference example will be positioned
       always in the upper left corner of the view. CellAnnotator uses
       by default the <a href="http://en.wikipedia.org/wiki/Cosine_similarity">cosine
@@ -78,14 +79,29 @@
     </p>
 
     <p>
-      <center><img style="width: 252px; height: 464px;" alt="" title="sorting dock" src="images/sorting-dock.png"></center>
-    </p>
-
-    <p>
-      To add/remove items to the sorting dock , simply select/mark one or
-      several items in the graphics view simply press the
-      corresponding button (<img style="width: 16px; height: 16px;" alt="" title="add items" src="images/list-add.png">/<img style="width: 16px; height: 16px;" alt="" title="remove items" src="images/list-remove.png">)in
-      the dock widget.
+      <center>
+        <table style="width: 50px" border="1" cellpadding="2" cellspacing="0">
+          <tr>
+            <td><center><img src="images/sorting-dock.png"></center>
+            </td>
+            <td><center><img src="images/sorting-dock-measures.png"></center>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              To add/remove items to the sorting dock , simply select/mark one or
+              several items in the graphics view simply press the
+              corresponding button (<img style="width: 16px; height: 16px;" alt="" title="add items" src="images/list-add.png">/<img style="width: 16px; height: 16px;" alt="" title="remove items" src="images/list-remove.png">)in
+              the dock widget.
+            </td>
+            <td valign="top">
+              The tab "Measurements" allows to sort the objects taking only certain feature groups
+              into account. It is same functionality that is descripted in section <a href="#feature_groups">Feature Groups</a>,
+              but here, the feature selection applies only for sorting.
+            </td>
+          </tr>
+        </table>
+      </center>
     </p>
 
     <p>
@@ -133,7 +149,7 @@
 
     <p>
       <ol>
-        <li><b>Select</b>at least one <b>item</b>in the gallery view</li>
+        <li><b>Select</b> at least one <b>item</b> in the gallery view</li>
         <li><b>Right-click</b>
           in the gallery view to open the context menu </li>
         <li>click on the menu "<b>Throw sort anchor</b>"</li>
@@ -159,8 +175,8 @@
           </tr>
           <tr>
             <td><a href="http://en.wikipedia.org/wiki/Cosine_similarity">Cosine Similarity</a></td>
-            <td >Measures orientation in the feature space not distance. This is the default sorting method.
-              Robust againstoutliers in one dimension, works well in high dimensional space.</td>
+            <td >Measures orientation in the feature space not the distance. This is the default sorting method.
+              Robust against outliers in one dimension, works well in high dimensional space.</td>
           </tr>
           <tr>
             <td>Class labels</td>
@@ -181,7 +197,7 @@
         <tr>
           <td><img style="width: 64px; height: 64px;" alt="" title="unclassified" src="images/class-indicator-unclassified.png"></td>
           <td>A white (neutral) square indicates that the item has
-            not been predicted yet.</td>
+            not been predicted i.e. classified yet.</td>
         </tr>
         <tr>
           <td><img style="width: 64px; height: 64px;" alt="" title="predicted" src="images/class-indicator-predicted.png"></td>
@@ -249,10 +265,19 @@
     <p>
       <b>Zoom</b>: It is
       possible to zoom either using the drop down menu or one
-      presses the "<b>SHIFT</b>"-key and <b>scroll the mouse wheel</b><br>.
+      presses the "<b>SHIFT</b>"-key and <b>scroll the mouse wheel</b>.<br>
       <b>Classification</b>: Toggle class indicator squares in the left bottom corner of a thumbnail.<br>
       <b>Mask</b>: Toggle black background mask of a thumbnail.<br>
       <b>Outline</b>: Toggle outlines in a thumbnail.<br>
+    </p>
+
+    <p>
+      <center>
+        <figure align="center">
+          <img title="view options comparison" src="images/view-options.png"><br>
+          <figcaption>View options in comparision.</figcaption>
+        </figure>
+      </center>
     </p>
 
     <p>
@@ -312,7 +337,7 @@
     </p>
 
     <p>
-      Main Elements are a <b>tool bar </b>and<b>annotation tree view</b>:<br>
+      Main Elements are a <b>tool bar </b>and <b>annotation tree view</b>:<br>
       <center><img style="width: 200px; height: 155px;" alt="" src="images/annotation-dock-minimal-svc2.png">
       </center>
     </p>
@@ -346,7 +371,7 @@
           </tr>
         <tr>
           <td><img style="width: 24px; height: 24px;" alt="" title="remove items" src="images/list-remove_24x24.png"></td>
-          <td>Remove annotations - selected items from class.</td>
+          <td>Remove selected items from annotations.</td>
         </tr>
         <tr>
           <td><img style="width: 24px; height: 24px;" alt="" title="clear treeview" src="images/edit-clear.png"></td>
@@ -354,11 +379,11 @@
         </tr>
         <tr>
           <td><img style="width: 24px; height: 24px;" alt="" title="save classifier" src="images/document-save-as.png"></td>
-          <td>Saves the current classifier to the data file.</td>
+          <td>Saves the current classifier.</td>
         </tr>
         <tr>
           <td><img style="width: 24px; height: 23px;" alt="" title="load annotations" src="images/load_classifier_24x24.png"></td>
-          <td>Load a previously defined classifier. </td>
+          <td>Load a previously trained classifier. </td>
         </tr>
       </table>
     </p>
@@ -372,16 +397,15 @@
       <u>classifier name</u> and a custom <u>description</u>. It is possible to overwrite a
       classifier. To load a classifier, a drop down menu shows a list of classifiers saved
       in the currently opened data file. The description is read only.
-      cross validation.
     </p>
 
     <p>
       <center>
         <table border="1" cellpadding="2" cellspacing="0">
           <tr>
-            <td><img style="width: 378px; height: 229px;" alt="" title="load annotations" src="images/load_classifier.png"><br>
+            <td><img title="load annotations" src="images/load_classifier.png"><br>
             </td>
-            <td><img style="width: 378px; height: 229px;" alt="" title="save classifier" src="images/save_classifier.png"><br>
+            <td><img title="save classifier" src="images/save_classifier.png"><br>
             </td>
           </tr>
         </table>
@@ -398,7 +422,7 @@
       tool bar. Then simply press the "Predict" button and
       the view gets updated. Sometimes an item can't be predicted because
       it's feature vector contains NAN's making prediction impossible. The
-      "Predict"-button is color encoded meaning it indicating a necessary
+      "Predict"-button is color encoded meaning it's indicating a necessary
       update:
     </p>
 
@@ -420,7 +444,7 @@
       <h3><a name="cross_validation"></a>Cross validation</h3>
     </p>
 
-    <p>Open the dialog by clicking on the <img style="width: 24px; height: 24px;" alt="" title="crossvalidation dialog" src="images/chart.png">
+    <p>Open the dialog by clicking on the <img title="crossvalidation dialog" src="images/chart.png">
       button. If possible grid search is triggered directly after the dialog
       pops up. The dialog consists of three tabs and some buttons at the
       bottom.
@@ -498,7 +522,9 @@
       <h3><a name="mpl_navbar"></a>Matplotlib Navigation Toolbar</h3>
     </p>
 
-    <p>By clicking in the plot and using the shortcut <b>t</b> the matplotlib navigationtool shows up at the bottom of a plot. See <a href="./shortcuts.html"><b>shortcuts</b> for a detailed description.
+    <p>By clicking in the plot and using the shortcut <b>t</b> the matplotlib
+      navigationtool shows up at the bottom of a plot.
+      See <a href="./shortcuts.html"><b>shortcuts</b></a> for a detailed description.
     </p>
 
     <p>
@@ -506,7 +532,6 @@
         <img alt="" title="matplotlib navigation toolbar" src="images/navigationtoolbar2.png">
       </center>
     </p>
-
 
     <p>
       <h3><a name="one_class_svm"></a>One class support vector machine</h3>
@@ -518,9 +543,7 @@
       <span style="font-weight: bold;">outliers</span> that are different
       from <span style="font-weight: bold;">normal
         objects</span> or <span style="font-weight: bold;">inliers</span>.
-      Here the idea was inverted and the one class svm is used to find
-      inliers. The second goal is to
-      <span style="font-weight: bold;">minimize the training
+      One advantage compared to the 2-class support vector machine is <span style="font-weight: bold;">minimal training
         effort</span>. In a two-class support vector machine one
       always has to train what's an inlier and what's an outliers. <span style="font-weight: bold;">Here we train only inliers i.e.
         during training one annotates only cells of interest</span>.
@@ -601,26 +624,40 @@
     <p>
       Currently CellAnnotator supports <a name="4D_zeiss-lsm"></a><b>4D Zeiss-lsm</b> image and <a name="4D_tiff_images"></a>4D tiff images.
       4D means (x,y,z,c) i.e. <a name="z-stacks"></a>z-stacks and multiple color channels
-      are supported. Each color channel has to be one single gray value
-      image.
+      are supported. In terms of an tiff image one color channel has to be saved as
+      single grey level image. i.e. a multi-color image is a multi-page tiff.
       <b>CellAnnotator does not support RGB images!</b>
 
     <p>
       <h3><a name="treatment_info"></a>Treatment and Experimental conditions</h3>
     </p>
 
-    By default CellAnnotator expects all raw images saved in one single directory, the <b>Image Directory</b>. No information about the experimental conditions is provided. To provide information about the experimental conditions move all images to subdirectories, where each subdirectory name corresponds to one single treatment. <br>
-    There is a drop down menu in the upper right corner of the preprocessing dialog <a href="#figure_processing_dialog">(see figure above)</a> to choose between these two options. The output file or <a href="#data_file_formats"><b>data file</b></a> is a hdf file that is optimized for fast reading and writing the data. This supports the paradigm of interactivity.
+    By default CellAnnotator expects all raw images saved in one single
+    directory, the <b>Image Directory</b>. No information about the experimental
+    conditions is provided. <br>
+    To provide information about the experimental conditions move all images to
+    subdirectories, where each subdirectory name corresponds to one single
+    treatment. There is a drop down menu in the upper right corner of the
+    preprocessing dialog <a href="#figure_processing_dialog">
+      (see figure above)</a> to choose between these two options.
+    <br><br>
+    The output file or <a href="#data_file_formats"><b>data file</b></a> is a
+    hdf file that is optimized for fast reading and writing the data.
+    This supports the paradigm of interactivity.
 
     <p>
       <table style="width: 100%;" border="1" cellpadding="0" cellspacing="0">
         <tr>
-          <td></td>
+          <td>
+            <img title="FlatDirectory" src="images/flatdirectory.png">
+          </td>
           <td>FlatDirectory</td>
           <td>Scan the <b>Image directory</b> for lsm and tiff files. No subdirectories are scanned. </td>
         </tr>
         <tr>
-          <td></td>
+          <td>
+            <img title="FlatDirectory" src="images/directory-per-treatment.png">
+          </td>
           <td>DirectoryPerTreatment</td>
           <td>Scan each subdirectory of the <b>Image directory</b> for lsm and tiff files. No furhter (sub-)subdirectories are scanned. The names of the subdirectories are used as identifiers of the treatment.</td>
         </tr>
@@ -688,7 +725,7 @@
       with Gaussian blurring filter as preprocessing step to reduce noise. Size and intensity
       filters can be used to remove artefacts. The screen shot below shows the
       &nbsp;setup dialog. <br>
-      There are two columns: <b>Channels, Segmentation</b>and
+      There are two columns: <b>Channels, Segmentation</b> and
       there is one row for each color channel. &nbsp;The first row is
       always for the primary segmentation i.e. the channel where the local adaptive threshold
       is applied. All other channels segment only an expanded region
@@ -727,7 +764,8 @@
         </tr>
         <tr>
           <td>Gallery size</td>
-          <td>Size of the thumbnails (bounding boxes) around foreground objects. This value is fixed and
+          <td>Size of the thumbnails (bounding boxes) around foreground objects.
+            This value is fixed after preprocessing is finished and
             can't be changed later on. </td>
         </tr>
         <tr>
@@ -787,7 +825,11 @@
         </tr>
         <tr>
           <td>Intensity normalization</td>
-          <td>Renormalize input images from min/max (by default 0, 255) to unsigned 8 bit images. The data type of the images determines the range of the values. By default <b>minimum</b> and <b>maximum</b> values of the current image are proposed.</td>
+          <td>Renormalize input images from min/max (by default 0, 255) to
+            unsigned 8 bit images. The data type of the images determines the
+            range of the values. By default the values 0 and 255 (8bit images) are used.
+            16bit and higher bit depths use <b>minimum</b> and <b>maximum</b>
+            values of the current image are proposed.</td>
         </tr>
         <tr>
           <td>Intensity filter</td>
@@ -812,7 +854,12 @@
       <table border="1" cellpadding="2" cellspacing="0">
         <tr>
           <td>Intensity Normalization</td>
-          <td>>Renormalize input images from min/max (by default 0, 255) to unsigned 8 bit images. The data type of the images determines the range of the values. By default <b>minimum</b> and <b>maximum</b> values of the current image are proposed.</td>
+          <td>
+          Renormalize input images from min/max (by default 0, 255) to
+          unsigned 8 bit images. The data type of the images determines the
+          range of the values. By default the values 0 and 255 (8bit images) are used.
+          16bit and higher bit depths use <b>minimum</b> and <b>maximum</b>
+          values of the current image are proposed.</td>
         </tr>
         <tr>
           <td>Expansion size</td>
@@ -868,6 +915,12 @@
           <td>Set the default metric for the method <a href="#throwsortanchor">Throw sort anchor</a></td>
         </tr>
         <tr>
+          <td>Feature Grouping</td>
+          <td>Default feature grouping used in the
+          <a href="#feature_groups">feature selection dialog</a>.
+          </td>
+        </tr>
+        <tr>
           <td>Max. fraction of outliers</td>
           <td>Parameter estimation for the <a href=#one_class_svm>One Class SVM</a> assumes a that max. 20% of the trainings samples are support vectors. This option allows to change the value. A high fraction of support vectors may lead to overfitting.</td>
         </tr>
@@ -901,7 +954,7 @@
 
         <tr>
           <td>Image Data</td>
-          <td>Save raw image data to hdf5</td>
+          <td>If on save raw image data to hdf5. Default is off.</td>
         </tr>
 
       </table>
@@ -921,7 +974,7 @@
           fast IO. This supports the paradigm of interactivity of the application.
           All data and settings which where used to produce the data sets and classifiers go into this file.</li>
         <li><b>CellH5</b> - It is also possible to load data from cellh5 files and save
-          classifier data to a cellh5 file. Cellh5 data structures are not as per formant, but
+          classifier data to a cellh5 file. Cellh5 data structures are not as performant, but
           store much larger data sets, and support data from screening plates (plate layout).
           Further cellh5 supports saving of tracking and event data. The cellh5
           navigation tool bar enables navigation and loading from
@@ -943,6 +996,9 @@
 
     <p>
       It is possible to export data for further analysis with external programs.
+      The export format is a simple csv-file since any data analysis program
+      can import csv files.<br><br>
+
       See the menu <b>Data</b> to proceed
     </p>
 
@@ -974,7 +1030,14 @@
     </p>
 
     <p>
-      The current implementation uses the feature set of the <a href="http://doc.cellcognition.org">cellcognition-framework</a>. It consists of 239 single values including simple features like <i>mean intensity</i> or <i>roisize</i> but also more abstract ones like <i>Haralick features</i>, descriping the texture of a foreground object. It is important to note that different color channels are treated independently i.e. it is possible to toggle features (or feature groups) always separately.<br>
+      The current implementation uses the feature set of the
+      <a href="http://doc.cellcognition.org">cellcognition-framework</a>.
+      It consists of 239 single values including simple features like
+      <i>mean intensity</i> or <i>roisize</i> but also more abstract ones
+      like <i>Haralick features</i>, descriping the texture of an
+      object. It is important to note that different color channels are treated
+      independently i.e. it is possible to toggle features (or feature groups)
+      always separately.<br>
 
 By Default all 239 features are used for analysis but it is possible to select only a subset and there are two ways to do this. Select feature by name and select feature by group.
  First open the <b>Feature selection Dialog (Menu: View)</b>:
