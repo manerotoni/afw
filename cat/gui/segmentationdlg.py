@@ -9,6 +9,7 @@ __all__ = ('SegmentationDialog', )
 
 import os
 import sys
+from math import floor
 from collections import OrderedDict
 from os.path import splitext, join, dirname
 
@@ -119,9 +120,8 @@ class SegmentationDialog(QtWidgets.QWidget):
         self.paramsChanged.emit()
 
     def setMaxZSlice(self, value):
-        if self.zslice.value() >= value:
-            self.zslice.setValue(value)
         self.zslice.setMaximum(value)
+        self.zslice.setValue(floor(value/2.0))
 
     def emitImageUpdate(self, dummy=None):
         self.imageUpdate.emit(self.parent().slider.value())
