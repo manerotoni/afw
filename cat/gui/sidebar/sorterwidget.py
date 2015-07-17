@@ -11,7 +11,7 @@ __all__ = ('AtSortWidget', 'AtChannelFeatureGroupsWidget')
 from os.path import dirname, join
 import numpy as np
 
-from PyQt5 import uic
+
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from cat.sorters import Sorter
 from cat.config import AtConfig
+from cat.gui.loadui import loadUI
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
 from .models import  AtSorterItemModel
@@ -81,7 +82,7 @@ class AtSortWidget(AtSideBarWidget):
     def __init__(self, *args, **kw):
         super(AtSortWidget, self).__init__(*args, **kw)
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
-        uic.loadUi(uifile, self)
+        loadUI(uifile, self)
 
         self.treeview.activated.connect(self.onActivated)
 

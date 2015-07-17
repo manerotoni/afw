@@ -11,10 +11,11 @@ __all__ = ('AtEnhancerWidget', 'AtContrasSliderWidget')
 from os.path import splitext
 import numpy as np
 
-from PyQt5 import uic
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
+
+from cat.gui.loadui import loadUI
 
 
 class BaCCalculator(QtCore.QObject):
@@ -144,7 +145,7 @@ class AtContrastSliderWidget(QtWidgets.QWidget):
 
     def __init__(self, parent, range_=(0, 256)):
         super(AtContrastSliderWidget, self).__init__(parent)
-        uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        loadUI(splitext(__file__)[0]+'.ui', self)
         self.settings = BaCCalculator(*range_)
 
         self.minimum.setRange(*range_)

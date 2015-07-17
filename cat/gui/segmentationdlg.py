@@ -13,7 +13,6 @@ from math import floor
 from collections import OrderedDict
 from os.path import splitext, join, dirname
 
-from PyQt5 import uic
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -22,6 +21,7 @@ from cat.segmentation import PrimaryParams, ExpansionParams
 from cat.segmentation import SRG_TYPE, ZProject
 from cat.xmlconf import XmlConfReader, XmlConfWriter
 from cat.segmentation.options import feature_groups
+from cat.gui.loadui import loadUI
 
 import mimetypes
 mimetypes.add_type('application/ch5', '.ch5')
@@ -52,7 +52,7 @@ class ExpansionWidget(QtWidgets.QGroupBox):
 
     def __init__(self, *args, **kw):
         super(ExpansionWidget, self).__init__(*args, **kw)
-        uic.loadUi(join(dirname(__file__), "expansionregion.ui"), self)
+        loadUI(join(dirname(__file__), "expansionregion.ui"), self)
 
     def setValue(self, value):
         self.expansionSize.setValue(value)
@@ -95,7 +95,7 @@ class SegmentationDialog(QtWidgets.QWidget):
 
     def __init__(self, *args, **kw):
         super(SegmentationDialog, self).__init__(*args, **kw)
-        uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        loadUI(splitext(__file__)[0]+'.ui', self)
         self.setWindowFlags(Qt.Tool)
         # row count (rowCount from gridlayout is not reliable!)
         self._rcount = 1

@@ -9,21 +9,21 @@ __all__ = ("SaveClassifierDialog", )
 
 
 from os.path import splitext, expanduser
-from PyQt5 import uic
+
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMessageBox
 
 from cat.hdfio.readercore import HdfError
-
+from cat.gui.loadui import loadUI
 
 class SaveClassifierDialog(QtWidgets.QDialog):
 
     def __init__(self, classifier, labels, sample_info, *args, **kw):
         super(SaveClassifierDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
-        uic.loadUi(uifile, self)
+        loadUI(uifile, self)
 
         self.classifier = classifier
         self.labels = labels

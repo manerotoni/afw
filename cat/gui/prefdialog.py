@@ -8,17 +8,16 @@ __licence__ = 'GPL'
 
 from os.path import splitext
 
-from PyQt5 import uic
 from PyQt5 import QtWidgets
 
 from cat.config import AtConfig
-
+from cat.gui.loadui import loadUI
 
 class AtPreferencesDialog(QtWidgets.QDialog):
 
     def __init__(self, *args, **kw):
         super(AtPreferencesDialog, self).__init__(*args, **kw)
-        uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        loadUI(splitext(__file__)[0]+'.ui', self)
         self.setWindowTitle("Preferences")
         self._compopts_old = dict()
 

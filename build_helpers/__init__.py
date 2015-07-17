@@ -9,3 +9,4 @@ __licence__ = 'GPL'
 
 from .commands import *
 from .submodule import *
+from .datafiles import *

@@ -12,13 +12,14 @@ __all__ = ("AtAnnotationWidget", )
 import warnings
 
 from os.path import join, dirname
-from PyQt5 import uic
+
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from cat.classifiers.classifiers import Classifier
+from cat.gui.loadui import loadUI
 from cat.gui.saveclassifierdlg import SaveClassifierDialog
 from cat.gui.loadclassifierdlg import LoadClassifierDialog
 
@@ -33,7 +34,7 @@ class AtAnnotationWidget(AtSideBarWidget):
     def __init__(self, *args, **kw):
         super(AtAnnotationWidget, self).__init__(*args, **kw)
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
-        uic.loadUi(uifile, self)
+        loadUI(uifile, self)
 
         self.saveBtn.clicked.connect(self.onSave)
         self.loadBtn.clicked.connect(self.onLoadAnnotations)

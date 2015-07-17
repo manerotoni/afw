@@ -20,7 +20,6 @@ from matplotlib.ticker import FixedLocator
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5 import uic
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
@@ -33,6 +32,7 @@ from sklearn.cross_validation import StratifiedKFold
 
 from cat.qmpl import QFigureWidget
 from cat.gui.sidebar.sidebar import NoSampleError
+from cat.gui.loadui import loadUI
 
 def _font_color(value):
     """Helper function for matrix plot"""
@@ -66,7 +66,7 @@ class CrossValidationDialog(QtWidgets.QWidget):
 
     def __init__(self, parent, classifier, *args, **kw):
         super(CrossValidationDialog, self).__init__(parent=parent, *args, **kw)
-        uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        loadUI(splitext(__file__)[0]+'.ui', self)
         self.setWindowFlags(Qt.Window)
 
         self.classifier = classifier

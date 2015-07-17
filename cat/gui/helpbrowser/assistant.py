@@ -13,9 +13,11 @@ __licence__ = 'GPL'
 __all__ = ("AtAssistant", )
 
 
-from os.path import join, dirname, isfile
+import sys
+from os.path import join, dirname, isfile, isdir, basename
+import tempfile, shutil
 
-from PyQt5 import uic
+
 from PyQt5 import QtGui
 from PyQt5 import QtHelp
 from PyQt5 import QtCore
@@ -24,7 +26,16 @@ from PyQt5.QtGui import QTextDocument
 
 from cat import version
 from cat.gui.lineedit import AtLineEdit
+from cat.gui.loadui import loadUI
 
+def create_temporary_copy(file_):
+    temp_dir = tempfile.gettempdir()
+    temp_path = join(temp_dir, version.appname)
+
+    if not isdir(temp_path):
+        shutil.copytree(dirname(file_), temp_path)
+
+    return join(temp_path, basename(file_))
 
 class AtHelpBrowser(QtWidgets.QTextBrowser):
 
@@ -61,11 +72,16 @@ class AtAssistant(QtWidgets.QMainWindow):
 
     def __init__(self, collections_file, *args, **kw):
 
+
+        if not isfile(collections_file):
+            collections_file = join("doc", basename(collections_file))
+            collections_file = create_temporary_copy(collections_file)
+
         if not isfile(collections_file):
             raise IOError("%s file not found" %(collections_file))
 
         super(AtAssistant, self).__init__(*args, **kw)
-        uic.loadUi(join(dirname(__file__), "assistant.ui"), self)
+        loadUI(join(dirname(__file__), "assistant.ui"), self)
 
         self.hengine = QtHelp.QHelpEngine(collections_file)
         self.hengine.setupData()

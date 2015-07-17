@@ -11,7 +11,7 @@ import h5py
 import numpy as np
 
 from os.path import splitext, expanduser, isfile
-from PyQt5 import uic
+
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QApplication
@@ -20,14 +20,14 @@ from PyQt5.QtWidgets import QMessageBox
 from cat.classifiers.classifiers import ClfDataModel
 from cat.hdfio.trainingset import AtTrainingSetIO
 from cat.hdfio.guesser import guessHdfType
-
+from cat.gui.loadui import loadUI
 
 class LoadClassifierDialog(QtWidgets.QDialog):
 
     def __init__(self, file_, *args, **kw):
         super(LoadClassifierDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
-        uic.loadUi(uifile, self)
+        loadUI(uifile, self)
 
         self._file = file_
         self.descriptions = dict()
