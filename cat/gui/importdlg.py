@@ -171,11 +171,13 @@ class ImportDialog(QtWidgets.QDialog):
         props = list(proc.iterprops())
         self.cbar.addChannels(len(images))
         self.cbar.setImages(images, list(proc.iterprops()))
-
+        state = self.segdlg.blockSignals(True)
         self.segdlg.setRegions(self.cbar.allChannels(), props)
         self.segdlg.setMaxZSlice(self.metadata.n_zslices-1)
+        self.segdlg.blockSignals(state)
         self.slider.setRange(0, self.metadata.n_images-1)
         self.slider.setValue(0)
+
         self.showObjects()
 
     def showImage(self, index=0):
