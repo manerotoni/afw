@@ -25,6 +25,9 @@ class AtSideBarWidget(QtWidgets.QWidget):
         self.featuredlg = featuredlg
         self.parent = parent
 
+    def itemByHash(self, hashkey):
+        return self.tileview[hashkey]
+
     def selectByHashes(self, hashes):
         smodel = self.itemView().selectionModel()
         smodel.clearSelection()

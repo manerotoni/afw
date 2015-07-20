@@ -196,5 +196,4 @@ class AtAnnotationWidget(AtSideBarWidget):
         except AttributeError:
             return
         dlg = LoadClassifierDialog(file_, self)
-        dlg.accepted.connect(self.clearItems)
         dlg.exec_()

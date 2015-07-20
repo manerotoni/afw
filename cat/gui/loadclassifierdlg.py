@@ -77,10 +77,11 @@ class LoadClassifierDialog(QtWidgets.QDialog):
         self.progressBar.setValue(0)
 
         self.progressBar.show()
+        tileview = self.parent().tileview
 
         items = list()
         for i, item in enumerate(hdf.itemsFromClassifier(indices, paths)):
-            items.append(item)
+            items.append(tileview[item.hash])
             self.progressBar.setValue(i+1)
             QApplication.processEvents()
 
@@ -112,6 +113,7 @@ class LoadClassifierDialog(QtWidgets.QDialog):
         model = self.parent().model
 
         self.parent().removeAll()
+        self.parent().clearItems()
         if lib in (dmodel.OneClassSvm, ):
             self._loadSingle(model, hdf, dmodel)
         elif lib in (dmodel.SupportVectorClassifier, ):
@@ -149,9 +151,14 @@ class LoadClassifierDialog(QtWidgets.QDialog):
         classnames = [str(classnames[l]) for l in labels[index_array]]
         idx = sample_info['index'][index_array].tolist()
         paths = sample_info['name'][index_array].tolist()
+
+        clf = self.parent().currentClassifier()
         items = self.loadItems(hdf, idx, paths)
+
         for name, item in zip(classnames, items):
+            class_ = clf.classByName(name)
             model.addAnnotation(item, name)
+            item.setTrainingSample(class_)
 
         for i in xrange(model.rowCount()):
             model.updateCounts(i)
@@ -167,7 +174,10 @@ class LoadClassifierDialog(QtWidgets.QDialog):
         idx = sample_info['index'][index_array].tolist()
         paths = sample_info['name'][index_array].tolist()
         items = self.loadItems(hdf, idx, paths)
+
+        clf = self.parent().currentClassifier()
         for item in items:
+            item.setTrainingSample(clf.INLIER)
             model.addAnnotation(item)
 
         self.parent().itemCountChanged.emit()
