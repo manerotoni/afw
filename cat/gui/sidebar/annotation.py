@@ -122,9 +122,11 @@ class AtAnnotationWidget(AtSideBarWidget):
             pass
 
     def validateClassifier(self):
-        vd = self.currentClassifier().validationDialog(self)
-        vd.show()
-        vd.raise_()
+        try:
+            vd = self.currentClassifier().validationDialog(self)
+            vd.raise_()
+        except NoSampleError:
+            return
 
     def currentClassifier(self):
         index = self.classifiers.currentIndex()

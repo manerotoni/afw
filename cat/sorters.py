@@ -11,8 +11,11 @@ from cat.pattern import Factory
 from cat.mining import filter_nans
 from cat.mining import ZScore, PCA
 
+
 def _data_from_items(items):
     nitems = len(items)
+    if nitems <  1:
+        raise SortingError
     nfeatures = items[0].features.size
     data = np.empty((nitems, nfeatures))
     for i, item in enumerate(items):

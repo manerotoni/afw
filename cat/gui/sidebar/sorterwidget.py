@@ -18,7 +18,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QMessageBox
 
-from cat.sorters import Sorter
+from cat.sorters import Sorter, SortingError
 from cat.config import AtConfig
 from .sidebar import NoSampleError
 from .sidebar import AtSideBarWidget
@@ -194,17 +194,12 @@ class AtSortWidget(AtSideBarWidget):
     def sortDescending(self):
         self.sort(reversed_=True)
 
-    def _data_from_items(self, items):
-        nitems = len(items)
-        nfeatures = items[0].features.size
-        data = np.empty((nitems, nfeatures))
-        for i, item in enumerate(items):
-            data[i, :] = item.features
-        return data
 
     def sort(self, reversed_=False):
         all_items = self.tileview.items
         try:
+            if not all_items:
+                raise NoSampleError
             sorter = Sorter(self.sortAlgorithm.currentText(), all_items,
                             self.sort_filter_indices)
             if sorter.requiresTreeData():
