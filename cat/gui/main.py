@@ -76,7 +76,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.setupToolbar()
         self.tileview = AtGraphicsView(
             parent=self,
-            gsize=self.toolBar.galsize,
+            gsize=self.navToolBar.galsize,
             show_classes=self.toolBar.classification.isChecked())
         self.toolBar.valueChanged.connect(self.tileview.zoom)
         self.toolBar.classification.stateChanged.connect(
@@ -119,7 +119,13 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
         self.loader.started.connect(self.onLoadingStarted)
 
+        self.statusbar.insertPermanentWidget(0,
+            QtWidgets.QLabel('Number of items:'))
+        self.nitems = QtWidgets.QLabel('0')
+        self.statusbar.insertPermanentWidget(1, self.nitems)
+
         self._restoreSettings()
+        self.navToolBar.hide()
         self.show()
         if file_ is not None:
             self.loader.openFile(file_)
@@ -335,9 +341,13 @@ class AtMainWindow(QtWidgets.QMainWindow):
             self.statusBar().showMessage("Image saved to %s" %filename)
 
     def updateToolbars(self, props):
-        self.navToolBar.updateToolbar(props.coordspace)
-        self.toolBar.updateToolbar(props)
+        # in case of cellh5 file
+        if props.gal_settings_mutable:
+            self.navToolBar.show()
+
+        self.navToolBar.updateToolbar(props)
         self.contrast.setChannelNames(props.channel_names, props.colors)
+        self.nitems.setText(str(props.n_items))
 
     def setupToolbar(self):
         self.toolBar = ViewToolBar(self)
@@ -418,10 +428,10 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.loaderThread.wait()
 
         self.tileview.clear()
-        self.tileview.updateRaster(self.toolBar.galsize)
+        self.tileview.updateRaster(self.navToolBar.galsize)
         self.tileview.updateNColumns(self.tileview.size().width())
 
-        self.progressbar.setRange(0, self.toolBar.nitems)
-        self.loader.setNumberItems(self.toolBar.nitems)
-        self.loader.setGallerySize(self.toolBar.galsize)
+        self.progressbar.setRange(0, self.navToolBar.nitems)
+        self.loader.setNumberItems(self.navToolBar.nitems)
+        self.loader.setGallerySize(self.navToolBar.galsize)
         self.loaderThread.start(self.loader)

@@ -43,10 +43,26 @@ class NavToolBar(AtToolBar):
         self.site.setSizeAdjustPolicy(policy)
         self.region.setSizeAdjustPolicy(policy)
 
+        self.galSize = QtWidgets.QSpinBox(self)
+        self.galSize.setRange(0, 10e4)
+        self.galSize.setValue(65)
+
+        self.nItems = QtWidgets.QSpinBox(self)
+        self.nItems.setRange(0, 1e9)
+        self.nItems.setSingleStep(50)
+        self.nItems.setValue(250)
+
         self.addWidget(self.plate)
         self.addWidget(self.well)
         self.addWidget(self.site)
         self.addWidget(self.region)
+
+        self.addSeparator()
+        self.addWidget(QtWidgets.QLabel("Gallery Size:", self))
+        self.addWidget(self.galSize)
+        self.addWidget(QtWidgets.QLabel("Number Items:", self))
+        self.addWidget(self.nItems)
+
 
         self.plate.activated.connect(self._cBoxChanged)
         self.well.activated.connect(self._cBoxChanged)
@@ -64,7 +80,10 @@ class NavToolBar(AtToolBar):
     def _cBoxChanged(self):
         self.coordUpdated.emit(self.coordinate)
 
-    def updateToolbar(self, coordspace):
+    def updateToolbar(self, props):
+
+        coordspace = props.coordspace
+
         self.plate.clear()
         self.well.clear()
         self.site.clear()
@@ -77,6 +96,19 @@ class NavToolBar(AtToolBar):
 
         self.coordUpdated.emit(self.coordinate)
 
+        self.nItems.setEnabled(props.gal_settings_mutable)
+        self.galSize.setEnabled(props.gal_settings_mutable)
+        self.nItems.setValue(props.n_items)
+        self.galSize.setValue(props.gallery_size)
+
+    @property
+    def galsize(self):
+        return self.galSize.value()
+
+    @property
+    def nitems(self):
+        return self.nItems.value()
+
 
 class ViewToolBar(AtToolBar):
 
@@ -85,15 +117,6 @@ class ViewToolBar(AtToolBar):
     def __init__(self, *args, **kw):
         super(ViewToolBar, self).__init__(*args, **kw)
         self.setObjectName("ViewToolbar")
-
-        self.galSize = QtWidgets.QSpinBox(self)
-        self.galSize.setRange(0, 10e4)
-        self.galSize.setValue(65)
-
-        self.nItems = QtWidgets.QSpinBox(self)
-        self.nItems.setRange(0, 1e9)
-        self.nItems.setSingleStep(50)
-        self.nItems.setValue(250)
 
         self.classification = QtWidgets.QCheckBox("Classifcation", self)
         self.masking = QtWidgets.QCheckBox("Mask", self)
@@ -122,34 +145,15 @@ class ViewToolBar(AtToolBar):
         self.addAction(self.actionOpen)
 
         self.addSeparator()
-        self.addWidget(QtWidgets.QLabel("Gallery Size:", self))
-        self.addWidget(self.galSize)
-        self.addWidget(QtWidgets.QLabel("Number Items:", self))
-        self.addWidget(self.nItems)
-        self.addSeparator()
         self.addWidget(self.zoom)
+        self.addSeparator()
         self.addWidget(self.classification)
         self.addWidget(self.masking)
         self.addWidget(self.outline)
 
-    def updateToolbar(self, props):
-
-        self.nItems.setEnabled(props.gal_settings_mutable)
-        self.galSize.setEnabled(props.gal_settings_mutable)
-        self.nItems.setValue(props.n_items)
-        self.galSize.setValue(props.gallery_size)
-
     def onIndexChanged(self, index):
         zfactor = self.zoom.itemData(index)
         self.valueChanged.emit(zfactor)
-
-    @property
-    def galsize(self):
-        return self.galSize.value()
-
-    @property
-    def nitems(self):
-        return self.nItems.value()
 
 
 class SortToolBar(AtToolBar):
