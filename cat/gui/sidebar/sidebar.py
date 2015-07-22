@@ -11,9 +11,9 @@ __all__ = ('AtSideBarWidget', 'NoSampleError')
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 
+
 class NoSampleError(Exception):
     pass
-
 
 class AtSideBarWidget(QtWidgets.QWidget):
 
@@ -24,6 +24,9 @@ class AtSideBarWidget(QtWidgets.QWidget):
         self.tileview = tileview
         self.featuredlg = featuredlg
         self.parent = parent
+
+    def itemByHash(self, hashkey):
+        return self.tileview[hashkey]
 
     def selectByHashes(self, hashes):
         smodel = self.itemView().selectionModel()
@@ -75,12 +78,12 @@ class AtSideBarWidget(QtWidgets.QWidget):
 
         ftrs_indices = self.filter_indices
 
+        if not ftrs_indices or features is None:
+            raise NoSampleError("no features selected for classifier training")
+
         # returns the full feature table if not features are selected
         if no_empty_table and not ftrs_indices:
             ftrs_indices = range(features.shape[1])
-
-        if not ftrs_indices or features is None:
-            raise NoSampleError("no features selected for classifier training")
 
         return features[:, ftrs_indices]
 

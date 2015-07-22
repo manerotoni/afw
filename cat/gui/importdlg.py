@@ -11,7 +11,7 @@ __all__ = ('ImportDialog', )
 
 import glob
 import traceback
-from os.path import isfile, isdir, basename
+from os.path import isfile, isdir, basename, dirname
 from os.path import splitext, expanduser
 from collections import OrderedDict
 
@@ -121,8 +121,11 @@ class ImportDialog(QtWidgets.QDialog):
     def onOpenOutFile(self):
 
         ofile = self.dataFile.text()
+        idir = self.imageDir.text()
         if isfile(ofile):
-            path = basename(ofile)
+            path = dirname(ofile)
+        elif isdir(idir):
+            path = dirname(idir)
         else:
             path = expanduser("~")
 
@@ -137,8 +140,11 @@ class ImportDialog(QtWidgets.QDialog):
         self.viewer.clearPolygons()
 
         idir = self.imageDir.text()
+        ofile = self.dataFile.text()
         if isdir(idir):
-            path = basename(idir)
+            path = dirname(idir)
+        elif isfile(ofile):
+            path = dirname(ofile)
         else:
             path = expanduser("~")
 
@@ -172,11 +178,13 @@ class ImportDialog(QtWidgets.QDialog):
         props = list(proc.iterprops())
         self.cbar.addChannels(len(images))
         self.cbar.setImages(images, list(proc.iterprops()))
-
+        state = self.segdlg.blockSignals(True)
         self.segdlg.setRegions(self.cbar.allChannels(), props)
         self.segdlg.setMaxZSlice(self.metadata.n_zslices-1)
+        self.segdlg.blockSignals(state)
         self.slider.setRange(0, self.metadata.n_images-1)
         self.slider.setValue(0)
+
         self.showObjects()
 
     def showImage(self, index=0):

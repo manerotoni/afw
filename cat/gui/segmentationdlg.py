@@ -169,7 +169,7 @@ class SegmentationDialog(QtWidgets.QWidget):
 
     def clearRegions(self):
         for i in range(self.regionBox.count()-self._ncols):
-            item = self.regionBox.takeAt(3)
+            item = self.regionBox.takeAt(self._ncols)
             item.widget().deleteLater()
             del item
         self._rcount = 1

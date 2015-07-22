@@ -74,6 +74,7 @@ class AtGraphicsView(MouseWheelView):
 
     def __init__(self, parent, gsize, show_classes=False, *args, **kw):
         super(AtGraphicsView, self).__init__(parent, *args, **kw)
+        self._items = dict()
         self.gsize = gsize
         self._grid = ItemGrid(self.gsize+CellGraphicsItem.BoundaryWidth)
         self._hdf = None
@@ -85,14 +86,26 @@ class AtGraphicsView(MouseWheelView):
         self.createActions()
         self.createContextMenu()
 
+    @property
+    def items(self):
+        return self._items.values()
+
+    def has_key(self, key):
+        return self._items.has_key()
+
+    def hashkeys(self):
+        return self._items.keys()
+
+    def __getitem__(self, key):
+        return self._items[key]
+
+    def __setitem__(self, key, item):
+        self._items[key] = item
+
     def zoom(self, factor):
         factor = factor/self.transform().m11()
         self.scale(factor, factor)
         self.reorder(True)
-
-    @property
-    def items(self):
-        return self._grid.items
 
     def contextMenuEvent(self, event):
         self.context_menu.exec_(event.globalPos())
@@ -169,6 +182,7 @@ class AtGraphicsView(MouseWheelView):
         self.scene().clear()
         self.scene().setSceneRect(QtCore.QRectF())
         self._grid.reset()
+        self._items.clear()
 
     def addItem(self, items):
 
@@ -179,10 +193,12 @@ class AtGraphicsView(MouseWheelView):
             citem = CellGraphicsItem(item)
             citem.setPos(*self._grid.newPos(citem))
             citem.toggleClassIndicator(self._show_classes)
+            self[citem.hash] = citem
             self.scene().addItem(citem)
             self.scene().setSceneRect(self._grid.rect(5.0))
 
     def selectByKey(self, hashkey):
+        """Set item with hashkey selected and all other items unselected."""
         for item in self.items:
             if item.hash == hashkey:
                 item.setSelected(True)

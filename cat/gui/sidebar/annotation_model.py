@@ -17,6 +17,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 
 from cat.classifiers.itemclass import ItemClass
+from cat.gui.sidebar import NoSampleError
 from .models import AtStandardItemModel
 
 
@@ -330,6 +331,8 @@ class AtMultiClassSvmItemModel(AtStandardItemModel):
             return
 
         all_features = None
+        if not self.items:
+            raise NoSampleError
         nfeatures = self.items[0].features.size
         classes = self.currentClasses()
 
