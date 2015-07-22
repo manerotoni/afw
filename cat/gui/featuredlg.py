@@ -12,11 +12,11 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5 import uic
+
 
 from cat.config import AtConfig
-from .sidebar import AtSideBarWidget
 from .sidebar import AtChannelFeatureGroupsWidget
+from cat.gui.loadui import loadUI
 
 class AtFeatureModel(QtGui.QStandardItemModel):
 
@@ -106,7 +106,7 @@ class AtFeatureSelectionDlg(QtWidgets.QWidget):
     def __init__(self, *args, **kw):
         super(AtFeatureSelectionDlg, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
-        uic.loadUi(uifile, self)
+        loadUI(uifile, self)
 
         self.setWindowFlags(Qt.Window)
 

@@ -9,7 +9,7 @@ Functions and classes for the build process.
 __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'LGPL'
 
-__all__ = ('Build', 'PyRcc', 'BuildHelp')
+__all__ = ('Build', 'BuildRcc', 'BuildHelp')
 
 
 from os.path import isfile
@@ -24,7 +24,7 @@ class Build(_build):
     """
 
     def run(self):
-        self.run_command('pyrcc')
+        self.run_command('build_rcc')
         self.run_command('build_help')
         _build.run(self)
 
@@ -63,7 +63,7 @@ class BuildHelp(Command):
             raise
 
 
-class PyRcc(Command):
+class BuildRcc(Command):
     """Custom command to compile Qt4-qrc files"""
 
     description = "Compile qt4-qrc files"

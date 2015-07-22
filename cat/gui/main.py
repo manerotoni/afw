@@ -6,9 +6,8 @@ __author__ = 'rudolf.hoefler@gmail.com'
 __licence__ = 'GPL'
 
 import sys
-from os.path import splitext, basename, expanduser, dirname, abspath
+from os.path import splitext, basename, expanduser, abspath
 
-from PyQt5 import uic
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
@@ -20,6 +19,7 @@ from PyQt5.QtGui import QKeySequence
 
 from cat import version
 from cat.config import AtConfig
+from cat.gui.loadui import loadUI
 from cat.gui.graphicsview import AtGraphicsView
 from cat.gui.toolbars import NavToolBar, ViewToolBar, SortToolBar
 from cat.gui.sidebar import AtSortWidget
@@ -53,8 +53,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, file_=None, *args, **kw):
         super(AtMainWindow, self).__init__(*args, **kw)
-        uic.loadUi(splitext(__file__)[0]+'.ui', self)
-
+        loadUI(splitext(__file__)[0]+'.ui', self)
 
         self.setWindowTitle(version.appstr)
         self.setAcceptDrops(True)

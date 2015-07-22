@@ -15,7 +15,7 @@ from os.path import isfile, isdir, basename, dirname
 from os.path import splitext, expanduser
 from collections import OrderedDict
 
-from PyQt5 import uic
+
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
@@ -24,6 +24,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from cat.threading import AtThread
 from cat.threading import AtImporter
+from cat.gui.loadui import loadUI
 from cat.gui.channelbar import ChannelBar
 from cat.gui.segmentationdlg import SegmentationDialog
 from cat.segmentation.multicolor import LsmProcessor
@@ -36,7 +37,7 @@ class ImportDialog(QtWidgets.QDialog):
 
     def __init__(self, *args, **kw):
         super(ImportDialog, self).__init__(*args, **kw)
-        uic.loadUi(splitext(__file__)[0]+'.ui', self)
+        loadUI(splitext(__file__)[0]+'.ui', self)
 
         self.structType.addItems(FileScanner.scanners())
 
