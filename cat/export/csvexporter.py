@@ -48,8 +48,9 @@ class StatsExporter(object):
         classes = dict()
 
         for item in self._items:
-            treatments[item.treatment][item.class_.name] += 1
-            classes[item.class_.label] = item.class_.name
+            if not item.isTrainingSample():
+                treatments[item.treatment][item.class_.name] += 1
+                classes[item.class_.label] = item.class_.name
 
         header = ['Treatment'] + classes.values()
 
