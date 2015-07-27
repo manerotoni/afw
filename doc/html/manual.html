@@ -168,21 +168,25 @@
     <p>
       <table border="1" cellpadding="2" cellspacing="0">
         <tr>
-            <td><a href="http://en.wikipedia.org/wiki/Euclidean_distance">Euclidean distance</a></td>
-            <td>Rank items simply by its
-              euclidean distance to the reference example, works well in low
-              dimensional space.</td>
-          </tr>
-          <tr>
-            <td><a href="http://en.wikipedia.org/wiki/Cosine_similarity">Cosine Similarity</a></td>
-            <td >Measures orientation in the feature space not the distance. This is the default sorting method.
-              Robust against outliers in one dimension, works well in high dimensional space.</td>
-          </tr>
-          <tr>
-            <td>Class labels</td>
-            <td>Sorts items first by class labels, second whether it is a training example, and third by prediction probability.
-              <img style="width: 523px; height: 130px;" alt="" title="sort class labels" src="images/sort-classlabels.png">
-            </td>
+          <td><a href="http://en.wikipedia.org/wiki/Euclidean_distance">Euclidean distance</a></td>
+          <td>Rank items simply by its
+            euclidean distance to the reference example, works well in low
+            dimensional space.</td>
+        </tr>
+        <tr>
+          <td><a href="http://en.wikipedia.org/wiki/Cosine_similarity">Cosine Similarity</a></td>
+          <td >Measures orientation in the feature space not the distance. This is the default sorting method.
+            Robust against outliers in one dimension, works well in high dimensional space.</td>
+        </tr>
+        <tr>
+          <td>Class labels</td>
+          <td>Sorts items first by class labels, second whether it is a training example, and third by prediction probability.
+            <img style="width: 523px; height: 130px;" alt="" title="sort class labels" src="images/sort-classlabels.png">
+          </td>
+        </tr>
+        <tr>
+          <td>Treatment</td>
+          <td>If the option <a href="#directory_structures">DirectoryPerTreatment</a> was used during image preprocessing, it is possible to sort the gallery alpha-numerically after the treatment names. If available, class prediction probabilities are used to rank the thumbnails within the treatment groups.</td>
           </tr>
       </table>
     </p>
@@ -646,6 +650,7 @@
     This supports the paradigm of interactivity.
 
     <p>
+      <a name="directory_structures">
       <table style="width: 100%;" border="1" cellpadding="0" cellspacing="0">
         <tr>
           <td>
@@ -1010,7 +1015,7 @@
         </tr>
         <tr>
           <td>Save counting statistics</td>
-          <td>For a quick overview over the counts per class and treatment after classification. <a href="./counts_statistics.html">Here is an example</a></td>
+          <td>For a quick overview over the counts per class and treatment after classification. <a href="./counts_statistics.html">Here is an example</a>. The counting statistics does not take samples from the training set i.e. samples used to train the classifier, into account.</td>
 
         </tr>
 
