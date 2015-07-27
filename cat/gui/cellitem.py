@@ -26,7 +26,7 @@ class StackOrder(object):
     contour = 400
     class_indicator = 500
     selector = 1000
-
+    description = 1100
 
 class Colors(object):
     # selected = QtGui.QColor("#87CEFA")
@@ -83,6 +83,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
                     color = AtPainter.complementaryColor(color)
                 self.setContour(contour, color)
 
+        self._addDescription()
         self.setFlag(self.ItemIsSelectable)
         self.sortkey = None
 
@@ -97,14 +98,31 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         return self.BoundaryWidth*self.shape[0]
 
     def hoverEnterEvent(self, event):
-
-        if self.treatment not in (None, "None"):
-            txt = self.treatment
-            txt += ("\n%s") %(self.class_.name)
-        else:
-            txt = ("%s") %(self.class_.name)
-
+        txt = ("%s") %(self.class_.name)
         QtWidgets.QToolTip.showText(QtGui.QCursor.pos(), txt)
+
+    def _addDescription(self):
+
+        self._description = QtWidgets.QGraphicsTextItem(self.treatment)
+        self._description.setZValue(StackOrder.description)
+        self._description.setDefaultTextColor(Colors.neutral)
+        font = self._description.font()
+        font.setPixelSize(int(self._bw*5))
+        self._description.setFont(font)
+
+        brect =  self._description.boundingRect()
+        rect0 = self.childrenBoundingRect()
+        xpos = self._bw*5
+        ypos = rect0.y() + rect0.height() - 0.5*(xpos + brect.height())
+        self._description.setTextWidth(rect0.width() - xpos)
+        self._description.setPos(xpos, ypos)
+        self.addToGroup(self._description)
+
+    def toggleDescription(self, state):
+        if state:
+            self._description.show()
+        else:
+            self._description.hide()
 
     def _classRect(self):
         rect0 = self.childrenBoundingRect()
