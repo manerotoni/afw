@@ -257,6 +257,11 @@ class Svc(Classifier):
             self._cvwidget = CrossValidationDialog(parent, self)
         return self._cvwidget
 
+    def description(self):
+        if self._cvwidget is None:
+            return ""
+        else:
+            return self._cvwidget.text()
 
     def train(self, features, labels):
         self.setupPreProcessor(features)

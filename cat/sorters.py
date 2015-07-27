@@ -147,3 +147,24 @@ class EucledianDistance(Sorter):
         mu = mu.mean(axis=0)
         distsq = [np.power((x - mu), 2).sum() for x in data_zs]
         return np.sqrt(distsq)
+
+
+class Treatment(Sorter):
+
+    def __init__(self, items, *args, **kw):
+        super(Treatment, self).__init__(items, *args, **kw)
+        self.treatment = [i.treatment for i in items]
+        self.scores = [i.class_.score for i in items]
+
+    def requiresTreeData(self):
+        return False
+
+    def __call__(self):
+
+        tr = sorted(set(self.treatment))
+        treatment = [tr.index(t) for t in self.treatment]
+
+        try:
+           return (np.array(treatment)*10**3 + np.array(self.scores))
+        except TypeError:
+            raise SortingError("No class labels available yet!")

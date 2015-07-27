@@ -75,8 +75,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.setupToolbar()
         self.tileview = AtGraphicsView(
             parent=self,
-            gsize=self.navToolBar.galsize,
-            show_classes=self.toolBar.classification.isChecked())
+            gsize=self.navToolBar.galsize)
         self.toolBar.valueChanged.connect(self.tileview.zoom)
         self.toolBar.classification.stateChanged.connect(
             self.tileview.toggleClassIndicators, Qt.QueuedConnection)
@@ -84,6 +83,8 @@ class AtMainWindow(QtWidgets.QMainWindow):
             self.tileview.toggleMasks, Qt.QueuedConnection)
         self.toolBar.outline.stateChanged.connect(
             self.tileview.toggleOutlines, Qt.QueuedConnection)
+        self.toolBar.description.stateChanged.connect(
+            self.tileview.toggleDescription, Qt.QueuedConnection)
 
         self.setCentralWidget(self.tileview)
         self.setupDock()
@@ -425,6 +426,7 @@ class AtMainWindow(QtWidgets.QMainWindow):
 
         self.abort.emit()
         self.loaderThread.wait()
+        self.tileview.setViewFlags(self.toolBar.viewFlags())
 
         self.tileview.clear()
         self.tileview.updateRaster(self.navToolBar.galsize)

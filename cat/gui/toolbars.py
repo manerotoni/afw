@@ -16,6 +16,14 @@ from cat.sorters import Sorter
 from cat.hdfio.cellh5reader import Ch5Coord
 
 
+class ViewFlags(object):
+
+    Classification = 1
+    Mask = 2
+    Outline = 4
+    Description = 16
+
+
 class AtToolBar(QtWidgets.QToolBar):
 
     def __init__(self, *args, **kw):
@@ -121,6 +129,7 @@ class ViewToolBar(AtToolBar):
         self.classification = QtWidgets.QCheckBox("Classifcation", self)
         self.masking = QtWidgets.QCheckBox("Mask", self)
         self.outline = QtWidgets.QCheckBox("Outline", self)
+        self.description = QtWidgets.QCheckBox("Treatment", self)
         self.outline.setCheckState(QtCore.Qt.Checked)
 
         self.zoom =  QtWidgets.QComboBox(self)
@@ -150,6 +159,25 @@ class ViewToolBar(AtToolBar):
         self.addWidget(self.classification)
         self.addWidget(self.masking)
         self.addWidget(self.outline)
+        self.addWidget(self.description)
+
+    def viewFlags(self):
+
+        flags = 0
+        if self.classification.isChecked():
+            flags = flags | ViewFlags.Classification
+
+        if self.masking.isChecked():
+            flags = flags | ViewFlags.Mask
+
+        if self.outline.isChecked():
+            flags = flags | ViewFlags.Outline
+
+        if self.description.isChecked():
+            flags = flags | ViewFlags.Description
+
+        return flags
+
 
     def onIndexChanged(self, index):
         zfactor = self.zoom.itemData(index)

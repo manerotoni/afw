@@ -133,6 +133,9 @@ class Classifier(object):
         self._actions = list()
         self._classes = OrderedDict()
 
+    def description(self):
+        return
+
     def setParameters(self, params):
         assert isinstance(params, dict)
         self._clf.set_params(**params)

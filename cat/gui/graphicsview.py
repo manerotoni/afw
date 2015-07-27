@@ -13,6 +13,7 @@ from PyQt5.QtCore import Qt
 from cat.itemgrid import ItemGrid
 from cat.gui.cellitem import CellGraphicsItem
 from cat.gui.graphicsscene import AtGraphicsScene
+from cat.gui.toolbars import ViewFlags
 
 
 class MouseWheelView(QtWidgets.QGraphicsView):
@@ -72,13 +73,13 @@ class AtGraphicsView(MouseWheelView):
     itemLoaded = QtCore.pyqtSignal(int)
     emitSelectedItems = QtCore.pyqtSignal(list)
 
-    def __init__(self, parent, gsize, show_classes=False, *args, **kw):
+    def __init__(self, parent, gsize, vflags=1, *args, **kw):
         super(AtGraphicsView, self).__init__(parent, *args, **kw)
         self._items = dict()
         self.gsize = gsize
         self._grid = ItemGrid(self.gsize+CellGraphicsItem.BoundaryWidth)
         self._hdf = None
-        self._show_classes = show_classes
+        self.vflags = vflags
 
         scene = AtGraphicsScene()
         scene.setBackgroundBrush(QtCore.Qt.darkGray)
@@ -101,6 +102,9 @@ class AtGraphicsView(MouseWheelView):
 
     def __setitem__(self, key, item):
         self._items[key] = item
+
+    def setViewFlags(self, vflags):
+        self.vflags = vflags
 
     def zoom(self, factor):
         factor = factor/self.transform().m11()
@@ -134,7 +138,6 @@ class AtGraphicsView(MouseWheelView):
             triggered=self.parent().onThrowAnchor)
 
     def toggleClassIndicators(self, state):
-        self._show_classes = state
         for item in self.items:
             item.toggleClassIndicator(state)
 
@@ -145,6 +148,10 @@ class AtGraphicsView(MouseWheelView):
     def toggleOutlines(self, state):
         for item in self.items:
             item.toggleOutline(state)
+
+    def toggleDescription(self, state):
+        for item in self.items:
+            item.toggleDescription(state)
 
     def selectedItems(self):
         return self.scene().selectedItems()
@@ -192,7 +199,10 @@ class AtGraphicsView(MouseWheelView):
         for item in items:
             citem = CellGraphicsItem(item)
             citem.setPos(*self._grid.newPos(citem))
-            citem.toggleClassIndicator(self._show_classes)
+            citem.toggleClassIndicator(self.vflags & ViewFlags.Classification)
+            citem.toggleOutline(self.vflags & ViewFlags.Outline)
+            citem.toggleMask(self.vflags & ViewFlags.Mask)
+            citem.toggleDescription(self.vflags & ViewFlags.Description)
             self[citem.hash] = citem
             self.scene().addItem(citem)
             self.scene().setSceneRect(self._grid.rect(5.0))

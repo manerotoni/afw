@@ -335,6 +335,7 @@ class MultiChannelProcessor(object):
                 container.delObject(label)
 
 
+
 class LsmProcessor(MultiChannelProcessor):
 
     def __init__(self, filename, params, channels,
