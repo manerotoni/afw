@@ -192,14 +192,19 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
 
     def toggleClassIndicator(self, state):
 
+        pos = self._description.pos()
         if state:
             self._classrect.show()
+            pos.setX(self._bw*5)
+            self._description.setPos(pos)
             if self._is_training_sample:
                 self._tsi.show()
         else:
             # item group does not keep the selection state
             isSelected = self.isSelected()
             self._classrect.hide()
+            pos.setX(0)
+            self._description.setPos(pos)
             self._tsi.hide()
             self.setSelected(isSelected)
 

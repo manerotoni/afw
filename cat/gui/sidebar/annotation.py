@@ -124,6 +124,7 @@ class AtAnnotationWidget(AtSideBarWidget):
     def validateClassifier(self):
         try:
             vd = self.currentClassifier().validationDialog(self)
+            vd.show()
             vd.raise_()
         except NoSampleError:
             return
