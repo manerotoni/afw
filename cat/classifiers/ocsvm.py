@@ -183,6 +183,11 @@ class OneClassSvm(Classifier):
 
         return self._params.gamma.value()
 
+    def description(self):
+        return ("Parameters:\n"
+                "Gamma = %f\n"
+                "Nu = %f") %(self.gamma, self.nu)
+
     def train(self, features, *args, **kw):
         self.setupPreProcessor(features)
         self._clf = sklearn.svm.OneClassSVM(

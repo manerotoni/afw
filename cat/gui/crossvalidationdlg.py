@@ -90,6 +90,9 @@ class CrossValidationDialog(QtWidgets.QWidget):
         self.onGridSearch()
         super(CrossValidationDialog, self).raise_()
 
+    def text(self):
+        return self.output.toPlainText()
+
     def onApplyBtn(self):
         self.classifier.setParameters(self.parameters)
 
@@ -190,6 +193,7 @@ class CrossValidationDialog(QtWidgets.QWidget):
 
     def gridSearch(self):
         self.tabWidget.setCurrentWidget(self.paramTab)
+        self.output.clear()
         self.showMessage('Grid search using %d-fold cross_validation'
                          %self.kfold)
         C = np.logspace(-6, 6, self.grid_C.value())

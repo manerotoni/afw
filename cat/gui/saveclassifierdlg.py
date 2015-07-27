@@ -20,11 +20,13 @@ from cat.hdfio.readercore import HdfError
 
 class SaveClassifierDialog(QtWidgets.QDialog):
 
-    def __init__(self, classifier, labels, sample_info, *args, **kw):
+    def __init__(self, classifier, labels, sample_info, description,
+                 *args, **kw):
         super(SaveClassifierDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
         uic.loadUi(uifile, self)
 
+        self._description.setPlainText(description)
         self.classifier = classifier
         self.labels = labels
         self.sinfo = sample_info

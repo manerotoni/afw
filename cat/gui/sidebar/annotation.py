@@ -184,7 +184,8 @@ class AtAnnotationWidget(AtSideBarWidget):
         labels = self.itemView().model().labels
         sinfo = self.itemView().model().sample_info
 
-        dlg = SaveClassifierDialog(clf, labels, sinfo, parent=self)
+        dlg = SaveClassifierDialog(clf, labels, sinfo, parent=self,
+                                   description=clf.description())
         dlg.path = self.parent.loader.file.filename
         dlg.exec_()
 
