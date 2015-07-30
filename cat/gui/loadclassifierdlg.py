@@ -55,7 +55,7 @@ class LoadClassifierDialog(QtWidgets.QDialog):
                 clf_names = hdf['classifiers'].keys()
             except KeyError as e:
                 QMessageBox.critical(self, "Error", "No classifiers found")
-                self.openBtn.setEnabled(False)
+                self.reject()
                 return
 
             else:
