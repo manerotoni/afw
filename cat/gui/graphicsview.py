@@ -19,7 +19,7 @@ from cat.gui.toolbars import ViewFlags
 class MouseWheelView(QtWidgets.QGraphicsView):
     """Graphicsview with zoom and pan feature.
 
-    Mousewheel events scale, Left click and mouse-move drag the the view.
+    Mousewheel events scale, Left click and mouse-move drag the view.
     """
 
     def __init__(self, *args, **kw):
@@ -78,7 +78,8 @@ class AtGraphicsView(MouseWheelView):
         super(AtGraphicsView, self).__init__(parent, *args, **kw)
         self._items = dict()
         self.gsize = gsize
-        self._grid = ItemGrid(self.gsize+CellGraphicsItem.BoundaryWidth)
+        self._grid = ItemGrid(
+            self.gsize+CellGraphicsItem.BoundaryWidth)
         self._hdf = None
         self.vflags = vflags
 
@@ -129,10 +130,11 @@ class AtGraphicsView(MouseWheelView):
         self.actionRefresh = QtWidgets.QAction(
             "&Refresh", self, triggered=lambda: self.reorder(True))
         self.actionSelectAll = QtWidgets.QAction("Select &all", self,
-                                             triggered=self.scene().selectAll)
+                 triggered=self.scene().selectAll)
 
         self.actionInvertSelection = QtWidgets.QAction(
-            "&Invert Selection", self, triggered=self.scene().invertSelection)
+            "&Invert Selection", self,
+            triggered=self.scene().invertSelection)
 
         self.actionThrowAnchor = QtWidgets.QAction(
             "&Throw Sort Anchor", self,
@@ -170,9 +172,9 @@ class AtGraphicsView(MouseWheelView):
 
     def reorder(self, force_update=False):
         scaled_colwidth = self.transform().m11()*self._grid.colwidth
-        col_count = math.floor(self.size().width()%scaled_colwidth)
+        col_count = math.floor(self.size().width()% scaled_colwidth)
 
-        if self._grid.colCount() > col_count or force_update:
+        if col_count != self._grid.colCount():
             width = self.size().width()/self.transform().m11()
             self._grid.reorder(width - scaled_colwidth)
             self.scene().setSceneRect(self._grid.rect(5.0))
@@ -183,7 +185,7 @@ class AtGraphicsView(MouseWheelView):
 
     def wheelEvent(self, event):
         super(AtGraphicsView, self).wheelEvent(event)
-        # self.reorder()
+        self.reorder()
 
     def clear(self):
         self._abort = True

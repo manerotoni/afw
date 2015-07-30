@@ -14,12 +14,12 @@ from cat.hdfio.trainingset import AtTrainingSetIO
 
 
 def guessHdfType(filename):
-    """Returns an instance of that class that implements the correct data model.
+    """Returns an instance of that class that implements the
+    correct data model.
 
     The file mode is fixed according to the data model.
     -) cellh5 only reading -> mode 'r'
     -) training set reading/writing -> mode 'a'
-
     """
 
     _, ext = splitext(filename)

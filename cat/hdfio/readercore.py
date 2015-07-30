@@ -20,8 +20,9 @@ from cat.gui.painting import AtPainter
 
 
 HdfFileInfo = namedtuple("HdfFileInfo",
-                         ["gal_settings_mutable", "n_items", "gallery_size",
-                          "coordspace", "channel_names", "colors"])
+                         ["gal_settings_mutable", "n_items",
+                          "gallery_size", "coordspace",
+                          "channel_names", "colors"])
 
 
 class HdfError(Exception):
@@ -33,8 +34,9 @@ class HdfItem(object):
     __slots__ = ['image', 'contour', 'features', 'index', 'frame',
                  'objid', 'colors', 'hash', 'path', 'treatment']
 
-    def __init__(self, image, contour, features, index, objid=None, frame=None,
-                 colors=None, path=None, treatment=None):
+    def __init__(self, image, contour, features, index,
+                 objid=None, frame=None, colors=None, path=None,
+                 treatment=None):
         self.image = image
         self.contour = contour
         self.features = features
@@ -92,7 +94,6 @@ class HdfItem(object):
 
 class HdfFile(h5py.File):
 
-    __metaclass__ = Factory
     GALLERY_SETTINGS_MUTABLE = True
 
     # h5py file modes
@@ -108,10 +109,10 @@ class HdfFile(h5py.File):
 
     @property
     def fileinfo(self):
-        """Determines the default number of items to load (cellh5 files
-        contain to many items to load them at once) and wether the size of
-        the gallery images is fixed. This method must be implemented
-        by child classes."""
+        """Determines the default number of items to load
+        (cellh5 files contain to many items to load them at once)
+        and wether the size of the gallery images is fixed.
+        This method must be implemented by child classes."""
         raise NotImplementedError()
 
     def featureGroups(self):
@@ -133,8 +134,9 @@ class HdfFile(h5py.File):
         return ["---"]
 
     def cspace(self):
-        """Returns a full mapping of the coordiante space the hdf file"""
-
+        """
+        Returns a full mapping of the coordiante space the hdf file
+        """
         # plate, well and site point to one single movie. each movie
         # can have different segementation regions.
 

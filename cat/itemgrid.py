@@ -38,7 +38,11 @@ class ItemGrid(QtCore.QObject):
 
         irow = 0
         for i, item in enumerate(skeys):
-            irow = math.floor(i/self.ncols)
+            try:
+                irow = math.floor(i/self.ncols)
+            except ZeroDivisionError:
+                return
+
             icol = i % self.ncols
             pos =  (icol*self.colwidth, irow*self.colwidth)
             self._positions[item] = pos
