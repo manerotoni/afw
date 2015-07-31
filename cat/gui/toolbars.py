@@ -30,7 +30,7 @@ class AtToolBar(QtWidgets.QToolBar):
         super(AtToolBar, self).__init__(*args, **kw)
         self.setObjectName(self.__class__.__name__)
         self.setWindowTitle(self.__class__.__name__)
-        self.setIconSize(QtCore.QSize(24, 24))
+        self.setIconSize(QtCore.QSize(16, 16))
 
 
 class NavToolBar(AtToolBar):

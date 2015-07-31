@@ -12,12 +12,13 @@ from PyQt5 import QtCore
 
 class ItemGrid(QtCore.QObject):
 
-    SPACING = 1
+    # relative with to the thumbnail size
+    Spacing = 0.0154
 
-    def __init__(self, colwidth=100, ncols=10, *args, **kw):
+    def __init__(self, gsize, ncols=10, *args, **kw):
         super(ItemGrid, self).__init__(*args, **kw)
         self.ncols = ncols
-        self.colwidth = colwidth
+        self.setColWidth(gsize)
         self._positions = dict()
         self._rect = QtCore.QRectF()
         self._rect.setX(0.0)
@@ -25,6 +26,9 @@ class ItemGrid(QtCore.QObject):
 
     def colCount(self):
         return self.ncols
+
+    def setColWidth(self, gsize):
+        self.colwidth = gsize*(1 + self.Spacing)
 
     @property
     def items(self):

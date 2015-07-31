@@ -17,6 +17,69 @@
    <iconset>
     <normaloff>:/annotationtool.svg</normaloff>:/annotationtool.svg</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true">
+QToolButton {
+    /*  background-color: transparent; */
+    border: 2px transparent #4A4949;
+    border-radius: 1px;
+    margin: 0px;
+    padding: 0px;
+}
+
+QToolButton[popupMode=&quot;1&quot;] { /* only for MenuButtonPopup */
+ padding-right: 20px; /* make way for the popup button */
+ border: 2px transparent #4A4949;
+ border-radius: 1px;
+}
+
+QToolButton[popupMode=&quot;2&quot;] { /* only for InstantPopup */
+ padding-right: 10px; /* make way for the popup button */
+ border: 2px transparent #4A4949;
+}
+
+
+QToolButton:hover, QToolButton::menu-button:hover {
+    background-color: transparent;
+    border: 1px solid #78879b;
+}
+
+QToolButton:checked, QToolButton:pressed,
+    QToolButton::menu-button:pressed {
+    background-color: silver;
+    border: 2px solid #78879b;
+}
+
+
+QDockWidget {
+    border: 1px solid lightgray;
+
+/*   titlebar-close-icon: url(close.png);
+    titlebar-normal-icon: url(undock.png);
+*/
+}
+
+QDockWidget::title {
+    text-align: left; /* align the text to the left */
+    background: lightgray;
+    padding-left: 5px;
+}
+
+QDockWidget::close-button, QDockWidget::float-button {
+    border: 1px solid transparent;
+    background: darkgray;
+    padding: 0px;
+}
+
+QDockWidget::close-button:hover, QDockWidget::float-button:hover {
+    background: gray;
+}
+
+QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
+    padding: 1px -1px -1px 1px;
+}
+</string>
+  </property>
   <property name="iconSize">
    <size>
     <width>24</width>
@@ -49,9 +112,25 @@
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
+    <property name="leftMargin">
      <number>0</number>
     </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QToolButton" name="toolButton">
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -60,7 +139,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

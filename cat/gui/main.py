@@ -114,15 +114,19 @@ class AtMainWindow(QtWidgets.QMainWindow):
         self.actionInvertSelection.triggered.connect(
             self.tileview.actionInvertSelection.trigger)
 
+        self.tileview.zoomChanged.connect(self.updateZoomFactor)
+
         self.featuredlg.selectionChanged.connect(
             self.annotation.predictionInvalid)
 
         self.loader.started.connect(self.onLoadingStarted)
 
-        self.statusbar.insertPermanentWidget(0,
+        self.zoom = QtWidgets.QLabel('100%')
+        self.statusbar.insertPermanentWidget(0, self.zoom)
+        self.statusbar.insertPermanentWidget(1,
             QtWidgets.QLabel('Number of items:'))
         self.nitems = QtWidgets.QLabel('0')
-        self.statusbar.insertPermanentWidget(1, self.nitems)
+        self.statusbar.insertPermanentWidget(2, self.nitems)
 
         self._restoreSettings()
         self.navToolBar.hide()
@@ -137,6 +141,9 @@ class AtMainWindow(QtWidgets.QMainWindow):
             self.progressbar.setRange(0, 0)
 
         self.progressbar.setValue(value)
+
+    def updateZoomFactor(self, factor):
+        self.zoom.setText("%d%s" %(round(100*factor, 0), "%"))
 
     def dragEnterEvent(self, event):
         event.acceptProposedAction()

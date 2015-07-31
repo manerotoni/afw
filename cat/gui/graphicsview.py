@@ -22,6 +22,8 @@ class MouseWheelView(QtWidgets.QGraphicsView):
     Mousewheel events scale, Left click and mouse-move drag the view.
     """
 
+    zoomChanged = QtCore.pyqtSignal(float)
+
     def __init__(self, *args, **kw):
         super(MouseWheelView, self).__init__(*args, **kw)
 
@@ -78,8 +80,7 @@ class AtGraphicsView(MouseWheelView):
         super(AtGraphicsView, self).__init__(parent, *args, **kw)
         self._items = dict()
         self.gsize = gsize
-        self._grid = ItemGrid(
-            self.gsize+CellGraphicsItem.BoundaryWidth)
+        self._grid = ItemGrid(self.gsize)
         self._hdf = None
         self.vflags = vflags
 
@@ -112,6 +113,10 @@ class AtGraphicsView(MouseWheelView):
         factor = factor/self.transform().m11()
         self.scale(factor, factor)
         self.reorder(True)
+
+    def scale(self, factor1, factor2):
+        super(AtGraphicsView, self).scale(factor1, factor2)
+        self.zoomChanged.emit(self.transform().m11())
 
     def contextMenuEvent(self, event):
         self.context_menu.exec_(event.globalPos())
@@ -161,14 +166,11 @@ class AtGraphicsView(MouseWheelView):
 
     def updateNColumns(self, width):
         self._grid.ncols = math.floor(
-            width/(self.gridSpan()*self.transform().m11())-1)
+            width/(self._grid.colwidth*self.transform().m11())-1)
 
     def updateRaster(self, gsize):
         self.gsize = gsize
-        self._grid.colwidth = self.gsize + self._grid.SPACING
-
-    def gridSpan(self):
-        return self.gsize + self._grid.SPACING
+        self._grid.setColWidth(gsize)
 
     def reorder(self, force_update=False):
         scaled_colwidth = self.transform().m11()*self._grid.colwidth
