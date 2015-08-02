@@ -14,6 +14,7 @@ class ItemGrid(QtCore.QObject):
 
     # relative with to the thumbnail size
     Spacing = 0.0154
+    MinNumberColumns = 5
 
     def __init__(self, gsize, ncols=10, *args, **kw):
         super(ItemGrid, self).__init__(*args, **kw)
@@ -36,7 +37,7 @@ class ItemGrid(QtCore.QObject):
         return self._positions.keys()
 
     def reorder(self, width):
-        self.ncols = math.floor(width/self.colwidth)
+        self.ncols = max(math.floor(width/self.colwidth), self.MinNumberColumns)
 
         skeys = sorted(self.items)
 

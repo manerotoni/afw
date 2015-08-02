@@ -21,34 +21,22 @@
    <string notr="true">
 QToolButton {
     /*  background-color: transparent; */
-    border: 2px transparent #4A4949;
-    border-radius: 1px;
     margin: 0px;
     padding: 0px;
 }
 
 QToolButton[popupMode=&quot;1&quot;] { /* only for MenuButtonPopup */
  padding-right: 20px; /* make way for the popup button */
- border: 2px transparent #4A4949;
  border-radius: 1px;
 }
 
 QToolButton[popupMode=&quot;2&quot;] { /* only for InstantPopup */
  padding-right: 10px; /* make way for the popup button */
- border: 2px transparent #4A4949;
 }
 
 
-QToolButton:hover, QToolButton::menu-button:hover {
-    background-color: transparent;
-    border: 1px solid #78879b;
-}
 
-QToolButton:checked, QToolButton:pressed,
-    QToolButton::menu-button:pressed {
-    background-color: silver;
-    border: 2px solid #78879b;
-}
+
 
 
 QDockWidget {
@@ -124,13 +112,6 @@ QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item row="0" column="0">
-     <widget class="QToolButton" name="toolButton">
-      <property name="text">
-       <string>...</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">

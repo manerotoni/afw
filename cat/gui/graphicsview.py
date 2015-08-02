@@ -37,7 +37,9 @@ class MouseWheelView(QtWidgets.QGraphicsView):
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                            QtWidgets.QSizePolicy.Expanding)
 
+
         self.setRenderHints(QtGui.QPainter.Antialiasing |
+                            QtGui.QPainter.TextAntialiasing |
                             QtGui.QPainter.SmoothPixmapTransform)
         self.setViewportUpdateMode(self.SmartViewportUpdate)
 

@@ -141,7 +141,7 @@ class ViewToolBar(AtToolBar):
         self.zoom.addItem("150%", QtCore.QVariant(1.5))
         self.zoom.addItem("200%", QtCore.QVariant(2.0))
         self.zoom.addItem("400%", QtCore.QVariant(4.0))
-        self.zoom.currentIndexChanged.connect(self.onIndexChanged)
+        self.zoom.activated.connect(self.onIndexChanged)
 
         icon = QtGui.QIcon(":/oxygen/document-new.png")
         self.actionNew = QtWidgets.QAction(
