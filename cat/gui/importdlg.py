@@ -39,8 +39,10 @@ class ImportDialog(QtWidgets.QDialog):
         super(ImportDialog, self).__init__(*args, **kw)
         loadUI(splitext(__file__)[0]+'.ui', self)
 
-        self.structType.addItems(FileScanner.scanners())
+        for name, scn in FileScanner.iterclasses():
+            self.structType.addItem(scn.icon(), name)
 
+        self.structType.setIconSize(QtCore.QSize(58, 16))
         self.metadata =  None
         self._files  = None
 

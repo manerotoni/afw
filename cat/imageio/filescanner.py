@@ -9,6 +9,8 @@ import os
 import glob
 from os.path import isdir, join
 
+from PyQt5 import QtGui
+
 from collections import OrderedDict
 from cat.pattern import Factory
 
@@ -27,6 +29,14 @@ class FileScanner(object):
     def __cmp__(self, other):
         return self._key < other._key
 
+    @staticmethod
+    def icon():
+        raise NotImplementedError
+
+    @classmethod
+    def iterclasses(self):
+        for n, c in self._classes.iteritems():
+            yield n, c
 
 class FlatDirectory(FileScanner):
     """Scann a flat directory for image files (tif and lsm).
@@ -46,6 +56,10 @@ class FlatDirectory(FileScanner):
         for f in files:
             tfiles[f] = None
         return tfiles
+
+    @staticmethod
+    def icon():
+        return QtGui.QIcon(':/flat_directory01.png')
 
 
 class DirectoryPerTreatment(FileScanner):
@@ -75,3 +89,7 @@ class DirectoryPerTreatment(FileScanner):
                     tfiles[f] = item
 
         return tfiles
+
+    @staticmethod
+    def icon():
+        return QtGui.QIcon(':/directory_per_treatment.png')
