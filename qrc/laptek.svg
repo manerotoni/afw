@@ -53,41 +53,6 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-972.36218)">
-    <rect
-       style="fill:#505050;fill-opacity:1;stroke:#646464;stroke-opacity:0.48339483000000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
-       id="rect2985"
-       width="297.5"
-       height="80"
-       x="0"
-       y="972.36218" />
-    <rect
-       style="fill:#008031;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="rect3755-7"
-       width="65"
-       height="65"
-       x="80"
-       y="979.86218" />
-    <rect
-       style="fill:#008031;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="rect3755-2"
-       width="65"
-       height="65"
-       x="152.5"
-       y="979.86218" />
-    <rect
-       style="fill:#008031;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="rect3755-1"
-       width="65"
-       height="65"
-       x="225"
-       y="980.1236" />
-    <rect
-       style="fill:#150302;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="rect3755"
-       width="65"
-       height="65"
-       x="7.5"
-       y="979.86218" />
     <image
        y="979.86218"
        x="7.5"
@@ -360,5 +325,40 @@ gg==
 "
        height="65"
        width="65" />
+    <rect
+       style="fill:#505050;fill-opacity:1;stroke:#ffffff;stroke-opacity:0.48339483000000000;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:9,1.5;stroke-dashoffset:0"
+       id="rect2985"
+       width="297.5"
+       height="80"
+       x="0"
+       y="972.36218" />
+    <rect
+       style="fill:#150302;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3755"
+       width="65"
+       height="65"
+       x="7.5"
+       y="979.86218" />
+    <rect
+       style="fill:#150302;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3755-7"
+       width="65"
+       height="65"
+       x="80"
+       y="979.86218" />
+    <rect
+       style="fill:#150302;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3755-2"
+       width="65"
+       height="65"
+       x="152.5"
+       y="979.86218" />
+    <rect
+       style="fill:#150302;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3755-1"
+       width="65"
+       height="65"
+       x="225"
+       y="980.1236" />
   </g>
 </svg>
