@@ -42,7 +42,7 @@ class ImportDialog(QtWidgets.QDialog):
         for name, scn in FileScanner.iterclasses():
             self.structType.addItem(scn.icon(), name)
 
-        self.structType.setIconSize(QtCore.QSize(58, 16))
+        self.structType.setIconSize(QtCore.QSize(48, 24))
         self.metadata =  None
         self._files  = None
 

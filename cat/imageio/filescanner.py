@@ -59,7 +59,7 @@ class FlatDirectory(FileScanner):
 
     @staticmethod
     def icon():
-        return QtGui.QIcon(':/flat_directory01.png')
+        return QtGui.QIcon(':/flat_directory.png')
 
 
 class DirectoryPerTreatment(FileScanner):
