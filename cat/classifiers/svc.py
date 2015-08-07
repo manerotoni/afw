@@ -125,6 +125,8 @@ class SvcParameterWidget(QtWidgets.QFrame):
             QSizePolicy.Preferred, QSizePolicy.Preferred)
 
         self.removeClassBtn.pressed.connect(self.onRemoveBtn)
+        self.removeClassBtn.pressed.connect(
+            parent.predictionInvalid)
 
         # disable the sanity check whether a sample is already reassign to
         # an other class

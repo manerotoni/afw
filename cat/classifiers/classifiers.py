@@ -130,7 +130,6 @@ class Classifier(object):
         self._pp = None # setup preprocessor in the train method
         self.model = None
         self._clf = None
-        self._actions = list()
         self._classes = OrderedDict()
 
     def description(self):
@@ -145,10 +144,6 @@ class Classifier(object):
 
     def normalize(self, features):
         return self._pp(features)
-
-    @property
-    def actions(self):
-        return self._actions
 
     @property
     def classes(self):
@@ -167,16 +162,6 @@ class Classifier(object):
 
         self._classes.clear()
         self._classes.update(classes)
-        self.createActions(parent, panel)
-
-    def createActions(self, parent, panel):
-        """Create context menu actions according to the class definition."""
-
-        self._actions = list()
-        for name in self._classes.keys():
-            self.actions.append(
-                QtWidgets.QAction( "add to %s" %name, parent,
-                    triggered=lambda: panel.addAnnotation(name)))
 
     @classmethod
     def classifiers(cls):

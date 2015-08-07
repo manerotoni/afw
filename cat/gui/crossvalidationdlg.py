@@ -85,10 +85,7 @@ class CrossValidationDialog(QtWidgets.QWidget):
         self.features = None
         self.labels =  None
         self.confusion_matrix = None
-
-    def raise_(self):
         self.onGridSearch()
-        super(CrossValidationDialog, self).raise_()
 
     def text(self):
         return self.output.toPlainText()

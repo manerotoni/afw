@@ -36,6 +36,8 @@ class AtAnnotationWidget(AtSideBarWidget):
         uifile = join(dirname(__file__), self.__class__.__name__ + ".ui")
         loadUI(uifile, self)
 
+        self._classifier_is_valid = False
+
         self.saveBtn.clicked.connect(self.onSave)
         self.loadBtn.clicked.connect(self.onLoadAnnotations)
 
@@ -53,7 +55,12 @@ class AtAnnotationWidget(AtSideBarWidget):
 
     def removeAll(self):
         super(AtAnnotationWidget, self).removeAll()
+        self.setButtonColor(Qt.red)
         self.clearItems()
+
+    def removeSelected(self):
+        super(AtAnnotationWidget, self).removeSelected()
+        self.setButtonColor(Qt.red)
 
     def onActivated(self, index):
         hkey = self.model.hashkey(index)
@@ -75,6 +82,9 @@ class AtAnnotationWidget(AtSideBarWidget):
             self.classifiers.setCurrentIndex(index)
 
     def setButtonColor(self, color):
+        if color == Qt.red:
+            self._classifier_is_valid = False
+
         color = QtGui.QColor(color).name()
         qss = "QPushButton#predictBtn {color: %s}" %color
         self.predictBtn.setStyleSheet(qss)
@@ -86,7 +96,6 @@ class AtAnnotationWidget(AtSideBarWidget):
 
         for name in Classifier.classifiers():
             clf = Classifier(name)
-            clf.createActions(self.tileview, self)
             self.classifiers.addItem(clf.name, userData=name)
             self.stack.addWidget(clf.parameterWidget(self))
             setattr(self, name, clf)
@@ -127,6 +136,7 @@ class AtAnnotationWidget(AtSideBarWidget):
             vd = self.currentClassifier().validationDialog(self)
             vd.show()
             vd.raise_()
+            self._classifier_is_valid = True
         except NoSampleError:
             return
 
@@ -154,6 +164,26 @@ class AtAnnotationWidget(AtSideBarWidget):
         try:
             QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
             self.train()
+
+            if not self._classifier_is_valid:
+                qmb = QMessageBox(QMessageBox.Question,
+                                  "Grid search & Cross Validation",
+                                  ("You need to run Grid Search & "
+                                   " Cross Validation before you predict"),
+                                  parent=self)
+                ignoreBtn = qmb.addButton(qmb.Ignore)
+                cancelBtn = qmb.addButton(qmb.Cancel)
+                runBtn = qmb.addButton(
+                    "Run Grid Search", qmb.AcceptRole)
+                qmb.exec_()
+
+                if qmb.clickedButton() == runBtn:
+                    self.validateClassifier()
+                elif qmb.clickedButton() == ignoreBtn:
+                    pass
+                elif qmb.clickedButton() == cancelBtn:
+                    return
+
         except NoSampleError:
             pass
         else:
@@ -202,5 +232,9 @@ class AtAnnotationWidget(AtSideBarWidget):
             return
         dlg = LoadClassifierDialog(file_, self)
 
-        if dlg.result() == dlg.Accepted:
+        if dlg.result() != dlg.Rejected:
             dlg.exec_()
+
+        if dlg.result() == dlg.Accepted:
+            self._classifier_is_valid = True
+            self.setButtonColor(Qt.red)
