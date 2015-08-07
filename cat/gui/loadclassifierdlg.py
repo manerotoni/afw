@@ -28,6 +28,7 @@ class LoadClassifierDialog(QtWidgets.QDialog):
         super(LoadClassifierDialog, self).__init__(*args, **kw)
         uifile = splitext(__file__)[0] + ".ui"
         loadUI(uifile, self)
+        self.setResult(-1)
 
         self._file = file_
         self.descriptions = dict()
