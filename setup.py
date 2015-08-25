@@ -17,7 +17,7 @@ import build_helpers
 
 from cat import version
 
-pyrcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
+rcc_opts = {'infile': join('qrc', 'cat_rc.qrc'),
               'outfile': join('cat', 'cat_rc.py'),
               'pyrccbin': join('C:\\', 'Python27', 'Lib', 'site-packages',
                                'PyQt5', 'pyrcc5.exe')}
@@ -40,10 +40,10 @@ setup(name='CellAnnotator',
                               'gui/helpbrowser/annotationtool.qhc',
                               'gui/helpbrowser/annotationtool.qch'],},
       scripts = ['CellAnnotator.py', 'postinstall.py'],
-      cmdclass = {'pyrcc': build_helpers.BuildRcc,
+      cmdclass = {'build_rcc': build_helpers.BuildRcc,
                   'build_help': build_helpers.BuildHelp,
                   'build': build_helpers.Build},
-      options = {'pyrcc': pyrcc_opts,
+      options = {'build_rcc': rcc_opts,
                  'build_help': help_opts,
                  'bdist_wininst':
                      {'install_script': 'postinstall.py'}})

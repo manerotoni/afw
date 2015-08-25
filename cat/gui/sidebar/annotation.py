@@ -236,5 +236,6 @@ class AtAnnotationWidget(AtSideBarWidget):
             dlg.exec_()
 
         if dlg.result() == dlg.Accepted:
-            self._classifier_is_valid = True
             self.setButtonColor(Qt.red)
+            # in this case the classifier is valid but
+            self._classifier_is_valid = True

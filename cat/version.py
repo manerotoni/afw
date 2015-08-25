@@ -7,7 +7,7 @@ __licence__ = 'GPL'
 
 
 MAJOR = 0
-MINOR = 6
+MINOR = 7
 
 organisation = "IMBA"
 appname = "CellAnnotator"

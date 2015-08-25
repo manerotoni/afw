@@ -7,6 +7,7 @@ import os
 import matplotlib
 matplotlib.rcsetup.all_backends = ["Qt5Agg"]
 
+from cat import version
 
 def find_files(search_dir, extension):
 
@@ -52,7 +53,7 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='CellAnnotator.exe',
+          name='%s.exe' %version.appstr,
           debug=False,
           strip=None,
           upx=True,
