@@ -91,7 +91,7 @@ class CellGraphicsItem(QtWidgets.QGraphicsItemGroup):
         return cmp(self.sortkey, other.sortkey)
 
     def __str__(self):
-        return self.hash, type(self)
+        return "%d, %s" %(self.hash, type(self))
 
     @property
     def _bw(self):

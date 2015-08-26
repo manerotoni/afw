@@ -102,10 +102,6 @@ class AtAnnotationWidget(AtSideBarWidget):
 
         clf = self.currentClassifier()
 
-    def setAnnotationActions(self, actions):
-        self.tileview.clearActions()
-        self.tileview.addActions(actions)
-
     def addAnnotation(self, class_name):
         try:
             self.addItems(self.tileview.selectedItems(), class_name)
@@ -118,8 +114,8 @@ class AtAnnotationWidget(AtSideBarWidget):
         clf = self.currentClassifier()
         class_ = clf.classByName(class_name)
         for item in items:
-            item.setTrainingSample(class_)
             self.model.addAnnotation(item, class_name)
+            item.setTrainingSample(class_)
         self.itemCountChanged.emit()
 
     def estimateParameters(self):
@@ -166,6 +162,7 @@ class AtAnnotationWidget(AtSideBarWidget):
             self.train()
 
             if not self._classifier_is_valid:
+                QApplication.restoreOverrideCursor()
                 qmb = QMessageBox(QMessageBox.Question,
                                   "Grid search & Cross Validation",
                                   ("You need to run Grid Search & "
@@ -176,6 +173,7 @@ class AtAnnotationWidget(AtSideBarWidget):
                 runBtn = qmb.addButton(
                     "Run Grid Search", qmb.AcceptRole)
                 qmb.exec_()
+                QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 
                 if qmb.clickedButton() == runBtn:
                     self.validateClassifier()
@@ -183,6 +181,7 @@ class AtAnnotationWidget(AtSideBarWidget):
                     pass
                 elif qmb.clickedButton() == cancelBtn:
                     return
+
 
         except NoSampleError:
             pass
