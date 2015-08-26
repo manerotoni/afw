@@ -208,8 +208,7 @@ class SvcWriter(ClfWriter):
         try:
             grp = self.h5f.create_group(self.dmodel.path)
         except ValueError as e:
-            raise HdfError("Classifer with name %s exists already"
-                           %name + str(e))
+            raise HdfError("Classifer with name '%s' exists already" %name)
 
         grp.attrs[self.dmodel.NAME] = Svc.name
         grp.attrs[self.dmodel.LIB] = self.dmodel.SupportVectorClassifier

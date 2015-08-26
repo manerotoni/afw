@@ -26,13 +26,13 @@ class SaveClassifierDialog(QtWidgets.QDialog):
         uifile = splitext(__file__)[0] + ".ui"
         loadUI(uifile, self)
 
+        self._path = None
         self._description.setPlainText(description)
         self.classifier = classifier
         self.labels = labels
         self.sinfo = sample_info
         self.name = classifier.name.replace(" ", "_").lower()
-
-        self.pathBtn.clicked.connect(self.onPathBtn)
+        self._name.selectAll()
 
     def accept(self):
         try:
@@ -45,11 +45,13 @@ class SaveClassifierDialog(QtWidgets.QDialog):
                                       self.sinfo)
         except HdfError as e:
             QMessageBox.critical(self, "error", str(e))
+            self._name.setFocus()
+            self._name.selectAll()
         else:
             QMessageBox.information(self, "information",
                                     "Data saved successfully")
 
-        super(SaveClassifierDialog, self).accept()
+            super(SaveClassifierDialog, self).accept()
 
 
     @property
@@ -66,11 +68,11 @@ class SaveClassifierDialog(QtWidgets.QDialog):
 
     @property
     def path(self):
-        return self._path.text()
+        return self._path
 
     @path.setter
     def path(self, path):
-        self._path.setText(path)
+        self._path = path
 
     @property
     def description(self):
@@ -79,13 +81,3 @@ class SaveClassifierDialog(QtWidgets.QDialog):
             return txt
         else:
             return None
-
-    def onPathBtn(self):
-
-        file_ = QFileDialog.getSaveFileName(
-            self, "Save File as...",
-            expanduser("~"),
-            "hdf files (*.hdf *.h5 *.hdf5 *.he5 *.ch5)")
-
-        if file_:
-            self.path = file_
