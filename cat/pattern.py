@@ -53,6 +53,7 @@ class Factory(type):
         elif hasattr(cls, "_classes"):
             bases[0]._classes[name] = cls
             setattr(bases[0], name, name) # perhaps an int?
+            setattr(cls, 'CLASSIFIER', name)
         return type.__init__(cls, name, bases, dct)
 
     def __call__(cls, klass=None, *args, **kw):

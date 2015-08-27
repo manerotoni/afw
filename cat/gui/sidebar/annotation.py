@@ -124,6 +124,7 @@ class AtAnnotationWidget(AtSideBarWidget):
             clf = self.currentClassifier()
             clf.estimateParameters(features)
             self.predictionInvalid()
+            self._classifier_is_valid = True
         except NoSampleError:
             pass
 
@@ -175,8 +176,12 @@ class AtAnnotationWidget(AtSideBarWidget):
                 qmb.exec_()
                 QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 
+                clf = self.currentClassifier()
                 if qmb.clickedButton() == runBtn:
-                    self.validateClassifier()
+                    if clf.CLASSIFIER == clf.OneClassSvm:
+                        self.estimateParameters()
+                    else:
+                        self.validateClassifier()
                 elif qmb.clickedButton() == ignoreBtn:
                     pass
                 elif qmb.clickedButton() == cancelBtn:
